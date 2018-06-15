@@ -1,0 +1,14 @@
+# General configuration
+# SECRET_KEY_BASE=
+
+# Database configuration
+# DB_HOST=
+# DB_USERNAME=
+# DB_PASSWORD=
+
+# LTI Broker configuration
+# RELATIVE_URL_ROOT=lti
+
+# LTI Apps configuration
+# LTI_APPS_DEFAULT=default
+# LTI_APPS=rooms:apps,greenlight:

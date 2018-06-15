@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
+  username: <%= ENV['DB_USERNAME'] || 'postgres' %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  connect_timeout: 10
+
+development:
+  <<: *default
+  database: lti_tool_provider_development
+
+test:
+  <<: *default
+  database: lti_tool_provider_test
+
+production:
+  <<: *default
+  database: lti_tool_provider_production

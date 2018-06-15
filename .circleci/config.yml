@@ -1,0 +1,114 @@
+version: 2.0
+
+jobs:
+  checkout_code:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+
+  bundle_dependencies:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run:  bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          key: v1-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ~/repo/vendor/bundle
+
+  rake_test:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+      - image: circleci/postgres:9.5-alpine
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run:
+          name: DB setup
+          command: bundle exec rake db:setup
+      - run:
+          name: Run tests
+          environment:
+              DATABASE_URL: "postgres://postgres@localhost:5432/lti_tool_provider_test"
+          command: bundle exec rake
+
+  precompile_assets:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
+      - run:
+          name: Precompile assets
+          command: bundle exec rake assets:precompile
+      - save_cache:
+          key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo/public/assets
+
+  deploy:
+    machine:
+        enabled: true
+    working_directory: ~/repo
+    environment:
+      - HEROKU_APP: still-shelf-38337
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          keys:
+            - v1-assets-{{ .Environment.CIRCLE_SHA1 }}
+      - checkout
+      - run:
+          name: Deploy Master to DockerHub
+          command: ./scripts/build_image.sh
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - checkout_code
+      - bundle_dependencies:
+          requires:
+            - checkout_code
+      - rake_test:
+          requires:
+            - bundle_dependencies
+      - precompile_assets:
+          requires:
+            - bundle_dependencies
+      - deploy:
+          requires:
+            - rake_test
+            - precompile_assets
