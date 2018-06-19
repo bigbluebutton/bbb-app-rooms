@@ -1,4 +1,5 @@
 class ToolProxyController < ApplicationController
+  include ApplicationHelper
   skip_before_action :verify_authenticity_token
 
   def create
@@ -16,7 +17,7 @@ class ToolProxyController < ApplicationController
     )
 
     tool_proxy = IMS::LTI::Models::ToolProxy.new(
-      id: "instructure.com/tool-provider-example:#{SecureRandom.uuid}",
+      id: "bigbluebutton.org/tool-provider:#{SecureRandom.uuid}",
       lti_version: 'LTI-2p0',
       security_contract: security_contract,
       tool_consumer_profile: registration_request.tc_profile_url,
@@ -49,7 +50,7 @@ class ToolProxyController < ApplicationController
     resource_handler = IMS::LTI::Models::ResourceHandler.from_json(
       {
         resource_type: {code: 'placements'},
-        resource_name: {default_value: 'lti_example_tool', key: ''},
+        resource_name: {default_value: 'lti_tool', key: ''},
         message: message.as_json
       }
     )

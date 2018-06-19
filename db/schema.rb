@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160420155226) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "collaboration_callbacks", force: :cascade do |t|
     t.string   "request_method"
     t.string   "host"
@@ -39,7 +42,7 @@ ActiveRecord::Schema.define(version: 20160420155226) do
     t.text     "correlation_id"
   end
 
-  add_index "rails_lti2_provider_registrations", ["correlation_id"], name: "index_rails_lti2_provider_registrations_on_correlation_id", unique: true
+  add_index "rails_lti2_provider_registrations", ["correlation_id"], name: "index_rails_lti2_provider_registrations_on_correlation_id", unique: true, using: :btree
 
   create_table "rails_lti2_provider_tools", force: :cascade do |t|
     t.string   "uuid"

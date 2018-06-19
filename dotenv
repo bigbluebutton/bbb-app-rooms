@@ -6,9 +6,10 @@
 # DB_USERNAME=
 # DB_PASSWORD=
 
-# LTI Broker configuration
+# App configuration
 # RELATIVE_URL_ROOT=lti
+# AUTHORIZED_TOOLS=rooms:apps,greenlight:
+# DEFAULT_TOOL=default
 
 # LTI Apps configuration
-# LTI_APPS_DEFAULT=default
-# LTI_APPS=rooms:apps,greenlight:
+# LTI_KEYS=bbb:welcome,key:secret

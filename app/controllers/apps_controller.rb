@@ -1,5 +1,5 @@
 class AppsController < ApplicationController
-  include AppsHelper
+  include ApplicationHelper
 
   def index
     redirect_to app_url
@@ -8,7 +8,7 @@ class AppsController < ApplicationController
   private
 
     def app_url
-      root = lti_apps[params[:app]]
+      root = authorized_tools[params[:app]]
       "#{root ? "/#{root}" : ''}/#{params[:app]}/launch?#{params.except(:app).to_query}"
     end
 

@@ -41,13 +41,15 @@ For using a different postgres server
 For changing the root (this is mandatory if you run the Tool Provider in the same box where BigBlueButton is running)
 ```
  # LTI Broker configuration
+ # It defines the root where the application is being mounted (e.g. lti for http://hostname/lti or lti/tools for http://hostname/lti/tools)
  # RELATIVE_URL_ROOT=lti
+ # It defines the external application to be used by default as for serving LTI launch requests
+ # DEFAULT_TOOL=default
+ # It defines the app name and root location [app_name:root_location]
+ # AUTHORIZED_TOOLS=rooms:apps,greenlight:
 ```
 For making use of the brokerage capability the external Application(s) has(ve) to be declared in the environment variable
 ```
  # LTI Apps configuration
- # It defines the external application to be used by default as for serving LTI launch requests
- # LTI_APPS_DEFAULT=default
- # It defines the app name and root location [app_name:root_location]
- # LTI_APPS=rooms:apps,greenlight:
+ # LTI_KEYS=bbb:welcome,key:secret
 ```

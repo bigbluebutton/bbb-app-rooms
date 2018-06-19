@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/blindsidenetworks/rails_lti2_provider.git
-  revision: f9d6e4df27c8107f39b76918690fd5ab973780bd
+  revision: 71d1cfca269258517bccb2cd0a81a9bcecaa8981
   branch: gatekeeper
   specs:
     rails_lti2_provider (0.0.1)
@@ -105,7 +105,7 @@ GEM
     minitest (5.11.3)
     multi_json (1.13.1)
     multipart-post (2.0.0)
-    nokogiri (1.8.2)
+    nokogiri (1.8.3)
       mini_portile2 (~> 2.3.0)
     pg (0.21.0)
     pry (0.11.3)
@@ -175,7 +175,7 @@ GEM
     sdoc (1.0.0)
       rdoc (>= 5.0)
     simple_oauth (0.2.0)
-    sprockets (2.12.4)
+    sprockets (2.12.5)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)

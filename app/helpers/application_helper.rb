@@ -31,4 +31,25 @@ module ApplicationHelper
     logger.info log_div('*', 100)
   end
 
+  class CustomError < StandardError;
+    attr_reader :error
+    def initialize(error = :unknown)
+      @error = error
+    end
+  end
+
+  def lti_authorized_application
+    raise CustomError.new(:missing_app) unless params.key?(:app)
+    raise CustomError.new(:not_found) unless params[:app] == 'default' || authorized_tools.key?(params[:app])
+  end
+
+  def lti_secret(key)
+    tool = RailsLti2Provider::Tool.find_by_uuid(key)
+    return tool.shared_secret if tool
+  end
+
+  def authorized_tools
+    string_to_hash(ENV["AUTHORIZED_TOOLS"] || '')
+  end
+
 end

@@ -1,20 +1,20 @@
 {
-    "guid": "baf196ff-2707-4ea3-9ad7-713db8e6f740",
+    "guid": "a11e8084-15e3-48da-a747-bc3b94020ee2",
     "product_info": {
         "product_version": "1.0",
         "product_name": {
-            "default_value": "Tool Provider Example",
+            "default_value": "Tool Provider",
             "key": "tool.name"
         },
         "product_family": {
-            "code": "tool-provider-example",
+            "code": "tool-provider",
             "vendor": {
-                "code": "instructure.com",
+                "code": "bigbluebutton.org",
                 "vendor_name": {
-                    "default_value": "Instructure",
+                    "default_value": "BigBlueButton",
                     "key": "tool.vendor.name"
                 },
-                "timestamp": "2014-07-22T10:59:55-06:00"
+                "timestamp": "2018-07-21T00:00:00-05:00"
             }
         }
     }

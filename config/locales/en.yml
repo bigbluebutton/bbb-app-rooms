@@ -23,4 +23,4 @@ en:
   app:
     cc:
       title:        "Tool Provider"
-      description:  "LTI Tool Provider that allows users to access to %{apps} functionality"
+      description:  "LTI Tool Provider that allows users to access %{apps} functionality"

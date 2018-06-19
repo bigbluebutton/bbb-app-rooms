@@ -6,7 +6,7 @@ LtiToolProvider::Application.routes.draw do
 
     get ':app/guide', to: 'guide#home'
 
-    root to: 'guide#home', :app => ENV["LTI_APPS_DEFAULT"] || 'default'
+    root to: 'guide#home', :app => ENV["DEFAULT_TOOL"] || 'default'
 
     get ':app/xml_config', to: 'guide#xml_config', as: :xml_config
     get ':app/xml_builder', to: 'guide#xml_builder', as: :xml_builder

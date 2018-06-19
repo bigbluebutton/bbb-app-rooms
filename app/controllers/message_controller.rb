@@ -1,14 +1,15 @@
 class MessageController < ApplicationController
   include ApplicationHelper
-  include AppsHelper
   include RailsLti2Provider::ControllerHelpers
 
   skip_before_action :verify_authenticity_token
-  before_filter :lti_application_allowed
+  before_filter :lti_authorized_application
   before_filter :lti_authentication, except: %i[youtube signed_content_item_request]
 
   rescue_from RailsLti2Provider::LtiLaunch::Unauthorized do |ex|
     @error = 'Authentication failed with: ' + case ex.error
+                                              when :invalid_key
+                                                'The LTI key used is invalid'
                                               when :invalid_signature
                                                 'The OAuth Signature was Invalid'
                                               when :invalid_nonce
@@ -19,8 +20,13 @@ class MessageController < ApplicationController
                                                 'Unknown Error'
                                               end
     @message = IMS::LTI::Models::Messages::Message.generate(request.request_parameters)
-    @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: 'secret', callback: 'about:blank')
-    render :basic_lti_launch_request, status: 200
+    @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: lti_secret(@message.oauth_consumer_key), callback: 'about:blank')
+    if request.request_parameters.key?('launch_presentation_return_url')
+      launch_presentation_return_url = request.request_parameters['launch_presentation_return_url'] + '&lti_errormsg=' + @error
+      redirect_to launch_presentation_return_url
+    else
+      render :basic_lti_launch_request, status: 200
+    end
   end
 
   def basic_lti_launch_request
@@ -54,7 +60,7 @@ class MessageController < ApplicationController
       @secret = "&#{RailsLti2Provider::Tool.find(@lti_launch.tool_id).shared_secret}"
       # TODO: should we create the lti_launch with all of the oauth params as well?
       @message = (@lti_launch && @lti_launch.message) || IMS::LTI::Models::Messages::Message.generate(request.request_parameters)
-      @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: 'secret', callback: 'about:blank')
+      @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: lti_secret(@message.oauth_consumer_key), callback: 'about:blank')
     end
 
     def resource_handler

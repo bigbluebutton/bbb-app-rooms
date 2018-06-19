@@ -2,9 +2,21 @@ require 'ims/lti'
 
 class GuideController < ApplicationController
   include ApplicationHelper
-  include AppsHelper
 
-  before_filter :lti_application_allowed
+  before_filter :lti_authorized_application
+
+  rescue_from CustomError do |ex|
+    @error = 'Authorization failed with: ' + case ex.error
+                                              when :missing_app
+                                                'The App ID is not included'
+                                              when :not_found
+                                                'The App is not registered'
+                                              else
+                                                'Unknown Error'
+                                              end
+    logger.info @error
+  end
+
 
   def home
   end
@@ -15,7 +27,7 @@ class GuideController < ApplicationController
 
   def xml_config
     tc = IMS::LTI::Services::ToolConfig.new(:title => t('app.cc.title'), :launch_url => blti_launch_url(:app => params[:app])) #"#{location}/#{year}/#{id}"
-    tc.description = t('app.cc.description', apps: ENV['LTI_APPS'] || 'default')
+    tc.description = t('app.cc.description', apps: authorized_tools.keys)
 
     if query_params = request.query_parameters
       platform = CanvasExtensions::PLATFORM
