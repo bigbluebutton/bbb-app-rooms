@@ -36,8 +36,6 @@ var XmlBuilder = React.createClass({
         <h2 className="text-center">XML Builder</h2>
 
         <p>
-          <p><span style={{'font-weight': 'bold'}}>Consumer key:</span> 'key'</p>
-          <p><span style={{'font-weight': 'bold'}}>Consumer secret:</span> 'secret'</p>
           <label htmlFor="xml-uri">XML URL:</label>
           <input onClick={this.xmlUrlClickHandler} style={{cursor: 'text'}} ref="xmlUrl" id="xml-url" value={this.state.xmlUrl} className="form-control form-read-only" readOnly type="text"/>
         </p>

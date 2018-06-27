@@ -27,15 +27,18 @@ class GuideController < ApplicationController
 
   def xml_config
     tc = IMS::LTI::Services::ToolConfig.new(:title => t('app.cc.title'), :launch_url => blti_launch_url(:app => params[:app])) #"#{location}/#{year}/#{id}"
-    tc.description = t('app.cc.description', apps: authorized_tools.keys)
+    tc.secure_launch_url = secure_url(tc.launch_url)
+    tc.icon = lti_icon(LTI_CONFIG[:tools][params[:app]]['icon'] || 'selector.png')
+    tc.secure_icon = secure_url(tc.icon)
+    tc.description = LTI_CONFIG[:tools][params[:app]]['description'] || t('app.cc.description')
 
     if query_params = request.query_parameters
       platform = CanvasExtensions::PLATFORM
       tc.set_ext_param(platform, :selection_width, query_params[:selection_width])
       tc.set_ext_param(platform, :selection_height, query_params[:selection_height])
       tc.set_ext_param(platform, :privacy_level, 'public')
-      tc.set_ext_param(platform, :text, 'Extension text')
-      tc.set_ext_param(platform, :icon_url, view_context.image_url("selector.png")) #root_url +  #view_context.asset_url('selector.png'))
+      tc.set_ext_param(platform, :text, LTI_CONFIG[:tools][params[:app]]['name'] || t('app.cc.title'))
+      tc.set_ext_param(platform, :icon_url, tc.icon)
       tc.set_ext_param(platform, :domain, request.host_with_port)
 
       query_params[:custom_params].each { |_, v| tc.set_custom_param(v[:name].to_sym, v[:value]) } if query_params[:custom_params]
@@ -57,9 +60,9 @@ class GuideController < ApplicationController
                           {url: blti_launch_url}
                         end
 
-    navigation_params[:icon_url] = view_context.asset_url('selector.png') + "?#{placement_key}"
+    navigation_params[:icon_url] = tc.icon + "?#{placement_key}"
     navigation_params[:canvas_icon_class] = "icon-lti"
-    navigation_params[:text] = "#{placement_key} Text"
+    navigation_params[:text] = LTI_CONFIG[:tools][params[:app]]['name'] || t('app.cc.title')
 
     tc.set_ext_param(CanvasExtensions::PLATFORM, placement_key, navigation_params)
   end

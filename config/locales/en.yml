@@ -22,5 +22,9 @@
 en:
   app:
     cc:
-      title:        "Tool Provider"
-      description:  "LTI Tool Provider that allows users to access %{apps} functionality"
+      title:        "LTI Tool Provider"
+      description:  "General Tool Provider that allows users to test LTI 1.x and 2.x capabilities"
+    default:
+      lti1:         "Configure LTI 1 Provider"
+      lti2:         "LTI 2 Config"
+      copypaste:    "Paste this url into your tool consumer to register this tool:"

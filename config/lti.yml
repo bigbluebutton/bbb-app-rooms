@@ -1,13 +1,30 @@
 defaults: &defaults
+  tools:
+    default: &default
+      icon: selector.png
+
+    rooms:
+      <<: *default
+      root: apps
+      secret: abcde-12345
+      name: Rooms
+      description: Rooms allows the creation and use of BigBlueButton Rooms through LTI
+
+    greenlight:
+      <<: *default
+      root: gl
+      secret: abcde-12345
+      name: Greenlight
+      description: Rooms allows the creation and use of BigBlueButton Rooms through LTI
 
 development:
   <<: *defaults
-  product_instance_guid: a11e8084-15e3-48da-a747-bc3b94020ee2
+  product_instance_guid: aada9378-4474-4676-ad7c-db583b43c8d7
 
 test:
   <<: *defaults
-  product_instance_guid: a11e8084-15e3-48da-a747-bc3b94020ee2
+  product_instance_guid: a27dfd1f-c372-4a05-a382-7fa782a53570
 
 production:
   <<: *defaults
-  product_instance_guid: 3d065331-5591-4ecf-96db-6d307b2805b1
+  product_instance_guid: 048a0d6c-2852-4117-9e32-b7a6c4baf69f

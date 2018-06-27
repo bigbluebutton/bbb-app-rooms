@@ -5,7 +5,6 @@ XmlBuilder.Placements.Row = React.createClass({
   },
 
   render: function () {
-    var messages = this.props.message
     return (
       <tr>
         <td className="text-center checkbox-col">
@@ -15,7 +14,7 @@ XmlBuilder.Placements.Row = React.createClass({
         </td>
         <td> {this.props.children} </td>
         <td className="message-type">
-            <XmlBuilder.Placements.MessageChoice messages={ messages } title={ this.props.children } placementKey={ this.props.placementKey }/>
+            <XmlBuilder.Placements.MessageChoice title={ this.props.children } placementKey={ this.props.placementKey } messages={ this.props.message }/>
         </td>
       </tr>
     );
