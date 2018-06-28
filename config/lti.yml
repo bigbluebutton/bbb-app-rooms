@@ -1,8 +1,13 @@
+defaults: &defaults
+
 development:
+  <<: *defaults
   product_instance_guid: a11e8084-15e3-48da-a747-bc3b94020ee2
 
 test:
+  <<: *defaults
   product_instance_guid: a11e8084-15e3-48da-a747-bc3b94020ee2
 
 production:
+  <<: *defaults
   product_instance_guid: 3d065331-5591-4ecf-96db-6d307b2805b1

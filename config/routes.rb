@@ -1,6 +1,12 @@
 LtiToolProvider::Application.routes.draw do
 
   scope ENV['RELATIVE_URL_ROOT'] || '/' do
+    namespace :api do
+      namespace :v1 do
+        get 'sso/launches/:token', to: 'sso#validate_launch', as: :sso_launches
+      end
+    end
+
     post 'callback', to: 'collaboration_callbacks#confirm_url'
     delete 'callback', to: 'collaboration_callbacks#confirm_url'
 

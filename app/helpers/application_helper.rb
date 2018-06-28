@@ -1,3 +1,6 @@
+require 'lti_tool_provider/helpers'
+include LtiToolProvider::Helpers
+
 module ApplicationHelper
 
   CAP_TO_DESCRIPTIONS = {
@@ -49,7 +52,7 @@ module ApplicationHelper
   end
 
   def authorized_tools
-    string_to_hash(ENV["AUTHORIZED_TOOLS"] || '')
+    JSON.parse(ENV["AUTHORIZED_TOOLS"] || '').to_h
   end
 
 end

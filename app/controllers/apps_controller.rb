@@ -8,7 +8,7 @@ class AppsController < ApplicationController
   private
 
     def app_url
-      root = authorized_tools[params[:app]]
+      root = authorized_tools[params[:app]]["root"]
       "#{root ? "/#{root}" : ''}/#{params[:app]}/launch?#{params.except(:app).to_query}"
     end
 

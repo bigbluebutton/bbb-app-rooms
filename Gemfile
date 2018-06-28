@@ -49,6 +49,7 @@ end
 
 gem 'ims-lti'
 gem 'rails_lti2_provider', git: 'https://github.com/blindsidenetworks/rails_lti2_provider.git', :branch => "gatekeeper"
+#gem 'rails_lti2_provider', path: '../rails_lti2_provider'
 
 gem 'react-rails', '1.5.0'
 
