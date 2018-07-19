@@ -46,6 +46,4 @@ for making use of the brokerage capability the external Application(s) has(ve) t
  # RELATIVE_URL_ROOT=lti
  # It defines the external application to be used by default as for serving LTI launch requests
  # DEFAULT_TOOL=default
- # It defines the app name and root location [app_name:root_location]
- # AUTHORIZED_TOOLS=rooms:apps,greenlight:
 ```

@@ -10,21 +10,6 @@ module LtiToolProvider
       ]
     end
 
-    def tokenize(str, secret, salt)
-      crypt = crypter(secret, salt)
-      crypt.encrypt_and_sign(str.ljust(128, ' '))
-    end
-
-    def untokenize(str, secret, salt)
-      crypt = crypter(secret, salt)
-      crypt.decrypt_and_verify(str).strip
-    end
-
-    def crypter(secret, salt)
-      key = ActiveSupport::KeyGenerator.new(secret).generate_key(salt, 32)
-      ActiveSupport::MessageEncryptor.new(key, {cipher: 'aes-256-cbc', digest: 'SHA1', serializer: Marshal})
-    end
-
     def secure_url(url)
       uri = URI.parse(url)
       uri.scheme = "https"

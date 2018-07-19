@@ -1,11 +1,11 @@
 <div class="container">
   <form class="form-signin">
-    <h1 class="form-signin-heading"><%= t('app.cc.title') %></h1>
+    <h1 class="form-signin-heading"><%=  t("apps.#{params[:app]}.title") %></h1>
     <br />
-    <h4><%= link_to t('app.default.lti1'), xml_builder_url %></h4>
+    <h4><%= link_to t('ui.lti1'), xml_builder_url %></h4>
     <br />
-    <h4><%= t('app.default.lti2') %></h4>
-    <p><%= t('app.default.copypaste') %></p>
+    <h4><%= t('ui.lti2') %></h4>
+    <p><%= t('ui.copypaste') %></p>
     <p><input type="text" onClick="this.select()" class="form-control" value="<%= tool_registration_url %>" /></p>
   </form>
 </div>

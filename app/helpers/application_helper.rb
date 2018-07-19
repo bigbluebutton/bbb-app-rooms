@@ -52,7 +52,7 @@ module ApplicationHelper
   end
 
   def authorized_tools
-    JSON.parse(ENV["AUTHORIZED_TOOLS"] || '').to_h
+    LTI_CONFIG[:tools].to_h
   end
 
 end

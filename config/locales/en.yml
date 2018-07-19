@@ -20,11 +20,17 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  app:
-    cc:
-      title:        "LTI Tool Provider"
-      description:  "General Tool Provider that allows users to test LTI 1.x and 2.x capabilities"
+  ui:
+    lti1:          "Configure LTI 1 Provider"
+    lti2:          "LTI 2 Config"
+    copypaste:     "Paste this url into your tool consumer to register this tool:"
+  apps:
     default:
-      lti1:         "Configure LTI 1 Provider"
-      lti2:         "LTI 2 Config"
-      copypaste:    "Paste this url into your tool consumer to register this tool:"
+      title:       "LTI Tool Provider"
+      description: "General Tool Provider that allows users to test LTI 1.x and 2.x capabilities"
+    rooms:
+      title:       "Rooms"
+      description: "Rooms allows the creation and use of BigBlueButton Rooms through LTI"
+    greenlight:
+      title:       "Greenlight"
+      description: "Rooms allows the creation and use of BigBlueButton Rooms through LTI"

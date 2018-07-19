@@ -1,5 +1,5 @@
-class Api::V1::SsoController < ApplicationController
-  include ApplicationHelper
+class Api::V1::SsoController < Api::V1::BaseController
+  before_action :doorkeeper_authorize!
 
   def validate_launch
     response = {token: params[:token], valid: token_valid?}
@@ -11,7 +11,7 @@ class Api::V1::SsoController < ApplicationController
   private
 
     def token_valid?
-      launch = Rails.cache.read params[:token]
+      launch = Rails.cache.read(params[:token])
       if !launch
         @error = {error: {key: 'token_invalid', message: 'The token does not exist'} }
         return false

@@ -7,15 +7,11 @@ defaults: &defaults
       <<: *default
       root: apps
       secret: abcde-12345
-      name: Rooms
-      description: Rooms allows the creation and use of BigBlueButton Rooms through LTI
 
     greenlight:
       <<: *default
       root: gl
       secret: abcde-12345
-      name: Greenlight
-      description: Rooms allows the creation and use of BigBlueButton Rooms through LTI
 
 development:
   <<: *defaults

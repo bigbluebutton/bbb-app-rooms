@@ -8,7 +8,6 @@
 
 # App configuration
 # RELATIVE_URL_ROOT=lti
-# AUTHORIZED_TOOLS={"rooms":{"root":"apps","secret":"abcde-12345"},"greenlight":{"root":"","secret":"12345-abcde"}}
-# DEFAULT_TOOL=default
 
 # LTI Apps configuration
+# DEFAULT_TOOL=default

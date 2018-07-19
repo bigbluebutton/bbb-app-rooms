@@ -58,3 +58,7 @@ gem 'simple_oauth', '0.2.0'
 gem 'lodash-rails', '~> 3.7.0'
 
 gem 'therubyracer'
+
+gem 'doorkeeper', '5.0.0.rc1'
+#gem 'doorkeeper', path: '../doorkeeper'
+#gem 'doorkeeper'
