@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyString
+  welcome: MyString
+  moderator: MyString
+  viewer: MyString
+  recording: false
+  wait_moderator: false
+  all_moderators: false
+
+two:
+  name: MyString
+  description: MyString
+  welcome: MyString
+  moderator: MyString
+  viewer: MyString
+  recording: false
+  wait_moderator: false
+  all_moderators: false

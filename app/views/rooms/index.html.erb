@@ -1,0 +1,52 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Rooms</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t('default.room.handler') %></th>
+      <th><%= t('default.room.name') %></th>
+      <th><%= t('default.room.description') %></th>
+      <th><%= t('default.room.welcome') %></th>
+      <th><%= t('default.room.moderator') %></th>
+      <th><%= t('default.room.viewer') %></th>
+      <th><%= t('default.room.recording') %></th>
+      <th><%= t('default.room.waitmoderator') %></th>
+      <th><%= t('default.room.allmoderators') %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rooms.each do |room| %>
+      <tr>
+        <td><%= room.handler %></td>
+        <td><%= room.name %></td>
+        <td><%= room.description %></td>
+        <td><%= room.welcome %></td>
+        <td><%= room.moderator %></td>
+        <td><%= room.viewer %></td>
+        <td><%= room.recording %></td>
+        <td><%= room.wait_moderator %></td>
+        <td><%= room.all_moderators %></td>
+        <td>
+          <%= link_to t('default.admin.showroom.text'), room,
+                class: "btn btn-xs btn-default" %></td>
+        <td>
+          <%= link_to t('default.admin.editroom.text'), edit_room_path(room),
+                class: "btn btn-xs btn-default" %></td>
+        <td>
+          <%= link_to t('default.admin.destroyroom.text'), room,
+                class: "btn btn-xs btn-danger",
+                data: { confirm: t('default.admin.destroyroom.confirmation') },
+                method: :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<% unless omniauth_provider?(:bbbltibroker) %>
+<%= link_to t('default.admin.newroom'), new_room_path, class: "btn btn-xs btn-default" %>
+<% end %>

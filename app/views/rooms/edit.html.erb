@@ -1,0 +1,11 @@
+<h1><%= t('default.room.editing') %></h1>
+
+<% if @user and @user.admin? %>
+<p>
+  <%= link_to t('default.admin.showall'), rooms_path, :class => "btn btn-xs btn-default pull-right" %>
+  <strong><%= t('default.admin.handler') %></strong><br>
+  <%= @room.handler %>
+</p>
+<% end %>
+
+<%= render 'form', room: @room %>

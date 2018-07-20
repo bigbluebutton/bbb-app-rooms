@@ -1,0 +1,54 @@
+<%= form_with(model: room, local: true, class: "form fill") do |form| %>
+  <% if room.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
+
+      <ul>
+      <% room.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group input-group col-6">
+    <%= form.label :name %>&nbsp;<span class="text-muted small">*Required</span><br>
+    <%= form.text_field :name, :required => true, size: "45", class: "form-control input col-6" %>
+  </div>
+
+  <div class="field form-group input-group col-8">
+    <%= form.label :description %>
+    <%= form.text_area :description, size: "45x4", class: 'form-control input col-8' %>
+  </div>
+
+  <div class="field form-group input-group col-8">
+    <%= form.label :welcome %>
+    <%= form.text_area :welcome, size: "45x4", class: 'form-control input col-8' %>
+  </div>
+
+  <%= form.hidden_field :moderator, value: @room.moderator %>
+  <%= form.hidden_field :viewer, value: @room.viewer %>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :recording %>&nbsp;
+    <b><%= t('default.room.recording') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
+  </div>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :wait_moderator %>&nbsp;
+    <b><%= t('default.room.waitmoderator') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>"></i><br>
+  </div>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :all_moderators %>&nbsp;
+    <b><%= t('default.room.allmoderators') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>"></i><br>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= form.button t('default.room.cancel'), class: "btn btn-default", name: "cancel" %>
+  </div>
+<% end %>

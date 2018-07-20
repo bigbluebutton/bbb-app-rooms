@@ -1,0 +1,102 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  default:
+    app:
+      error:          "Error"
+    admin:
+      back:           "Back"
+      handler:        "Handler"
+      newroom:        "New Room"
+      showall:        "Show all"
+      showroom:
+        text:         "Show"
+      editroom:
+        text:         "Edit"
+      destroyroom:
+        text:         "Destroy"
+        confirmation: "Are you sure to destouy this room?"
+    bigbluebutton:
+      moderator:      "Moderator"
+      viewer:         "Viewer"
+    room:
+      created:        "Room was successfully created."
+      edit:           "Edit"
+      editing:        "Editing Room"
+      show:           "Show"
+      showing:        "Showing Room"
+      destroy:        "Destroy"
+      destroyed:      "Room was successfully destroyed"
+      join:           "Join"
+      name:           "Name"
+      description:    "Description"
+      welcome:        "Welcome"
+      moderator:      "Moderator token"
+      viewer:         "Viewer token"
+      recording:      "Recording"
+      waitmoderator:  "Wait moderator"
+      allmoderators:  "All moderators"
+      update:         "Update"
+      updated:        "Updated"
+      cancel:         "Cancel"
+      tooltip:
+        recording:    "The session may be recorded"
+        waitmoderator: "Viewers are unable to join until a moderator joins"
+        allmoderators: "All users will join as moderators"
+    meeting:
+      close:           "Close tab/window"
+      close_manually:  "This tab/window must be closed manually"
+
+  error:
+    http:
+      _401:
+        code:       "Unauthorized"
+        message:    "Unauthorized access"
+        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser"
+    bigbluebutton:
+      invalidrequest:
+        code:       "BBBAPICallInvalid"
+        message:    "BBB API call invalid"
+        suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed"
+    room:
+      forbidden:
+        code:       "AccessForbidden"
+        message:    "The session has expired"
+        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser"
+      notfound:
+        code:       "NotFound"
+        message:    "The room was not found"
+        suggestion: "The room may have been removed by an administrator. Contact technical support."
+      invalidsecret:
+        code:       "InvalidSecret"
+        message:    "The token could not be validated"
+        suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider"
