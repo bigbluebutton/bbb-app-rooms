@@ -12,7 +12,7 @@ if [[ -n "$2" ]]; then
     tag=$2
 fi
 
-image="$account/lti_tool_provider:$tag"
+image="$account/bbb-lti-broker:$tag"
 
 echo "Building $image ..."
 docker build -t $image .

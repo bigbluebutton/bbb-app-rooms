@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-LtiToolProvider::Application.load_tasks
+BbbLtiBroker::Application.load_tasks

@@ -1,5 +1,5 @@
-require 'lti_tool_provider/helpers'
-include LtiToolProvider::Helpers
+require 'bbb_lti_broker/helpers'
+include BbbLtiBroker::Helpers
 
 module ApplicationHelper
 

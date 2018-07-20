@@ -1,4 +1,4 @@
-LtiToolProvider::Application.routes.draw do
+BbbLtiBroker::Application.routes.draw do
 
   scope ENV['RELATIVE_URL_ROOT'] || '/' do
     namespace :api do

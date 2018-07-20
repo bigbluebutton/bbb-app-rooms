@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Run tests
           environment:
-              DATABASE_URL: "postgres://postgres@localhost:5432/lti_tool_provider_test"
+              DATABASE_URL: "postgres://postgres@localhost:5432/bbb_lti_broker_test"
           command: bundle exec rake
 
   precompile_assets:
@@ -74,7 +74,7 @@ jobs:
           paths:
             - ~/repo/public/assets
 
-  deploy:
+  build_image:
     machine:
         enabled: true
     working_directory: ~/repo
@@ -108,7 +108,7 @@ workflows:
       - precompile_assets:
           requires:
             - bundle_dependencies
-      - deploy:
+      - build_image:
           requires:
             - rake_test
             - precompile_assets

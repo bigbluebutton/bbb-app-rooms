@@ -1,4 +1,4 @@
-# lti_tool_provider
+# bbb_lti_broker
 Generic LTI tool_provider
 
 # LTI Tool Provider Using ims-lti Gem

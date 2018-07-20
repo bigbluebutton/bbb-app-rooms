@@ -6,12 +6,10 @@ defaults: &defaults
     rooms:
       <<: *default
       root: apps
-      secret: abcde-12345
 
     greenlight:
       <<: *default
       root: gl
-      secret: abcde-12345
 
 development:
   <<: *defaults

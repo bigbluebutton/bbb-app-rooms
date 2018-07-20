@@ -10,12 +10,12 @@ default: &default
 
 development:
   <<: *default
-  database: lti_tool_provider_development
+  database: bbb_lti_broker_development
 
 test:
   <<: *default
-  database: lti_tool_provider_test
+  database: bbb_lti_broker_test
 
 production:
   <<: *default
-  database: lti_tool_provider_production
+  database: bbb_lti_broker_production

@@ -1,5 +1,5 @@
-require 'lti_tool_provider/helpers'
-include LtiToolProvider::Helpers
+require 'bbb_lti_broker/helpers'
+include BbbLtiBroker::Helpers
 
 namespace :db do
   namespace :keys do
@@ -8,7 +8,7 @@ namespace :db do
       begin
         Rake::Task['environment'].invoke
         ActiveRecord::Base.connection
-        blti_keys = LtiToolProvider::Helpers.string_to_hash(args[:keys] || '')
+        blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
           return
@@ -35,7 +35,7 @@ namespace :db do
       begin
         Rake::Task['environment'].invoke
         ActiveRecord::Base.connection
-        blti_keys = LtiToolProvider::Helpers.string_to_hash(args[:keys] || '')
+        blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
           return
@@ -63,7 +63,7 @@ namespace :db do
       begin
         Rake::Task['environment'].invoke
         ActiveRecord::Base.connection
-        blti_keys = LtiToolProvider::Helpers.string_to_hash(args[:keys] || '')
+        blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
           return
