@@ -1,0 +1,6 @@
+[Unit]
+Description=Deployer
+
+[Service]
+#Environment='AWS_ACCESS_KEY_ID=' 'AWS_SECRET_ACCESS_KEY='
+ExecStart=/usr/local/bin/deploy aws latest
