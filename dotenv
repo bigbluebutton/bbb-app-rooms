@@ -1,3 +1,7 @@
+# App configuration
+# SECRET_KEY_BASE=<rake secret>
+# RELATIVE_URL_ROOT=apps/rooms
+
 # Database configuration
 # DB_ADAPTER=<postgresql|sqlite3>
 # DB_HOST=
@@ -8,10 +12,13 @@
 # DB_TIMEOUT=5000
 # DB_CONNECT_TIMEOUT=10
 # DB_DATABASE=bbb_app_rooms_production
-# RELATIVE_URL_ROOT=apps/rooms
+
+# BigBlueButton configuration
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
 # BIGBLUEBUTTON_SECRET=8cd8ef52e8e101574e400365b55e11a6
 # BIGBLUEBUTTON_MODERATOR_ROLES=Instructor,Faculty,Teacher,Mentor,Administrator,Admin
+
+# BigBlueButton LTI Broker configuration
 # OMNIAUTH_BBBLTIBROKER_SITE=http://localhost
 # OMNIAUTH_BBBLTIBROKER_ROOT=lti
 # OMNIAUTH_BBBLTIBROKER_KEY=b21211c29d2720a4c847fc3a9097720a196f7fafddbaa0f68d5c1cb54fdbb046

@@ -59,10 +59,6 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.relative_url_root = "/rooms"
-  config.assets.prefix = "/rooms/assets"
-  if ENV['RELATIVE_URL_ROOT']
-    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT']}/rooms"
-    config.assets.prefix = "/#{ENV['RELATIVE_URL_ROOT']}/rooms/assets"
-  end
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '' }/rooms"
+  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
 end

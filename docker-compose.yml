@@ -5,10 +5,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '3000:3000'
+      - '3001:3001'
     env_file: .env
     expose:
-      - '3000'
+      - '3001'
     working_dir: '/usr/src/app'
     environment:
       DB_HOST: 'db'
@@ -18,3 +18,9 @@ services:
       - db
   db:
     image: postgres:9.5
+    volumes:
+      - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
+      - "db-data:/var/lib/postgresql/data"
+      restart: on-failure
+volumes:
+  db-data:

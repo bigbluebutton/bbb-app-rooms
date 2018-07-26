@@ -1,7 +1,7 @@
 FROM ruby:2.5.1
 
 # app dependencies
-RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+RUN apt-get update -qq && apt-get install -f -y build-essential libpq-dev nodejs postgresql-client
 
 ENV RAILS_ENV=production
 
@@ -11,7 +11,7 @@ WORKDIR $APP_HOME
 
 # Add the app
 ADD . $APP_HOME
-EXPOSE 3000
+EXPOSE 3001
 
 # Install app dependencies
 RUN bundle install --without development test doc --deployment --clean
