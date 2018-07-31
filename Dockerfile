@@ -1,3 +1,4 @@
+# Base image:
 FROM ruby:2.5.1
 
 # app dependencies
@@ -11,7 +12,6 @@ WORKDIR $APP_HOME
 
 # Add the app
 ADD . $APP_HOME
-EXPOSE 3001
 
 # Install app dependencies
 RUN bundle install --without development test doc --deployment --clean

@@ -3,8 +3,8 @@ class Room < ApplicationRecord
 
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
-    self.moderator = random_password(8) if self.moderator.empty?
-    self.viewer = random_password(8, self.moderator) if self.viewer.empty?
+    self.moderator = random_password(8) if self.moderator?
+    self.viewer = random_password(8, self.moderator) if self.viewer?
   end
 
   private

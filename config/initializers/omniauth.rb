@@ -1,7 +1,7 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
   # Pre-set omniauth variables based on ENV
   omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/auth"
-  omniauth_site =ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || "http://localhost:3000"
+  omniauth_site =ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || "http://localhost:3400"
   omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
   omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"] || ''
   omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"] || ''
