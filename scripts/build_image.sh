@@ -17,7 +17,7 @@ image="$account/bbb-app-rooms:$tag"
 echo "Building $image ..."
 docker build -t $image .
 
-if [[ -v "${DOCKER_USER}" ]] && [[ -v "${DOCKER_PASS}" ]]; then
+if [[ -n $DOCKER_USER ]] && [[ -n $DOCKER_PASS ]]; then
     echo "Publishing $image ..."
     docker login -u $DOCKER_USER -p $DOCKER_PASS
     docker push $image
