@@ -1,9 +1,11 @@
 # General configuration
-# SECRET_KEY_BASE=
+# SECRET_KEY_BASE=<rake secret>
 
 # Database configuration
-# DB_HOST=
-# DB_USERNAME=
+# DB_ADAPTER=[sqlite3|postgresql]
+# DB_HOST=<localhost>
+# DB_NAME=
+# DB_USERNAME=<root>
 # DB_PASSWORD=
 
 # App configuration

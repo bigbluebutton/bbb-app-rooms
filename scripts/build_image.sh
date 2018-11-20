@@ -17,8 +17,9 @@ image="$account/bbb-lti-broker:$tag"
 echo "Building $image ..."
 docker build -t $image .
 
-echo "Publishing $image ..."
-docker login -u $DOCKER_USER -p $DOCKER_PASS
-docker push $image
-
-docker logout
+if [[ -v "${DOCKER_USER}" ]] && [[ -v "${DOCKER_PASS}" ]]; then
+    echo "Publishing $image ..."
+    docker login -u $DOCKER_USER -p $DOCKER_PASS
+    docker push $image
+    docker logout
+fi

@@ -3,7 +3,7 @@ include BbbLtiBroker::Helpers
 
 namespace :db do
   namespace :keys do
-    desc "Add a new blti keypair"
+    desc "Add a new blti keypair (e.g. 'rake db:keys:add[key:secret]')"
     task :add, :keys do |t, args|
       begin
         Rake::Task['environment'].invoke
@@ -30,7 +30,7 @@ namespace :db do
       end
     end
 
-    desc "Update an existent blti keypair if exists"
+    desc "Update an existent blti keypair if exists (e.g. 'rake db:keys:update[key:secret]')"
     task :update, :keys do |t, args|
       begin
         Rake::Task['environment'].invoke
@@ -58,7 +58,7 @@ namespace :db do
       end
     end
 
-    desc "Delete an existent blti keypair if exists"
+    desc "Delete an existent blti keypair if exists (e.g. 'rake db:keys:delete[key:secret]')"
     task :delete, :keys do |t, args|
       begin
         Rake::Task['environment'].invoke
@@ -117,7 +117,6 @@ namespace :db do
         exit 0
       end
     end
-
 
   end
 end
