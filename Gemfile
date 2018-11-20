@@ -59,6 +59,4 @@ gem 'lodash-rails', '~> 3.7.0'
 
 gem 'therubyracer'
 
-gem 'doorkeeper', '5.0.0.rc1'
-#gem 'doorkeeper', path: '../doorkeeper'
-#gem 'doorkeeper'
+gem 'doorkeeper', '~> 4.2', '>= 4.2.6'

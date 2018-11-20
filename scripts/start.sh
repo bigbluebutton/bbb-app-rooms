@@ -1,15 +1,25 @@
 #!/bin/bash
 
-while ! curl http://$DB_HOST:5432/ 2>&1 | grep '52'
+while ! pg_isready -h ${DB_HOST:-localhost} -p ${DB_PORT:-5432} > /dev/null 2> /dev/null;
 do
-  echo "Waiting for postgres to start up ..."
-  sleep 1
+    sleep 1
 done
+echo "Database ${DB_HOST:-localhost} started..."
 
-# Precompile assets
-#    assets are precompiled on start because the root can change based on ENV["RELATIVE_URL_ROOT"]
+# Assets are precompiled on start because the root can change based on ENV["RELATIVE_URL_ROOT"]
+echo "Precompile assets..."
 bundle exec rake assets:precompile --trace
-# Database migrations
-bundle exec rake db:exists && bundle exec rake db:migrate || bundle exec rake db:setup
-# App starts
-bundle exec rails s -b 0.0.0.0 -p 3000
+
+echo "Database migrations..."
+if bundle exec rake db:exists; then
+    echo "Database already exists..."
+    bundle exec rake db:migrate
+else
+    echo "Database does not exist..."
+    bundle exec rake db:create
+    bundle exec rake db:migrate
+    bundle exec rake db:seed
+fi
+
+echo "Start app..."
+bundle exec rails s -b 0.0.0.0 -p 3400
