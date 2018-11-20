@@ -1,5 +1,6 @@
-# General configuration
+# App configuration
 # SECRET_KEY_BASE=<rake secret>
+# RELATIVE_URL_ROOT=lti
 
 # Database configuration
 # DB_ADAPTER=[sqlite3|postgresql]
@@ -8,8 +9,8 @@
 # DB_USERNAME=<root>
 # DB_PASSWORD=
 
-# App configuration
-# RELATIVE_URL_ROOT=lti
-
 # LTI Apps configuration
 # DEFAULT_TOOL=default
+# APP_ROOMS_UID=
+# APP_ROOMS_SECRET=
+# APP_ROOMS_SITE=

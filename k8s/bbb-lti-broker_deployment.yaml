@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bbb-lti-broker-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bbb-lti-broker
+    spec:
+      containers:
+      - name: bbb-lti-broker
+        image: bigbluebutton/bbb-lti-broker:latest
+        ports:
+        - containerPort: 3400
+        env:
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: bbb-lti-broker-secrets
+                key: secret-key-base
