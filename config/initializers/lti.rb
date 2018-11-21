@@ -1,4 +1,4 @@
-LTI_CONFIG = YAML.load(File.read("#{Rails.root}/config/lti.yml"))[Rails.env] || {}
+LTI_CONFIG = YAML.load(File.read("#{Rails.root}/config/tool_providers.yml"))[Rails.env] || {}
 
 LTI_CONFIG[:tools].to_h.each do |key, props|
     props["uid"] = ENV['APP_ROOMS_UID'] if ENV['APP_ROOMS_UID']

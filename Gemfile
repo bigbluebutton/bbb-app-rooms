@@ -53,8 +53,15 @@ group :development, :test do
 end
 
 gem 'ims-lti'
-gem 'rails_lti2_provider', git: 'https://github.com/blindsidenetworks/rails_lti2_provider.git', :branch => "gatekeeper"
-#gem 'rails_lti2_provider', path: '../rails_lti2_provider'
+
+group :development do
+  #gem 'rails_lti2_provider', path: '../rails_lti2_provider'
+  gem 'rails_lti2_provider', git: 'https://github.com/blindsidenetworks/rails_lti2_provider.git', :branch => "gatekeeper"
+end
+
+group :test, :production do
+  gem 'rails_lti2_provider', git: 'https://github.com/blindsidenetworks/rails_lti2_provider.git', :branch => "gatekeeper"
+end
 
 gem 'react-rails', '1.5.0'
 

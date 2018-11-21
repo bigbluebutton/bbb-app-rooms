@@ -1,5 +1,5 @@
 class Api::V1::SsoController < Api::V1::BaseController
-  before_action :doorkeeper_authorize!
+  #before_action :doorkeeper_authorize!
 
   def validate_launch
     response = {token: params[:token], valid: token_valid?}

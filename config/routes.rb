@@ -10,6 +10,8 @@ BbbLtiBroker::Application.routes.draw do
     end
 
     use_doorkeeper do
+      # Include 'skip_controllers :application' for disabling controller for managing external applications
+      #   [http://localhost/lti/oauth/applications]
       skip_controllers :applications
     end
 
