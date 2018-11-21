@@ -5,8 +5,13 @@ ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
-# Use postgres as the database for Active Record
-gem "pg", "~> 0.21"
+
+# Include sqlite as the default database
+gem 'sqlite3', '~> 1.3'
+# Include postgres as the database for production
+group :production do
+  gem "pg", "~> 0.21"
+end
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -76,5 +81,12 @@ gem 'rest-client'
 
 gem 'omniauth'
 gem 'omniauth-oauth2'
-#gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
-gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+
+group :development do
+  #gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
+  gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+end
+
+group :test, :production do
+  gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+end

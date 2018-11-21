@@ -6,14 +6,23 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '3401:3401'
-    depends_on:
-      - db
+#    depends_on:
+#      - db
     env_file: .env
     working_dir: '/usr/src/app'
-    environment:
-      DB_HOST: 'db'
+#    environment:
+#      DB_HOST: 'db'
+#      DB_ADAPTER: 'postgresql'
     stdin_open: true
     tty: true
+    volumes:
+      - ./db/production:/usr/src/app/db/production
+      - ./log:/usr/src/app/log
+#    logging:
+#      driver: $LOG_DRIVER
+#      options:
+#        syslog-address: $LOG_ADDRESS
+#        tag: $LOG_TAG
   web:
     build:
       context: .
@@ -22,11 +31,11 @@ services:
       - '8401:8401'
     depends_on:
       - app
-  db:
-    image: postgres:9.5
-    volumes:
-      - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
-      - "db-data:/var/lib/postgresql/data"
-    restart: on-failure
-volumes:
-  db-data:
+#  db:
+#    image: postgres:9.5
+#    volumes:
+#      - "/var/run/postgres/postgres.sock:/var/run/postgres/postgres.sock"
+#      - "db-data:/var/lib/postgresql/data"
+#    restart: on-failure
+#volumes:
+#  db-data:

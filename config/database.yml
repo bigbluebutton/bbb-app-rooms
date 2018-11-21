@@ -1,21 +1,24 @@
 default: &default
-  adapter: postgresql
-  host: <%= ENV['DB_HOST'] || 'localhost' %>
-  username: <%= ENV['DB_USERNAME'] || 'postgres' %>
-  password: <%= ENV['DB_PASSWORD'] %>
-  encoding: unicode
+  adapter: sqlite3
   pool: 5
   timeout: 5000
   connect_timeout: 10
+  encoding: unicode
+  timeout: 5000
 
 development:
   <<: *default
-  database: bbb_app_rooms_development
+  database: db/development.sqlite3
 
 test:
   <<: *default
-  database: bbb_app_rooms_test
+  database: db/development.sqlite3
 
+# Use sqlite3 in production by default.
 production:
   <<: *default
-  database: bbb_app_rooms_production
+  adapter: <%= ENV['DB_ADAPTER'] || 'sqlite3' %>
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
+  database: <%= ENV['DB_NAME'] || 'db/production/production.sqlite3' %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
