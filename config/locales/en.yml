@@ -21,7 +21,8 @@
 
 en:
   ui:
-    lti1:          "Configure LTI 1 Provider"
+    lti1:          "LTI 1 Provider"
+    lti1config:    "Configure LTI 1 Provider"
     lti2:          "LTI 2 Config"
     copypaste:     "Paste this url into your tool consumer to register this tool:"
   apps:

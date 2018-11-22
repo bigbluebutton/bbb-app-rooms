@@ -28,7 +28,7 @@ class GuideController < ApplicationController
   def xml_config
     tc = IMS::LTI::Services::ToolConfig.new(:title => t("apps.#{params[:app]}.title"), :launch_url => blti_launch_url(:app => params[:app])) #"#{location}/#{year}/#{id}"
     tc.secure_launch_url = secure_url(tc.launch_url)
-    tc.icon = lti_icon(LTI_CONFIG[:tools][params[:app]]['icon'] || 'selector.png')
+    tc.icon = lti_icon('selector.png')
     tc.secure_icon = secure_url(tc.icon)
     tc.description = t("apps.#{params[:app]}.description")
 

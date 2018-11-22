@@ -1,10 +1,15 @@
 <div class="container">
   <form class="form-signin">
-    <h1 class="form-signin-heading"><%=  t("apps.#{params[:app]}.title") %></h1>
+    <h1 class="form-signin-heading"><%= t("apps.#{params[:app]}.title") %></h1>
     <br />
-    <h4><%= link_to t('ui.lti1'), xml_builder_url %></h4>
+    <h3><%= t('ui.lti1') %></h3>
+    <p><%= t('ui.copypaste') %></p>
+    <p><input type="text" onClick="this.select()" class="form-control" value="<%= xml_config_url %>" /></p>
+    <% if ENV['DEVELOPER_MODE_ENABLED'] == 'true' %>
+      <h4><%= link_to t('ui.lti1config'), xml_builder_url %></h4>
+    <% end %>
     <br />
-    <h4><%= t('ui.lti2') %></h4>
+    <h3><%= t('ui.lti2') %></h3>
     <p><%= t('ui.copypaste') %></p>
     <p><input type="text" onClick="this.select()" class="form-control" value="<%= tool_registration_url %>" /></p>
   </form>

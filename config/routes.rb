@@ -10,20 +10,18 @@ BbbLtiBroker::Application.routes.draw do
     end
 
     use_doorkeeper do
-      # Include 'skip_controllers :application' for disabling controller for managing external applications
-      #   [http://localhost/lti/oauth/applications]
-      skip_controllers :applications
+      # Including 'skip_controllers :application' disables the controller for managing external applications
+      #   [http://example.com/lti/oauth/applications]
+      skip_controllers :applications unless ENV['DEVELOPER_MODE_ENABLED'] == 'true'
     end
 
     post 'callback', to: 'collaboration_callbacks#confirm_url'
     delete 'callback', to: 'collaboration_callbacks#confirm_url'
 
     get ':app/guide', to: 'guide#home'
-
-    root to: 'guide#home', :app => ENV["DEFAULT_TOOL"] || 'default'
-
     get ':app/xml_config', to: 'guide#xml_config', as: :xml_config
-    get ':app/xml_builder', to: 'guide#xml_builder', as: :xml_builder
+    get ':app/xml_builder', to: 'guide#xml_builder', as: :xml_builder if ENV['DEVELOPER_MODE_ENABLED'] == 'true'
+    root to: 'guide#home', app: ENV['DEFAULT_LTI_TOOL'] || 'default'
 
     resources :tool_proxy, only: [:create]
 
@@ -39,6 +37,6 @@ BbbLtiBroker::Application.routes.draw do
 
     get  ':app/launch', to: 'apps#index', as: :lti_apps
 
-    mount RailsLti2Provider::Engine => "/rails_lti2_provider"
+    mount RailsLti2Provider::Engine => '/rails_lti2_provider'
   end
 end

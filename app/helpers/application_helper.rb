@@ -1,7 +1,9 @@
+# Helpers are used to generalize the app, but this one makes use of some external helpers
 require 'bbb_lti_broker/helpers'
-include BbbLtiBroker::Helpers
 
+# Helpers for the application
 module ApplicationHelper
+  include BbbLtiBroker::Helpers
 
   CAP_TO_DESCRIPTIONS = {
     'accountNavigation' => 'Account Navigation',
@@ -54,5 +56,4 @@ module ApplicationHelper
   def authorized_tools
     LTI_CONFIG[:tools].to_h
   end
-
 end

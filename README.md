@@ -42,8 +42,8 @@ For changing the root (this is mandatory if you run the Tool Provider in the sam
 for making use of the brokerage capability the external Application(s) has(ve) to be declared in the environment variable
 ```
  # LTI Broker configuration
- # It defines the root where the application is being mounted (e.g. lti for http://hostname/lti or lti/tools for http://hostname/lti/tools)
+ # It defines the root where the application is being mounted (e.g. lti for http://example.com/lti or lti/tools for http://example.com/lti/tools)
  # RELATIVE_URL_ROOT=lti
  # It defines the external application to be used by default as for serving LTI launch requests
- # DEFAULT_TOOL=default
+ # DEFAULT_LTI_TOOL=default
 ```
