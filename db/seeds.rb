@@ -11,7 +11,7 @@ unless RailsLti2Provider::Tool.find_by_uuid(default_key)
     LTI_CONFIG[:tools].to_h.each do |key, props|
         next if key == 'default'
         Doorkeeper::Application.create!(
-            :name => "#{key.capitalize} LTI",
+            :name => "#{key}",
             :uid => "#{props["uid"] || SecureRandom.hex(64)}",
             :secret => "#{props["secret"] || SecureRandom.hex(64)}",
             :redirect_uri => "#{props["site"] || 'http://localhost'}/apps/#{key}/auth/bbbltibroker/callback"

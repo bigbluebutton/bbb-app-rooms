@@ -18,6 +18,7 @@ BbbLtiBroker::Application.routes.draw do
     post 'callback', to: 'collaboration_callbacks#confirm_url'
     delete 'callback', to: 'collaboration_callbacks#confirm_url'
 
+    get ':app', to: 'guide#home'
     get ':app/guide', to: 'guide#home'
     get ':app/xml_config', to: 'guide#xml_config', as: :xml_config
     get ':app/xml_builder', to: 'guide#xml_builder', as: :xml_builder if ENV['DEVELOPER_MODE_ENABLED'] == 'true'

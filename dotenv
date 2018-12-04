@@ -9,7 +9,7 @@
 # DB_PASSWORD=
 
 # App configuration
-# RELATIVE_URL_ROOT=
+# RELATIVE_URL_ROOT=lti
 
 # There are some functions that can be enabled when setting the server into developer mode.
 # This includes:

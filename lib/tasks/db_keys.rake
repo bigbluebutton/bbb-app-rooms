@@ -11,7 +11,7 @@ namespace :db do
         blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
-          return
+          exit 1
         end
         blti_keys.each do |key, secret|
           puts "Adding '#{key}=#{secret}'"
@@ -25,8 +25,6 @@ namespace :db do
       rescue => exception
         puts exception.backtrace
         exit 1
-      else
-        exit 0
       end
     end
 
@@ -38,7 +36,7 @@ namespace :db do
         blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
-          return
+          exit 1
         end
         puts "#{blti_keys}"
         blti_keys.each do |key, secret|
@@ -53,8 +51,6 @@ namespace :db do
       rescue => exception
         puts exception.backtrace
         exit 1
-      else
-        exit 0
       end
     end
 
@@ -66,7 +62,7 @@ namespace :db do
         blti_keys = BbbLtiBroker::Helpers.string_to_hash(args[:keys] || '')
         if blti_keys.empty?
           puts "No keys provided"
-          return
+          exit 1
         end
         puts "#{blti_keys}"
         blti_keys.each do |key, secret|
@@ -81,8 +77,6 @@ namespace :db do
       rescue => exception
         puts exception.backtrace
         exit 1
-      else
-        exit 0
       end
     end
 
@@ -96,8 +90,6 @@ namespace :db do
       rescue => exception
         puts exception.backtrace
         exit 1
-      else
-        exit 0
       end
     end
 
@@ -113,8 +105,6 @@ namespace :db do
       rescue => exception
         puts exception.backtrace
         exit 1
-      else
-        exit 0
       end
     end
 

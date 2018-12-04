@@ -49,3 +49,5 @@ bower.json
 node_modules/
 
 public
+
+config/tool_providers.yml
