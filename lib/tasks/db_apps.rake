@@ -142,6 +142,5 @@ namespace :db do
         exit 1
       end
     end
-
   end
 end

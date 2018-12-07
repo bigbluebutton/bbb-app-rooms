@@ -28,7 +28,7 @@ class GuideController < ApplicationController
   def xml_config
     tc = IMS::LTI::Services::ToolConfig.new(:title => t("apps.#{params[:app]}.title"), :launch_url => blti_launch_url(:app => params[:app])) #"#{location}/#{year}/#{id}"
     tc.secure_launch_url = secure_url(tc.launch_url)
-    tc.icon = lti_icon('selector.png')
+    tc.icon = lti_icon(params[:app])
     tc.secure_icon = secure_url(tc.icon)
     tc.description = t("apps.#{params[:app]}.description")
 
@@ -48,6 +48,20 @@ class GuideController < ApplicationController
   end
 
   private
+
+  def lti_icon(app)
+    return view_context.image_url('selector.png') if app == 'default'
+    app = Doorkeeper::Application.where(name: app).first
+    app1 = app.attributes.select { |key, value| ['name', 'uid', 'secret', 'redirect_uri'].include?(key) }
+    begin
+      uri = URI.parse(app1['redirect_uri'])
+      path_base = uri.path.sub('auth/bbbltibroker/callback', app1['name'])
+      "http://#{uri.host}#{path_base + '/assets/icon.svg'}"
+    rescue
+      view_context.image_url('selector.png')
+    end
+  end
+
 
   def create_placement(tc, placement_key)
     message_type = request.query_parameters["#{placement_key}_message_type"] || :basic_lti_request

@@ -54,6 +54,6 @@ module ApplicationHelper
   end
 
   def authorized_tools
-    LTI_CONFIG[:tools].to_h
+    Doorkeeper::Application.all.select("id, name, uid, secret, redirect_uri").to_a.map { |app| [app.name, app.attributes] }.to_h
   end
 end

@@ -34,8 +34,7 @@ class ToolProxyController < ApplicationController
   private
   def product_instance
     product_instance = IMS::LTI::Models::ProductInstance.new.from_json(File.read(File.join(Rails.root, 'config', 'product_instance.json')))
-
-    product_instance.guid = LTI_CONFIG[:product_instance_guid] || 'invalid'
+    product_instance.guid = ENV['PRODUCT_INSTANCE_GUID'] || 'invalid'
     product_instance.product_info.product_version = '2.x'
     product_instance
   end
@@ -55,7 +54,6 @@ class ToolProxyController < ApplicationController
       }
     )
     resource_handler.ext_placements = placements if placements.present?
-
 
     IMS::LTI::Models::ToolProfile.new(
       lti_version: 'LTI-2p0',

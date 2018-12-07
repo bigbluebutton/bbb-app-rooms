@@ -1,6 +1,5 @@
 module BbbLtiBroker
   module Helpers
-
     def string_to_hash(str)
       Hash[
         str.split(',').map do |pair|
@@ -14,15 +13,6 @@ module BbbLtiBroker
       uri = URI.parse(url)
       uri.scheme = "https"
       uri.to_s
-    end
-
-    def lti_icon(icon)
-      begin
-        uri = URI.parse(url)
-        uri.to_s
-      rescue
-        view_context.image_url(icon)
-      end
     end
   end
 end

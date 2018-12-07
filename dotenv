@@ -1,5 +1,6 @@
 # General configuration
 # SECRET_KEY_BASE=<rake secret>
+# PRODUCT_INSTANCE_GUID=<rake uuid>
 
 # Database configuration
 # DB_ADAPTER=[sqlite3|postgresql]
