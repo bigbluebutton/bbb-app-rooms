@@ -50,7 +50,7 @@ class GuideController < ApplicationController
   private
 
   def lti_icon(app)
-    return view_context.image_url('selector.png') if app == 'default'
+    return view_context.image_url('icon.svg') if app == 'default'
     app = Doorkeeper::Application.where(name: app).first
     app1 = app.attributes.select { |key, value| ['name', 'uid', 'secret', 'redirect_uri'].include?(key) }
     begin
@@ -58,7 +58,7 @@ class GuideController < ApplicationController
       path_base = uri.path.sub('auth/bbbltibroker/callback', app1['name'])
       "http://#{uri.host}#{path_base + '/assets/icon.svg'}"
     rescue
-      view_context.image_url('selector.png')
+      view_context.image_url('icon.svg')
     end
   end
 
