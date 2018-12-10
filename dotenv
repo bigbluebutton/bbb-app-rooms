@@ -12,11 +12,12 @@
 # App configuration
 # RELATIVE_URL_ROOT=lti
 
+# LTI tools configuration
+# DEFAULT_LTI_TOOL=default
+
 # There are some functions that can be enabled when setting the server into developer mode.
 # This includes:
 #   - A LTI App can be used by default for testing purposes.
 #   - A UI for managing OAuth2 applications is enabled [http://example.com/lti/oauth/applications].
 #   -
 # DEVELOPER_MODE_ENABLED=true
-
-# DEFAULT_LTI_TOOL=default
