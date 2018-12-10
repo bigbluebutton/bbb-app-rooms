@@ -7,9 +7,12 @@ class AppsController < ApplicationController
 
   private
 
-    def app_url
-      root = authorized_tools[params[:app]]["root"]
-      "#{root ? '/' + root : ''}/#{params[:app]}/launch?#{params.except(:app, :controller, :action).to_query}"
-    end
+  def app_url
+    app = lti_app(params[:app])
+    uri = URI.parse(app['redirect_uri'])
+    root = uri.path.sub("#{app['name']}/auth/bbbltibroker/callback", '')
+    root = root.gsub('/', '')
+    "#{root ? '/' + root : ''}/#{params[:app]}/launch?#{params.except(:app, :controller, :action).to_query}"
+  end
 
 end

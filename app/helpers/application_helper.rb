@@ -53,7 +53,28 @@ module ApplicationHelper
     return tool.shared_secret if tool
   end
 
+  def lti_app(name)
+    app = Doorkeeper::Application.where(name: name).first
+    app.attributes.select { |key, value| ['name', 'uid', 'secret', 'redirect_uri'].include?(key) }
+  end
+
+  def lti_icon(app_name)
+    uri = URI.parse(view_context.image_url('icon.svg'))
+    path_base = uri.path.sub('assets/icon.svg', '')
+    unless app_name == 'default'
+      begin
+        app = lti_app(app_name)
+        uri = URI.parse(app['redirect_uri'])
+        path_base = uri.path.sub('auth/bbbltibroker/callback', app_name) + '/'
+      rescue
+      end
+    end
+    "http://#{uri.host}#{path_base + 'assets/icon.svg'}"
+  end
+
   def authorized_tools
-    Doorkeeper::Application.all.select("id, name, uid, secret, redirect_uri").to_a.map { |app| [app.name, app.attributes] }.to_h
+    tools = Doorkeeper::Application.all.select("id, name, uid, secret, redirect_uri").to_a.map { |app| [app.name, app.attributes] }.to_h
+    tools['default'] = {}
+    tools
   end
 end
