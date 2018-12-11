@@ -10,8 +10,8 @@ Rails.application.routes.draw do
     end
 
     # Handles recording management.
-    scope 'rooms/:id/recording' do
-      post '/publish', :to => 'rooms#recording_publish', as: :recording_join
+    scope 'rooms/:id/recording/:record_id' do
+      post '/publish', :to => 'rooms#recording_publish', as: :recording_publish
       post '/unpublish', :to => 'rooms#recording_unpublish', as: :recording_unpublish
       post '/protect', :to => 'rooms#recording_protect', as: :recording_protect
       post '/unprotect', :to => 'rooms#recording_unprotect', as: :recording_unprotect

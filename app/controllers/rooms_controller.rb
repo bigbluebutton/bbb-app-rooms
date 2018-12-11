@@ -105,6 +105,24 @@ class RoomsController < ApplicationController
     end
   end
 
+  # POST /rooms/:id/recording/:record_id/unpublish
+  def recording_unpublish
+    unpublish_recording(params[:record_id])
+    redirect_to room_path(params[:id])
+  end
+
+  # POST /rooms/:id/recording/:record_id/publish
+  def recording_publish
+    publish_recording(params[:record_id])
+    redirect_to room_path(params[:id])
+  end
+
+  # POST /rooms/:id/recording/:record_id/delete
+  def recording_delete
+    delete_recording(params[:record_id])
+    redirect_to room_path(params[:id])
+  end
+
   private
 
     def set_error(error, status)

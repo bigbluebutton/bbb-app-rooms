@@ -25,4 +25,6 @@
 
 <%= button_to t('default.room.join'), meeting_join_path(@room), :class => "btn btn-primary", :type => "button", form: {target: '_blank'}  %>
 
+<%= render "shared/sessions", recordings: recordings, only_public: false %>
+
 </div>
