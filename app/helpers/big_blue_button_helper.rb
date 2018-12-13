@@ -1,7 +1,7 @@
 module BigBlueButtonHelper
 
-  BIGBLUEBUTTON_ENDPOINT = "http://test-install.blindsidenetworks.com/bigbluebutton/"
-  BIGBLUEBUTTON_SECRET = "8cd8ef52e8e101574e400365b55e11a6"
+  BIGBLUEBUTTON_ENDPOINT = "http://10.39.81.96/bigbluebutton/" #"http://test-install.blindsidenetworks.com/bigbluebutton/"
+  BIGBLUEBUTTON_SECRET = "be2b15dce0e012e6dfea2b66e5b2c95a" #"8cd8ef52e8e101574e400365b55e11a6"
   BIGBLUEBUTTON_MODERATOR_ROLES = "Instructor,Faculty,Teacher,Mentor,Administrator,Admin"
 
   def bigbluebutton_endpoint
