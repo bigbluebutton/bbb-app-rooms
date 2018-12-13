@@ -14,7 +14,7 @@
 %>
 
 <tr>
-  <td>
+  <td class="text-left">
     <% if recording[:published] %>
       <% recording[:playbacks].each do |p| %>
         <%= link_to p[:type].capitalize, p[:url], class: "btn btn-sm btn-primary", target: "_blank" %>
@@ -32,9 +32,9 @@
       </text>
     </div>
   </td>
-  <td>
+  <td class="text-left">
     <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
-      <text id='recording-description'>
+      <text id='recording-description' class="text-wrap">
         <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
       </text>
     </div>
