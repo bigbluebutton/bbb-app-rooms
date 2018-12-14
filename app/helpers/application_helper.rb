@@ -8,10 +8,6 @@ module ApplicationHelper
     "#{ENV['OMNIAUTH_BBBLTIBROKER_SITE']}#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
   end
 
-  def lti_broker_api_v1_sso_url
-    "#{lti_broker_url}/api/v1/sso"
-  end
-
   def omniauth_client_token
     client_id = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
     client_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET']

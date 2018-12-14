@@ -143,7 +143,7 @@ class RoomsController < ApplicationController
 
     def set_launch_room
       @error = nil
-      sso = JSON.parse(RestClient.get("#{lti_broker_api_v1_sso_url}/launches/#{params['token']}", {'Authorization' => "Bearer #{omniauth_client_token}"}))
+      sso = JSON.parse(RestClient.get("#{params['sso']}", {'Authorization' => "Bearer #{omniauth_client_token}"}))
       # Exit with error if sso is not valid
       set_error('forbidden', :forbidden) and return unless sso["valid"]
       # Continue through happy path
