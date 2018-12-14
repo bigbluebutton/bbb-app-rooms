@@ -31,10 +31,12 @@ class MessageController < ApplicationController
 
   def basic_lti_launch_request
     process_message
-    # Redirect to external application if configured
-    Rails.cache.write(params[:oauth_nonce], {message: @message, oauth: {consumer_key: params[:oauth_consumer_key], timestamp: params[:oauth_timestamp]}})
-    session[:user_id] = @current_user.id
-    redirect_to lti_apps_path(params[:app], token: params[:oauth_nonce], handler: resource_handler) unless params[:app] == 'default'
+    unless params[:app] == 'default'
+      # Redirect to external application if configured
+      Rails.cache.write(params[:oauth_nonce], {message: @message, oauth: {consumer_key: params[:oauth_consumer_key], timestamp: params[:oauth_timestamp]}})
+      session[:user_id] = @current_user.id
+      redirect_to lti_apps_path(params[:app], sso: api_v1_sso_launch_url(params[:oauth_nonce]), handler: resource_handler)
+    end
   end
 
   def content_item_selection

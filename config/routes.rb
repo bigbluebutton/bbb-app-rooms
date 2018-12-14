@@ -3,7 +3,7 @@ BbbLtiBroker::Application.routes.draw do
   scope ENV['RELATIVE_URL_ROOT'] || '/' do
     namespace :api do
       namespace :v1 do
-        get 'sso/launches/:token', to: 'sso#validate_launch', as: :sso_launches
+        get 'sso/launch/:token', to: 'sso#validate_launch', as: :sso_launch
         get 'users/:id', to: 'users#show', as: :users
         get 'user', to: 'users#show', as: :user
       end
