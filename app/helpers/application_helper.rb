@@ -1,26 +1,33 @@
 module ApplicationHelper
-
   def omniauth_authorize_path(provider)
-    "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/auth/#{provider.to_s}"
+    path = omniauth_callback_path(provider)
+    path.slice(0..(path.index('/callback') - 1))
   end
 
-  def lti_broker_url
-    "#{ENV['OMNIAUTH_BBBLTIBROKER_SITE']}#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
+  def omniauth_authorize_url(provider)
+    url = omniauth_callback_url(provider)
+    url.slice(0..(url.index('/callback') - 1))
   end
 
-  def omniauth_client_token
-    client_id = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
-    client_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET']
-    response = RestClient.post("#{lti_broker_url}/oauth/token", {grant_type: 'client_credentials', client_id: client_id, client_secret: client_secret})
+  def omniauth_bbbltibroker_url(url)
+    url.slice(0..(url.index('/api') - 1))
+  end
+
+  def omniauth_client_token(lti_broker_url)
+    oauth_options = {
+      grant_type: 'client_credentials',
+      client_id: Rails.configuration.omniauth_bbbltibroker_key,
+      client_secret: Rails.configuration.omniauth_bbbltibroker_secret
+    }
+    response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
     JSON.parse(response)["access_token"]
   end
 
   def omniauth_provider?(code)
     provider = code.to_s
     OmniAuth::strategies.each do |strategy|
-      return true if provider.downcase == strategy.to_s.demodulize.downcase and ENV["OMNIAUTH_#{provider.upcase}_KEY"] and ENV["OMNIAUTH_#{provider.upcase}_SECRET"]
+      return true if provider.downcase == strategy.to_s.demodulize.downcase
     end
     false
   end
-
 end
