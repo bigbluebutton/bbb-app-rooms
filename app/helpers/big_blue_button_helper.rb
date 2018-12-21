@@ -99,6 +99,12 @@ module BigBlueButtonHelper
     bbb.publish_recordings(record_id, false)
   end
 
+  # Update recording for a room.
+  def update_recording(record_id, meta)
+    meta[:recordID] = record_id
+    bbb.send_api_request("updateRecordings", meta)
+  end
+
   private
 
   # Sets a BigBlueButtonApi object for interacting with the API.

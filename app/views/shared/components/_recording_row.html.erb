@@ -30,13 +30,15 @@
           <%= recording[:name] %>
         <% end %>
       </text>
+      <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
     </div>
   </td>
   <td class="text-left">
-    <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
-      <text id='recording-description' class="text-wrap">
+    <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+      <text id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
       </text>
+      <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
     </div>
   </td>
   <td class="text-left">

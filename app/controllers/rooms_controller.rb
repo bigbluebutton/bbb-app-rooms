@@ -117,6 +117,16 @@ class RoomsController < ApplicationController
     redirect_to room_path(params[:id])
   end
 
+  # POST /rooms/:id/recording/:record_id/update
+  def recording_update
+    if params[:setting] == "rename_recording"
+      update_recording(params[:record_id], "meta_name" => params[:record_name])
+    elsif params[:setting] == "describe_recording"
+      update_recording(params[:record_id], "meta_description" => params[:record_description])
+    end
+    redirect_to room_path(params[:id])
+  end
+
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(params[:record_id])
