@@ -1,114 +1,61 @@
-version: 2.0
-
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
 jobs:
-  checkout_code:
+  build:
     docker:
-      - image: circleci/ruby:2.5.1-node-browsers
+      # specify the version you desire here
+       - image: circleci/ruby:2.5.1-node-browsers
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
     working_directory: ~/repo
+
     steps:
       - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
       - save_cache:
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/repo
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
-  bundle_dependencies:
-    docker:
-      - image: circleci/ruby:2.5.1-node-browsers
-    working_directory: ~/repo
-    steps:
-      - restore_cache:
-          keys:
-            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-      - run:  bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - save_cache:
-          key: v1-bundle-{{ checksum "Gemfile.lock" }}
-          paths:
-            - ~/repo/vendor/bundle
+      # Database setup
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
 
-  rake_test:
-    docker:
-      - image: circleci/ruby:2.5.1-node-browsers
-      - image: circleci/postgres:9.5-alpine
-    working_directory: ~/repo
-    steps:
-      - restore_cache:
-          keys:
-            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-      - run: bundle install --jobs=4 --retry=3 --path vendor/bundle
+      # run tests!
       - run:
-          name: Wait for DB
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
-      - run:
-          name: DB setup
-          command: bundle exec rake db:setup
-      - run:
-          name: Run tests
-          environment:
-              DATABASE_URL: "postgres://postgres@localhost:5432/bbb_app_rooms_test"
-          command: bundle exec rake
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
 
-  precompile_assets:
-    docker:
-      - image: circleci/ruby:2.5.1-node-browsers
-    working_directory: ~/repo
-    steps:
-      - restore_cache:
-          keys:
-            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-      - run: bundle --path vendor/bundle
-      - run:
-          name: Precompile assets
-          command: bundle exec rake assets:precompile
-      - save_cache:
-          key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/repo/public/assets
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
 
-  build_image:
-    machine:
-        enabled: true
-    working_directory: ~/repo
-    environment:
-      - HEROKU_APP: still-shelf-38337
-    steps:
-      - restore_cache:
-          keys:
-            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-      - restore_cache:
-          keys:
-            - v1-bundle-{{ checksum "Gemfile.lock" }}
-      - restore_cache:
-          keys:
-            - v1-assets-{{ .Environment.CIRCLE_SHA1 }}
-      - checkout
-      - run:
-          name: Deploy Master to DockerHub
-          command: ./scripts/build_image.sh "$CIRCLE_REPOSITORY_URL" "$CIRCLE_BRANCH"
-workflows:
-  version: 2
-  build-and-deploy:
-    jobs:
-      - checkout_code
-      - bundle_dependencies:
-          requires:
-            - checkout_code
-      - rake_test:
-          requires:
-            - bundle_dependencies
-      - precompile_assets:
-          requires:
-            - bundle_dependencies
-      - build_image:
-          requires:
-            - rake_test
-            - precompile_assets
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
