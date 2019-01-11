@@ -59,3 +59,23 @@ jobs:
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+
+  precompile_assets:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+    working_directory: ~/repo
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
+      - run:
+          name: Precompile assets
+          command: bundle exec rake assets:precompile
+      - save_cache:
+          key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo/public/assets
