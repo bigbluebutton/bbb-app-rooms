@@ -86,6 +86,26 @@ jobs:
           paths:
             - ~/repo/public/assets
 
+  build_image:
+    machine:
+        enabled: true
+    working_directory: ~/repo
+    environment:
+      - HEROKU_APP: still-shelf-38337
+    steps:
+      - restore_cache:
+          keys:
+            - v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+      - restore_cache:
+          keys:
+            - v1-bundle-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          keys:
+            - v1-assets-{{ .Environment.CIRCLE_SHA1 }}
+      - checkout
+      - run:
+          name: Deploy Master to DockerHub
+          command: ./scripts/build_image.sh "$CIRCLE_REPOSITORY_URL" "$CIRCLE_BRANCH"
 
 
 workflows:
@@ -96,3 +116,6 @@ workflows:
       - precompile_assets:
           requires:
             - build
+      - build_image:
+          requires:
+            - precompile_assets
