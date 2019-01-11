@@ -79,3 +79,12 @@ jobs:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo/public/assets
+
+workflows:
+  version: 2
+  build-and-publish:
+    jobs:
+      - build
+      - precompile_assets:
+          requires:
+            - build
