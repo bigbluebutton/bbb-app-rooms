@@ -111,15 +111,19 @@ jobs:
 workflows:
   version: 2
   build-and-publish:
-    filters:
-      branches:
-        only:
-          - master
     jobs:
       - build
       - precompile_assets:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - build
       - build_image:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - precompile_assets
