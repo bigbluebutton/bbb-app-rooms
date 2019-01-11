@@ -60,6 +60,12 @@ jobs:
           path: /tmp/test-results
           destination: test-results
 
+      # save cache
+      - save_cache:
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+
   precompile_assets:
     docker:
       - image: circleci/ruby:2.5.1-node-browsers
@@ -79,6 +85,8 @@ jobs:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo/public/assets
+
+
 
 workflows:
   version: 2
