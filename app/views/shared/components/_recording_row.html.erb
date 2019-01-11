@@ -1,0 +1,81 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+
+<tr>
+  <td class="text-left">
+    <% if recording[:published] %>
+      <% recording[:playbacks].each do |p| %>
+        <%= link_to p[:type].capitalize, p[:url], class: "btn btn-sm btn-primary", target: "_blank" %>
+      <% end %>
+    <% end %>
+  </td>
+  <td>
+    <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+      <text id='recording-text'>
+        <% if recording[:metadata][:name] %>
+          <%= recording[:metadata][:name] %>
+        <% else %>
+          <%= recording[:name] %>
+        <% end %>
+      </text>
+      <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+    </div>
+  </td>
+  <td class="text-left">
+    <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+      <text id='recording-description-text' class="text-wrap">
+        <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
+      </text>
+      <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+    </div>
+  </td>
+  <td class="text-left">
+    <% p = recording[:playbacks].find do |p| p.key?(:preview) end %>
+    <% if p %>
+      <% Array.wrap(p[:preview][:images][:image]).each do |img| %>
+        <%= image_tag(img[:content].strip, class: "px-1") %>
+      <% end %>
+    <% end %>
+  </td>
+  <td class="text-left">
+    <div class="small text-muted">
+      <%= recording_date(recording[:startTime]) %>
+    </div>
+  </td>
+  <td class="text-left">
+    <%= recording_length(recording[:playbacks]) %>
+  </td>
+  <td class="text-center">
+    <div class="item-action dropdown">
+      <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
+        <i class="fas fa-ellipsis-v px-4"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <% if recording[:state] == "published" %>
+          <%= button_to recording_unpublish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
+            <i class="dropdown-icon fas fa-book"></i> <%= t("unpublish") %>
+          <% end %>
+        <% elsif recording[:state] == "unpublished" %>
+          <%= button_to recording_publish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
+            <i class="dropdown-icon fas fa-book-open"></i> <%= t("publish") %>
+          <% end %>
+        <% end %>
+        <%= button_to recording_delete_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
+          <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("delete") %>
+        <% end %>
+      </div>
+    </div>
+  </td>
+</tr>
