@@ -1,17 +1,14 @@
-# App configuration
+## App configuration
 # SECRET_KEY_BASE=<rake secret>
+
 # RELATIVE_URL_ROOT=apps/rooms
 
-# Database configuration
-# DB_ADAPTER=<postgresql|sqlite3>
-# DB_HOST=
-# DB_USERNAME=
+## Database configuration
+# DB_ADAPTER=[sqlite3|postgresql]
+# DB_HOST=<localhost>
+# DB_NAME=
+# DB_USERNAME=<root>
 # DB_PASSWORD=
-# DB_ENCODING=5
-# DB_POOL=5
-# DB_TIMEOUT=5000
-# DB_CONNECT_TIMEOUT=10
-# DB_DATABASE=bbb_app_rooms_production
 
 # BigBlueButton configuration
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
