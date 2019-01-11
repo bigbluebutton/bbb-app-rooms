@@ -10,7 +10,7 @@ gem 'rails', '~> 5.2.0'
 gem 'sqlite3', '~> 1.3'
 # Include postgres as the database for production
 group :production do
-  gem "pg", "~> 0.21"
+  gem "pg", "~> 1.0"
 end
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
@@ -45,6 +45,8 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
+  gem 'rspec'
+  gem 'rspec_junit_formatter'
 end
 
 group :development do
@@ -82,11 +84,5 @@ gem 'rest-client'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 
-group :development do
-  #gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
-  gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
-end
-
-group :test, :production do
-  gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
-end
+#gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'

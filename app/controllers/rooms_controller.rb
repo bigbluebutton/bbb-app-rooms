@@ -146,7 +146,7 @@ class RoomsController < ApplicationController
       return if session[:uid]
       if params['action'] == 'launch'
         cookies['launch_params'] = { :value => params.except(:app, :controller, :action).to_json, :expires => 30.minutes.from_now }
-        redirect_to omniauth_authorize_path(:bbbltibroker) and return
+        redirect_to omniauth_authorize_url(:bbbltibroker) and return
       end
       redirect_to errors_path(401)
     end
@@ -171,7 +171,8 @@ class RoomsController < ApplicationController
 
     def set_launch_room
       @error = nil
-      sso = JSON.parse(RestClient.get("#{lti_broker_api_v1_sso_url}/launches/#{params['token']}", {'Authorization' => "Bearer #{omniauth_client_token}"}))
+      lti_broker_url = omniauth_bbbltibroker_url(params['sso'])
+      sso = JSON.parse(RestClient.get("#{params['sso']}", {'Authorization' => "Bearer #{omniauth_client_token(lti_broker_url)}"}))
       # Exit with error if sso is not valid
       set_error('forbidden', :forbidden) and return unless sso["valid"]
       # Continue through happy path

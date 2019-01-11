@@ -16,5 +16,4 @@ class Room < ApplicationRecord
     end while password == reference
     password
   end
-
 end
