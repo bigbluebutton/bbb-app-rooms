@@ -68,7 +68,9 @@ jobs:
 
   precompile_assets:
     branches:
-      only master
+      only:
+        - master
+
     docker:
       - image: circleci/ruby:2.5.1-node-browsers
     working_directory: ~/repo
