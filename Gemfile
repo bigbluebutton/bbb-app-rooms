@@ -73,7 +73,7 @@ gem 'json'
 
 gem 'bigbluebutton-api-ruby'
 
-gem 'bootstrap-sass', '~> 3.3.7'
+gem 'bootstrap-sass', '~> 3.4.1'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'font-awesome-rails'
