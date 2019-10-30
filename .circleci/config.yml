@@ -47,6 +47,8 @@ jobs:
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run:
           name: DB setup
+          environment:
+              DATABASE_URL: "postgres://postgres@localhost:5432/bbb_lti_broker_test"
           command: bundle exec rake db:setup
       - run:
           name: Run tests
@@ -93,7 +95,8 @@ jobs:
       - checkout
       - run:
           name: Deploy Master to DockerHub
-          command: ./scripts/build_image.sh "$CIRCLE_REPOSITORY_URL" "$CIRCLE_BRANCH"
+          command: ./scripts/image_build.sh "$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" "$CIRCLE_BRANCH"
+
 workflows:
   version: 2
   build-and-deploy:
