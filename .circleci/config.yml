@@ -105,8 +105,7 @@ jobs:
       - checkout
       - run:
           name: Deploy Master to DockerHub
-          command: ./scripts/build_image.sh "$CIRCLE_REPOSITORY_URL" "$CIRCLE_BRANCH"
-
+          command: ./scripts/image_build.sh "$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" "$CIRCLE_BRANCH"
 
 workflows:
   version: 2
