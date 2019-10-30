@@ -17,6 +17,6 @@ ADD . $APP_HOME
 RUN bundle install --without development test doc --deployment --clean
 
 # Precompile assets
-#    assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up threough .env
+#    assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up through .env
 
-CMD /usr/src/app/scripts/start.sh
+CMD ["scripts/start.sh"]

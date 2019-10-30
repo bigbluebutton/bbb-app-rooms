@@ -64,12 +64,11 @@ module ApplicationHelper
     unless app_name == 'default'
       begin
         app = lti_app(app_name)
-        uri = URI.parse(app['redirect_uri'])
-        path_base = uri.path.sub('auth/bbbltibroker/callback', app_name) + '/'
+        baseurl = URI.join(app['redirect_uri'], '/').to_s
       rescue
       end
     end
-    "http://#{uri.host}#{path_base + 'assets/icon.svg'}"
+    "#{baseurl}assets/icon.svg"
   end
 
   def authorized_tools

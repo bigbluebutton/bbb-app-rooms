@@ -9,10 +9,8 @@ class AppsController < ApplicationController
 
   def app_url
     app = lti_app(params[:app])
-    uri = URI.parse(app['redirect_uri'])
-    root = uri.path.sub("#{app['name']}/auth/bbbltibroker/callback", '')
-    root = root.gsub('/', '')
-    "#{root ? '/' + root : ''}/#{params[:app]}/launch?#{params.except(:app, :controller, :action).to_query}"
+    baseurl = URI.join(app['redirect_uri'], '/').to_s
+    "#{baseurl}launch?#{params.except(:app, :controller, :action).to_query}"
   end
 
 end
