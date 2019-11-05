@@ -1,5 +1,5 @@
 # Load the Rails application.
-require File.expand_path('../application', __FILE__)
-
+require_relative 'application'
+OAUTH_10_SUPPORT = true
 # Initialize the Rails application.
-BbbLtiBroker::Application.initialize!
+Rails.application.initialize!

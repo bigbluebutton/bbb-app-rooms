@@ -1,14 +1,14 @@
-ContentItemBuilder.ContentItemForm = React.createClass({
+ContentItemBuilder.ContentItemForm = createReactClass({
 
   propTypes: {
-    data: React.PropTypes.string,
-    returnUrl: React.PropTypes.string,
-    ltiVersion: React.PropTypes.string,
-    contentItems: React.PropTypes.object,
-    ltiMsg: React.PropTypes.string,
-    ltiLog: React.PropTypes.string,
-    ltiErrorMsg: React.PropTypes.string,
-    LtiErrorLog: React.PropTypes.string
+    data: PropTypes.string,
+    returnUrl: PropTypes.string,
+    ltiVersion: PropTypes.string,
+    contentItems: PropTypes.object,
+    ltiMsg: PropTypes.string,
+    ltiLog: PropTypes.string,
+    ltiErrorMsg: PropTypes.string,
+    LtiErrorLog: PropTypes.string
   },
 
 
@@ -48,7 +48,7 @@ ContentItemBuilder.ContentItemForm = React.createClass({
 
   //called from parent via ref attribute
   submit: function() {
-    React.findDOMNode(this.refs.contentItemForm).submit();
+    ReactDOM.findDOMNode(this.refs.contentItemForm).submit();
   }
 
 });

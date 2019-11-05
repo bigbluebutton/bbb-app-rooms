@@ -1,14 +1,18 @@
-XmlBuilder.CustomParams.Row = React.createClass({
+XmlBuilder.CustomParams.Row = createReactClass({
 
   propTypes: {
-    param_name: React.PropTypes.string,
-    param_value: React.PropTypes.string,
-    index: React.PropTypes.number.isRequired,
-    onRowDelete: React.PropTypes.func.isRequired
+    param_name: PropTypes.string,
+    param_value: PropTypes.string,
+    index: PropTypes.number.isRequired,
+    onRowDelete: PropTypes.func.isRequired
   },
 
-  removeHandler: function () {
-    var index = React.findDOMNode(this.refs.index).value.trim();
+  removeHandler: function (e) {
+    // prevent refreshing page
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
+    var index = ReactDOM.findDOMNode(this.refs.index).value.trim();
     this.props.onRowDelete(Number(index));
   },
 

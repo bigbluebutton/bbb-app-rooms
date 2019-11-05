@@ -1,16 +1,16 @@
-var ContentItemBuilder = React.createClass({
+var ContentItemBuilder = createReactClass({
 
   propTypes: {
-    data: React.PropTypes.string,
-    returnUrl: React.PropTypes.string,
-    ltiVersion: React.PropTypes.string,
-    ltiLaunchUrl: React.PropTypes.string,
-    ltiUpdateUrl: React.PropTypes.string,
-    textFileUrl: React.PropTypes.string,
-    videoUrl: React.PropTypes.string,
-    ccFileUrl: React.PropTypes.string,
-    documentTargets: React.PropTypes.array,
-    mediaTypes: React.PropTypes.array
+    data: PropTypes.string,
+    returnUrl: PropTypes.string,
+    ltiVersion: PropTypes.string,
+    ltiLaunchUrl: PropTypes.string,
+    ltiUpdateUrl: PropTypes.string,
+    textFileUrl: PropTypes.string,
+    videoUrl: PropTypes.string,
+    ccFileUrl: PropTypes.string,
+    documentTargets: PropTypes.array,
+    mediaTypes: PropTypes.array
   },
 
   getInitialState: function () {

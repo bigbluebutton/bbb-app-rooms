@@ -1,22 +1,26 @@
-ContentItemBuilder.ContentItems = React.createClass({
+ContentItemBuilder.ContentItems = createReactClass({
 
   propTypes: {
-    initialContentItems: React.PropTypes.array,
-    ltiLaunchUrl: React.PropTypes.string,
-    ltiUpdateUrl: React.PropTypes.string,
-    textFileUrl: React.PropTypes.string,
-    videoUrl: React.PropTypes.string,
-    ccFileUrl: React.PropTypes.string,
-    documentTargets: React.PropTypes.array,
-    mediaTypes: React.PropTypes.array,
-    updateContentItems: React.PropTypes.func.isRequired
+    initialContentItems: PropTypes.array,
+    ltiLaunchUrl: PropTypes.string,
+    ltiUpdateUrl: PropTypes.string,
+    textFileUrl: PropTypes.string,
+    videoUrl: PropTypes.string,
+    ccFileUrl: PropTypes.string,
+    documentTargets: PropTypes.array,
+    mediaTypes: PropTypes.array,
+    updateContentItems: PropTypes.func.isRequired
   },
 
   getInitialState: function () {
     return {contentItems: (this.props.initialContentItems || [])};
   },
 
-  addRowHandler: function () {
+  addRowHandler: function (e) {
+    // prevent refreshing page
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
     var contentItems = this.state.contentItems;
     contentItems.push({
       title: '',
@@ -32,7 +36,11 @@ ContentItemBuilder.ContentItems = React.createClass({
     this.setState({contentItems: contentItems});
   },
 
-  loveHandler: function () {
+  loveHandler: function (e) {
+    // prevent refreshing page
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    
     var contentItems = this.state.contentItems;
     var index = contentItems.push({
       title: 'It\'s amazing',

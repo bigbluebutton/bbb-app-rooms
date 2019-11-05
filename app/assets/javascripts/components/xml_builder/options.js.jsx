@@ -1,4 +1,4 @@
-XmlBuilder.Options = React.createClass({
+XmlBuilder.Options = createReactClass({
 
   render: function () {
     return (

@@ -1,23 +1,11 @@
-# General configuration
-# SECRET_KEY_BASE=<rake secret>
-# PRODUCT_INSTANCE_GUID=<rake uuid>
-
-# Database configuration
-# DB_ADAPTER=[sqlite3|postgresql]
-# DB_HOST=<localhost>
-# DB_NAME=
-# DB_USERNAME=<root>
-# DB_PASSWORD=
-
 # App configuration
-# RELATIVE_URL_ROOT=lti
+RELATIVE_URL_ROOT=lti
 
 # LTI tools configuration
-# DEFAULT_LTI_TOOL=default
+DEFAULT_LTI_TOOL=rooms
 
-# There are some functions that can be enabled when setting the server into developer mode.
-# This includes:
-#   - A LTI App can be used by default for testing purposes.
-#   - A UI for managing OAuth2 applications is enabled [http://example.com/lti/oauth/applications].
-#   -
-# DEVELOPER_MODE_ENABLED=true
+# Consumer key
+CONSUMER_KEY=consumer_key
+
+# Consumer Secret
+CONSUMER_SECRET=consumer_secret

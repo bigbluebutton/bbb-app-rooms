@@ -1,31 +1,35 @@
-ContentItemBuilder.ContentItems.Row = React.createClass({
+ContentItemBuilder.ContentItems.Row = createReactClass({
 
   propTypes: {
-    onRowDelete: React.PropTypes.func.isRequired,
-    onRowChange: React.PropTypes.func.isRequired,
-    index: React.PropTypes.number.isRequired,
-    documentTargets: React.PropTypes.array.isRequired,
-    mediaTypes: React.PropTypes.array.isRequired,
-    title: React.PropTypes.string,
-    text: React.PropTypes.string,
-    icon: React.PropTypes.string,
-    thumbnail: React.PropTypes.string,
-    type: React.PropTypes.string,
-    width: React.PropTypes.string,
-    height: React.PropTypes.string,
-    presentationTarget: React.PropTypes.string,
-    windowTarget: React.PropTypes.string,
-    confirmUrl: React.PropTypes.string,
-    canvasVisibility: React.PropTypes.string
+    onRowDelete: PropTypes.func.isRequired,
+    onRowChange: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
+    documentTargets: PropTypes.array.isRequired,
+    mediaTypes: PropTypes.array.isRequired,
+    title: PropTypes.string,
+    text: PropTypes.string,
+    icon: PropTypes.string,
+    thumbnail: PropTypes.string,
+    type: PropTypes.string,
+    width: PropTypes.string,
+    height: PropTypes.string,
+    presentationTarget: PropTypes.string,
+    windowTarget: PropTypes.string,
+    confirmUrl: PropTypes.string,
+    canvasVisibility: PropTypes.string
   },
 
-  removeHandler: function () {
-    var index = React.findDOMNode(this.refs.index).value.trim();
+  removeHandler: function (e) {
+    // prevent refreshing page
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    
+    var index = ReactDOM.findDOMNode(this.refs.index).value.trim();
     this.props.onRowDelete(Number(index));
   },
 
   tableChangeHandler: function (e) {
-    var index = React.findDOMNode(this.refs.index).value.trim();
+    var index = ReactDOM.findDOMNode(this.refs.index).value.trim();
 
     var state = {};
     state[e.target.id] = e.target.value;

@@ -1,7 +1,7 @@
-XmlBuilder.Placements.Row = React.createClass({
+XmlBuilder.Placements.Row = createReactClass({
 
   propTypes: {
-    placementKey: React.PropTypes.string
+    placementKey: PropTypes.string
   },
 
   render: function () {

@@ -1,5 +1,5 @@
 {
-    "guid": "a11e8084-15e3-48da-a747-bc3b94020ee2",
+    "guid": "1562b430-18c2-4115-adf0-0f3554a4129b",
     "product_info": {
         "product_version": "1.0",
         "product_name": {
@@ -14,7 +14,7 @@
                     "default_value": "BigBlueButton",
                     "key": "tool.vendor.name"
                 },
-                "timestamp": "2018-07-21T00:00:00-05:00"
+                "timestamp": "2019-11-04T13:48:31-05:00"
             }
         }
     }

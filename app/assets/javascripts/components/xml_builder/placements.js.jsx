@@ -1,11 +1,11 @@
-XmlBuilder.Placements = React.createClass({
+XmlBuilder.Placements = createReactClass({
 
   propTypes: {
-    placements: React.PropTypes.array
+    placements: PropTypes.array
   },
 
   selectAll: function() {
-    $('input.placement').prop('checked', $(this.refs.cbSelectAll.getDOMNode()).prop('checked'));
+    $('input.placement').prop('checked', $(ReactDOM.findDOMNode(this.refs.cbSelectAll)).prop('checked'));
   },
 
   render: function () {

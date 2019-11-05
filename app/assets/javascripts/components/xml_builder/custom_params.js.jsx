@@ -1,8 +1,8 @@
-XmlBuilder.CustomParams = React.createClass({
+XmlBuilder.CustomParams = createReactClass({
 
   propTypes: {
-    initialCustomParams: React.PropTypes.array,
-    onFormChange: React.PropTypes.func
+    initialCustomParams: PropTypes.array,
+    onFormChange: PropTypes.func
   },
 
   getInitialState: function () {
@@ -10,7 +10,10 @@ XmlBuilder.CustomParams = React.createClass({
     return {customParams: initialCustomParams};
   },
 
-  addRowHandler: function () {
+  addRowHandler: function (e) {
+    // prevent refreshing page
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     var customParams = this.state.customParams;
     customParams.push( {name: '', value: ''} );
     this.setState( {customParams: customParams} );

@@ -1,10 +1,10 @@
-ContentItemBuilder.ContentItemMessage = React.createClass({
+ContentItemBuilder.ContentItemMessage = createReactClass({
 
   propTypes: {
-    data: React.PropTypes.string,
-    returnUrl: React.PropTypes.string,
-    ltiVersion: React.PropTypes.string,
-    contentItems: React.PropTypes.object
+    data: PropTypes.string,
+    returnUrl: PropTypes.string,
+    ltiVersion: PropTypes.string,
+    contentItems: PropTypes.object
   },
 
   getInitialState: function () {
@@ -23,7 +23,7 @@ ContentItemBuilder.ContentItemMessage = React.createClass({
   },
 
   formSubmitHandler: function () {
-    React.findDOMNode(this.refs.contentItemForm).submit();
+    ReactDOM.findDOMNode(this.refs.contentItemForm).submit();
   },
 
   render: function () {
