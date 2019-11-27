@@ -44,7 +44,7 @@ en:
         text:         "Edit"
       destroyroom:
         text:         "Destroy"
-        confirmation: "Are you sure to destouy this room?"
+        confirmation: "Are you sure to destroy this room?"
     bigbluebutton:
       moderator:      "Moderator"
       viewer:         "Viewer"
@@ -63,15 +63,17 @@ en:
       moderator:      "Moderator token"
       viewer:         "Viewer token"
       recording:      "Recording"
-      waitmoderator:  "Wait moderator"
+      waitmoderator:  "Wait for moderator"
       allmoderators:  "All moderators"
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
+      grades:         "Grades"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
+      waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"

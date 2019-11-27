@@ -6,6 +6,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '3401:3401'
+      # - 127.0.0.1:6379:6379 # redis
 #    depends_on:
 #      - db
     env_file: .env

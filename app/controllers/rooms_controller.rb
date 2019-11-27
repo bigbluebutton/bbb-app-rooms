@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   include BigBlueButtonHelper
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
+  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close grades]
   before_action :check_for_cancel, :only => [:create, :update]
 
   # GET /rooms
@@ -76,6 +76,7 @@ class RoomsController < ApplicationController
   # GET /launch?name=&description=&handler=
   # GET /launch.json?
   def launch
+    puts "------------------ starts launch -------------------"
     respond_to do |format|
       if @room
         format.html { render :show }
@@ -87,10 +88,17 @@ class RoomsController < ApplicationController
     end
   end
 
-  # GET /rooms/:id/meeting/join
-  # GET /rooms/:id/meeting/join.json
+  # POST /rooms/:id/meeting/join
+  # POST /rooms/:id/meeting/join.json
   def meeting_join
-    redirect_to join_meeting_url
+    puts "--------------------------- calls meeting join -------------------------------"
+    # make user wait until moderator is in room
+    if wait_for_mod? && ! mod_in_room?
+      render json: { :wait_for_mod => true } , status: :ok
+    else 
+      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
+      redirect_to join_meeting_url
+    end
   end
 
   # GET /rooms/:id/meeting/end
@@ -133,20 +141,28 @@ class RoomsController < ApplicationController
     redirect_to room_path(params[:id])
   end
 
+  # GET /rooms/:id/grades
+  def grades
+    grades_handler = JSON.parse(cookies[@room.handler])['grades_handler']
+    redirect_to "#{grades_handler['send_grades_url']}/#{grades_handler['grades_token']}"
+  end
+
   private
 
     def set_error(error, status)
+      puts "--------------------------- set error -----------------------"
+      puts status
       @room = @user = nil
       @error = { key: t("error.room.#{error}.code"), message:  t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), :status => status }
     end
 
     def authenticate_user!
-      return unless omniauth_provider?(:bbbltibroker)
+      return unless omniauth_provider?(:ltibroker)
       # Assume user authenticated if session[:uid] is set
       return if session[:uid]
       if params['action'] == 'launch'
         cookies['launch_params'] = { :value => params.except(:app, :controller, :action).to_json, :expires => 30.minutes.from_now }
-        redirect_to omniauth_authorize_url(:bbbltibroker) and return
+        redirect_to omniauth_authorize_url(:ltibroker) and return
       end
       redirect_to errors_path(401)
     end
@@ -178,6 +194,8 @@ class RoomsController < ApplicationController
       # Continue through happy path
       launch_params = sso["message"]
       @room = Room.find_by(handler: params[:handler]) || Room.create!(new_room_params(launch_params['resource_link_title'], launch_params['resource_link_description']))
+      @room.can_grade = sso.has_key? "grades"
+      launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
       @user = User.new(user_params(launch_params))
       cookies[params[:handler]] = { :value => launch_params.to_json, :expires => 30.minutes.from_now }
     end

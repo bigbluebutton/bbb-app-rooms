@@ -30,7 +30,9 @@
                   <th><%= t("recording.table.preview") %></th>
                   <th><%= t("recording.table.date") %></th>
                   <th><%= t("recording.table.duration") %></th>
-                  <th><%= t("recording.table.toolbar") %></th>
+                  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+                    <th><%= t("recording.table.toolbar") %></th>
+                  <% end %>
                 </tr>
               </thead>
               <tbody id="recording-table">

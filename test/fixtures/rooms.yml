@@ -6,6 +6,7 @@ one:
   welcome: MyString
   moderator: MyString
   viewer: MyString
+  handler: handler
   recording: false
   wait_moderator: false
   all_moderators: false
@@ -16,6 +17,7 @@ two:
   welcome: MyString
   moderator: MyString
   viewer: MyString
+  handler: handler
   recording: false
   wait_moderator: false
   all_moderators: false
