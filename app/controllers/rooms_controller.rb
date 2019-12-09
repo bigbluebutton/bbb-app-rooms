@@ -193,7 +193,7 @@ class RoomsController < ApplicationController
       set_error('forbidden', :forbidden) and return unless sso["valid"]
       # Continue through happy path
       launch_params = sso["message"]
-      @room = Room.find_by(handler: params[:handler]) || Room.create!(new_room_params(launch_params['resource_link_title'], launch_params['resource_link_description']))
+      @room = Room.find_by(handler: params[:handler]) || Room.create!(launch_params_to_new_room_params(launch_params))
       @room.can_grade = sso.has_key? "grades"
       launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
       @user = User.new(user_params(launch_params))
@@ -215,15 +215,29 @@ class RoomsController < ApplicationController
       }
     end
 
-    def new_room_params(name, description)
+    def new_room_params(name, description, recording=false, wait_moderator=false, all_moderators=false)
       params.permit(:handler).merge({
         name: name,
         description: description,
         welcome: '',
-        recording: false,
-        wait_moderator: false,
-        all_moderators: false
+        recording: recording,
+        wait_moderator: wait_moderator,
+        all_moderators: all_moderators
       })
+    end
+
+    def launch_params_to_new_room_params(launch_params)
+      name = launch_params['resource_link_title']
+      description = launch_params['resource_link_description']
+      record = message_has_custom?(launch_params, 'record')
+      wait_mod = message_has_custom?(launch_params, 'wait_moderator')
+      all_moderators = message_has_custom?(launch_params, 'all_moderators')
+
+      new_room_params(name, description, record, wait_mod, all_moderators)
+    end
+
+    def message_has_custom?(message, type)
+      message.has_key?('custom_params') && message['custom_params'].has_key?('custom_' + type) && message['custom_params']['custom_' + type] == 'true'
     end
 
     def check_for_cancel
