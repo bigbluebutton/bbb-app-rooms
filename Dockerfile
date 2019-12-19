@@ -1,8 +1,8 @@
 # Base image:
-FROM ruby:2.5.1
+FROM ruby:2.6.3
 
 # app dependencies
-RUN apt-get update -qq && apt-get install -f -y build-essential libpq-dev nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -f -y build-essential libpq-dev nodejs postgresql-client vim
 
 ENV RAILS_ENV=production
 

@@ -14,13 +14,16 @@ module ApplicationHelper
   end
 
   def omniauth_client_token(lti_broker_url)
-    oauth_options = {
+    response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
+    JSON.parse(response)["access_token"]
+  end
+
+  def oauth_options
+    {
       grant_type: 'client_credentials',
       client_id: Rails.configuration.omniauth_bbbltibroker_key,
       client_secret: Rails.configuration.omniauth_bbbltibroker_secret
     }
-    response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
-    JSON.parse(response)["access_token"]
   end
 
   def omniauth_provider?(code)

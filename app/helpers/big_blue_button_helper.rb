@@ -26,6 +26,15 @@ module BigBlueButtonHelper
     s.nil? ? nil : s.chomp("/")
   end
 
+  def wait_for_mod?
+    return unless @room and @user
+    @room.wait_moderator && ! @user.moderator?(bigbluebutton_moderator_roles)
+  end
+
+  def mod_in_room?
+    bbb.is_meeting_running?(@room.handler)
+  end
+
   def join_meeting_url
     return unless @room and @user
     unless bbb

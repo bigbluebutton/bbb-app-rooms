@@ -15,7 +15,7 @@
 <%= link_to '', '#',:name => 'Refresh', :class => "btn btn-default glyphicon glyphicon-refresh pull-left", :onClick  => "location.reload();" %>
 
 <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-<%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
+  <%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
 <% end %>
 
 <br>
@@ -23,7 +23,13 @@
 
 <h3><%= @room.description %></h3>
 
-<%= button_to t('default.room.join'), meeting_join_path(@room), :class => "btn btn-primary", :type => "button", form: {target: '_blank'}  %>
+<%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room), room: @room.id } %>
+
+<% if @room.can_grade && (@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) %>
+  <%= link_to t('default.room.grades'), grades_path(@room), :class => "btn btn-primary", :type => "button" %>
+<% end %>
+
+<%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
 
 <%= render "shared/sessions", recordings: recordings, only_public: false %>
 

@@ -22,7 +22,7 @@ pre {
 a {
   color: #000;
 
-  &:visited {
+  &:visited:not(.btn) {
     color: #666;
   }
 

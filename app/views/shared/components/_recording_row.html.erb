@@ -30,7 +30,9 @@
           <%= recording[:name] %>
         <% end %>
       </text>
-      <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+      <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+        <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+      <% end %>
     </div>
   </td>
   <td class="text-left">
@@ -38,7 +40,9 @@
       <text id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
       </text>
-      <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+      <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+        <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
+      <% end %>
     </div>
   </td>
   <td class="text-left">
@@ -57,25 +61,27 @@
   <td class="text-left">
     <%= recording_length(recording[:playbacks]) %>
   </td>
-  <td class="text-center">
-    <div class="item-action dropdown">
-      <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
-        <i class="fas fa-ellipsis-v px-4"></i>
-      </a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <% if recording[:state] == "published" %>
-          <%= button_to recording_unpublish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
-            <i class="dropdown-icon fas fa-book"></i> <%= t("unpublish") %>
+  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+    <td class="text-center">
+      <div class="item-action dropdown">
+        <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
+          <i class="fas fa-ellipsis-v px-4"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <% if recording[:state] == "published" %>
+            <%= button_to recording_unpublish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+              <i class="dropdown-icon fas fa-book"></i> <%= t("unpublish") %>
+            <% end %>
+          <% elsif recording[:state] == "unpublished" %>
+            <%= button_to recording_publish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+              <i class="dropdown-icon fas fa-book-open"></i> <%= t("publish") %>
+            <% end %>
           <% end %>
-        <% elsif recording[:state] == "unpublished" %>
-          <%= button_to recording_publish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
-            <i class="dropdown-icon fas fa-book-open"></i> <%= t("publish") %>
+          <%= button_to recording_delete_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+            <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("delete") %>
           <% end %>
-        <% end %>
-        <%= button_to recording_delete_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item" do %>
-          <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("delete") %>
-        <% end %>
+        </div>
       </div>
-    </div>
-  </td>
+    </td>
+  <% end %>
 </tr>

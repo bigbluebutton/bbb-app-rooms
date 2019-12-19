@@ -71,7 +71,7 @@ Rails.application.configure do
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
-  config.i18n.fallbacks = true
+  config.i18n.fallbacks = [I18n.default_locale]
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
@@ -87,6 +87,23 @@ Rails.application.configure do
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
+
+  # configure redis for ActionCable
+  if ENV['REDIS_URL'].present?
+    # Set up Redis cache store
+    config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'],
+
+      connect_timeout:    30,  # Defaults to 20 seconds
+      read_timeout:       0.2, # Defaults to 1 second
+      write_timeout:      0.2, # Defaults to 1 second
+      reconnect_attempts: 1,   # Defaults to 0
+
+      error_handler: lambda { |method:, returning:, exception:|
+        config.logger.warn "Support: Redis cache action #{method} failed and returned '#{returning}': #{exception}"
+      } }
+  else
+    config.cache_store = :memory_store
   end
 
   # Do not dump schema after migrations.
