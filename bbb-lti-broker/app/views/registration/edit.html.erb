@@ -1,0 +1,38 @@
+<div>
+    <%= link_to t('registration.goback'), registration_list_url %>
+    <h3><%= t('registration.editreg') %></h3>
+    <%= form_tag(submit_registration_path) do %>
+        <%= hidden_field_tag(:reg_id, @registration['issuer']) %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:iss, t('registration.issuer') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:iss, @registration['issuer'], :readonly => true, size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:client_id, t('registration.clientid') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:client_id, @registration['client_id'], size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:key_set_url, t('registration.keyseturl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:key_set_url, @registration['key_set_url'], size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:auth_token_url, t('registration.auth_token_url') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:auth_token_url, @registration['auth_token_url'], size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:auth_login_url, t('registration.auth_login_url') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:auth_login_url, @registration['auth_login_url'], size: 90) %>
+            <% end %>
+        <% end %>
+        <%= submit_tag(t('ui.submit')) %>
+    <% end %>
+</div>

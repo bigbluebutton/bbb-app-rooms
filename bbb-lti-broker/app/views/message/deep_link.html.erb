@@ -1,0 +1,6 @@
+<h1>Deep Link</h1>
+
+<%= form_tag(@deep_link_return_url) do %>
+    <%= hidden_field_tag 'JWT', @deep_link_jwt_message %>
+    <%= submit_tag(t('ui.submit')) %>
+<% end %>

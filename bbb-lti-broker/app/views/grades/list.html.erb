@@ -1,0 +1,21 @@
+<div>
+    <h1>Grades</h1>
+    <table>
+        <thead>
+            <tr>
+                <th><%= t('grade.userid') %></th>
+                <th><%= t('grade.resultscore') %></th>
+                <th><%= t('grade.resultmaximum') %></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @grades.each do |grade| %>
+                <tr style="padding: 2em; border: 1px darkgrey solid;">
+                    <th><%= grade['userId'] %></th>
+                    <th><%= grade['resultScore'] %></th>
+                    <th><%= grade['resultMaximum'] %></th>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>

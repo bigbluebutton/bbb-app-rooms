@@ -6,7 +6,6 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
-/db/data/*
 
 # Ignore all logfiles and tempfiles.
 */log/*
@@ -19,17 +18,10 @@ log/
 # Ignore Byebug command history file.
 .byebug_history
 
-/db/*.sqlite3
-/db/production/*
-/data/*
+db/*.sqlite3
 
 /.ssh
 .env
-
-# Ignore circleci extrafiles
-/.circleci/*
-!/.circleci/config.yml
-process.yml
 
 # used to fake https for testing
 localhost.crt
