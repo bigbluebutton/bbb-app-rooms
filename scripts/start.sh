@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ "$RAILS_ENV" = "production" ] && [ "$DB_ADAPTER" = "postgresql" ]; then
   while ! curl http://$DB_HOST:-localhost:${DB_PORT:-5432}/ 2>&1 | grep '52'
@@ -25,4 +25,4 @@ echo "Precompile assets..."
 bundle exec rake assets:precompile --trace
 
 echo "Start app..."
-bundle exec rails s -b 0.0.0.0 -p 3401
+bundle exec rails s -b 0.0.0.0 -p 3000

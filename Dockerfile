@@ -1,22 +1,32 @@
-# Base image:
-FROM ruby:2.6.3
+FROM ruby:2.7.0-alpine
 
-# app dependencies
-RUN apt-get update -qq && apt-get install -f -y build-essential libpq-dev nodejs postgresql-client vim
+USER root
+
+RUN apk update \
+&& apk upgrade \
+&& apk add --update --no-cache \
+build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
+yaml-dev zlib-dev nodejs yarn
 
 ENV RAILS_ENV=production
 
-ENV APP_HOME=/usr/src/app
-RUN mkdir $APP_HOME
+ENV APP_HOME /usr/src/app
+RUN mkdir -p $APP_HOME
+COPY . $APP_HOME
 WORKDIR $APP_HOME
 
-# Add the app
-ADD . $APP_HOME
+ENV BUNDLER_VERSION='2.1.4'
+RUN gem install bundler --no-document -v '2.1.4'
+RUN bundle config set without 'development test doc'
+RUN bundle install
 
-# Install app dependencies
-RUN bundle install --without development test doc --deployment --clean
+RUN bundle update --bundler 2.1.4
+RUN gem update --system
+
+EXPOSE 3000
 
 # Precompile assets
 #   The assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up through .env
 
+# Run startup command
 CMD ["scripts/start.sh"]
