@@ -8,7 +8,8 @@ RUN apk update \
 build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
 yaml-dev zlib-dev nodejs yarn
 
-ENV RAILS_ENV=production
+ARG RAILS_ENV
+ENV RAILS_ENV=${RAILS_ENV:-production}
 
 ENV APP_HOME /usr/src/app
 RUN mkdir -p $APP_HOME

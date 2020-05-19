@@ -106,6 +106,8 @@ Rails.application.configure do
     config.cache_store = :memory_store
   end
 
+  config.hosts = ENV['WHITELIST_HOST'].presence || nil
+
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 

@@ -1,7 +1,7 @@
 ## App configuration
 # SECRET_KEY_BASE=<rake secret>
 
-# RELATIVE_URL_ROOT=apps/rooms
+# RELATIVE_URL_ROOT=apps
 
 ## Database configuration
 # DB_ADAPTER=[sqlite3|postgresql]
