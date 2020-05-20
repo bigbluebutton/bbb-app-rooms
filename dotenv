@@ -5,7 +5,17 @@ RELATIVE_URL_ROOT=lti
 DEFAULT_LTI_TOOL=rooms
 
 # Consumer key
-CONSUMER_KEY=consumer_key
+CONSUMER_KEY=key
 
 # Consumer Secret
-CONSUMER_SECRET=consumer_secret
+CONSUMER_SECRET=secret
+
+# DEVELOPER_MODE_ENABLED=true
+
+# WHITELIST_HOST=broker.example.com
+
+# DB_ADAPTER=postgresql
+# DB_HOST=localhost
+# DB_NAME=bbb_demo_production
+# DB_USERNAME=bbb_demo
+# DB_PASSWORD=

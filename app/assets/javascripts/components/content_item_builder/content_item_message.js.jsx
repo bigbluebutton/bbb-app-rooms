@@ -4,6 +4,7 @@ ContentItemBuilder.ContentItemMessage = createReactClass({
     data: PropTypes.string,
     returnUrl: PropTypes.string,
     ltiVersion: PropTypes.string,
+    consumerKey: PropTypes.string,
     contentItems: PropTypes.object
   },
 
@@ -35,6 +36,7 @@ ContentItemBuilder.ContentItemMessage = createReactClass({
           contentItems={this.props.contentItems}
           returnUrl={this.props.returnUrl}
           ltiVersion={this.props.ltiVersion}
+          consumerKey={this.props.consumerKey}
           ltiMsg={this.state.ltiMsg}
           ltiLog={this.state.ltiLog}
           ltiErrorMsg={this.state.ltiErrorMsg}

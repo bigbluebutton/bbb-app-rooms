@@ -44,16 +44,16 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
-  
+
   # Allow this to work in an iframe on another domain
   config.action_dispatch.default_headers = {
-      'X-Frame-Options' => 'ALLOWALL'
+    'X-Frame-Options' => 'ALLOWALL'
   }
 
-  config.hosts << ENV["WHITELIST_HOST"] || ""
+  config.hosts << ENV['WHITELIST_HOST'] || ''
 
   config.react.variant = :development
-  
+
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 

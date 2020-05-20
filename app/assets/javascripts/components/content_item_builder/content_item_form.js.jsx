@@ -8,7 +8,8 @@ ContentItemBuilder.ContentItemForm = createReactClass({
     ltiMsg: PropTypes.string,
     ltiLog: PropTypes.string,
     ltiErrorMsg: PropTypes.string,
-    LtiErrorLog: PropTypes.string
+    LtiErrorLog: PropTypes.string,
+    consumerKey: PropTypes.string,
   },
 
 
@@ -35,6 +36,7 @@ ContentItemBuilder.ContentItemForm = createReactClass({
       <form ref="contentItemForm" action="signed_content_item_request" method="post" id="contentItemForm">
         <input type="hidden" name="lti_message_type" value="ContentItemSelection"/>
         <input type="hidden" name="lti_version" value={this.props.ltiVersion}/>
+        <input type="hidden" name="oauth_consumer_key" value={this.props.consumerKey}/>
         <input type="hidden" name="data" value={this.props.data}/>
         <input type="hidden" name="content_items" value={JSON.stringify(contentItems)}/>
         <input type="hidden" name="lti_msg" value={this.props.ltiMsg}/>

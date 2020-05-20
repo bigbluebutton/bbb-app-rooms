@@ -1,0 +1,57 @@
+#bbb-registration-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#bbb-registration-table td, #bbb-registration-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#bbb-registration-table tr:nth-child(even){
+    background-color: #f2f2f2;
+}
+
+#bbb-registration-table tr:hover {
+    background-color: #ddd;
+}
+
+#bbb-registration-table thead th {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    text-align: left;
+    background-color: #3c73c5;
+    color: white;
+}
+
+#bbb-registration-table .fa {
+    font-size: 1.4em;
+}
+
+#bbb-registration-table .fa-trash {
+    color: red;
+}
+
+input[type="submit"] {
+    background-color: #3eb343;
+    border: none;
+    color: white;
+    padding: 0.5em 1.3em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+input[value="Go Back"] {
+    background-color: #575f58;
+}
+input[readonly],
+textarea[readonly] {
+    background-color: #e8e8e8;
+}
+
+.form-required-txt {
+    color: #d21d1d;
+}

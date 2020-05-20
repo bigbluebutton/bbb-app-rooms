@@ -1,0 +1,44 @@
+<div>
+    <%= link_to t('registration.goback'), registration_list_url %>
+    <h3><%= t('registration.newreg') %></h3>
+    <%= render 'starter_info' %>
+    <br>
+    <%= form_tag(submit_registration_path) do %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:iss, class: "col-sm-2 col-form-label") do %>
+                <%= t('registration.issuer') %>
+                <%= label_tag(:required, "(#{t('registration.required')})", class: "form-required-txt") %>:
+                <% end %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:iss, "", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:client_id, t('registration.clientid') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:client_id, "", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:key_set_url, t('registration.keyseturl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:key_set_url, "", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:auth_token_url, t('registration.auth_token_url') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:auth_token_url, "", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:auth_login_url, t('registration.auth_login_url') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:auth_login_url, "", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= hidden_field_tag 'public_key_path', @public_key_file.path %>
+        <%= hidden_field_tag 'private_key_path', @private_key_file.path %>
+        <%= submit_tag(t('ui.submit')) %>
+    <% end %>
+</div>

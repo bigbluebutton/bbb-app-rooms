@@ -1,0 +1,19 @@
+<h1 style="text-align: center">Content Item Selection</h1>
+<h4>Content Item Response</h4>
+
+<% if @message %>
+<%= react_component('ContentItemBuilder',
+                    data:@message.data,
+                    returnUrl:@message.content_item_return_url,
+                    ltiVersion:@message.lti_version,
+                    ltiLaunchUrl:blti_launch_url,
+                    ltiUpdateUrl:content_item_request_launch_url,
+                    textFileUrl: asset_url('test_file.txt'),
+                    ccFileUrl: asset_url('test-course-export.imscc'),
+                    documentTargets:@message.accept_presentation_document_targets.split(','),
+                    mediaTypes:@message.accept_media_types.split(','),
+                    consumerKey:@oauth_consumer_key
+    ) %>
+<% end %>
+<h4>LTI Message</h4>
+<%= render "message_info" %>

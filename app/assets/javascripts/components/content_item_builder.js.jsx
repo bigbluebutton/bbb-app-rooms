@@ -9,6 +9,7 @@ var ContentItemBuilder = createReactClass({
     textFileUrl: PropTypes.string,
     videoUrl: PropTypes.string,
     ccFileUrl: PropTypes.string,
+    consumerKey: PropTypes.string,
     documentTargets: PropTypes.array,
     mediaTypes: PropTypes.array
   },
@@ -46,6 +47,7 @@ var ContentItemBuilder = createReactClass({
           returnUrl={this.props.returnUrl}
           ltiVersion={this.props.ltiVersion}
           contentItems={this.state.contentItems}
+          consumerKey={this.props.consumerKey}
         />
       </div>
     );

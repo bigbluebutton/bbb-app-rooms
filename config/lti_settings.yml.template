@@ -1,7 +1,0 @@
-production:
-  consumer_key: prod_consumer_key
-  consumer_secret: prod_consumer_secret
-
-development:
-  consumer_key: consumer_key
-  consumer_secret: consumer_secret

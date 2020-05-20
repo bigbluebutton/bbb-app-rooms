@@ -1,0 +1,44 @@
+{
+    "title": "Rooms",
+    "description": "Launch into rooms.",
+    "target_link_uri": "http://broker.blindside.com/lti/rooms/messages/oblti",
+    "oidc_initiation_url": "https://broker.blindside.com/lti/rooms/auth/login",
+    "scopes": [
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly",
+        "https://purl.imsglobal.org/spec/lti-ags/scope/score",
+        "https://purl.imsglobal.org/spec/lti-nrps/scope/contextmembership.readonly"
+    ],
+    "extensions": [
+        {
+            "platform": "canvas.instructure.com",
+            "settings":{ 
+                "text": "Rooms",
+                "icon_url": "https://pbs.twimg.com/profile_images/467451035837923328/JxPpOTL6_400x400.jpeg",
+                "placements":[  
+                    {  
+                    "text":"Rooms",
+                    "enabled":true,
+                    "icon_url":"https://pbs.twimg.com/profile_images/467451035837923328/JxPpOTL6_400x400.jpeg",
+                    "placement":"link_selection",
+                    "message_type":"LtiResourceLinkRequest",
+                    "target_link_uri":"http://broker.blindside.com/lti/rooms/messages/oblti",
+                    "canvas_icon_class":"icon-lti"
+                    },
+                    {  
+                        "text":"Rooms",
+                        "enabled":true,
+                        "icon_url":"https://pbs.twimg.com/profile_images/467451035837923328/JxPpOTL6_400x400.jpeg",
+                        "placement":"account_navigation",
+                        "message_type":"LtiResourceLinkRequest",
+                        "target_link_uri":"http://broker.blindside.com/lti/rooms/messages/oblti",
+                        "canvas_icon_class":"icon-lti"
+                    }
+                ]
+            },
+            "privacy_level":"public"
+        }
+    ],
+    "custom_fields": {}
+}

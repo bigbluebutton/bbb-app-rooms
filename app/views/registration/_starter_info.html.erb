@@ -1,0 +1,56 @@
+<%= content_tag :div do %>
+    <%= button_tag t('registration.startmeoff'), :data => {:toggle => "collapse", :target => "#collapseStarterInfo"}, :type => "button", :class => "btn btn-primary" %>
+    <%= content_tag :div, class: "collapse", id: "collapseStarterInfo" do %>
+        <% if @apps.length > 1 %>
+            <%= content_tag :div, class: "form-group row" do %>
+                <%= label_tag(:app, t('registration.app') + ':', class: "col-sm-2 col-form-label") %>
+                <%= content_tag :div, class: "col-sm-10 col" do %>
+                    <%= select_tag 'lti_app_name', options_for_select(@apps, @apps[0]) %>
+                <% end %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:jsonconfigurl, t('registration.jsonconfigurl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:jsonconfigurl, json_config_url(:app => @app, :temp_key_token => @temp_key_token), :readonly => true, :class => "click-to-copy", size: 90) %>
+                <%= link_to(t('registration.showme'), json_config_url(:app => @app, :temp_key_token => @temp_key_token), :target => '_blank') %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:toolurl, t('registration.toolurl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:toolurl, openid_launch_url(:app => @app), :readonly => true, :class => "click-to-copy", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:deeplinkurl, t('registration.deeplinkurl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:deeplinkurl, deep_link_request_launch_url(:app => @app), :readonly => true, :class => "click-to-copy", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:initloginurl, t('registration.initloginurl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_field_tag(:initloginurl, openid_login_url(:app => @app), :readonly => true, :class => "click-to-copy", size: 90) %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:publickey, t('registration.publickey') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_area_tag(:publickey, @public_key, :readonly => true, :class => "click-to-copy", size: "90x15") %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:jwk, t('registration.jwk') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_area_tag(:jwk, @jwk, :readonly => true, :class => "click-to-copy", size: "90x15") %>
+            <% end %>
+        <% end %>
+        <%= content_tag :div, class: "form-group row" do %>
+            <%= label_tag(:redirurl, t('registration.redirurl') + ':', class: "col-sm-2 col-form-label") %>
+            <%= content_tag :div, class: "col-sm-10 col" do %>
+                <%= text_area_tag(:redirurl, @redirect_uri, :escape => false, :readonly => true, :class => "click-to-copy", size: "90x2") %>
+            <% end %>
+        <% end %>
+    <% end %>
+<% end %>

@@ -21,6 +21,10 @@
 
 en:
   ui:
+    goback:        "Go Back"
+    submit:        "Submit"
+    new:           "New"
+    options:       "Options"
     lti1:          "LTI 1 Provider"
     lti1config:    "Configure LTI 1 Provider"
     lti2:          "LTI 2 Config"
@@ -35,3 +39,38 @@ en:
     greenlight:
       title:       "Greenlight"
       description: "Rooms allows the creation and use of BigBlueButton Rooms through LTI"
+  registration:
+    goback:         "Go Back"
+    issuer:         "Issuer"
+    clientid:       "Client ID"
+    keyseturl:      "Key set URL"
+    authtokenurl:   "Auth token URL"
+    authloginurl:   "Auth login URL"
+    toolprivkey:    "Tool private key"
+    editreg:        "Edit Registration"
+    newreg:         "New Registration"
+    list:           "Registrations"
+    startmeoff:     "Start me off"
+    toolurl:        "Tool URL"
+    deeplinkurl:    "Deep Link URL"
+    publickey:      "Public key"
+    jwk:            "JWK"
+    initloginurl:   "Initiate login URL"
+    redirurl:       "Redirection URI(s)"
+    jsonconfigurl:  "JSON Configuration URL"
+    required:       "Required"
+    showme:         "Show me"
+    nokeymessage:   "Your key does not exist. Go to new registration to generate a key first."
+    expkeymessage:  "Your key has expired. Go to new registration to generate a new key."
+  grade:
+    userid:         "User ID"
+    resultscore:    "Result Score"
+    resultmaximum:  "Maximum Score"
+  permission:
+    nonrps:         "The tool does not have permission to send grades or access student list."
+  error:
+    invalid:
+      token:       "The token does not exist."
+    expired:
+      token:   "The token has expired."
+      request: "The request has expired."
