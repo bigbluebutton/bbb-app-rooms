@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CanvasExtensions
   PLATFORM = 'canvas.instructure.com'
   PLACEMENTS = [

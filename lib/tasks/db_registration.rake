@@ -39,13 +39,14 @@ namespace :db do
         jwk = jwk.to_json
 
         key_dir = Digest::MD5.hexdigest issuer + client_id
-        Dir.mkdir('.ssh/' + key_dir) unless Dir.exist?('.ssh/' + key_dir)
+	Dir.mkdir('.ssh/') unless Dir.exists?('.ssh/')
+        Dir.mkdir('.ssh/' + key_dir) unless Dir.exists?('.ssh/' + key_dir)
 
-        File.open(File.join(Rails.root, '.ssh', key_dir, 'priv_key'), 'w') do |f|
+        File.open(File.join(Rails.root, ".ssh", key_dir, 'priv_key'), 'w') do |f|
           f.puts private_key.to_s
         end
 
-        File.open(File.join(Rails.root, '.ssh', key_dir, 'pub_key'), 'w') do |f|
+        File.open(File.join(Rails.root, ".ssh", key_dir, 'pub_key'), 'w') do |f|
           f.puts public_key.to_s
         end
 
@@ -128,13 +129,14 @@ namespace :db do
         jwk = jwk.to_json
 
         key_dir = Digest::MD5.hexdigest issuer + client_id
-        Dir.mkdir('.ssh/' + key_dir) unless Dir.exist?('.ssh/' + key_dir)
+        Dir.mkdir('.ssh/') unless Dir.exists?('.ssh/')
+        Dir.mkdir('.ssh/' + key_dir) unless Dir.exists?('.ssh/' + key_dir)
 
-        File.open(File.join(Rails.root, '.ssh', key_dir, 'priv_key'), 'w') do |f|
+        File.open(File.join(Rails.root, ".ssh", key_dir, 'priv_key'), 'w') do |f|
           f.puts private_key.to_s
         end
 
-        File.open(File.join(Rails.root, '.ssh', key_dir, 'pub_key'), 'w') do |f|
+        File.open(File.join(Rails.root, ".ssh", key_dir, 'pub_key'), 'w') do |f|
           f.puts public_key.to_s
         end
 

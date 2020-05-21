@@ -1,11 +1,11 @@
-version: '3'
+version: '2'
 
 services:
   app:
-    image: ${DOCKER_REPO:-bigbluebutton}/bbb-lti-broker:${DOCKER_TAG:-latest}
+    build: .
     env_file: .env
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:password@postgres:5432/greenlight_production}
+      - DATABASE_URL = ${DATABASE_URL:-postgresql://postgres:password@postgres:5432/greenlight_production}
     command: rails server -p 3000 -b '0.0.0.0'
     volumes:
       - .:/app

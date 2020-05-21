@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OpenIdAuthenticator
   include ActiveSupport::Concern
 
@@ -8,6 +10,8 @@ module OpenIdAuthenticator
     jwt_header = JSON.parse(Base64.urlsafe_decode64(jwt_parts[0]))
     jwt_body = JSON.parse(Base64.urlsafe_decode64(jwt_parts[1]))
 
+    puts jwt_header
+    puts jwt_body
     validate_nonce(jwt_body)
 
     # validate registration (deployment)
@@ -111,7 +115,7 @@ module OpenIdAuthenticator
             'resource_link_title': 'title',
             'resource_link_description': 'description'
         })
-    
+
     p = extract_param(p, jwt_body, 'https://purl.imsglobal.org/spec/lti/claim/launch_presentation',
         {
             'launch_presentation_return_url': 'return_url',
@@ -147,7 +151,7 @@ module OpenIdAuthenticator
             'ext_user_username': 'user_username',
             'ext_lms': 'lms',
         })
-    
+
     p = extract_param(p, jwt_body, 'https://purl.imsglobal.org/spec/lti/claim/lis',
         {
             'lis_person_sourcedid': 'person_sourcedid'
@@ -206,6 +210,5 @@ module OpenIdAuthenticator
     }
     p[:lti_message_type] = 'basic-lti-launch-request' if jwt_body['https://purl.imsglobal.org/spec/lti/claim/message_type'] == 'LtiResourceLinkRequest'
     p[:lti_message_type] = 'ContentItemSelectionRequest' if jwt_body['https://purl.imsglobal.org/spec/lti/claim/message_type'] == 'LtiDeepLinkingRequest'
-    p
   end
 end

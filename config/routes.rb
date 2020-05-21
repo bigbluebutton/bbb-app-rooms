@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   scope ENV['RELATIVE_URL_ROOT'] || '/' do
     # rooms calls this api to validate launch from broker
@@ -32,7 +34,6 @@ Rails.application.routes.draw do
     # lti 1.3 authenticate user through login
     post ':app/auth/login', to: 'auth#login', as: 'openid_login'
     post ':app/messages/oblti', to: 'message#openid_launch_request', as: 'openid_launch'
-
     # requests from tool consumer go through this path
     post ':app/messages/blti', to: 'message#basic_lti_launch_request', as: 'blti_launch'
 

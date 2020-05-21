@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::SsoController < Api::V1::BaseController
   # before_action :doorkeeper_authorize!
 

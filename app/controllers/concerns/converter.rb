@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Converter
   include ActiveSupport::Concern
   def string_to_hash(str)

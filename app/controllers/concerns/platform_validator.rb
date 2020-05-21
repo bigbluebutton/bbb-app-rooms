@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PlatformValidator
   include ActiveSupport::Concern
 
@@ -14,7 +16,7 @@ module PlatformValidator
 
   def lti_registration_params(iss, options = {})
     reg = lti_registration(iss, options)
-    JSON.parse(reg.tool_settings) 
+    JSON.parse(reg.tool_settings)
   end
 
   def lti_registration(iss, options = {})

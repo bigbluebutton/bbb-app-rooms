@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # required for LTI
 require 'ims/lti'
 # Used to validate oauth signatures
@@ -39,33 +41,31 @@ class MessageController < ApplicationController
     @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: lti_secret(@message.oauth_consumer_key), callback: 'about:blank')
     if request.request_parameters.key?('launch_presentation_return_url')
       launch_presentation_return_url = request.request_parameters['launch_presentation_return_url'] + '&lti_errormsg=' + @error
-      redirect_to launch_presentation_return_url
+      redirect_to(launch_presentation_return_url)
     else
-      render :basic_lti_launch_request, status: 200
+      render(:basic_lti_launch_request, status: :ok)
     end
   end
 
   def openid_launch_request
-    unless params[:app] == 'default'
-      nonce = @jwt_body['nonce']
-      # Redirect to external application if configured
-      Rails.cache.write(nonce, message: @message, oauth: { timestamp: @jwt_body['exp'] }, lti_launch_nonce: @lti_launch.nonce)
-      session[:user_id] = @current_user.id
-      tc_instance_guid = tool_consumer_instance_guid(request.referrer, params)
-      redirect_to lti_apps_path(params[:app], sso: api_v1_sso_launch_url(nonce), handler: resource_handler(tc_instance_guid, params))
-    end
+    return if params[:app] == 'default'
+
+    nonce = @jwt_body['nonce']
+    # Redirect to external application if configured
+    Rails.cache.write(nonce, message: @message, oauth: { timestamp: @jwt_body['exp'] }, lti_launch_nonce: @lti_launch.nonce)
+    session[:user_id] = @current_user.id
+    redirect_to(lti_apps_path(params.to_unsafe_h))
   end
 
   # first touch point from tool consumer (moodle, canvas, etc)
   def basic_lti_launch_request
     process_message
-    unless params[:app] == 'default'
-      # Redirect to external application if configured
-      Rails.cache.write(params[:oauth_nonce], message: @message, oauth: { consumer_key: params[:oauth_consumer_key], timestamp: params[:oauth_timestamp] })
-      session[:user_id] = @current_user.id
-      tc_instance_guid = tool_consumer_instance_guid(request.referrer, params)
-      redirect_to lti_apps_path(params[:app], sso: api_v1_sso_launch_url(params[:oauth_nonce]), handler: resource_handler(tc_instance_guid, params))
-    end
+    return if params[:app] == 'default'
+
+    # Redirect to external application if configured
+    Rails.cache.write(params[:oauth_nonce], message: @message, oauth: { consumer_key: params[:oauth_consumer_key], timestamp: params[:oauth_timestamp] })
+    session[:user_id] = @current_user.id
+    redirect_to(lti_apps_path(params.to_unsafe_h))
   end
 
   # for /lti/:app/xml_builder enable placement for message type: content_item_selection_request
@@ -84,7 +84,7 @@ class MessageController < ApplicationController
     message = IMS::LTI::Models::Messages::Message.generate(request.request_parameters)
     message.launch_url = launch_url
     @launch_params = { launch_url: message.launch_url, signed_params: message.signed_post_params(tool.shared_secret) }
-    render 'message/signed_content_item_form'
+    render('message/signed_content_item_form')
   end
 
   def deep_link
@@ -100,8 +100,6 @@ class MessageController < ApplicationController
     # TODO: should we create the lti_launch with all of the oauth params as well?
     @message = (@lti_launch&.message) || IMS::LTI::Models::Messages::Message.generate(request.request_parameters)
 
-    puts request.request_parameters
-    puts @message.inspect
     tc_instance_guid = tool_consumer_instance_guid(request.referrer, params)
     @header = SimpleOAuth::Header.new(:post, request.url, @message.post_params, consumer_key: @message.oauth_consumer_key, consumer_secret: lti_secret(@message.oauth_consumer_key), callback: 'about:blank')
     @current_user = User.find_by(context: tc_instance_guid, uid: params['user_id']) || User.create(user_params(tc_instance_guid, params))
@@ -111,6 +109,7 @@ class MessageController < ApplicationController
   def verify_blti_launch
     jwt = verify_openid_launch
     @jwt_body = jwt[:body]
+    logger.info("JWT Body: " + @jwt_body.to_s)
     @jwt_header = jwt[:header]
     check_launch
     @message = IMS::LTI::Models::Messages::Message.generate(params)

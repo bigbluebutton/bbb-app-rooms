@@ -1,8 +1,17 @@
+# Create a Secret Key for Rails
+#
+# You can generate a secure one through the Greenlight docker image
+# with the command.
+#
+#   docker run --rm bigbluebutton/greenlight:v2 bundle exec rake secret
+#
+SECRET_KEY_BASE=secret
+
 # App configuration
 RELATIVE_URL_ROOT=lti
 
 # LTI tools configuration
-DEFAULT_LTI_TOOL=rooms
+DEFAULT_LTI_TOOL=tool
 
 # Consumer key
 CONSUMER_KEY=key
@@ -10,12 +19,15 @@ CONSUMER_KEY=key
 # Consumer Secret
 CONSUMER_SECRET=secret
 
-# DEVELOPER_MODE_ENABLED=true
+#DEVELOPER_MODE_ENABLED=true
 
-# WHITELIST_HOST=broker.example.com
+#WHITELIST_HOST=broker.example.com
 
-# DB_ADAPTER=postgresql
-# DB_HOST=localhost
-# DB_NAME=bbb_demo_production
-# DB_USERNAME=bbb_demo
-# DB_PASSWORD=
+## Use DATABASE_URL when using a postgres outside the pre-packaged with docker-compose
+## DATABASE_URL=postgres://myuser:mypass@localhost
+
+# Only needed for Docker Compose.
+## Change DOCKER_REPO when using a repo other than bigbluebutton
+## DOCKER_REPO=my-repo
+## Change DOCKER_TAG when using a tag other than latest
+## DOCKER_TAG=my-tag

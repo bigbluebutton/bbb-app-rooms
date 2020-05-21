@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Exceptions
   class CustomError < StandardError
     attr_reader :error

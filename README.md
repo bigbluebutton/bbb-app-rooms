@@ -1,40 +1,19 @@
-# bbb_lti_broker
-Generic LTI tool_provider
+## BigBlueButton LTI Broker
+The BBB LTI Broker is a Web Application that acts as a LTI Broker for connecting tool consumers with BigBlueButton Apps. 
 
-# LTI Tool Provider Using ims-lti Gem
+## Getting Started
+#### Use Docker
+First, make sure you have both Docker and Docker-Compose installed as they are requirements.
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-This is a basic and simple LTI Tool Provider based on https://github.com/instructure/lti_tool_provider_example that uses the
-[ims-lti](https://github.com/instructure/ims-lti) 2.0.0.beta gem. It includes a simple Tool that is enabled by default, but it
-also allows to enable external applications to be hocked as Tools while acting as a broker for them
-
-To get this running in your development environment, check out the repo then:
-
+Then, to get this running with Docker, follow these steps:
+Pull the ```docker-compose.yml``` and ```dotenv``` files from the repository. Then run the following commands.
 ```
-  gem i bundler -v 1.17.3
-  bundle install
-  bundle exec rake db:create
-  bundle exec rake db:migrate
-  bundle exec rake db:seed
-  bundle exec rails s
-```
-
-To get this running with Docker, follow these steps:
-
-```
-  cp docker-compose/config/* config/
-  docker-compose build
-  docker-compose run --rm lti-test-tool bundle install
-  docker-compose run --rm lti-test-tool bundle exec rake db:create
-  docker-compose run --rm lti-test-tool bundle exec rake db:migrate
-  docker-compose run --rm lti-test-tool bundle exec rake db:seed
+  docker-compose run app rake db:create
+  docker-compose run app rake db:migrate
+  docker-compose run app rake db:seed
   docker-compose up
 ```
-
-You can add the tool to a tool consumer with the the '/tool_proxy' endpoint
-
-To customize its behaviour copy the file dotenv as .env (for development only) and uncomment the environment variables as required.
+To customize its behaviour copy the file dotenv as app.env (for development only) and uncomment the environment variables as required.
 
 The database by default is sqlite3, even for production. Change the adapter for using postgresql and set up the rest of the parameters.
 
@@ -83,46 +62,87 @@ The seed will set up data by default that should be changed for production. This
     :secret => 'secret'
   }
 ```
-  - LTI Tool specific for https://github.com/bigbluebutton/bbb-app-rooms
-```
-  {
-    :name => 'rooms',
-    :uid => 'b21211c29d2720a4c847fc3a9097720a196f7fafddbaa0f68d5c1cb54fdbb046',
-    :secret => '3590e00d7ebd398b75c4ea5a65097a19a687d72715af811bc8b3e78aa1664789',
-    :redirect_uri => 'http://example.com/apps/rooms/auth/ltibroker/callback'
-  }
-```
-Where name is the application key (keep it short, 'rooms' is the identifier for bbb-app-rooms). uid and secret have to be used for OAuth2 when configuring the tool. And redirect_url holds the callback url for the application. As the app uses a gem that implements an omniauth strategy (see bbb-app-rooms documentation) you should keep it in the format expressed in the example.
 
+## Ports
+The LTI Broker uses port 3000 by default, but this can be changed by editing the docker-compose file.
+Under the 'app' service the 'ports' configuration can be modified from 3000:3000 to DESIRED_PORT:3000
+
+## Add a Tool to the LTI Broker
+In order to add an LTI Tool Provider or edit an existing tool, rake commands are used.
+A name for the tool, the hostname, as well as the provided UID and secret from the tool are required.
+The command is ```docker-compose run app rake "db:apps:add[tool_name,hostname,tool_uid,tool_secret]"```
+
+#### Useful Rake Commands
+Rake commands should be run using the following syntax:
 ```
-  <scheme>://<hostname>/<root for the app>/<key for the app>/<omniauth callback>
+docker-compose run app rake "RAKE_COMMAND"
+```
+The following are some useful and relevant rake commands for the LTI Broker:
+* rake db:apps:add[name,hostname,uid,secret,root]  # Add a new blti app
+* rake db:apps:delete[name]                        # Delete an existent blti app if exists
+* rake db:apps:deleteall                           # Delete all existent blti apps
+* rake db:apps:show[name]                          # Show an existent blti app if exists
+* rake db:apps:showall                             # Show all existent blti apps
+* rake db:apps:update[name,hostname,uid,secret]    # Update an existent blti app if exists
+* rake db:create                                   # Creates the database from DATABASE_URL or config/database.yml for the curre...
+* rake db:drop                                     # Drops the database from DATABASE_URL or config/database.yml for the current...
+* rake db:environment:set                          # Set the environment value for the database
+* rake db:exists                                   # Checks to see if the database exists
+* rake db:fixtures:load                            # Loads fixtures into the current environment's database
+* rake db:keys:add[keys]                           # Add a new blti keypair (e.g
+* rake db:keys:delete[keys]                        # Delete an existent blti keypair if exists (e.g
+* rake db:keys:deleteall                           # Delete all existent blti keypairs
+* rake db:keys:show                                # Show all existent blti keypairs
+* rake db:keys:update[keys]                        # Update an existent blti keypair if exists (e.g
+* rake db:migrate                                  # Migrate the database (options: VERSION=x, VERBOSE=false, SCOPE=blog)
+* rake db:migrate:status                           # Display status of migrations
+* rake db:prepare                                  # Runs setup if database does not exist, or runs migrations if it does
+* rake db:registration:delete                      # Delete existing Tool configuration
+* rake db:registration:keygen[type]                # Generate new key pair for existing Tool configuration [key, jwk]
+* rake db:registration:new[type]                   # Add new Tool configuration [key, jwk]
+
+
+## Link the LTI Broker to LMS
+
+### Using LTI 1.0/1.1
+There is no need to register an LTI 1.0/1.1 tool with the broker. All that the the LTI Tool Consumer needs is the Broker Key and Secret. These can be set as environment variables. 
+There are certain fields the tool consumer will require. These fields (and example values) are:
+Tool URL => ```http://broker.example.com/lti/TOOL_NAME/messages/blti```
+Consumer Key => ```BROKER_KEY```
+Shared Secret => ```BROKER_SECRET```
+
+### Using LTI 1.3
+#### Add an LTI 1.3 Registration
+To register an LTI 1.3 tool with the Broker, there are some rake commands (for production) and a web UI for development mode.
+The Web UI is found at ```http://broker.example.com/lti/registration/list```
+The rake tasks to register are: 
+```
+rake db:registration:new[key]
+rake db:registration:keygen[key]
+```
+In order to see all the available options use ```rake --tasks```
+
+#### Using the Web UI
+Navigate to ```http://broker.example.com/lti/registration/list```
+
+
+Once the LTI 1.3 tool is registered with the Broker, it can be hooked into a tool consumer.
+There are certain fields the tool consumer will require. These fields (and example values) are:
+Tool URL => ```http://broker.example.com/lti/TOOL_NAME/messages/oblti```
+Client ID => ```Gh4Bj81cK290d```
+Public Key => ```A_JWT_KEY```
+Initiate Login URL => ```http://broker.example.com/lti/TOOL_NAME/auth/login```
+Redirection URI(s) => 
+```
+http://broker.example.com/lti/TOOL_NAME/messages/oblti
+http://broker.example.com/lti/TOOL_NAME/messages/deep-link
 ```
 
-For changing the seeded data or adding keys and apps manually, there are some rake tools provided.
+All of these fields and values are visible and provided in the web UI.
+The other empty fields in the web UI are the following: Key Set URL, Auth Token URL, and Auth Login URL
 
-```
-  rake db:apps:showall
-  rake db:apps:update[rooms,https://newexample.com/apps]
-```
+These values will be provided by your LMS after you have registered the tool provider.
 
-For adding an LTI 1.3 registration, there are some rake commands (for production) and a web UI for development mode.
 
-```
-  http://broker.example.com/lti/registration/list
-```
-```
-  rake db:registration:new[key]
-  rake db:registration:keygen[key]
-```
-
-Use rake --tasks for seeing all the options available
-
-To set the default room settings, use the custom parameters:
-
-```
-record=true
-wait_moderator=true
-all_moderators=true
-```
-
-They correspond to turn recording on, wait for moderator to start the meeting, and allow all users to join as a moderator.
+## Developer Notes
+Must set DOCKER_USERNAME and DOCKER_PASSWORD in CircleCI config in order to have new images automatically pushed to dockerhub.

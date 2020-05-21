@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BbbLtiBroker
   module Helpers
     def string_to_hash(str)

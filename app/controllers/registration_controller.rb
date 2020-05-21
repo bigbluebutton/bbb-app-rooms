@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'pathname'
 
@@ -45,7 +47,8 @@ class RegistrationController < ApplicationController
 
     if params.key?('private_key_path') && params.key?('public_key_path')
       key_dir = Digest::MD5.hexdigest params[:iss] + params[:client_id]
-      Dir.mkdir('.ssh/' + key_dir) unless Dir.exist?('.ssh/' + key_dir)
+      Dir.mkdir('.ssh/') unless Dir.exists?('.ssh/')
+      Dir.mkdir('.ssh/' + key_dir) unless Dir.exists?('.ssh/' + key_dir)
 
       priv_key = read_temp_file(params[:private_key_path])
       pub_key = read_temp_file(params[:public_key_path])
@@ -54,6 +57,7 @@ class RegistrationController < ApplicationController
         f.puts priv_key
       end
 
+      Rails.root.join('path/to')
       File.open(File.join(Rails.root, '.ssh', key_dir, 'pub_key'), 'w') do |f|
         f.puts pub_key
       end

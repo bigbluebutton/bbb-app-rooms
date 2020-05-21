@@ -27,8 +27,8 @@ namespace :db do
         puts "Adding '#{args.to_hash}'"
         uid = args.[](:uid) || SecureRandom.hex(32)
         secret = args.[](:secret) || SecureRandom.hex(32)
-        # The redirect_url has to be in the form http://example.com/apps/rooms/auth/bbbltibroker/callback
-        redirect_uri = "#{args[:hostname]}/#{args[:name]}/auth/bbbltibroker/callback"
+        
+        redirect_uri = "#{args[:hostname]}/#{args[:name]}"
         app = Doorkeeper::Application.create!(name: args[:name], uid: uid, secret: secret, redirect_uri: redirect_uri)
         app1 = app.attributes.select { |key, _value| %w[name uid secret redirect_uri].include?(key) }
         puts "Added '#{app1.to_json}'"
@@ -55,8 +55,8 @@ namespace :db do
         puts "Updating '#{args.to_hash}'"
         app.update!(uid: args[:uid]) if args.[](:uid)
         app.update!(secret: args[:secret]) if args.[](:secret)
-        ## The redirect_url has to be in the form http://example.com/apps/rooms/auth/bbbltibroker/callback
-        redirect_uri = "#{args[:hostname]}/#{args[:name]}/auth/bbbltibroker/callback"
+        
+        redirect_uri = "#{args[:hostname]}/#{args[:name]}"
         app.update!(redirect_uri: redirect_uri) if args.[](:hostname)
         app1 = app.attributes.select { |key, _value| %w[name uid secret redirect_uri].include?(key) }
         puts "Updated '#{app1.to_json}'"

@@ -2,8 +2,14 @@
 
 <h2>Configuration XML</h2>
 
+<% if defined?(xml_builder_url) %>
+<% xml_url = xml_builder_url %>
+<% else %>
+<% xml_url = "" %>
+<% end %>
+
 <p>View the LTI configuration xml <%= link_to('here', xml_config_url, target: "_blank") %>.</p>
-<p> Customize the configuration <%= link_to('here', xml_builder_url) %>.</p>
+<p> Customize the configuration <%= link_to('here', xml_url) %>.</p>
 <p>This configuration is used to install your LTI tool into an LSM.  This xml can be referenced by url or copied and pasted during the install process.</p>
 
 <h2>LTI Launch</h2>
