@@ -68,7 +68,6 @@ en:
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
-      grades:         "Grades"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"

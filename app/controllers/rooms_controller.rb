@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   include BigBlueButtonHelper
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close grades]
+  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, :only => [:create, :update]
 
   # GET /rooms
@@ -141,12 +141,6 @@ class RoomsController < ApplicationController
     redirect_to room_path(params[:id])
   end
 
-  # GET /rooms/:id/grades
-  def grades
-    grades_handler = JSON.parse(cookies[@room.handler])['grades_handler']
-    redirect_to "#{grades_handler['send_grades_url']}/#{grades_handler['grades_token']}"
-  end
-
   private
 
     def set_error(error, status)
@@ -175,8 +169,7 @@ class RoomsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       puts "--------------------------- set_room -----------------------"
-      redirect_to "#{rooms_url}?#{query}" and return
-
+      puts params.to_json
       @error = nil
       @room = Room.find_by(id: params[:id])
       # Exit with error if room was not found
@@ -204,8 +197,6 @@ class RoomsController < ApplicationController
         puts new_room_params
         @room = Room.create!(new_room_params)
       end
-      #@room.can_grade = sso.has_key? "grades"
-      #launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
       @user = User.find_by(uid: launch_params['user_id'])
       if !@user
         new_user_params = launch_params_to_new_user_params(launch_params)

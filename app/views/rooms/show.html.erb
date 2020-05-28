@@ -25,10 +25,6 @@
 
 <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room), room: @room.id } %>
 
-<% if @room.can_grade && (@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) %>
-  <%= link_to t('default.room.grades'), grades_path(@room), :class => "btn btn-primary", :type => "button" %>
-<% end %>
-
 <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
 
 <%= render "shared/sessions", recordings: recordings, only_public: false %>

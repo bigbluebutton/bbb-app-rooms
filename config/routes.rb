@@ -7,7 +7,6 @@ Rails.application.routes.draw do
         post '/join', :to => 'rooms#meeting_join', as: :meeting_join
         post '/end', :to => 'rooms#meeting_end', as: :meeting_end
         get '/close', :to => 'rooms#meeting_close', as: :autoclose
-        get '/grades', :to => 'rooms#grades', as: :grades
       end
 
       # Handles recording management.

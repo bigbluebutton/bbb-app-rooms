@@ -18,10 +18,6 @@ class SessionsController < ApplicationController
     # As authentication did not fail, initialize the session
     session[:uid] = auth.uid
     redirect_to "#{room_launch_url}"
-    #launch_params = cookies['launch_params']
-    #query = JSON.parse(launch_params).to_query if launch_params
-    #cookies.delete('launch_params')
-    #redirect_to "#{room_launch_url}?#{query}"
   end
 
   def failure
