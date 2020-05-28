@@ -95,7 +95,7 @@ class RoomsController < ApplicationController
     # make user wait until moderator is in room
     if wait_for_mod? && ! mod_in_room?
       render json: { :wait_for_mod => true } , status: :ok
-    else 
+    else
       NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
       redirect_to join_meeting_url
     end
@@ -157,18 +157,26 @@ class RoomsController < ApplicationController
     end
 
     def authenticate_user!
-      return unless omniauth_provider?(:ltibroker)
+      puts "--------------------------- authenticate_user -----------------------"
+      return unless omniauth_provider?(:bbbltibroker)
       # Assume user authenticated if session[:uid] is set
+      puts "--------------------------- authenticate_user -----------------------"
+      puts session[:uid]
       return if session[:uid]
+      puts "--------------------------- no session uid, proceed with authentication -----------------------"
+      puts params['action']
       if params['action'] == 'launch'
         cookies['launch_params'] = { :value => params.except(:app, :controller, :action).to_json, :expires => 30.minutes.from_now }
-        redirect_to omniauth_authorize_url(:ltibroker) and return
+        redirect_to omniauth_authorize_url(:bbbltibroker) and return
       end
       redirect_to errors_path(401)
     end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_room
+      puts "--------------------------- set_room -----------------------"
+      redirect_to "#{rooms_url}?#{query}" and return
+
       @error = nil
       @room = Room.find_by(id: params[:id])
       # Exit with error if room was not found
@@ -186,17 +194,24 @@ class RoomsController < ApplicationController
     end
 
     def set_launch_room
-      @error = nil
-      lti_broker_url = omniauth_bbbltibroker_url(params['sso'])
-      sso = JSON.parse(RestClient.get("#{params['sso']}", {'Authorization' => "Bearer #{omniauth_client_token(lti_broker_url)}"}))
-      # Exit with error if sso is not valid
-      set_error('forbidden', :forbidden) and return unless sso["valid"]
-      # Continue through happy path
-      launch_params = sso["message"]
-      @room = Room.find_by(handler: params[:handler]) || Room.create!(launch_params_to_new_room_params(launch_params))
-      @room.can_grade = sso.has_key? "grades"
-      launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
-      @user = User.new(user_params(launch_params))
+      puts "--------------------------- set_launch_room -----------------------"
+      launch_params = JSON.parse(cookies["launch_params"])
+      handler = resource_handler(launch_params)
+      puts ">>>> #{handler}"
+      @room = Room.find_by(handler: handler)
+      if !@room
+        new_room_params = launch_params_to_new_room_params(launch_params)
+        puts new_room_params
+        @room = Room.create!(new_room_params)
+      end
+      #@room.can_grade = sso.has_key? "grades"
+      #launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
+      @user = User.find_by(uid: launch_params['user_id'])
+      if !@user
+        new_user_params = launch_params_to_new_user_params(launch_params)
+        puts new_user_params
+        @user = User.create!(new_user_params)
+      end
       cookies[params[:handler]] = { :value => launch_params.to_json, :expires => 30.minutes.from_now }
     end
 
@@ -204,7 +219,7 @@ class RoomsController < ApplicationController
       params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
     end
 
-    def user_params(launch_params)
+    def launch_params_to_new_user_params(launch_params)
       {
         uid: launch_params['user_id'],
         roles: launch_params['roles'],
@@ -215,8 +230,10 @@ class RoomsController < ApplicationController
       }
     end
 
-    def new_room_params(name, description, recording=false, wait_moderator=false, all_moderators=false)
-      params.permit(:handler).merge({
+    def new_room_params(handler, name, description, recording=false, wait_moderator=false, all_moderators=false)
+      puts "--------------------------- new_room_params -----------------------"
+      params.permit.merge({
+        handler: handler,
         name: name,
         description: description,
         welcome: '',
@@ -227,13 +244,15 @@ class RoomsController < ApplicationController
     end
 
     def launch_params_to_new_room_params(launch_params)
+      puts "--------------------------- launch_params_to_new_room_params -----------------------"
+      handler = resource_handler(launch_params)
       name = launch_params['resource_link_title']
       description = launch_params['resource_link_description']
       record = message_has_custom?(launch_params, 'record')
       wait_mod = message_has_custom?(launch_params, 'wait_moderator')
       all_moderators = message_has_custom?(launch_params, 'all_moderators')
 
-      new_room_params(name, description, record, wait_mod, all_moderators)
+      new_room_params(handler, name, description, record, wait_mod, all_moderators)
     end
 
     def message_has_custom?(message, type)
@@ -244,6 +263,10 @@ class RoomsController < ApplicationController
       if params[:cancel]
         redirect_to @room
       end
+    end
+
+    def resource_handler(params)
+      Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
     end
 
 end

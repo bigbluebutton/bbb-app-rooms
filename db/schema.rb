@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_06_200038) do
+ActiveRecord::Schema.define(version: 2020_05_28_195723) do
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 2018_06_06_200038) do
     t.datetime "updated_at", null: false
     t.string "handler"
     t.index ["handler"], name: "index_rooms_on_handler"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "uid"
+    t.string "roles"
+    t.string "full_name"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end
