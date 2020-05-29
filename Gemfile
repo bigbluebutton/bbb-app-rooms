@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
@@ -86,5 +86,5 @@ gem 'rest-client'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 
-gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
-#gem 'omniauth-ltibroker', git: 'https://github.com/jfederico/omniauth-bbbltibroker.git'
+#gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'

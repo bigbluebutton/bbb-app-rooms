@@ -21,12 +21,7 @@ module BigBlueButtonHelper
   end
 
   def join_meeting_url
-    puts ">>>>> join_meeting_url"
-    puts @room
-    puts @user
-
     return unless @room and @user
-    puts "continue"
     unless bbb
       @error = {
         key: t('error.bigbluebutton.invalidrequest.code'),

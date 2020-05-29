@@ -18,6 +18,7 @@ module BbbAppRooms
 
     config.bigbluebutton_endpoint = ENV['BIGBLUEBUTTON_ENDPOINT'] || "http://test-install.blindsidenetworks.com/bigbluebutton/api"
     config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET'] || "8cd8ef52e8e101574e400365b55e11a6"
+    config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || "Instructor,Faculty,Teacher,Mentor,Administrator,Admin"
 
     config.omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/auth"
     config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || "http://localhost:3000"

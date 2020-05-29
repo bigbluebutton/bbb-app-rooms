@@ -2,14 +2,11 @@ class SessionsController < ApplicationController
   include ApplicationHelper
 
   def new
-    puts ">>>>>>>>>>>>>>> session:new"
     cookies['launch_params'] = params.except(:controller, :action).to_json
-    puts cookies['launch_params']
     redirect_to omniauth_authorize_url(:bbbltibroker)
   end
 
   def create
-    puts ">>>>>>>>>>>>>>> session:create"
     auth = request.env["omniauth.auth"]
 
     # Return error if authentication fails
@@ -21,7 +18,6 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    puts ">>>>>>>>>>>>>>> session:failure"
   end
 
 end
