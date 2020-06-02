@@ -14,6 +14,7 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
+  config.public_file_server.enabled = true
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
@@ -62,6 +63,10 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  config.hosts = nil
+
   config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '' }/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
+
+  config.web_console.whiny_requests = false
 end

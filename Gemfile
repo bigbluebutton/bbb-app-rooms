@@ -1,11 +1,11 @@
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
-
-ruby '2.6.3'
+source 'http://rubygems.org'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
-
+gem 'rails', '>= 6.0.3'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
 # Include postgres as the database for production
@@ -22,7 +22,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'mini_racer', platforms: :ruby
 
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '~> 5.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -42,10 +42,10 @@ gem 'redis'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+gem 'dotenv-rails'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'dotenv-rails'
   gem 'rspec'
   gem 'rspec_junit_formatter'
 end
@@ -69,7 +69,7 @@ group :test do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data'
 
 gem 'json'
 
@@ -86,5 +86,4 @@ gem 'rest-client'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 
-#gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
-gem 'omniauth-ltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'

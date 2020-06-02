@@ -1,20 +1,38 @@
+# frozen_string_literal: true
+
+# Pre-set omniauth variables based on ENV
+Rails.configuration.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE']
+Rails.configuration.omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
+Rails.configuration.omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"]
+Rails.configuration.omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"]
+
+OmniAuth.config.logger = Rails.logger
+
 Rails.application.config.middleware.use OmniAuth::Builder do
-  # Pre-set omniauth variables based on ENV
-  omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/auth"
-  omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || "http://localhost:3400"
-  omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
-  omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"] || ''
-  omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"] || ''
-
-  # Prepare the actual settings
-  client_options = {
-    site: omniauth_site || '',
-    authorize_url: "#{omniauth_root || ''}/oauth/authorize",
-    token_url: "#{omniauth_root || ''}/oauth/token",
-    revoke_url: "#{omniauth_root || ''}/oauth/revoke"
-  }
-  options = { provider_ignores_state: true, path_prefix: omniauth_path_prefix, omniauth_root: omniauth_root, client_options: client_options }
-
   # Initialize the provider
-  provider :bbbltibroker, omniauth_key, omniauth_secret, options unless omniauth_key.empty? or omniauth_secret.empty?
+  provider(
+    :bbbltibroker,
+    Rails.configuration.omniauth_key,
+    Rails.configuration.omniauth_secret,
+    {
+      provider_ignores_state: true,
+      path_prefix: "#{Rails.configuration.relative_url_root}/auth",
+      omniauth_root: "#{Rails.configuration.omniauth_root}",
+      raw_info_url: "#{Rails.configuration.omniauth_root}/api/v1/session.json",
+      scope: 'api',
+      info_params: [
+        'full_name',
+        'first_name',
+        'last_name',
+        'test'
+      ],
+      client_options: {
+        site: Rails.configuration.omniauth_site,
+        code: 'rooms',
+        authorize_url: "#{Rails.configuration.omniauth_root}/oauth/authorize",
+        token_url: "#{Rails.configuration.omniauth_root}/oauth/token",
+        revoke_url: "#{Rails.configuration.omniauth_root}/oauth/revoke"
+      }
+    }
+  ) unless Rails.configuration.omniauth_site.empty? || Rails.configuration.omniauth_key.empty? || Rails.configuration.omniauth_secret.empty? || false
 end

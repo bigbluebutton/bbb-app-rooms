@@ -16,10 +16,11 @@ class Room < ApplicationRecord
   private
 
   def random_password(length, reference = '')
-    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
+    o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
     begin
       password = (0...length).map { o[rand(o.length)] }.join
     end while password == reference
     password
   end
+
 end

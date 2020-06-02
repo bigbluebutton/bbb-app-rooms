@@ -11,21 +11,6 @@ module BigBlueButtonHelper
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
   end
 
-  # Sets a BigBlueButtonApi object for interacting with the API.
-  def bbb
-    @bbb ||= if Rails.configuration.loadbalancer_configured
-      lb_user = retrieve_loadbalanced_credentials(owner.provider)
-      BigBlueButton::BigBlueButtonApi.new(remove_slash(lb_user["apiURL"]), lb_user["secret"], "0.8")
-    else
-      BigBlueButton::BigBlueButtonApi.new(remove_slash(bigbluebutton_endpoint), bigbluebutton_secret, "0.8")
-    end
-  end
-
-  # Removes trailing forward slash from a URL.
-  def remove_slash(s)
-    s.nil? ? nil : s.chomp("/")
-  end
-
   def wait_for_mod?
     return unless @room and @user
     @room.wait_moderator && ! @user.moderator?(bigbluebutton_moderator_roles)
@@ -125,6 +110,11 @@ module BigBlueButtonHelper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(bigbluebutton_endpoint, bigbluebutton_secret, "0.8")
+    @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(bigbluebutton_endpoint), bigbluebutton_secret, "0.9", "true")
+  end
+
+  # Removes trailing forward slash from a URL.
+  def remove_slash(s)
+    s.nil? ? nil : s.chomp("/")
   end
 end

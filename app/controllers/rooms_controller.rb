@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   include BigBlueButtonHelper
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close grades]
+  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, :only => [:create, :update]
 
   # GET /rooms
@@ -73,29 +73,19 @@ class RoomsController < ApplicationController
     end
   end
 
-  # GET /launch?name=&description=&handler=
+  # GET /launch
   # GET /launch.json?
   def launch
-    puts "------------------ starts launch -------------------"
-    respond_to do |format|
-      if @room
-        format.html { render :show }
-        format.json { render :show, status: :created, location: @room }
-      else
-        format.html { render :error }
-        format.json { render json: @error, status: :unprocessable_entity }
-      end
-    end
+    redirect_to room_path(@room.id)
   end
 
   # POST /rooms/:id/meeting/join
   # POST /rooms/:id/meeting/join.json
   def meeting_join
-    puts "--------------------------- calls meeting join -------------------------------"
     # make user wait until moderator is in room
     if wait_for_mod? && ! mod_in_room?
       render json: { :wait_for_mod => true } , status: :ok
-    else 
+    else
       NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
       redirect_to join_meeting_url
     end
@@ -141,28 +131,20 @@ class RoomsController < ApplicationController
     redirect_to room_path(params[:id])
   end
 
-  # GET /rooms/:id/grades
-  def grades
-    grades_handler = JSON.parse(cookies[@room.handler])['grades_handler']
-    redirect_to "#{grades_handler['send_grades_url']}/#{grades_handler['grades_token']}"
-  end
-
   private
 
     def set_error(error, status)
-      puts "--------------------------- set error -----------------------"
-      puts status
       @room = @user = nil
       @error = { key: t("error.room.#{error}.code"), message:  t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), :status => status }
     end
 
     def authenticate_user!
-      return unless omniauth_provider?(:ltibroker)
+      return unless omniauth_provider?(:bbbltibroker)
       # Assume user authenticated if session[:uid] is set
       return if session[:uid]
       if params['action'] == 'launch'
         cookies['launch_params'] = { :value => params.except(:app, :controller, :action).to_json, :expires => 30.minutes.from_now }
-        redirect_to omniauth_authorize_url(:ltibroker) and return
+        redirect_to omniauth_authorize_url(:bbbltibroker) and return
       end
       redirect_to errors_path(401)
     end
@@ -182,29 +164,29 @@ class RoomsController < ApplicationController
       set_error('forbidden', :forbidden) and return unless cookies[@room.handler]
       # Continue through happy path
       launch_params = JSON.parse(cookies[@room.handler])
-      @user = User.new(user_params(launch_params))
+      @user = User.find_by(uid: launch_params['user_id'])
     end
 
     def set_launch_room
-      @error = nil
-      lti_broker_url = omniauth_bbbltibroker_url(params['sso'])
-      sso = JSON.parse(RestClient.get("#{params['sso']}", {'Authorization' => "Bearer #{omniauth_client_token(lti_broker_url)}"}))
-      # Exit with error if sso is not valid
-      set_error('forbidden', :forbidden) and return unless sso["valid"]
-      # Continue through happy path
-      launch_params = sso["message"]
-      @room = Room.find_by(handler: params[:handler]) || Room.create!(launch_params_to_new_room_params(launch_params))
-      @room.can_grade = sso.has_key? "grades"
-      launch_params['grades_handler'] = sso["grades"] if sso.has_key? "grades"
-      @user = User.new(user_params(launch_params))
-      cookies[params[:handler]] = { :value => launch_params.to_json, :expires => 30.minutes.from_now }
+      launch_params = JSON.parse(cookies["launch_params"])
+      @room = Room.find_by(handler: resource_handler(launch_params))
+      if !@room
+        room_params = launch_params_to_new_room_params(launch_params)
+        @room = Room.create!(room_params)
+      end
+      @user = User.find_by(uid: launch_params['user_id'])
+      if !@user
+        user_params = launch_params_to_new_user_params(launch_params)
+        @user = User.create!(user_params)
+      end
+      cookies[@room.handler] = { :value => launch_params.to_json, :expires => 30.minutes.from_now }
     end
 
     def room_params
       params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
     end
 
-    def user_params(launch_params)
+    def launch_params_to_new_user_params(launch_params)
       {
         uid: launch_params['user_id'],
         roles: launch_params['roles'],
@@ -215,8 +197,9 @@ class RoomsController < ApplicationController
       }
     end
 
-    def new_room_params(name, description, recording=false, wait_moderator=false, all_moderators=false)
-      params.permit(:handler).merge({
+    def new_room_params(handler, name, description, recording=false, wait_moderator=false, all_moderators=false)
+      params.permit.merge({
+        handler: handler,
         name: name,
         description: description,
         welcome: '',
@@ -227,13 +210,14 @@ class RoomsController < ApplicationController
     end
 
     def launch_params_to_new_room_params(launch_params)
+      handler = resource_handler(launch_params)
       name = launch_params['resource_link_title']
       description = launch_params['resource_link_description']
       record = message_has_custom?(launch_params, 'record')
-      wait_mod = message_has_custom?(launch_params, 'wait_moderator')
+      wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
       all_moderators = message_has_custom?(launch_params, 'all_moderators')
 
-      new_room_params(name, description, record, wait_mod, all_moderators)
+      new_room_params(handler, name, description, record, wait_moderator, all_moderators)
     end
 
     def message_has_custom?(message, type)
@@ -244,6 +228,10 @@ class RoomsController < ApplicationController
       if params[:cancel]
         redirect_to @room
       end
+    end
+
+    def resource_handler(params)
+      Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
     end
 
 end
