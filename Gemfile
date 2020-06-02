@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '>= 6.0.3'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
 # Include postgres as the database for production
@@ -86,5 +86,4 @@ gem 'rest-client'
 gem 'omniauth'
 gem 'omniauth-oauth2'
 
-#gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
