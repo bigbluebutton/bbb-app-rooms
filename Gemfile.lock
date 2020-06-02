@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/jfederico/omniauth-bbbltibroker.git
+  remote: https://github.com/bigbluebutton/omniauth-bbbltibroker.git
   revision: 044c306e292a62f7a5a51b377484c14b72828dd7
   specs:
     omniauth-bbbltibroker (0.1.1)
