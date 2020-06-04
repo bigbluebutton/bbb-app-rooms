@@ -1,0 +1,71 @@
+#   Modifiers through environment variables in TravisCI
+#
+#   For pushing the image to DockerHub add:
+#     DOCKER_REPO=your-username/your-repo (by default the Git Repo Slug is assigned. e.g. bigbluebutton/bbb-app-rooms)
+#     DOCKER_USERNAME=your-username
+#     DOCKER_PASSWORD=your-password
+#
+#   For bypassing tests add:
+#     IGNORE_TEST=true
+#
+#   For building docker images for all branches add:
+#     BUILD_ALL=true (by default only docker images for tags and master branch are built)
+
+sudo: required
+language: ruby
+rvm:
+  - 2.7.1
+cache:
+  bundler: true
+  directories:
+    - tmp/cache/assets/test/sprockets
+services:
+  - postgresql
+  - docker
+env:
+  global:
+  - COMMIT_SHORT_SHA=${TRAVIS_COMMIT::8}
+  - BUILD_NUMBER="${TRAVIS_TAG:-${TRAVIS_BRANCH}-${COMMIT_SHORT_SHA}}"
+  - DOCKER_REPO="${DOCKER_REPO:-${TRAVIS_REPO_SLUG}}"
+jobs:
+  include:
+  - stage: test
+    name: rubocop
+    script:
+      - echo "bundle exec rubocop"
+    if: env(IGNORE_TEST) IS NOT present
+  - stage: test
+    name: test
+    before_script:
+      - bundle install
+    script:
+      - echo "rails test"
+    if: env(IGNORE_TEST) IS NOT present
+# This build is only triggered when building from the master branch.
+  - stage: build
+    name: build master
+    script:
+      - docker build -t $DOCKER_REPO:$TRAVIS_BRANCH .
+    after_success:
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+      - docker push $DOCKER_REPO
+    if: env(IGNORE_BUILD) IS NOT present AND branch IS master
+# This build is only triggered when building from a branch other than master.
+  - stage: build
+    name: build branch
+    script:
+      - docker build -t $DOCKER_REPO:$TRAVIS_BRANCH .
+    after_success:
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+      - docker push $DOCKER_REPO
+    if: env(IGNORE_BUILD) IS NOT present AND tag IS blank AND env(BUILD_ALL) IS present
+# This build is only triggered when building from a tag.
+  - stage: build
+    name: build release
+    script:
+      - docker build -t $DOCKER_REPO:$TRAVIS_TAG .
+    after_success:
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
+      - docker tag $DOCKER_REPO:$TRAVIS_TAG $DOCKER_REPO:latest
+      - docker push $DOCKER_REPO
+    if: env(IGNORE_BUILD) IS NOT present AND tag IS NOT blank
