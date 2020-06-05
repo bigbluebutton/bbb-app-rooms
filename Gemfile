@@ -83,7 +83,8 @@ gem "jquery-fileupload-rails"
 
 gem 'rest-client'
 
-gem 'omniauth'
+gem 'omniauth', path: '../omniauth'
 gem 'omniauth-oauth2'
 
-gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+gem 'omniauth-bbbltibroker', path: '../omniauth-bbbltibroker'
+#gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
