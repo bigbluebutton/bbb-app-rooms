@@ -148,8 +148,8 @@ class RoomsController < ApplicationController
       # Assume user authenticated if session[:uid] is set
       return if session[:uid]
       if params['action'] == 'launch'
-        redirector = omniauth_authorize_path(:bbbltibroker)
-        # redirector = omniauth_authorize_path(:bbbltibroker, state: params[:launch_nonce])
+        # redirector = omniauth_authorize_path(:bbbltibroker)
+        redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
         puts "redirects to #{redirector}"
         redirect_to redirector and return
       end

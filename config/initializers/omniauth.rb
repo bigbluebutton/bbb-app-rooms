@@ -20,12 +20,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       omniauth_root: "#{Rails.configuration.omniauth_root}",
       raw_info_url: "#{Rails.configuration.omniauth_root}/api/v1/session.json",
       scope: 'api',
-      state: 'stateisstate',
       info_params: [
         'full_name',
         'first_name',
-        'last_name',
-        'test'
+        'last_name'
       ],
       client_options: {
         site: Rails.configuration.omniauth_site,
