@@ -15,6 +15,7 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    puts ">>>>>>>>>> RoomsController:show"
     respond_to do |format|
       if @room
         format.html { render :show }
@@ -76,7 +77,10 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirect_to room_path(@room.id)
+    puts ">>>>>>>>>> RoomsController:launch..."
+    redirector room_path(@room.id)
+    puts "redirects to #{redirector}"
+    redirect_to redirector
   end
 
   # POST /rooms/:id/meeting/join
@@ -139,12 +143,15 @@ class RoomsController < ApplicationController
     end
 
     def authenticate_user!
+      puts ">>>>>>>>>> RoomsController:authenticate_user!"
       return unless omniauth_provider?(:bbbltibroker)
       # Assume user authenticated if session[:uid] is set
       return if session[:uid]
       if params['action'] == 'launch'
-        cookies['launch_params'] = { :value => params.except(:app, :controller, :action).to_json, :expires => 30.minutes.from_now }
-        redirect_to omniauth_authorize_url(:bbbltibroker) and return
+        redirector = omniauth_authorize_path(:bbbltibroker)
+        # redirector = omniauth_authorize_path(:bbbltibroker, state: params[:launch_nonce])
+        puts "redirects to #{redirector}"
+        redirect_to redirector and return
       end
       redirect_to errors_path(401)
     end

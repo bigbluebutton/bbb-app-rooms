@@ -20,7 +20,8 @@ Rails.application.routes.draw do
       end
 
       # Handles launches.
-      get 'launch', :to => 'sessions#new', as: :launch
+      #get 'launch', :to => 'sessions#new', as: :launch
+      get 'launch', :to => 'rooms#launch', as: :room_launch
 
       # Handles sessions.
       get '/sessions/create'
@@ -33,8 +34,6 @@ Rails.application.routes.draw do
 
       # Handles errors.
       get '/errors/:code', to: 'errors#index', as: :errors
-
-      get 'room_launch', :to => 'rooms#launch', as: :room_launch
     end
 
     resources :rooms

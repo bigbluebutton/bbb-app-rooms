@@ -2,8 +2,6 @@ class SessionsController < ApplicationController
   include ApplicationHelper
 
   def new
-    cookies['launch_params'] = params.except(:controller, :action).to_json
-    redirect_to omniauth_authorize_url(:bbbltibroker, nonce: params[:nonce])
   end
 
   def create

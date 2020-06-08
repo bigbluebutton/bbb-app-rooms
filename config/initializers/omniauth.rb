@@ -18,16 +18,14 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       provider_ignores_state: true,
       path_prefix: "#{Rails.configuration.relative_url_root}/auth",
       omniauth_root: "#{Rails.configuration.omniauth_root}",
-      # define the oauth endpoint for the authentication
       raw_info_url: "#{Rails.configuration.omniauth_root}/api/v1/session.json",
       scope: 'api',
-      # define the parameters expected as part of the response along with [uid]
+      state: 'stateisstate',
       info_params: [
-        'userid',
-        'lis_person_name_full',
-        'roles',
-        'resource_link_title',
-        'resource_link_description'
+        'full_name',
+        'first_name',
+        'last_name',
+        'test'
       ],
       client_options: {
         site: Rails.configuration.omniauth_site,
