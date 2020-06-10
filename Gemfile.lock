@@ -328,5 +328,3 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webdrivers
 
-BUNDLED WITH
-   2.1.4
