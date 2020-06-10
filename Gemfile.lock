@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/bigbluebutton/omniauth-bbbltibroker.git
-  revision: 044c306e292a62f7a5a51b377484c14b72828dd7
+  revision: bd7d914cc0b05d3c68b0656e7e71b414c2b63913
   specs:
-    omniauth-bbbltibroker (0.1.1)
+    omniauth-bbbltibroker (0.1.2)
 
 GEM
   remote: http://rubygems.org/
@@ -327,4 +327,3 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
   webdrivers
-
