@@ -15,7 +15,6 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
-    puts ">>>>>>>>>> RoomsController:show"
     respond_to do |format|
       if @room
         format.html { render :show }
@@ -77,9 +76,7 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    puts ">>>>>>>>>> RoomsController:launch..."
     redirector = room_path(@room.id)
-    puts ">>>>> redirects to #{redirector}"
     redirect_to redirector
   end
 
@@ -143,16 +140,12 @@ class RoomsController < ApplicationController
     end
 
     def authenticate_user!
-      puts ">>>>>>>>>> RoomsController:authenticate_user!"
-      puts request.original_url
-      puts session['omniauth_auth']
       return unless omniauth_provider?(:bbbltibroker)
       # Assume user authenticated if session[:omaniauth_auth] is set
       return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
       session[:callback] = request.original_url
       if params['action'] == 'launch'
         redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-        puts ">>>>> redirects to #{redirector}"
         redirect_to redirector and return
       end
       redirect_to errors_path(401)
@@ -160,7 +153,6 @@ class RoomsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      puts ">>>>>>>>>> RoomsController:set_room"
       @room = Room.find_by(id: params[:id])
       # Exit with error if room was not found
       set_error('notfound', :not_found) and return unless @room
@@ -171,7 +163,6 @@ class RoomsController < ApplicationController
     end
 
     def set_launch_room
-      puts ">>>>>>>>>> RoomsController:set_launch_room"
       launch_nonce = params['launch_nonce'] #|| session['omniauth_params']['launch_nonce']
       # Pull the Launch request_parameters
       bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
