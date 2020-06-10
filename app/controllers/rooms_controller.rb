@@ -169,9 +169,9 @@ class RoomsController < ApplicationController
       session_params = JSON.parse(RestClient.get(bbbltibroker_url, {'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"}))
       # Exit with error if session_params is not valid
       set_error('forbidden', :forbidden) and return unless session_params['valid']
-      # Continue through happy path
       launch_params = session_params['message']
-
+      set_error('forbidden', :forbidden) and return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+      # Continue through happy path
       @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
         room.update(launch_params_to_new_room_params(launch_params))
       end
