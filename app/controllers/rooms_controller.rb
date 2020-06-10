@@ -78,8 +78,8 @@ class RoomsController < ApplicationController
   # GET /launch.json?
   def launch
     puts ">>>>>>>>>> RoomsController:launch..."
-    redirector room_path(@room.id)
-    puts "redirects to #{redirector}"
+    redirector = room_path(@room.id)
+    puts ">>>>> redirects to #{redirector}"
     redirect_to redirector
   end
 
@@ -144,13 +144,15 @@ class RoomsController < ApplicationController
 
     def authenticate_user!
       puts ">>>>>>>>>> RoomsController:authenticate_user!"
+      puts request.original_url
+      puts session['omniauth_auth']
       return unless omniauth_provider?(:bbbltibroker)
-      # Assume user authenticated if session[:uid] is set
-      return if session[:uid]
+      # Assume user authenticated if session[:omaniauth_auth] is set
+      return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+      session[:callback] = request.original_url
       if params['action'] == 'launch'
-        # redirector = omniauth_authorize_path(:bbbltibroker)
         redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-        puts "redirects to #{redirector}"
+        puts ">>>>> redirects to #{redirector}"
         redirect_to redirector and return
       end
       redirect_to errors_path(401)
@@ -158,35 +160,34 @@ class RoomsController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_room
-      @error = nil
+      puts ">>>>>>>>>> RoomsController:set_room"
       @room = Room.find_by(id: params[:id])
       # Exit with error if room was not found
       set_error('notfound', :not_found) and return unless @room
-      # Exit by setting the user as Administrator if bbbltibroker is not enabled
-      unless omniauth_provider?(:bbbltibroker)
-        @user = User.new({uid: 0, roles: 'Administrator', full_name: 'User'})
-        return
-      end
-      # Exit with error by re-setting the room to nil if the cookie for the room.handler is not set
-      set_error('forbidden', :forbidden) and return unless cookies[@room.handler]
+      # Exit with error by re-setting the room to nil if the session for the room.handler is not set
+      set_error('forbidden', :forbidden) and return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.now.to_time
       # Continue through happy path
-      launch_params = JSON.parse(cookies[@room.handler])
-      @user = User.find_by(uid: launch_params['user_id'])
+      @user = User.find_by(uid: session['omniauth_auth']['uid'])
     end
 
     def set_launch_room
-      launch_params = JSON.parse(cookies["launch_params"])
-      @room = Room.find_by(handler: resource_handler(launch_params))
-      if !@room
-        room_params = launch_params_to_new_room_params(launch_params)
-        @room = Room.create!(room_params)
+      puts ">>>>>>>>>> RoomsController:set_launch_room"
+      launch_nonce = params['launch_nonce'] #|| session['omniauth_params']['launch_nonce']
+      # Pull the Launch request_parameters
+      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
+      session_params = JSON.parse(RestClient.get(bbbltibroker_url, {'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"}))
+      # Exit with error if session_params is not valid
+      set_error('forbidden', :forbidden) and return unless session_params['valid']
+      # Continue through happy path
+      launch_params = session_params['message']
+
+      @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
+        room.update(launch_params_to_new_room_params(launch_params))
       end
-      @user = User.find_by(uid: launch_params['user_id'])
-      if !@user
-        user_params = launch_params_to_new_user_params(launch_params)
-        @user = User.create!(user_params)
+      @user = User.find_or_create_by(uid: launch_params['user_id']) do |user|
+        user.update(launch_params_to_new_user_params(launch_params))
       end
-      cookies[@room.handler] = { :value => launch_params.to_json, :expires => 30.minutes.from_now }
+      session[@room.handler] = {expires: 30.minutes.from_now }
     end
 
     def room_params
@@ -223,7 +224,6 @@ class RoomsController < ApplicationController
       record = message_has_custom?(launch_params, 'record')
       wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
       all_moderators = message_has_custom?(launch_params, 'all_moderators')
-
       new_room_params(handler, name, description, record, wait_moderator, all_moderators)
     end
 
