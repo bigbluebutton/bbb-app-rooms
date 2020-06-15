@@ -33,24 +33,15 @@ jobs:
     name: rubocop
     script:
       - echo "bundle exec rubocop"
-    if: env(IGNORE_TEST) IS NOT present
+    if: env(TEST_IGNORE) IS NOT present
   - stage: test
     name: test
     before_script:
       - bundle install
     script:
       - echo "rails test"
-    if: env(IGNORE_TEST) IS NOT present
-# This build is only triggered when building from the master branch.
-  - stage: build
-    name: build master
-    script:
-      - docker build -t $DOCKER_REPO:$TRAVIS_BRANCH .
-    after_success:
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
-      - docker push $DOCKER_REPO
-    if: env(IGNORE_BUILD) IS NOT present AND branch = master
-# This build is only triggered when building from a branch other than master.
+    if: env(TEST_IGNORE) IS NOT present
+# This build is only triggered when building from a branch.
   - stage: build
     name: build branch
     script:
@@ -58,7 +49,7 @@ jobs:
     after_success:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
       - docker push $DOCKER_REPO
-    if: env(IGNORE_BUILD) IS NOT present AND tag IS blank AND env(BUILD_ALL) IS present
+    if: env(BUILD_IGNORE) IS NOT present AND branch = master OR tag IS blank AND env(BUILD_ALL) IS present
 # This build is only triggered when building from a tag.
   - stage: build
     name: build release
@@ -68,4 +59,4 @@ jobs:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
       - docker tag $DOCKER_REPO:$TRAVIS_TAG $DOCKER_REPO:latest
       - docker push $DOCKER_REPO
-    if: env(IGNORE_BUILD) IS NOT present AND tag IS NOT blank
+    if: env(BUILD_IGNORE) IS NOT present AND tag IS NOT blank
