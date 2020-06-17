@@ -5,6 +5,7 @@ class RoomsController < ApplicationController
   before_action :set_launch_room, only: %i[launch]
   before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, :only => [:create, :update]
+  before_action :allow_iframe_requests
 
   # GET /rooms
   # GET /rooms.json
@@ -232,4 +233,7 @@ class RoomsController < ApplicationController
       Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
     end
 
+    def allow_iframe_requests
+      response.headers.delete('X-Frame-Options')
+    end
 end
