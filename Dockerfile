@@ -8,6 +8,9 @@ RUN apk update \
 build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
 yaml-dev zlib-dev nodejs yarn
 
+ARG BUILD_NUMBER
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+
 ARG RAILS_ENV
 ENV RAILS_ENV=${RAILS_ENV:-production}
 

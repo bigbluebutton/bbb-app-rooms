@@ -45,7 +45,7 @@ jobs:
   - stage: build
     name: build branch
     script:
-      - docker build -t $DOCKER_REPO:$TRAVIS_BRANCH .
+      - docker build -t $DOCKER_REPO:$TRAVIS_BRANCH --build-arg BUILD_NUMBER="$TRAVIS_BRANCH ($(expr substr $TRAVIS_COMMIT 1 7))" .
     after_success:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
       - docker push $DOCKER_REPO
@@ -54,7 +54,7 @@ jobs:
   - stage: build
     name: build release
     script:
-      - docker build -t $DOCKER_REPO:$TRAVIS_TAG .
+      - docker build -t $DOCKER_REPO:$TRAVIS_TAG --build-arg BUILD_NUMBER=$TRAVIS_TAG .
     after_success:
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io
       - docker tag $DOCKER_REPO:$TRAVIS_TAG $DOCKER_REPO:latest
