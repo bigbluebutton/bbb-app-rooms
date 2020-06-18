@@ -1,6 +1,11 @@
 module BigBlueButtonHelper
   def bigbluebutton_endpoint
-    Rails.configuration.bigbluebutton_endpoint
+    url = Rails.configuration.bigbluebutton_endpoint
+    # Fix endpoint format if required.
+    url += "/" unless url.ends_with?('/')
+    url += "api/" if url.ends_with?('bigbluebutton/')
+    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
+    url
   end
 
   def bigbluebutton_secret
