@@ -1,11 +1,6 @@
 module BigBlueButtonHelper
   def bigbluebutton_endpoint
-    url = Rails.configuration.bigbluebutton_endpoint
-    # Fix endpoint format if required.
-    url += "/" unless url.ends_with?('/')
-    url += "api/" if url.ends_with?('bigbluebutton/')
-    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
-    url
+    Rails.configuration.bigbluebutton_endpoint
   end
 
   def bigbluebutton_secret
@@ -14,6 +9,14 @@ module BigBlueButtonHelper
 
   def bigbluebutton_moderator_roles
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
+  end
+
+  def fix_bbb_endpoint_format(url)
+    # Fix endpoint format only if required.
+    url += "/" unless url.ends_with?('/')
+    url += "api/" if url.ends_with?('bigbluebutton/')
+    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
+    url
   end
 
   def wait_for_mod?
@@ -115,7 +118,7 @@ module BigBlueButtonHelper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(bigbluebutton_endpoint), bigbluebutton_secret, "0.9", "true")
+    @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)), bigbluebutton_secret, "0.9", "true")
   end
 
   # Removes trailing forward slash from a URL.
