@@ -3,20 +3,33 @@
 
 # RELATIVE_URL_ROOT=apps
 
-## Database configuration
-# DB_ADAPTER=[sqlite3|postgresql]
-# DB_HOST=<localhost>
-# DB_NAME=
-# DB_USERNAME=<root>
-# DB_PASSWORD=
-
-# BigBlueButton configuration
+## BigBlueButton configuration
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
 # BIGBLUEBUTTON_SECRET=8cd8ef52e8e101574e400365b55e11a6
 # BIGBLUEBUTTON_MODERATOR_ROLES=Instructor,Faculty,Teacher,Mentor,Administrator,Admin
 
-# BigBlueButton LTI Broker configuration
+## BigBlueButton LTI Broker configuration
+# In the broker run
+# rake db:apps:add[name,redirect_uri,uid,secret,root] as in
+# rake db:apps:add[rooms,https://lti.jesus.blindside-dev.com/apps/rooms/auth/bbbltibroker/callback,b21211c29d27,3590e00d7ebd]
 # OMNIAUTH_BBBLTIBROKER_SITE=http://localhost
 # OMNIAUTH_BBBLTIBROKER_ROOT=lti
-# OMNIAUTH_BBBLTIBROKER_KEY=b21211c29d2720a4c847fc3a9097720a196f7fafddbaa0f68d5c1cb54fdbb046
-# OMNIAUTH_BBBLTIBROKER_SECRET=3590e00d7ebd398b75c4ea5a65097a19a687d72715af811bc8b3e78aa1664789
+# OMNIAUTH_BBBLTIBROKER_KEY=b21211c29d27
+# OMNIAUTH_BBBLTIBROKER_SECRET=3590e00d7ebd
+
+#WHITELIST_HOST=broker.example.com
+
+## Set the hostname using your own domain (Required)
+URL_HOST=lti.jesus.blindside-dev.com
+
+## Use only with postgres instance outside the one pre-packaged with docker-compose (Optional)
+# DATABASE_URL=postgres://postgres:password@localhost
+
+## Use to send logs to Standard Output (Optional)
+RAILS_LOG_TO_STDOUT=true
+
+## Use to serve assets through the app (Required for now)
+RAILS_SERVE_STATIC_FILES=true
+
+## Use to enable features only available for development (Optional)
+# RAILS_ENV=development
