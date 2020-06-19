@@ -1,35 +1,5 @@
 <div id="body" class="bbbroom">
 
-<p id="notice"><%= notice %></p>
-
-
-<% if @user.admin? %>
-<p>
-  <%= link_to t('default.admin.showall'), rooms_path, :class => "btn btn-xs btn-default pull-right" %>
-  <strong><%= t('default.admin.handler') %></strong>:&nbsp;<%= @room.handler %>
-</p>
-<% end %>
-
-<br>
-
-<%= link_to '', '#',:name => 'Refresh', :class => "btn btn-default glyphicon glyphicon-refresh pull-left", :onClick  => "location.reload();" %>
-
-<% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-  <%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
-<% end %>
-
-<br>
-<h1><%= @room.name %></h1>
-
-<h3><%= @room.description %></h3>
-
-<%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room), room: @room.id } %>
-
-<%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
-
-<%= render "shared/sessions", recordings: recordings, only_public: false %>
-
-</div>
-
+<%= render "shared/session", recordings: recordings, only_public: false %>
 
 <%= render "shared/footer" %>

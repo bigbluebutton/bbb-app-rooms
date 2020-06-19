@@ -46,14 +46,6 @@
     </div>
   </td>
   <td class="text-left">
-    <% p = recording[:playbacks].find do |p| p.key?(:preview) end %>
-    <% if p %>
-      <% Array.wrap(p[:preview][:images][:image]).each do |img| %>
-        <%= image_tag(img[:content].strip, class: "px-1") %>
-      <% end %>
-    <% end %>
-  </td>
-  <td class="text-left">
     <div class="small text-muted">
       <%= recording_date(recording[:startTime]) %>
     </div>
