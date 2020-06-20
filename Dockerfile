@@ -3,10 +3,10 @@ FROM ruby:2.7.0-alpine
 USER root
 
 RUN apk update \
-&& apk upgrade \
-&& apk add --update --no-cache \
-build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
-yaml-dev zlib-dev nodejs yarn
+  && apk upgrade \
+  && apk add --update --no-cache \
+    build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
+    yaml-dev zlib-dev nodejs yarn dumb-init
 
 ARG BUILD_NUMBER
 ENV BUILD_NUMBER=${BUILD_NUMBER}
@@ -33,4 +33,5 @@ EXPOSE 3000
 #   The assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up through .env
 
 # Run startup command
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["scripts/start.sh"]
