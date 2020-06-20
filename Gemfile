@@ -8,10 +8,8 @@ end
 gem 'rails', '>= 6.0.3'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
-# Include postgres as the database for production
-group :production do
-  gem "pg", "~> 1.0"
-end
+# Include postgres as another database option
+gem "pg", "~> 1.0"
 # Use Puma as the app server
 gem 'puma', '~> 3.12'
 # Use SCSS for stylesheets
