@@ -26,4 +26,4 @@ bundle exec rake assets:precompile --trace
 
 echo "Start app..."
 rm -r tmp/pids/server.pid
-bundle exec rails s -b 0.0.0.0 -p 3001
+bundle exec rails s -b 0.0.0.0 -p 3000
