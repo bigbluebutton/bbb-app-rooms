@@ -20,10 +20,6 @@ else
   bundle exec rake db:seed
 fi
 
-# Assets are precompiled on start because the root can change based on ENV["RELATIVE_URL_ROOT"]
-echo "Precompile assets..."
-bundle exec rake assets:precompile --trace
-
 echo "Start app..."
 rm -r tmp/pids/server.pid
 bundle exec rails s -b 0.0.0.0 -p 3000

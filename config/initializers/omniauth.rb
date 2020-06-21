@@ -8,6 +8,10 @@ Rails.configuration.omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"]
 
 OmniAuth.config.logger = Rails.logger
 
+missing_configs = Rails.configuration.omniauth_site.blank? ||
+                  Rails.configuration.omniauth_key.blank? ||
+                  Rails.configuration.omniauth_secret.blank?
+
 Rails.application.config.middleware.use OmniAuth::Builder do
   # Initialize the provider
   provider(
@@ -34,5 +38,5 @@ Rails.application.config.middleware.use OmniAuth::Builder do
         revoke_url: "#{Rails.configuration.omniauth_root}/oauth/revoke"
       }
     }
-  ) unless Rails.configuration.omniauth_site.empty? || Rails.configuration.omniauth_key.empty? || Rails.configuration.omniauth_secret.empty? || false
+  ) unless missing_configs
 end

@@ -14,6 +14,9 @@ ENV BUILD_NUMBER=${BUILD_NUMBER}
 ARG RAILS_ENV
 ENV RAILS_ENV=${RAILS_ENV:-production}
 
+ARG RELATIVE_URL_ROOT
+ENV RELATIVE_URL_ROOT=${RELATIVE_URL_ROOT:-apps}
+
 ENV APP_HOME /usr/src/app
 RUN mkdir -p $APP_HOME
 COPY . $APP_HOME
@@ -30,11 +33,9 @@ RUN bundle install
 RUN bundle update --bundler 2.1.4
 RUN gem update --system
 
+RUN bundle exec rake assets:precompile --trace
+
 EXPOSE 3000
 
-# Precompile assets
-#   The assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up through .env
-
-# Run startup command
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["scripts/start.sh"]

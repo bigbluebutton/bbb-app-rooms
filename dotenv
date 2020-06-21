@@ -1,7 +1,7 @@
 ## App configuration
 # SECRET_KEY_BASE=<rake secret>
 
-# RELATIVE_URL_ROOT=apps
+RELATIVE_URL_ROOT=apps
 
 ## BigBlueButton configuration
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
