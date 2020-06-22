@@ -54,7 +54,7 @@
     <%= recording_length(recording[:playbacks]) %>
   </td>
   <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-    <td class="text-center">
+    <td class="text-center pull-right">
       <div class="item-action dropdown">
         <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
           <i class="fas fa-ellipsis-v px-4"></i>
