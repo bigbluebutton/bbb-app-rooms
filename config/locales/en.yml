@@ -78,6 +78,10 @@ en:
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"
+    scheduled_meeting:
+      created:        "The meeting was scheduled."
+      edit:           "Edit"
+      updated:        "The meeting schedule was updated."
 
   error:
     http:

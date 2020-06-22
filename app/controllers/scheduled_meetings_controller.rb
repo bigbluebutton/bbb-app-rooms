@@ -2,7 +2,8 @@ class ScheduledMeetingsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
   before_action :authenticate_user!, raise: false
-  before_action :set_room
+  before_action :find_room
+  before_action :find_scheduled_meeting, only: [:edit, :update, :join]
 
   def new
     @scheduled_meeting = ScheduledMeeting.new
@@ -23,6 +24,13 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def update
+    respond_to do |format|
+      if @scheduled_meeting.update(scheduled_meeting_params)
+        format.html { redirect_to @room, notice: t('default.scheduled_meeting.updated') }
+      else
+        format.html { render :edit }
+      end
+    end
   end
 
   def join
@@ -43,9 +51,13 @@ class ScheduledMeetingsController < ApplicationController
     )
   end
 
-  def set_room
+  def find_room
     @room = Room.find_by(id: params[:room_id])
     return unless check_room
     find_user
+  end
+
+  def find_scheduled_meeting
+    @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
   end
 end
