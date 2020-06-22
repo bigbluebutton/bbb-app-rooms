@@ -1,12 +1,14 @@
 class Room < ApplicationRecord
   before_save :default_values
 
+  has_many :scheduled_meetings
+
   attr_accessor :can_grade
 
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
-    self.moderator = random_password(8) if self.moderator.nil? or self.moderator.empty?
-    self.viewer = random_password(8, self.moderator) if self.viewer.nil? || self.viewer.empty?
+    self.moderator = random_password(8) if self.moderator.blank?
+    self.viewer = random_password(8, self.moderator) if self.viewer.blank?
   end
 
   def broadcast_room_start

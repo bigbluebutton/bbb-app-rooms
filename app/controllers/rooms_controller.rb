@@ -3,7 +3,7 @@ class RoomsController < ApplicationController
   include BigBlueButtonHelper
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
+  before_action :set_room, only: %i[show edit update destroy]
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :allow_iframe_requests
 
@@ -18,6 +18,7 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
+        @scheduled_meetings = @room.scheduled_meetings # TODO: only active
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
       else
@@ -81,25 +82,9 @@ class RoomsController < ApplicationController
     redirect_to redirector
   end
 
-  # POST /rooms/:id/meeting/join
-  # POST /rooms/:id/meeting/join.json
-  def meeting_join
-    # make user wait until moderator is in room
-    if wait_for_mod? && ! mod_in_room?
-      render json: { :wait_for_mod => true } , status: :ok
-    else
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
-      redirect_to join_meeting_url
-    end
-  end
-
-  # GET /rooms/:id/meeting/end
-  # GET /rooms/:id/meeting/end.json
-  def meeting_end
-  end
-
-  # GET /rooms/:id/meeting/close
-  def meeting_close
+  # GET /rooms/close
+  # A simple page that closes itself
+  def close
     respond_to do |format|
       format.html { render :autoclose }
     end
@@ -140,27 +125,11 @@ class RoomsController < ApplicationController
       @error = { key: t("error.room.#{error}.code"), message:  t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), :status => status }
     end
 
-    def authenticate_user!
-      return unless omniauth_provider?(:bbbltibroker)
-      # Assume user authenticated if session[:omaniauth_auth] is set
-      return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
-      session[:callback] = request.original_url
-      if params['action'] == 'launch'
-        redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-        redirect_to redirector and return
-      end
-      redirect_to errors_path(401)
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find_by(id: params[:id])
-      # Exit with error if room was not found
-      set_error('notfound', :not_found) and return unless @room
-      # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-      set_error('forbidden', :forbidden) and return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.now.to_time
-      # Continue through happy path
-      @user = User.find_by(uid: session['omniauth_auth']['uid'])
+      return unless check_room
+      find_user
     end
 
     def set_launch_room

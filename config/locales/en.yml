@@ -63,6 +63,7 @@ en:
       moderator:      "Moderator token"
       viewer:         "Viewer token"
       recording:      "Recording"
+      recordings:     "Recordings"
       waitmoderator:  "Wait for moderator"
       allmoderators:  "All moderators"
       update:         "Update"
@@ -73,6 +74,7 @@ en:
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
       waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
+      scheduled_meetings: "Scheduled meetings"
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"

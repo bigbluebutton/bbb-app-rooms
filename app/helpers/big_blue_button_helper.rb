@@ -47,8 +47,14 @@ module BigBlueButtonHelper
       :logoutURL => autoclose_url,
       :"meta_description" => @room.description,
     })
-    role = (@user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators) ? 'moderator' : 'viewer'
-    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
+
+    is_moderator = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators
+    role = is_moderator ? 'moderator' : 'viewer'
+    bbb.join_meeting_url(
+      @room.handler,
+      @user.username(t("default.bigbluebutton.#{role}")),
+      @room.attributes[role]
+    )
   end
 
   # Fetches all recordings for a room.
