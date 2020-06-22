@@ -4,8 +4,8 @@ class User < ApplicationRecord
   end
 
   def moderator?(roles)
-    roles.each { |role|
-      return true if self.roles.include?(role)
+    roles.any? { |role|
+      self.roles.include?(role)
     }
   end
 

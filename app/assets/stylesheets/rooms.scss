@@ -4,3 +4,20 @@
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+
+html,body,.container {
+    height: 94%;
+}
+.container {
+    display:table;
+    width: 100%;
+}
+
+.dropdown {
+  position: absolute;
+}
+
+div #body {
+  height: 100%;
+}
