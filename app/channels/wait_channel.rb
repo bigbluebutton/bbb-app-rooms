@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class WaitChannel < ApplicationCable::Channel
   def subscribed
     # stream_from "some_channel"
-    puts "--------------------------------- some user is subscribed ----------------------------------"
-    stream_from "room_#{params[:room]}"
+    # puts('--------------------------------- some user is subscribed ----------------------------------')
+    stream_from("room_#{params[:room]}")
   end
 
   def unsubscribed

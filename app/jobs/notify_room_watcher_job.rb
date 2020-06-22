@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotifyRoomWatcherJob < ApplicationJob
   queue_as :default
 

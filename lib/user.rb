@@ -42,4 +42,6 @@ module BbbAppRooms
     end
   end
 
+    roles.split(',')
+  end
 end

@@ -19,7 +19,7 @@ Layout/HashAlignment:
   EnforcedHashRocketStyle: [ key, table ]
   EnforcedColonStyle: [ key, table ]
 Layout/LineLength:
-  Max: 128
+  Max: 200
 Metrics:
   Enabled: false
 Naming/AccessorMethodName:
@@ -59,3 +59,10 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+Style/ClassAndModuleChildren:
+  Enabled: false
+Rails/Date:
+  Enabled: false
+Rails/HelperInstanceVariable:
+  # this is temporary while I refactor the code from the helper to libs/concerns
+  Enabled: false
