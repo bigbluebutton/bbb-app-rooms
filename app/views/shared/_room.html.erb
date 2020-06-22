@@ -65,7 +65,7 @@
                 <th class="col-md-2"><%= t("recording.table.date") %></th>
                 <th class="col-md-1"><%= t("recording.table.duration") %></th>
                 <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-                  <th class="col-md-1"><%= t("recording.table.actions") %></th>
+                  <th class="text-right col-md-1"><%= t("recording.table.actions") %></th>
                 <% end %>
               </tr>
             </thead>
