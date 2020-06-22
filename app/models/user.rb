@@ -3,10 +3,8 @@ class User < ApplicationRecord
     self.roles.include?("Administrator") || self.roles.include?("Admin")
   end
 
-  def moderator?(roles)
-    roles.each { |role|
-      return true if self.roles.include?(role)
-    }
+  def moderator?(moderator_roles)
+    moderator_roles.any? { |role| self.roles.include?(role) }
   end
 
   def username(default)
