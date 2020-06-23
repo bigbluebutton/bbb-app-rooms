@@ -19,10 +19,6 @@ class Room < ApplicationRecord
     self.viewer = random_password(8, self.moderator) if self.viewer.blank?
   end
 
-  def broadcast_room_start
-    ActionCable.server.broadcast("room_#{self.id}", action: "started")
-  end
-
   def ids_for_get_recordings
     scheduled_meetings.map { |meeting| meeting.meeting_id }
   end

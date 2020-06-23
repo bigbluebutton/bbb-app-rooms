@@ -30,16 +30,7 @@ module BigBlueButtonHelper
 
   def join_meeting_url(scheduled_meeting, user)
     return unless scheduled_meeting.present? && user.present?
-
-    unless bbb
-      @error = {
-        key: t('error.bigbluebutton.invalidrequest.code'),
-        message:  t('error.bigbluebutton.invalidrequest.message'),
-        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
-        status: :internal_server_error
-      }
-      return
-    end
+    return unless check_bbb
 
     room = scheduled_meeting.room
     bbb.create_meeting(scheduled_meeting.name, scheduled_meeting.meeting_id, {
@@ -57,6 +48,18 @@ module BigBlueButtonHelper
       scheduled_meeting.meeting_id,
       user.username(t("default.bigbluebutton.#{role}")),
       room.attributes[role]
+    )
+  end
+
+  def external_join_meeting_url(scheduled_meeting, full_name)
+    return unless scheduled_meeting.present? && full_name.present?
+    return unless check_bbb
+
+    room = scheduled_meeting.room
+    bbb.join_meeting_url(
+      scheduled_meeting.meeting_id,
+      full_name,
+      room.attributes['viewer']
     )
   end
 
@@ -127,7 +130,24 @@ module BigBlueButtonHelper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)), bigbluebutton_secret, "0.9", "true")
+    @bbb ||= BigBlueButton::BigBlueButtonApi.new(
+      remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)),
+      bigbluebutton_secret, "0.9", "true"
+    )
+  end
+
+  def check_bbb
+    unless bbb
+      @error = {
+        key: t('error.bigbluebutton.invalidrequest.code'),
+        message:  t('error.bigbluebutton.invalidrequest.message'),
+        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
+        status: :internal_server_error
+      }
+      false
+    else
+      true
+    end
   end
 
   # Removes trailing forward slash from a URL.

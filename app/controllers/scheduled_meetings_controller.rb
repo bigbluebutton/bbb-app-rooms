@@ -1,9 +1,11 @@
 class ScheduledMeetingsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
-  before_action :authenticate_user!, raise: false
+  before_action :authenticate_user!, raise: false, except: [:external, :external_post]
   before_action :find_room
-  before_action :find_scheduled_meeting, only: [:edit, :update, :join]
+  before_action :check_room, except: [:external, :external_post]
+  before_action :find_user, except: [:external, :external_post]
+  before_action :find_scheduled_meeting, only: [:edit, :update, :join, :external, :external_post]
 
   def new
     @scheduled_meeting = ScheduledMeeting.new
@@ -38,8 +40,22 @@ class ScheduledMeetingsController < ApplicationController
     if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
       render json: { :wait_for_mod => true } , status: :ok
     else
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
+      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@scheduled_meeting)
       redirect_to join_meeting_url(@scheduled_meeting, @user)
+    end
+  end
+
+  def external
+  end
+
+  def external_post
+    # TODO: validate the params
+
+    if !mod_in_room?(@scheduled_meeting)
+      render json: { :wait_for_mod => true } , status: :ok
+    else
+      full_name = "#{params[:first_name]} #{params[:last_name]}"
+      redirect_to external_join_meeting_url(@scheduled_meeting, full_name)
     end
   end
 
@@ -47,14 +63,12 @@ class ScheduledMeetingsController < ApplicationController
 
   def scheduled_meeting_params
     params.require(:scheduled_meeting).permit(
-      :name
+      :name, :recording, :wait_moderator, :all_moderators
     )
   end
 
   def find_room
     @room = Room.from_param(params[:room_id])
-    return unless check_room
-    find_user
   end
 
   def find_scheduled_meeting

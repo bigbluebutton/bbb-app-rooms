@@ -1,7 +1,7 @@
 class NotifyRoomWatcherJob < ApplicationJob
   queue_as :default
 
-  def perform(room)
-    room.broadcast_room_start
+  def perform(scheduled_meeting)
+    scheduled_meeting.broadcast_conference_started
   end
 end

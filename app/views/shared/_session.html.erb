@@ -49,7 +49,11 @@
               <li>
                 <%= meeting.name %>
                 <%= button_tag t('default.room.join'), type: 'button', class: "btn btn-primary join-room-btn", data: { url: join_room_scheduled_meeting_path(@room, meeting), room: @room.id, meeting: meeting.id } %>
-                <%= link_to '', edit_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.edit'), class: "btn btn-default glyphicon glyphicon-edit" %>
+                <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+                  <%= link_to '', edit_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.edit'), class: "btn btn-default glyphicon glyphicon-edit" %>
+
+                  <%= link_to '', external_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.external'), class: "btn btn-default glyphicon glyphicon-link" %>
+                <% end %>
               </li>
             <% end %>
           </ul>

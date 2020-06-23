@@ -75,6 +75,10 @@ en:
       allmoderators:  "All moderators"
       created:        "The meeting was scheduled."
       edit:           "Edit"
+      external:
+        first_name:   "First name"
+        join:         "Join"
+        last_name:    "Last name"
       recording:      "Recording"
       tooltip:
         recording:    "The session may be recorded"
