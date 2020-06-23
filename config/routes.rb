@@ -3,6 +3,9 @@
 Rails.application.routes.draw do
   scope ENV['RELATIVE_URL_ROOT'] || '' do
     scope 'rooms' do
+      get '/health_check', to: 'health_check#all'
+      get '/healthz', to: 'health_check#all'
+
       # Handles meeting management.
       scope ':id/meeting' do
         post '/join', to: 'rooms#meeting_join', as: :meeting_join
