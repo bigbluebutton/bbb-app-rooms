@@ -2,6 +2,6 @@
 
 class HealthCheckController < ApplicationController
   def all
-    render plain: "success"
+    render(plain: 'success')
   end
 end
