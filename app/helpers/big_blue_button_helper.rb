@@ -11,14 +11,6 @@ module BigBlueButtonHelper
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
   end
 
-  def fix_bbb_endpoint_format(url)
-    # Fix endpoint format only if required.
-    url += "/" unless url.ends_with?('/')
-    url += "api/" if url.ends_with?('bigbluebutton/')
-    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
-    url
-  end
-
   def wait_for_mod?
     return unless @room and @user
     @room.wait_moderator && ! @user.moderator?(bigbluebutton_moderator_roles)
@@ -119,6 +111,15 @@ module BigBlueButtonHelper
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)), bigbluebutton_secret, "0.9", "true")
+  end
+
+  # Fixes BigBlueButton endpoint ending.
+  def fix_bbb_endpoint_format(url)
+    # Fix endpoint format only if required.
+    url += "/" unless url.ends_with?('/')
+    url += "api/" if url.ends_with?('bigbluebutton/')
+    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
+    url
   end
 
   # Removes trailing forward slash from a URL.
