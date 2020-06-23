@@ -24,7 +24,6 @@ Rails.application.routes.draw do
       end
 
       # Handles launches.
-      # get 'launch', :to => 'sessions#new', as: :launch
       get 'launch', to: 'rooms#launch', as: :room_launch
 
       # Handles sessions.
