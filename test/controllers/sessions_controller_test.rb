@@ -10,6 +10,6 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get failure' do
     get sessions_failure_url
-    assert_response :success
+    assert_response :found
   end
 end
