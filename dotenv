@@ -1,7 +1,13 @@
-## App configuration
-# SECRET_KEY_BASE=<rake secret>
+# Create a Secret Key for Rails
+#
+# You can generate a secure one through the Greenlight docker image
+# with the command.
+#
+#   docker run --rm bigbluebutton/greenlight:v2 bundle exec rake secret
+#
+SECRET_KEY_BASE=secret
 
-# RELATIVE_URL_ROOT=apps
+RELATIVE_URL_ROOT=apps
 
 ## BigBlueButton configuration
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/

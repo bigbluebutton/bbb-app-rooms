@@ -32,7 +32,7 @@ jobs:
   - stage: test
     name: rubocop
     script:
-      - echo "bundle exec rubocop"
+      - bundle exec rubocop
     if: env(TEST_IGNORE) IS NOT present
   - stage: test
     name: test
