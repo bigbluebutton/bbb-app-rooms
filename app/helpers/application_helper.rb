@@ -23,4 +23,9 @@ module ApplicationHelper
     end
     false
   end
+
+  def can_edit?(user, resource)
+    # TODO: verifiy the resource as well
+    user.admin? || user.moderator?(bigbluebutton_moderator_roles)
+  end
 end

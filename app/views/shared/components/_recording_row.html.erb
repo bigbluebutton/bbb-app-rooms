@@ -30,7 +30,7 @@
           <%= recording[:name] %>
         <% end %>
       </text>
-      <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+      <% if can_edit?(@user, recording) %>
         <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
       <% end %>
     </div>
@@ -40,7 +40,7 @@
       <text id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
       </text>
-      <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+      <% if can_edit?(@user, recording) %>
         <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
       <% end %>
     </div>
@@ -53,7 +53,7 @@
   <td class="text-left">
     <%= recording_length(recording[:playbacks]) %>
   </td>
-  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+  <% if can_edit?(@user, recording) %>
     <td class="text-center">
       <div class="item-action dropdown">
         <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
