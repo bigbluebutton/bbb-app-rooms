@@ -15,7 +15,37 @@ class Room < ApplicationRecord
     ActionCable.server.broadcast("room_#{self.id}", action: "started")
   end
 
+  def api_attributes(scheduled_meeting = nil)
+    id = api_meeting_id(scheduled_meeting)
+    if scheduled_meeting.nil?
+      name = self.name
+    else
+      name = scheduled_meeting.name
+    end
+
+    {
+      meeting_id: id,
+      name: name
+    }
+  end
+
+  def ids_for_get_recordings
+    scheduled_meetings.pluck(:created_at).map { |meeting|
+      self.api_meeting_id(meeting)
+    }.unshift(self.handler)
+  end
+
   private
+
+  def api_meeting_id(scheduled_meeting = nil)
+    if scheduled_meeting.nil?
+      self.handler
+    elsif scheduled_meeting.is_a?(ScheduledMeeting)
+      "#{self.handler}-#{scheduled_meeting.created_at.to_i}"
+    elsif scheduled_meeting.is_a?(DateTime) || scheduled_meeting.is_a?(Time)
+      "#{self.handler}-#{scheduled_meeting.to_i}"
+    end
+  end
 
   def random_password(length, reference = '')
     o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map { |i| i.to_a }.flatten
@@ -24,5 +54,4 @@ class Room < ApplicationRecord
     end while password == reference
     password
   end
-
 end

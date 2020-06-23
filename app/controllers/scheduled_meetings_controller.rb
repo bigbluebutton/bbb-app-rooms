@@ -39,7 +39,7 @@ class ScheduledMeetingsController < ApplicationController
       render json: { :wait_for_mod => true } , status: :ok
     else
       NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
-      redirect_to join_meeting_url
+      redirect_to join_meeting_url(@room, @user, @scheduled_meeting)
     end
   end
 

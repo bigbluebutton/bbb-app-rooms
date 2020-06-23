@@ -18,6 +18,7 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
+        @recordings = get_recordings(@room)
         @scheduled_meetings = @room.scheduled_meetings # TODO: only active
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
@@ -120,11 +121,6 @@ class RoomsController < ApplicationController
 
   private
 
-    def set_error(error, status)
-      @room = @user = nil
-      @error = { key: t("error.room.#{error}.code"), message:  t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), :status => status }
-    end
-
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find_by(id: params[:id])
@@ -138,9 +134,9 @@ class RoomsController < ApplicationController
       bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
       session_params = JSON.parse(RestClient.get(bbbltibroker_url, {'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"}))
       # Exit with error if session_params is not valid
-      set_error('forbidden', :forbidden) and return unless session_params['valid']
+      set_room_error('forbidden', :forbidden) and return unless session_params['valid']
       launch_params = session_params['message']
-      set_error('forbidden', :forbidden) and return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+      set_room_error('forbidden', :forbidden) and return unless launch_params['user_id'] == session['omniauth_auth']['uid']
       # Continue through happy path
       @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
         room.update(launch_params_to_new_room_params(launch_params))

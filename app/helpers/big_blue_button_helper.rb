@@ -28,8 +28,9 @@ module BigBlueButtonHelper
     bbb.is_meeting_running?(@room.handler)
   end
 
-  def join_meeting_url
-    return unless @room and @user
+  def join_meeting_url(room, user, scheduled_meeting = nil)
+    return unless room.present? && user.present?
+
     unless bbb
       @error = {
         key: t('error.bigbluebutton.invalidrequest.code'),
@@ -39,27 +40,29 @@ module BigBlueButtonHelper
       }
       return
     end
-    bbb.create_meeting(@room.name, @room.handler, {
-      :moderatorPW => @room.moderator,
-      :attendeePW => @room.viewer,
-      :welcome => @room.welcome,
-      :record => @room.recording,
+
+    attrs = room.api_attributes(scheduled_meeting)
+    bbb.create_meeting(attrs[:name], attrs[:meeting_id], {
+      :moderatorPW => room.moderator,
+      :attendeePW => room.viewer,
+      :welcome => room.welcome,
+      :record => room.recording,
       :logoutURL => autoclose_url,
-      :"meta_description" => @room.description,
+      :"meta_description" => room.description,
     })
 
-    is_moderator = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators
+    is_moderator = user.moderator?(bigbluebutton_moderator_roles) || room.all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
     bbb.join_meeting_url(
-      @room.handler,
-      @user.username(t("default.bigbluebutton.#{role}")),
-      @room.attributes[role]
+      attrs[:meeting_id],
+      user.username(t("default.bigbluebutton.#{role}")),
+      room.attributes[role]
     )
   end
 
   # Fetches all recordings for a room.
-  def recordings
-    res = bbb.get_recordings(meetingID: @room.handler)
+  def get_recordings(room)
+    res = bbb.get_recordings(meetingID: room.ids_for_get_recordings)
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|

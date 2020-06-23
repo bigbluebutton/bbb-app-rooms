@@ -15,17 +15,27 @@ class ApplicationController < ActionController::Base
 
   def check_room
     # Exit with error if room was not found
-    set_error('notfound', :not_found) and return false unless @room
+    set_room_error('notfound', :not_found) and return false unless @room
 
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
     expired = session[@room.handler].blank? ||
               session[@room.handler]['expires'].to_time <= Time.now.to_time
-    set_error('forbidden', :forbidden) and return false if expired
+    set_room_error('forbidden', :forbidden) and return false if expired
 
     true
   end
 
   def find_user
     @user = User.find_by(uid: session['omniauth_auth']['uid'])
+  end
+
+  def set_room_error(error, status)
+    @room = @user = nil
+    @error = {
+      key: t("error.room.#{error}.code"),
+      message: t("error.room.#{error}.message"),
+      suggestion: t("error.room.#{error}.suggestion"),
+      status: status
+    }
   end
 end
