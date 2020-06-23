@@ -84,8 +84,7 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirector = room_path(@room.id)
-    redirect_to(redirector)
+    redirect_to(room_path(@room.id))
   end
 
   # POST /rooms/:id/meeting/join
