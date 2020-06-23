@@ -163,10 +163,13 @@ class RoomsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_room
     @room = Room.find_by(id: params[:id])
+
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
+
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
     set_error('forbidden', :forbidden) && return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.zone.now.to_time
+
     # Continue through happy path
     @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
   end
@@ -176,10 +179,13 @@ class RoomsController < ApplicationController
     # Pull the Launch request_parameters
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
     session_params = JSON.parse(RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"))
+
     # Exit with error if session_params is not valid
     set_error('forbidden', :forbidden) && return unless session_params['valid']
+
     launch_params = session_params['message']
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+
     # Continue through happy path
     @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
       room.update(launch_params_to_new_room_params(launch_params))

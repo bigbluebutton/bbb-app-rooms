@@ -14,10 +14,10 @@ class SessionsController < ApplicationController
 
     # As authentication did not fail, initialize the session
     session['omniauth_auth'] = omniauth_auth
+    redirect_to(room_launch_url(launch_nonce: omniauth_params['launch_nonce']))
   end
 
   def failure
-    redirect_to errors_url(500)
+    redirect_to(errors_url(500))
   end
-
 end
