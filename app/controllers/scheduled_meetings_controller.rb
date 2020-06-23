@@ -35,11 +35,11 @@ class ScheduledMeetingsController < ApplicationController
 
   def join
     # make user wait until moderator is in room
-    if wait_for_mod? && !mod_in_room?
+    if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
       render json: { :wait_for_mod => true } , status: :ok
     else
       NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
-      redirect_to join_meeting_url(@room, @user, @scheduled_meeting)
+      redirect_to join_meeting_url(@scheduled_meeting, @user)
     end
   end
 

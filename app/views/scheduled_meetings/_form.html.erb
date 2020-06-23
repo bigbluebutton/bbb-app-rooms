@@ -16,6 +16,24 @@
     <%= form.text_field :name, :required => true, size: "45", class: "form-control input col-6" %>
   </div>
 
+  <div class="field form-group input-group">
+    <%= form.check_box :recording %>&nbsp;
+    <b><%= t('default.scheduled_meeting.recording') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.recording') %>"></i><br>
+  </div>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :wait_moderator %>&nbsp;
+    <b><%= t('default.scheduled_meeting.waitmoderator') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.waitmoderator') %>"></i><br>
+  </div>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :all_moderators %>&nbsp;
+    <b><%= t('default.scheduled_meeting.allmoderators') %></b>&nbsp;
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.allmoderators') %>"></i><br>
+  </div>
+
   <div class="actions">
     <%= form.submit class: "btn btn-primary" %>
   </div>

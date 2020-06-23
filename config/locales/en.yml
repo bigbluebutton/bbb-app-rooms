@@ -62,26 +62,26 @@ en:
       welcome:        "Welcome"
       moderator:      "Moderator token"
       viewer:         "Viewer token"
-      recording:      "Recording"
       recordings:     "Recordings"
-      waitmoderator:  "Wait for moderator"
-      allmoderators:  "All moderators"
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
-      tooltip:
-        recording:    "The session may be recorded"
-        waitmoderator: "Viewers are unable to join until a moderator joins"
-        allmoderators: "All users will join as moderators"
       waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
       scheduled_meetings: "Scheduled meetings"
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"
     scheduled_meeting:
+      allmoderators:  "All moderators"
       created:        "The meeting was scheduled."
       edit:           "Edit"
+      recording:      "Recording"
+      tooltip:
+        recording:    "The session may be recorded"
+        waitmoderator: "Viewers are unable to join until a moderator joins"
+        allmoderators: "All users will join as moderators"
       updated:        "The meeting schedule was updated."
+      waitmoderator:  "Wait for moderator"
 
   error:
     http:

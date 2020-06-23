@@ -8,4 +8,8 @@ class ScheduledMeeting < ApplicationRecord
   def self.from_param(param)
     find_by(id: param)
   end
+
+  def meeting_id
+    "#{room.handler}-#{self.created_at.to_i}"
+  end
 end

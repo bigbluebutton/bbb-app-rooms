@@ -19,17 +19,17 @@ module BigBlueButtonHelper
     url
   end
 
-  def wait_for_mod?
-    return unless @room and @user
-    @room.wait_moderator && ! @user.moderator?(bigbluebutton_moderator_roles)
+  def wait_for_mod?(scheduled_meeting, user)
+    return unless scheduled_meeting and user
+    scheduled_meeting.wait_moderator && !user.moderator?(bigbluebutton_moderator_roles)
   end
 
-  def mod_in_room?
-    bbb.is_meeting_running?(@room.handler)
+  def mod_in_room?(scheduled_meeting)
+    bbb.is_meeting_running?(scheduled_meeting.meeting_id)
   end
 
-  def join_meeting_url(room, user, scheduled_meeting = nil)
-    return unless room.present? && user.present?
+  def join_meeting_url(scheduled_meeting, user)
+    return unless scheduled_meeting.present? && user.present?
 
     unless bbb
       @error = {
@@ -41,20 +41,20 @@ module BigBlueButtonHelper
       return
     end
 
-    attrs = room.api_attributes(scheduled_meeting)
-    bbb.create_meeting(attrs[:name], attrs[:meeting_id], {
+    room = scheduled_meeting.room
+    bbb.create_meeting(scheduled_meeting.name, scheduled_meeting.meeting_id, {
       :moderatorPW => room.moderator,
       :attendeePW => room.viewer,
       :welcome => room.welcome,
-      :record => room.recording,
+      :record => scheduled_meeting.recording,
       :logoutURL => autoclose_url,
       :"meta_description" => room.description,
     })
 
-    is_moderator = user.moderator?(bigbluebutton_moderator_roles) || room.all_moderators
+    is_moderator = user.moderator?(bigbluebutton_moderator_roles) || scheduled_meeting.all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
     bbb.join_meeting_url(
-      attrs[:meeting_id],
+      scheduled_meeting.meeting_id,
       user.username(t("default.bigbluebutton.#{role}")),
       room.attributes[role]
     )
