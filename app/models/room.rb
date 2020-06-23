@@ -5,6 +5,14 @@ class Room < ApplicationRecord
 
   attr_accessor :can_grade
 
+  def to_param
+    self.handler
+  end
+
+  def self.from_param(param)
+    find_by(handler: param)
+  end
+
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
     self.moderator = random_password(8) if self.moderator.blank?

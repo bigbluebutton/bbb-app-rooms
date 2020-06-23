@@ -52,7 +52,7 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def find_room
-    @room = Room.find_by(id: params[:room_id])
+    @room = Room.from_param(params[:room_id])
     return unless check_room
     find_user
   end

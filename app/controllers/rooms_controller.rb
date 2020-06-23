@@ -79,7 +79,7 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirector = room_path(@room.id)
+    redirector = room_path(@room)
     redirect_to redirector
   end
 
@@ -94,13 +94,13 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -110,23 +110,22 @@ class RoomsController < ApplicationController
     elsif params[:setting] == "describe_recording"
       update_recording(params[:record_id], "meta_description" => params[:record_description])
     end
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_room
-      @room = Room.find_by(id: params[:id])
-      return unless check_room
-      find_user
-    end
+  def set_room
+    @room = Room.from_param(params[:id])
+    return unless check_room
+    find_user
+  end
 
     def set_launch_room
       launch_nonce = params['launch_nonce'] #|| session['omniauth_params']['launch_nonce']
