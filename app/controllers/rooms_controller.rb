@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+require 'user'
 
 class RoomsController < ApplicationController
   include ApplicationHelper
@@ -180,7 +183,6 @@ class RoomsController < ApplicationController
         room.update(launch_params_to_new_room_params(launch_params))
       end
       user_params = launch_params_to_new_user_params(launch_params)
-      puts user_params
       session[@room.handler] = {user_params: user_params, expires: 30.minutes.from_now}
     end
 
