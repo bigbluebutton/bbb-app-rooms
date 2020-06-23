@@ -66,3 +66,4 @@ Rails/Date:
 Rails/HelperInstanceVariable:
   # this is temporary while I refactor the code from the helper to libs/concerns
   Enabled: false
+  
