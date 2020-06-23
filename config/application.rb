@@ -27,5 +27,8 @@ module BbbAppRooms
     config.omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
     config.omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"] || ''
     config.omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"] || ''
+
+    ### TODO: Not sure if this is really necessary. Check it out.
+    config.autoload_paths << "#{Rails.root}/lib"
   end
 end

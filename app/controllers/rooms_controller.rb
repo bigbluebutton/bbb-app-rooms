@@ -1,6 +1,9 @@
+
 class RoomsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
+  include BbbAppRooms
+
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
   before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
@@ -160,7 +163,7 @@ class RoomsController < ApplicationController
       # Exit with error by re-setting the room to nil if the session for the room.handler is not set
       set_error('forbidden', :forbidden) and return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.now.to_time
       # Continue through happy path
-      @user = User.find_by(uid: session['omniauth_auth']['uid'])
+      @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
     end
 
     def set_launch_room
@@ -176,25 +179,13 @@ class RoomsController < ApplicationController
       @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
         room.update(launch_params_to_new_room_params(launch_params))
       end
-      @user = User.find_or_create_by(uid: launch_params['user_id']) do |user|
-        user.update(launch_params_to_new_user_params(launch_params))
-      end
-      session[@room.handler] = {expires: 30.minutes.from_now }
+      user_params = launch_params_to_new_user_params(launch_params)
+      puts user_params
+      session[@room.handler] = {user_params: user_params, expires: 30.minutes.from_now}
     end
 
     def room_params
       params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
-    end
-
-    def launch_params_to_new_user_params(launch_params)
-      {
-        uid: launch_params['user_id'],
-        roles: launch_params['roles'],
-        full_name: launch_params['lis_person_name_full'],
-        first_name: launch_params['lis_person_name_given'],
-        last_name: launch_params['lis_person_name_family'],
-        email: launch_params['lis_person_contact_email_primary'],
-      }
     end
 
     def new_room_params(handler, name, description, recording=false, wait_moderator=false, all_moderators=false)
@@ -217,6 +208,17 @@ class RoomsController < ApplicationController
       wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
       all_moderators = message_has_custom?(launch_params, 'all_moderators')
       new_room_params(handler, name, description, record, wait_moderator, all_moderators)
+    end
+
+    def launch_params_to_new_user_params(launch_params)
+      {
+        uid: launch_params['user_id'],
+        full_name: launch_params['lis_person_name_full'],
+        first_name: launch_params['lis_person_name_given'],
+        last_name: launch_params['lis_person_name_family'],
+        email: launch_params['lis_person_contact_email_primary'],
+        roles: launch_params['roles'],
+      }
     end
 
     def message_has_custom?(message, type)
