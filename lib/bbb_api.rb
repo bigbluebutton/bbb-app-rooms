@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module BigBlueButtonHelper
+module BbbApi
   def bigbluebutton_endpoint
     Rails.configuration.bigbluebutton_endpoint
   end
@@ -120,9 +120,9 @@ module BigBlueButtonHelper
   # Fixes BigBlueButton endpoint ending.
   def fix_bbb_endpoint_format(url)
     # Fix endpoint format only if required.
-    url += "/" unless url.ends_with?('/')
-    url += "api/" if url.ends_with?('bigbluebutton/')
-    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
+    url += '/' unless url.ends_with?('/')
+    url += 'api/' if url.ends_with?('bigbluebutton/')
+    url += 'bigbluebutton/api/' unless url.ends_with?('bigbluebutton/api/')
     url
   end
 

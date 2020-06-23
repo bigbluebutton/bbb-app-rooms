@@ -11,10 +11,10 @@ module BbbAppRooms
     end
 
     def moderator?(moderator_roles)
-      moderator_roles = moderator_roles.split(',') unless moderator_roles.kind_of?(Array)
-      moderator_roles.any? { |role|
+      moderator_roles = moderator_roles.split(',') unless moderator_roles.is_a?(Array)
+      moderator_roles.any? do |role|
         role?(role)
-      }
+      end
     end
 
     def admin?
@@ -22,26 +22,25 @@ module BbbAppRooms
     end
 
     def role?(role)
-      launch_roles.any? { |launch_role|
+      launch_roles.any? do |launch_role|
         launch_role.match(/#{role}/i)
-      }
+      end
     end
 
     def username(default)
       return full_name if full_name
       return "#{first_name} #{last_name}" if first_name || last_name
       return email.split('@').first if email
+
       default
     end
 
     private
 
     def launch_roles
-      return [] unless self.roles
-      self.roles.split(',')
-    end
-  end
+      return [] unless roles
 
-    roles.split(',')
+      roles.split(',')
+    end
   end
 end

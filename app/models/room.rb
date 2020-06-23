@@ -19,6 +19,7 @@ class Room < ApplicationRecord
 
   def random_password(length, reference = '')
     o = [('a'..'z'), ('A'..'Z'), ('0'..'9')].map(&:to_a).flatten
+    password = ''
     loop do
       password = (0...length).map { o[rand(o.length)] }.join
       break unless password == reference

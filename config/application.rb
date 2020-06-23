@@ -23,10 +23,9 @@ module BbbAppRooms
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
 
     config.omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/auth"
-    config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || "http://localhost:3000"
-    config.omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
-    config.omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"] || ''
-    config.omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"] || ''
-
+    config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || 'http://localhost:3000'
+    config.omniauth_root = (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s
+    config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
+    config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
   end
 end
