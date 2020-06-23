@@ -1,48 +1,45 @@
-class User
-  attr_accessor :uid, :roles, :full_name, :first_name, :last_name, :email
+# frozen_string_literal: true
 
-  def initialize(params)
-    params.each do |key, value|
-      instance_variable_set("@#{key}", value)
-    end
-  end
+module BbbAppRooms
+  class User
+    attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles
 
-  def moderator?(moderator_roles)
-    moderator_roles.each do |role|
-      return true if role?(role)
+    def initialize(params)
+      params.each do |key, value|
+        instance_variable_set("@#{key}", value)
+      end
     end
-    false
-  end
 
-  def admin?
-    role?('Administrator')
-  end
+    def moderator?(moderator_roles)
+      moderator_roles = moderator_roles.split(',') unless moderator_roles.kind_of?(Array)
+      moderator_roles.any? { |role|
+        role?(role)
+      }
+    end
 
-  def role?(role)
-    launch_roles.each do |launch_role|
-      return true if launch_role.match(/#{role}/i)
+    def admin?
+      role?('Admin')
     end
-    false
-  end
 
-  def username(default)
-    if self.full_name
-      return self.full_name
+    def role?(role)
+      launch_roles.any? { |launch_role|
+        launch_role.match(/#{role}/i)
+      }
     end
-    if self.first_name or self.last_name
-      return "#{self.first_name} #{self.last_name}"
-    end
-    if self.email
-      return self.email.split("@").first
-    end
-    default
-  end
 
-  private
+    def username(default)
+      return full_name if full_name
+      return "#{first_name} #{last_name}" if first_name || last_name
+      return email.split('@').first if email
+      default
+    end
+
+    private
 
     def launch_roles
       return [] unless self.roles
-      self.roles.split(",")
+      self.roles.split(',')
     end
+  end
 
 end
