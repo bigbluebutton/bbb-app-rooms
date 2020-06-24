@@ -2,6 +2,7 @@ require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
   before_action :set_current_locale
+  before_action :set_timezone
 
   def authenticate_user!
     return unless omniauth_provider?(:bbbltibroker)
@@ -52,5 +53,11 @@ class ApplicationController < ActionController::Base
       I18n.locale = 'en' # fallback
     end
     response.set_header("Content-Language", I18n.locale)
+  end
+
+  def set_timezone
+    tz = ActiveSupport::TimeZone[Rails.application.config.default_timezone]
+    tz = ActiveSupport::TimeZone['UTC'] if tz.nil?
+    Time.zone = tz
   end
 end

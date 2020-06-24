@@ -33,3 +33,8 @@ RAILS_SERVE_STATIC_FILES=true
 
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
+
+# The name of the timezone used in the interface
+# Check all available options with:
+# ActiveSupport::TimeZone.all.map { |tz| tz.name }
+DEFAULT_TIMEZONE=UTC

@@ -34,9 +34,17 @@ class ScheduledMeeting < ApplicationRecord
     self.id.to_s
   end
 
-  def self.parse_start_at(date, time)
+  def self.parse_start_at(date, time, zone = nil)
+    if zone.nil?
+      zone = Time.zone
+    elsif zone.is_a?(String)
+      zone = ActiveSupport::TimeZone[zone]
+    end
+    zone_str = Time.at(zone.utc_offset.abs).utc.strftime("%H:%M")
+    zone_sig = zone.utc_offset < 0 ? '-' : '+'
+
     DateTime.strptime(
-      "#{date}T#{time}:00+00:00", '%Y-%m-%dT%H:%M:%S%z'
+      "#{date}T#{time}:00#{zone_sig}#{zone_str}", '%Y-%m-%dT%H:%M:%S%z'
     )
   end
 
