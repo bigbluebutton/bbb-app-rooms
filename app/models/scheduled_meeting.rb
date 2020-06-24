@@ -34,17 +34,17 @@ class ScheduledMeeting < ApplicationRecord
     self.id.to_s
   end
 
-  def self.parse_start_at(date, time, zone = nil)
-    if zone.nil?
-      zone = Time.zone
-    elsif zone.is_a?(String)
-      zone = ActiveSupport::TimeZone[zone]
-    end
-    zone_str = Time.at(zone.utc_offset.abs).utc.strftime("%H:%M")
+  def self.parse_start_at(date, time, locale = I18n.locale, zone = Time.zone)
+    format_date = I18n.t('default.formats.flatpickr.date_ruby', locale: locale)
+    format_time = I18n.t('default.formats.flatpickr.time_ruby', locale: locale)
+
+    zone = ActiveSupport::TimeZone[zone] if zone.is_a?(String)
+    zone_str = Time.at(zone.utc_offset.abs).utc.strftime(format_time)
     zone_sig = zone.utc_offset < 0 ? '-' : '+'
 
+    # format string example: "%Y-%m-%dT%H:%M%z"
     DateTime.strptime(
-      "#{date}T#{time}:00#{zone_sig}#{zone_str}", '%Y-%m-%dT%H:%M:%S%z'
+      "#{date}T#{time}#{zone_sig}#{zone_str}", "#{format_date}T#{format_time}%z"
     )
   end
 
@@ -52,12 +52,14 @@ class ScheduledMeeting < ApplicationRecord
     "#{room.handler}-#{self.created_at.to_i}"
   end
 
-  def start_at_date
-    self.start_at.strftime('%Y-%m-%d') if self.start_at
+  def start_at_date(locale)
+    format = I18n.t('default.formats.flatpickr.date_ruby', locale: locale)
+    self.start_at.strftime(format) if self.start_at
   end
 
-  def start_at_time
-    self.start_at.strftime('%H:%M') if self.start_at
+  def start_at_time(locale)
+    format = I18n.t('default.formats.flatpickr.time_ruby', locale: locale)
+    self.start_at.strftime(format) if self.start_at
   end
 
   def broadcast_conference_started
@@ -69,8 +71,8 @@ class ScheduledMeeting < ApplicationRecord
 
   # Example of params:
   #   "date"=>"2020-06-12", "time"=>"17:15"
-  def set_dates_from_params(params)
-    self.start_at = ScheduledMeeting.parse_start_at(params[:date], params[:time])
+  def set_dates_from_params(params, locale = I18n.locale, zone = Time.zone)
+    self.start_at = ScheduledMeeting.parse_start_at(params[:date], params[:time], locale, zone)
   end
 
   private

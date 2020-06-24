@@ -100,7 +100,12 @@ en:
         allmoderators: "All users will join as moderators"
       updated:        "The meeting schedule was updated"
       waitmoderator:  "Wait for moderator"
-
+    formats:
+      flatpickr:
+        date_js: "m/d/Y"
+        date_ruby: "%m/%d/%Y"
+        time_js: "H:i"
+        time_ruby: "%H:%M"
   error:
     http:
       _401:

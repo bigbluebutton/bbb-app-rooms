@@ -69,7 +69,12 @@ pt:
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       waitmoderator:  "Aguardar moderador"
-
+    formats:
+      flatpickr:
+        date_js: "d/m/Y"
+        date_ruby: "%d/%m/%Y"
+        time_js: "H:i"
+        time_ruby: "%H:%M"
   error:
     http:
       _401:

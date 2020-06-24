@@ -8,13 +8,13 @@
   <div class="field form-group input-group col-6">
     <% if error %> <div class="field_with_errors"> <% end %>
     <%= form.label :date %>
-    <%= form.text_field :date, value: scheduled_meeting.start_at_date, required: true, class: "form-control datepicker input" %>
+    <%= form.text_field :date, value: scheduled_meeting.start_at_date(I18n.locale), required: true, class: "form-control datepicker input", data: { format: t('default.formats.flatpickr.date_js') } %>
     <% if error %> </div> <% end %>
   </div>
   <div class="field form-group input-group col-6">
     <% if error %> <div class="field_with_errors"> <% end %>
     <%= form.label :time %>
-    <%= form.text_field :time, value: scheduled_meeting.start_at_time, required: true, class: "form-control timepicker input" %>
+    <%= form.text_field :time, value: scheduled_meeting.start_at_time(I18n.locale), required: true, class: "form-control timepicker input", data: { format: t('default.formats.flatpickr.time_js') } %>
     <% if error %> </div> <% end %>
   </div>
 

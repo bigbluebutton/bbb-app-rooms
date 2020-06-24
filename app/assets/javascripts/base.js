@@ -1,14 +1,20 @@
 $(document).on('turbolinks:load', function(){
-  $(".datepicker").flatpickr({
-    enableTime: false,
-    dateFormat: "Y-m-d",
-    minDate: new Date(),
+  $(".datepicker").each(function() {
+    var format = $(this).data('format');
+    $(this).flatpickr({
+      enableTime: false,
+      dateFormat: format,
+      minDate: new Date(),
+    });
   });
 
-  $(".timepicker").flatpickr({
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: "H:i",
-    time_24hr: true,
+  $(".timepicker").each(function() {
+    var format = $(this).data('format');
+    $(this).flatpickr({
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: format,
+      time_24hr: true,
+    });
   });
 });
