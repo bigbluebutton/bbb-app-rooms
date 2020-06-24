@@ -33,7 +33,9 @@ RUN bundle install
 RUN bundle update --bundler 2.1.4
 RUN gem update --system
 
-RUN SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile --trace
+RUN if [ "$RAILS_ENV" == "production" ]; \
+  then SECRET_KEY_BASE=`bin/rake secret` bundle exec rake assets:precompile --trace; \
+  fi
 
 EXPOSE 3000
 
