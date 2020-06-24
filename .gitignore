@@ -34,3 +34,5 @@
 .ruby-version
 .env
 public
+
+data/postgres
