@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require 'bbb_api'
-
 module ApplicationHelper
-  include BbbApi
-
   def omniauth_bbbltibroker_url(path = nil)
     url = Rails.configuration.omniauth_site
     url += Rails.configuration.omniauth_root if Rails.configuration.omniauth_root.present?
