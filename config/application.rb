@@ -27,5 +27,7 @@ module BbbAppRooms
     config.omniauth_root = "#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''}"
     config.omniauth_key = ENV["OMNIAUTH_BBBLTIBROKER_KEY"] || ''
     config.omniauth_secret = ENV["OMNIAUTH_BBBLTIBROKER_SECRET"] || ''
+
+    config.default_timezone = ENV["DEFAULT_TIMEZONE"]
   end
 end

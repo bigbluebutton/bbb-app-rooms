@@ -15,4 +15,5 @@
 //= require turbolinks
 //= require jquery
 //= require bootstrap-sprockets
+//= require flatpickr/dist/flatpickr
 //= require_tree .

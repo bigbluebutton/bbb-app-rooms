@@ -49,7 +49,7 @@ en:
       moderator:      "Moderator"
       viewer:         "Viewer"
     room:
-      created:        "Room was successfully created."
+      created:        "Room was successfully created"
       edit:           "Edit"
       editing:        "Editing Room"
       show:           "Show"
@@ -62,37 +62,66 @@ en:
       welcome:        "Welcome"
       moderator:      "Moderator token"
       viewer:         "Viewer token"
-      recording:      "Recording"
-      waitmoderator:  "Wait for moderator"
-      allmoderators:  "All moderators"
+      recordings:     "Recordings"
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
+      waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
+      scheduled_meetings: "Scheduled meetings"
+    meeting:
+      close:           "Close tab/window"
+      close_manually:  "This tab/window must be closed manually"
+    scheduled_meeting:
+      allmoderators:  "All moderators"
+      created:        "The meeting was scheduled"
+      durations:
+        5m: "5 minutes"
+        10m: "10 minutes"
+        15m: "15 minutes"
+        20m: "20 minutes"
+        30m: "30 minutes"
+        45m: "45 minutes"
+        1h: "1 hour"
+        2h: "2 hours"
+        3h: "3 hours"
+        4h: "4 hours"
+        more: "More than 4 hours"
+      edit:           "Edit"
+      error:
+        invalid_start_at: "Invalid start date or time"
+      external:
+        first_name:   "First name"
+        join:         "Join"
+        last_name:    "Last name"
+      recording:      "Recording"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
-      waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
-    meeting:
-      close:           "Close tab/window"
-      close_manually:  "This tab/window must be closed manually"
-
+      updated:        "The meeting schedule was updated"
+      waitmoderator:  "Wait for moderator"
+    formats:
+      flatpickr:
+        date_js: "m/d/Y"
+        date_ruby: "%m/%d/%Y"
+        time_js: "H:i"
+        time_ruby: "%H:%M"
   error:
     http:
       _401:
         code:       "Unauthorized"
         message:    "Unauthorized access"
-        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser"
+        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
     bigbluebutton:
       invalidrequest:
         code:       "BBBAPICallInvalid"
-        message:    "BBB API call invalid"
-        suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed"
+        message:    "Invalid BigBlueButton API call"
+        suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed."
     room:
       forbidden:
         code:       "AccessForbidden"
         message:    "The session has expired"
-        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser"
+        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
       notfound:
         code:       "NotFound"
         message:    "The room was not found"
@@ -100,4 +129,4 @@ en:
       invalidsecret:
         code:       "InvalidSecret"
         message:    "The token could not be validated"
-        suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider"
+        suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider."

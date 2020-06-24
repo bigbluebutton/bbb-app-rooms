@@ -1,11 +1,24 @@
 class RoomsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
-  before_action :authenticate_user!, :raise => false
+
+  before_action :authenticate_user!, raise: false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
-  before_action :check_for_cancel, :only => [:create, :update]
-  before_action :allow_iframe_requests
+  before_action :find_room, only: %i[show edit update destroy]
+  before_action :find_user, only: %i[show edit update destroy]
+
+  before_action only: %i[show launch close] do
+    authorize_user!(:show, @room)
+  end
+  before_action only: %i[edit update recording_publish recording_unpublish
+                         recording_update recording_delete] do
+    authorize_user!(:edit, @room)
+  end
+  before_action only: %i[index new create destroy] do
+    authorize_user!(:admin, @room)
+  end
+
+  before_action :check_for_cancel, only: %i[create update]
 
   # GET /rooms
   # GET /rooms.json
@@ -18,10 +31,12 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
+        @recordings = get_recordings(@room)
+        @scheduled_meetings = @room.scheduled_meetings # TODO: only active
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
       else
-        format.html { render :error, status: @error[:status] }
+        format.html { render 'shared/error', status: @error[:status] }
         format.json { render json: {error:  @error[:message]}, status: @error[:status] }
       end
     end
@@ -77,29 +92,13 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirector = room_path(@room.id)
+    redirector = room_path(@room)
     redirect_to redirector
   end
 
-  # POST /rooms/:id/meeting/join
-  # POST /rooms/:id/meeting/join.json
-  def meeting_join
-    # make user wait until moderator is in room
-    if wait_for_mod? && ! mod_in_room?
-      render json: { :wait_for_mod => true } , status: :ok
-    else
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room)
-      redirect_to join_meeting_url
-    end
-  end
-
-  # GET /rooms/:id/meeting/end
-  # GET /rooms/:id/meeting/end.json
-  def meeting_end
-  end
-
-  # GET /rooms/:id/meeting/close
-  def meeting_close
+  # GET /rooms/close
+  # A simple page that closes itself
+  def close
     respond_to do |format|
       format.html { render :autoclose }
     end
@@ -108,13 +107,13 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -124,44 +123,16 @@ class RoomsController < ApplicationController
     elsif params[:setting] == "describe_recording"
       update_recording(params[:record_id], "meta_description" => params[:record_description])
     end
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(params[:record_id])
-    redirect_to room_path(params[:id])
+    redirect_to room_path(@room)
   end
 
   private
-
-    def set_error(error, status)
-      @room = @user = nil
-      @error = { key: t("error.room.#{error}.code"), message:  t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), :status => status }
-    end
-
-    def authenticate_user!
-      return unless omniauth_provider?(:bbbltibroker)
-      # Assume user authenticated if session[:omaniauth_auth] is set
-      return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
-      session[:callback] = request.original_url
-      if params['action'] == 'launch'
-        redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-        redirect_to redirector and return
-      end
-      redirect_to errors_path(401)
-    end
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_room
-      @room = Room.find_by(id: params[:id])
-      # Exit with error if room was not found
-      set_error('notfound', :not_found) and return unless @room
-      # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-      set_error('forbidden', :forbidden) and return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.now.to_time
-      # Continue through happy path
-      @user = User.find_by(uid: session['omniauth_auth']['uid'])
-    end
 
     def set_launch_room
       launch_nonce = params['launch_nonce'] #|| session['omniauth_params']['launch_nonce']
@@ -169,9 +140,9 @@ class RoomsController < ApplicationController
       bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
       session_params = JSON.parse(RestClient.get(bbbltibroker_url, {'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"}))
       # Exit with error if session_params is not valid
-      set_error('forbidden', :forbidden) and return unless session_params['valid']
+      set_room_error('forbidden', :forbidden) and return unless session_params['valid']
       launch_params = session_params['message']
-      set_error('forbidden', :forbidden) and return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+      set_room_error('forbidden', :forbidden) and return unless launch_params['user_id'] == session['omniauth_auth']['uid']
       # Continue through happy path
       @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
         room.update(launch_params_to_new_room_params(launch_params))
@@ -231,9 +202,5 @@ class RoomsController < ApplicationController
 
     def resource_handler(params)
       Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
-    end
-
-    def allow_iframe_requests
-      response.headers.delete('X-Frame-Options')
     end
 end

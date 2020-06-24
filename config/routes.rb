@@ -1,13 +1,7 @@
 Rails.application.routes.draw do
   scope ENV['RELATIVE_URL_ROOT'] || '' do
     scope 'rooms' do
-
-      # Handles meeting management.
-      scope ':id/meeting' do
-        post '/join', :to => 'rooms#meeting_join', as: :meeting_join
-        post '/end', :to => 'rooms#meeting_end', as: :meeting_end
-        get '/close', :to => 'rooms#meeting_close', as: :autoclose
-      end
+      get '/close', :to => 'rooms#close', as: :autoclose
 
       # Handles recording management.
       scope ':id/recording/:record_id' do
@@ -36,6 +30,15 @@ Rails.application.routes.draw do
       get '/errors/:code', to: 'errors#index', as: :errors
     end
 
-    resources :rooms
+    # Handles meeting management.
+    resources :rooms do
+      resources :scheduled_meetings, only: [:new, :create, :edit, :update] do
+        member do
+          post :join
+          get :external
+          post :external_post
+        end
+      end
+    end
   end
 end

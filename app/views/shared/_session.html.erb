@@ -26,8 +26,9 @@
       <div class="col-12">
         <%= link_to '', '#',:name => 'Refresh', :class => "btn btn-default glyphicon glyphicon-refresh pull-left", :onClick  => "location.reload();" %>
 
-        <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+        <% if can_edit?(@user, @room) %>
           <%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
+          <%= link_to '', new_room_scheduled_meeting_path(@room), :name => t('default.room.new_meeting'), :class => "btn btn-default glyphicon glyphicon-plus pull-right" %>
         <% end %>
 
         <br>
@@ -35,13 +36,35 @@
 
         <h3><%= @room.description %></h3>
 
-        <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room), room: @room.id } %>
-
         <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
       </div>
     </div>
 
-    <%= render "shared/components/search_bar", subtitle: t("room.recordings") %>
+    <div class="row">
+      <div class="col-12">
+        <h2 class="subtitle"><%= t('default.room.scheduled_meetings') %></h2>
+        <% if @scheduled_meetings.count > 0 %>
+          <ul>
+            <% @scheduled_meetings.find_each do |meeting| %>
+              <li>
+                <%= meeting.name %>
+                <%= meeting.start_at %>
+                <%= meeting.duration %>
+
+                <%= button_tag t('default.room.join'), type: 'button', class: "btn btn-primary join-room-btn", data: { url: join_room_scheduled_meeting_path(@room, meeting), room: @room.id, meeting: meeting.id } %>
+                <% if can_edit?(@user, @room) %>
+                  <%= link_to '', edit_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.edit'), class: "btn btn-default glyphicon glyphicon-edit" %>
+
+                  <%= link_to '', external_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.external'), class: "btn btn-default glyphicon glyphicon-link" %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+
+    <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
 
     <div class="row">
       <div class="col-12">
@@ -55,7 +78,7 @@
                   <th class="col-md-4"><%= t("recording.table.description") %></th>
                   <th class="col-md-2"><%= t("recording.table.date") %></th>
                   <th class="col-md-1"><%= t("recording.table.duration") %></th>
-                  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+                  <% if can_edit?(@user, @room) %>
                     <th><%= t("recording.table.toolbar") %></th>
                   <% end %>
                 </tr>

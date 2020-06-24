@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   def omniauth_bbbltibroker_url(path = nil)
     url = Rails.configuration.omniauth_site
     url += Rails.configuration.omniauth_root if Rails.configuration.omniauth_root.present?
@@ -23,5 +22,9 @@ module ApplicationHelper
       return true if provider.downcase == strategy.to_s.demodulize.downcase
     end
     false
+  end
+
+  def can_edit?(user, resource)
+    Abilities.can?(user, :edit, resource)
   end
 end

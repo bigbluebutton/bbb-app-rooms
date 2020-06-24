@@ -15,10 +15,11 @@
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 $(document).on('turbolinks:load', function(){
-    $('#join-room-btn').on('click', function() {
+    $('.join-room-btn').on('click', function() {
         console.log("click on join room btn");
         var join_room_url = $(this).data('url');
         var room_id = $(this).data('room');
+        var meeting_id = $(this).data('meeting');
 
         $.ajax({
             url: join_room_url,
@@ -31,7 +32,8 @@ $(document).on('turbolinks:load', function(){
                 }
                 App.cable.subscriptions.create({
                     channel: "WaitChannel",
-                    room: room_id
+                    room: room_id,
+                    meting: meeting_id
                 }, {
                     connected: function(data) {
                         console.log("connected");
@@ -58,4 +60,3 @@ $(document).on('turbolinks:load', function(){
         });
     })
 });
-  

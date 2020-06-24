@@ -7,10 +7,6 @@ module BigBlueButtonHelper
     Rails.configuration.bigbluebutton_secret
   end
 
-  def bigbluebutton_moderator_roles
-    Rails.configuration.bigbluebutton_moderator_roles.split(',')
-  end
-
   def fix_bbb_endpoint_format(url)
     # Fix endpoint format only if required.
     url += "/" unless url.ends_with?('/')
@@ -19,41 +15,53 @@ module BigBlueButtonHelper
     url
   end
 
-  def wait_for_mod?
-    return unless @room and @user
-    @room.wait_moderator && ! @user.moderator?(bigbluebutton_moderator_roles)
+  def wait_for_mod?(scheduled_meeting, user)
+    return unless scheduled_meeting and user
+    scheduled_meeting.wait_moderator && !user.moderator?(Abilities.moderator_roles)
   end
 
-  def mod_in_room?
-    bbb.is_meeting_running?(@room.handler)
+  def mod_in_room?(scheduled_meeting)
+    bbb.is_meeting_running?(scheduled_meeting.meeting_id)
   end
 
-  def join_meeting_url
-    return unless @room and @user
-    unless bbb
-      @error = {
-        key: t('error.bigbluebutton.invalidrequest.code'),
-        message:  t('error.bigbluebutton.invalidrequest.message'),
-        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
-        status: :internal_server_error
-      }
-      return
-    end
-    bbb.create_meeting(@room.name, @room.handler, {
-      :moderatorPW => @room.moderator,
-      :attendeePW => @room.viewer,
-      :welcome => @room.welcome,
-      :record => @room.recording,
+  def join_meeting_url(scheduled_meeting, user)
+    return unless scheduled_meeting.present? && user.present?
+    return unless check_bbb
+
+    room = scheduled_meeting.room
+    bbb.create_meeting(scheduled_meeting.name, scheduled_meeting.meeting_id, {
+      :moderatorPW => room.moderator,
+      :attendeePW => room.viewer,
+      :welcome => room.welcome,
+      :record => scheduled_meeting.recording,
       :logoutURL => autoclose_url,
-      :"meta_description" => @room.description,
+      :"meta_description" => room.description,
     })
-    role = (@user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators) ? 'moderator' : 'viewer'
-    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
+
+    is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
+    role = is_moderator ? 'moderator' : 'viewer'
+    bbb.join_meeting_url(
+      scheduled_meeting.meeting_id,
+      user.username(t("default.bigbluebutton.#{role}")),
+      room.attributes[role]
+    )
+  end
+
+  def external_join_meeting_url(scheduled_meeting, full_name)
+    return unless scheduled_meeting.present? && full_name.present?
+    return unless check_bbb
+
+    room = scheduled_meeting.room
+    bbb.join_meeting_url(
+      scheduled_meeting.meeting_id,
+      full_name,
+      room.attributes['viewer']
+    )
   end
 
   # Fetches all recordings for a room.
-  def recordings
-    res = bbb.get_recordings(meetingID: @room.handler)
+  def get_recordings(room)
+    res = bbb.get_recordings(meetingID: room.ids_for_get_recordings)
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
@@ -118,7 +126,24 @@ module BigBlueButtonHelper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)), bigbluebutton_secret, "0.9", "true")
+    @bbb ||= BigBlueButton::BigBlueButtonApi.new(
+      remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)),
+      bigbluebutton_secret, "0.9", "true"
+    )
+  end
+
+  def check_bbb
+    unless bbb
+      @error = {
+        key: t('error.bigbluebutton.invalidrequest.code'),
+        message:  t('error.bigbluebutton.invalidrequest.message'),
+        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
+        status: :internal_server_error
+      }
+      false
+    else
+      true
+    end
   end
 
   # Removes trailing forward slash from a URL.
