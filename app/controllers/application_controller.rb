@@ -18,14 +18,35 @@ class ApplicationController < ActionController::Base
 
   def check_room
     # Exit with error if room was not found
-    set_room_error('notfound', :not_found) and return false unless @room
+    unless @room
+      set_room_error('notfound', :not_found)
+      return false
+    end
 
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
     expired = session[@room.handler].blank? ||
               session[@room.handler]['expires'].to_time <= Time.now.to_time
-    set_room_error('forbidden', :forbidden) and return false if expired
+    if expired
+      set_room_error('forbidden', :forbidden)
+      return false
+    end
 
     true
+  end
+
+  def find_room
+    @room = if params.key?(:room_id)
+              Room.from_param(params[:room_id])
+            else
+              Room.from_param(params[:id])
+            end
+
+    # render the default error, aborts the rest of the execution if called in a before_action
+    unless check_room
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+    end
   end
 
   def find_user

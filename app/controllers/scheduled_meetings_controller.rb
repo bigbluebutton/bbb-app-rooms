@@ -74,15 +74,6 @@ class ScheduledMeetingsController < ApplicationController
     )
   end
 
-  def find_room
-    @room = Room.from_param(params[:room_id])
-    unless check_room
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-    end
-  end
-
   def find_scheduled_meeting
     @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
   end

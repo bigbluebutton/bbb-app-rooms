@@ -3,7 +3,8 @@ class RoomsController < ApplicationController
   include BigBlueButtonHelper
   before_action :authenticate_user!, :raise => false
   before_action :set_launch_room, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy]
+  before_action :find_room, only: %i[show edit update destroy]
+  before_action :find_user, only: %i[show edit update destroy]
   before_action :check_for_cancel, :only => [:create, :update]
   before_action :allow_iframe_requests
 
@@ -120,12 +121,6 @@ class RoomsController < ApplicationController
   end
 
   private
-
-  def set_room
-    @room = Room.from_param(params[:id])
-    return unless check_room
-    find_user
-  end
 
     def set_launch_room
       launch_nonce = params['launch_nonce'] #|| session['omniauth_params']['launch_nonce']
