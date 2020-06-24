@@ -1,7 +1,12 @@
-# coding: utf-8
+# frozen_string_literal: true
+
+require 'user'
+require 'bbb_api'
+
 class ScheduledMeetingsController < ApplicationController
   include ApplicationHelper
-  include BigBlueButtonHelper
+  include BbbApi
+  include BbbAppRooms
 
   before_action :authenticate_user!, except: %i[external external_post], raise: false
   before_action :find_room

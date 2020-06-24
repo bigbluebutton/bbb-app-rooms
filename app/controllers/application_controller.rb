@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
@@ -15,10 +17,10 @@ class ApplicationController < ActionController::Base
     session[:callback] = request.original_url
     if params['action'] == 'launch'
       redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-      redirect_to redirector and return
+      redirect_to(redirector) and return
     end
 
-    redirect_to errors_path(401)
+    redirect_to(errors_path(401))
   end
 
   def authorize_user!(action, resource)
@@ -34,7 +36,7 @@ class ApplicationController < ActionController::Base
 
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
     expired = session[@room.handler].blank? ||
-              session[@room.handler]['expires'].to_time <= Time.now.to_time
+              session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
     if expired
       set_room_error('forbidden', :forbidden)
       return false
@@ -59,7 +61,8 @@ class ApplicationController < ActionController::Base
   end
 
   def find_user
-    @user = User.find_by(uid: session['omniauth_auth']['uid'])
+    # @user = User.find_by(uid: session['omniauth_auth']['uid'])
+    @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
   end
 
   def set_room_error(error, status)

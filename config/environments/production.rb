@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -47,14 +49,14 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = (ENV["ENABLE_SSL"] == "true")
+  config.force_ssl = (ENV['ENABLE_SSL'] == 'true')
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -83,34 +85,36 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
+    STDOUT.sync = true
+    logger = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
   # configure redis for ActionCable
-  if ENV['REDIS_URL'].present?
-    # Set up Redis cache store
-    config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'],
+  config.cache_store = if ENV['REDIS_URL'].present?
+                         # Set up Redis cache store
+                         [:redis_cache_store, { url: ENV['REDIS_URL'],
 
-      connect_timeout:    30,  # Defaults to 20 seconds
-      read_timeout:       0.2, # Defaults to 1 second
-      write_timeout:      0.2, # Defaults to 1 second
-      reconnect_attempts: 1,   # Defaults to 0
+                                                connect_timeout: 30, # Defaults to 20 seconds
+                                                read_timeout: 0.2, # Defaults to 1 second
+                                                write_timeout: 0.2, # Defaults to 1 second
+                                                reconnect_attempts: 1, # Defaults to 0
 
-      error_handler: lambda { |method:, returning:, exception:|
-        config.logger.warn "Support: Redis cache action #{method} failed and returned '#{returning}': #{exception}"
-      } }
-  else
-    config.cache_store = :memory_store
-  end
+                                                error_handler: lambda { |method:, returning:, exception:|
+                                                                 config.logger.warn("Support: Redis cache action #{method} failed and returned '#{returning}': #{exception}")
+                                                               }, },]
+                       else
+                         :memory_store
+                       end
 
   config.hosts = ENV['WHITELIST_HOST'].presence || nil
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '' }/rooms"
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
 end

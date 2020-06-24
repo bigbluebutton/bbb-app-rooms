@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -15,21 +17,12 @@ Rails.application.configure do
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   config.public_file_server.enabled = true
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
-    config.action_controller.perform_caching = true
-
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
-    }
-  else
-    config.action_controller.perform_caching = true
-
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
-    }
-  end
+  config.action_controller.perform_caching = true if Rails.root.join('tmp/caching-dev.txt').exist?
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{2.days.to_i}",
+  }
+  config.cache_store = :memory_store
+  config.action_controller.perform_caching = true
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
@@ -65,7 +58,7 @@ Rails.application.configure do
 
   config.hosts = nil
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '' }/rooms"
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
 
   config.web_console.whiny_requests = false

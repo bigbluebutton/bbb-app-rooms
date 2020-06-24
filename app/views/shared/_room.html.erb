@@ -1,0 +1,130 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+
+<div class="row">
+  <div class="col-12">
+    <% unless notice == nil %>
+    <div class="alert alert-info show fade in" role="alert">
+      <%= notice %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+
+    <!-- top bar buttons -->
+    <div class="row">
+      <div class="col-6">
+        <%= link_to '', '#',:name => 'Refresh', :class => "btn btn-default glyphicon glyphicon-refresh pull-left", :onClick  => "location.reload();" %>
+      </div>
+
+      <div class="col-6 ">
+        <% if can_edit?(@user, @room) %>
+          <%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
+          <%= link_to '', new_room_scheduled_meeting_path(@room), :name => t('default.room.new_meeting'), :class => "btn btn-default glyphicon glyphicon-plus pull-right" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- room -->
+  <div class="row">
+    <div class="col-12">
+    <h1><%= @room.name %></h1>
+
+    <h3><%= @room.description %></h3>
+
+    <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h2 class="subtitle"><%= t('default.room.scheduled_meetings') %></h2>
+      <% if @scheduled_meetings.count > 0 %>
+        <ul>
+          <% @scheduled_meetings.find_each do |meeting| %>
+            <li>
+              <%= meeting.name %>
+              <%= meeting.start_at %>
+              <%= meeting.duration %>
+
+              <%= button_tag t('default.room.join'), type: 'button', class: "btn btn-primary join-room-btn", data: { url: join_room_scheduled_meeting_path(@room, meeting), room: @room.id, meeting: meeting.id } %>
+              <% if can_edit?(@user, @room) %>
+                <%= link_to '', edit_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.edit'), class: "btn btn-default glyphicon glyphicon-edit" %>
+
+                <%= link_to '', external_room_scheduled_meeting_path(@room, meeting), name: t('default.scheduled_meeting.external'), class: "btn btn-default glyphicon glyphicon-link" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- recordings -->
+  <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover table-outline table-vcenter text-wrap card-table">
+            <thead>
+              <tr>
+                <th><%= t("recording.table.formats") %></th>
+                <th class="col-md-2"><%= t("recording.table.name") %></th>
+                <th class="col-md-4"><%= t("recording.table.description") %></th>
+                <th class="col-md-2"><%= t("recording.table.date") %></th>
+                <th class="col-md-1"><%= t("recording.table.duration") %></th>
+                <% if can_edit?(@user, @room) %>
+                  <th class="text-right col-md-1"><%= t("recording.table.actions") %></th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody id="recording-table">
+              <tr id="no_recordings_found" style="display: none;">
+                <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
+                  <%= t("recording.no_matched_recordings", inject: only_public ? t("recording.visibility.public").downcase + " "  : "") %>
+                </td>
+              </tr>
+              <% if recordings.empty? %>
+                <tr>
+                  <td colspan="7" class="text-center h4 p-6 font-weight-normal">
+                    <%= t("recording.no_recordings", inject: only_public ? t("recording.visibility.public").downcase + " "  : "") %>
+                  </td>
+                </tr>
+              <% else %>
+                <% recordings.each do |recording| %>
+                  <% if only_public %>
+                    <%= render "shared/components/public_recording_row", recording: recording %>
+                  <% else %>
+                    <%= render "shared/components/recording_row", recording: recording %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -43,15 +43,4 @@ ActiveRecord::Schema.define(version: 2020_06_23_183830) do
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "uid"
-    t.string "roles"
-    t.string "full_name"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
 end

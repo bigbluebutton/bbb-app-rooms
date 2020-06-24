@@ -1,18 +1,12 @@
-module BigBlueButtonHelper
+# frozen_string_literal: true
+
+module BbbApi
   def bigbluebutton_endpoint
     Rails.configuration.bigbluebutton_endpoint
   end
 
   def bigbluebutton_secret
     Rails.configuration.bigbluebutton_secret
-  end
-
-  def fix_bbb_endpoint_format(url)
-    # Fix endpoint format only if required.
-    url += "/" unless url.ends_with?('/')
-    url += "api/" if url.ends_with?('bigbluebutton/')
-    url += "bigbluebutton/api/" unless url.ends_with?('bigbluebutton/api/')
-    url
   end
 
   def wait_for_mod?(scheduled_meeting, user)
@@ -29,14 +23,17 @@ module BigBlueButtonHelper
     return unless check_bbb
 
     room = scheduled_meeting.room
-    bbb.create_meeting(scheduled_meeting.name, scheduled_meeting.meeting_id, {
-      :moderatorPW => room.moderator,
-      :attendeePW => room.viewer,
-      :welcome => room.welcome,
-      :record => scheduled_meeting.recording,
-      :logoutURL => autoclose_url,
-      :"meta_description" => room.description,
-    })
+    bbb.create_meeting(
+      scheduled_meeting.name, scheduled_meeting.meeting_id,
+      {
+        moderatorPW: room.moderator,
+        attendeePW: room.viewer,
+        welcome: room.welcome,
+        record: scheduled_meeting.recording,
+        logoutURL: autoclose_url,
+        'meta_description': room.description,
+      }
+    )
 
     is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
@@ -66,13 +63,14 @@ module BigBlueButtonHelper
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
       next if r.key?(:error)
+
       r[:playbacks] = if !r[:playback] || !r[:playback][:format]
-        []
-      elsif r[:playback][:format].is_a?(Array)
-        r[:playback][:format]
-      else
-        [r[:playback][:format]]
-      end
+                        []
+                      elsif r[:playback][:format].is_a?(Array)
+                        r[:playback][:format]
+                      else
+                        [r[:playback][:format]]
+                      end
 
       r.delete(:playback)
     end
@@ -88,14 +86,14 @@ module BigBlueButtonHelper
   # Helper for converting BigBlueButton dates into a nice length string.
   def recording_length(playbacks)
     # Stats format currently doesn't support length.
-    valid_playbacks = playbacks.reject { |p| p[:type] == "statistics" }
-    return "0 min" if valid_playbacks.empty?
+    valid_playbacks = playbacks.reject { |p| p[:type] == 'statistics' }
+    return '0 min' if valid_playbacks.empty?
 
     len = valid_playbacks.first[:length]
     if len > 60
       "#{(len / 60).round} hrs"
-    elsif len == 0
-      "< 1 min"
+    elsif len.zero?
+      '< 1 min'
     else
       "#{len} min"
     end
@@ -119,7 +117,7 @@ module BigBlueButtonHelper
   # Update recording for a room.
   def update_recording(record_id, meta)
     meta[:recordID] = record_id
-    bbb.send_api_request("updateRecordings", meta)
+    bbb.send_api_request('updateRecordings', meta)
   end
 
   private
@@ -146,8 +144,17 @@ module BigBlueButtonHelper
     end
   end
 
+  # Fixes BigBlueButton endpoint ending.
+  def fix_bbb_endpoint_format(url)
+    # Fix endpoint format only if required.
+    url += '/' unless url.ends_with?('/')
+    url += 'api/' if url.ends_with?('bigbluebutton/')
+    url += 'bigbluebutton/api/' unless url.ends_with?('bigbluebutton/api/')
+    url
+  end
+
   # Removes trailing forward slash from a URL.
-  def remove_slash(s)
-    s.nil? ? nil : s.chomp("/")
+  def remove_slash(str)
+    str.nil? ? nil : str.chomp('/')
   end
 end
