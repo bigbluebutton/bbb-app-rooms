@@ -3,16 +3,21 @@ require 'bigbluebutton_api'
 class ApplicationController < ActionController::Base
   before_action :set_current_locale
   before_action :set_timezone
+  before_action :allow_iframe_requests
 
   def authenticate_user!
     return unless omniauth_provider?(:bbbltibroker)
+
     # Assume user authenticated if session[:omaniauth_auth] is set
-    return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+    return if session['omniauth_auth'] &&
+              Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+
     session[:callback] = request.original_url
     if params['action'] == 'launch'
       redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
       redirect_to redirector and return
     end
+
     redirect_to errors_path(401)
   end
 
@@ -80,5 +85,9 @@ class ApplicationController < ActionController::Base
     tz = ActiveSupport::TimeZone[Rails.application.config.default_timezone]
     tz = ActiveSupport::TimeZone['UTC'] if tz.nil?
     Time.zone = tz
+  end
+
+  def allow_iframe_requests
+    response.headers.delete('X-Frame-Options')
   end
 end

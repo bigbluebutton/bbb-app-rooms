@@ -3,10 +3,10 @@ class ScheduledMeetingsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
 
-  before_action :authenticate_user!, raise: false, except: [:external, :external_post]
+  before_action :authenticate_user!, except: %i[external external_post], raise: false
   before_action :find_room
-  before_action :find_user, except: [:external, :external_post]
-  before_action :find_scheduled_meeting, only: [:edit, :update, :join, :external, :external_post]
+  before_action :find_user, except: %i[external external_post]
+  before_action :find_scheduled_meeting, only: %i[edit update join external external_post]
 
   def new
     @scheduled_meeting = ScheduledMeeting.new

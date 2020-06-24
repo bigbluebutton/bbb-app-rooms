@@ -13,7 +13,7 @@ module LtiHelper
   end
 
   def moderator?
-    bigbluebutton_moderator_roles.each do |role|
+    Abilities.moderator_roles.each do |role|
       return true if role?(role)
     end
     false

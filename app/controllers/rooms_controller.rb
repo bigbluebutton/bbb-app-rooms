@@ -1,12 +1,12 @@
 class RoomsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
-  before_action :authenticate_user!, :raise => false
+
+  before_action :authenticate_user!, raise: false
   before_action :set_launch_room, only: %i[launch]
   before_action :find_room, only: %i[show edit update destroy]
   before_action :find_user, only: %i[show edit update destroy]
-  before_action :check_for_cancel, :only => [:create, :update]
-  before_action :allow_iframe_requests
+  before_action :check_for_cancel, only: %i[create update]
 
   # GET /rooms
   # GET /rooms.json
@@ -190,9 +190,5 @@ class RoomsController < ApplicationController
 
     def resource_handler(params)
       Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
-    end
-
-    def allow_iframe_requests
-      response.headers.delete('X-Frame-Options')
     end
 end

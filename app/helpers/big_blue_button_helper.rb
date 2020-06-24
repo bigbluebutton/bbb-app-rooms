@@ -7,10 +7,6 @@ module BigBlueButtonHelper
     Rails.configuration.bigbluebutton_secret
   end
 
-  def bigbluebutton_moderator_roles
-    Rails.configuration.bigbluebutton_moderator_roles.split(',')
-  end
-
   def fix_bbb_endpoint_format(url)
     # Fix endpoint format only if required.
     url += "/" unless url.ends_with?('/')
@@ -21,7 +17,7 @@ module BigBlueButtonHelper
 
   def wait_for_mod?(scheduled_meeting, user)
     return unless scheduled_meeting and user
-    scheduled_meeting.wait_moderator && !user.moderator?(bigbluebutton_moderator_roles)
+    scheduled_meeting.wait_moderator && !user.moderator?(Abilities.moderator_roles)
   end
 
   def mod_in_room?(scheduled_meeting)
@@ -42,7 +38,7 @@ module BigBlueButtonHelper
       :"meta_description" => room.description,
     })
 
-    is_moderator = user.moderator?(bigbluebutton_moderator_roles) || scheduled_meeting.all_moderators
+    is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
     bbb.join_meeting_url(
       scheduled_meeting.meeting_id,
