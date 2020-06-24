@@ -25,6 +25,6 @@ module ApplicationHelper
   end
 
   def can_edit?(user, resource)
-    Abilities.can_edit?(user, resource)
+    Abilities.can?(user, :edit, resource)
   end
 end

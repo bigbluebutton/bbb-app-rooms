@@ -21,6 +21,10 @@ class ApplicationController < ActionController::Base
     redirect_to errors_path(401)
   end
 
+  def authorize_user!(action, resource)
+    redirect_to errors_path(401) unless Abilities.can?(@user, action, resource)
+  end
+
   def check_room
     # Exit with error if room was not found
     unless @room

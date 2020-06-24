@@ -6,6 +6,18 @@ class RoomsController < ApplicationController
   before_action :set_launch_room, only: %i[launch]
   before_action :find_room, only: %i[show edit update destroy]
   before_action :find_user, only: %i[show edit update destroy]
+
+  before_action only: %i[show launch close] do
+    authorize_user!(:show, @room)
+  end
+  before_action only: %i[edit update recording_publish recording_unpublish
+                         recording_update recording_delete] do
+    authorize_user!(:edit, @room)
+  end
+  before_action only: %i[index new create destroy] do
+    authorize_user!(:admin, @room)
+  end
+
   before_action :check_for_cancel, only: %i[create update]
 
   # GET /rooms

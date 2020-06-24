@@ -8,6 +8,13 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_user, except: %i[external external_post]
   before_action :find_scheduled_meeting, only: %i[edit update join external external_post]
 
+  before_action only: %i[join external external_post] do
+    authorize_user!(:show, @scheduled_meeting)
+  end
+  before_action only: %i[new create edit update] do
+    authorize_user!(:edit, @room)
+  end
+
   def new
     @scheduled_meeting = ScheduledMeeting.new
   end
