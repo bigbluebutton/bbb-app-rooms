@@ -44,6 +44,10 @@ class ScheduledMeeting < ApplicationRecord
     "#{room.handler}-#{self.created_at.to_i}"
   end
 
+  def start_at_date
+    self.start_at.strftime('%Y-%m-%d') if self.start_at
+  end
+
   def start_at_time
     self.start_at.strftime('%H:%M') if self.start_at
   end

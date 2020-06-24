@@ -1,6 +1,8 @@
 require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
+  before_action :set_current_locale
+
   def authenticate_user!
     return unless omniauth_provider?(:bbbltibroker)
     # Assume user authenticated if session[:omaniauth_auth] is set
@@ -37,5 +39,18 @@ class ApplicationController < ActionController::Base
       suggestion: t("error.room.#{error}.suggestion"),
       status: status
     }
+  end
+
+  private
+
+  def set_current_locale
+    al = browser.accept_language.first
+    case al.code # TODO: redundant, here just as an example on how to add languages
+    when 'en'
+      I18n.locale = al.code
+    else
+      I18n.locale = 'en'
+    end
+    response.set_header("Content-Language", I18n.locale)
   end
 end
