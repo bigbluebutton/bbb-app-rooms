@@ -11,12 +11,12 @@ class ScheduledMeetingsController < ApplicationController
   before_action :authenticate_user!, except: %i[external external_post], raise: false
   before_action :find_room
   before_action :find_user, except: %i[external external_post]
-  before_action :find_scheduled_meeting, only: %i[edit update join external external_post]
+  before_action :find_scheduled_meeting, only: %i[edit update destroy join external external_post]
 
   before_action only: %i[join external external_post] do
     authorize_user!(:show, @scheduled_meeting)
   end
-  before_action only: %i[new create edit update] do
+  before_action only: %i[new create edit update destroy] do
     authorize_user!(:edit, @room)
   end
 
@@ -75,6 +75,14 @@ class ScheduledMeetingsController < ApplicationController
     else
       full_name = "#{params[:first_name]} #{params[:last_name]}"
       redirect_to external_join_meeting_url(@scheduled_meeting, full_name)
+    end
+  end
+
+  def destroy
+    @scheduled_meeting.destroy
+    respond_to do |format|
+      format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
+      format.json { head :no_content }
     end
   end
 

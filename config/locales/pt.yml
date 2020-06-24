@@ -43,6 +43,9 @@ pt:
     scheduled_meeting:
       allmoderators:  "Todos moderadores"
       created:        "A reunião foi agendada"
+      destroy:
+        confirmation: "Você tem certeza que deseja remover este agendamento?"
+      destroyed:      "O agendamento foi removido"
       durations:
         5m: "5 minutos"
         10m: "10 minutos"

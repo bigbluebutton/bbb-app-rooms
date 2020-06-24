@@ -74,6 +74,9 @@ en:
     scheduled_meeting:
       allmoderators:  "All moderators"
       created:        "The meeting was scheduled"
+      destroy:
+        confirmation: "Are you sure you want to remove this scheduled meeting?"
+      destroyed:      "The scheduled meeting was removed"
       durations:
         5m: "5 minutes"
         10m: "10 minutes"

@@ -36,7 +36,7 @@ Rails.application.routes.draw do
 
     # Handles meeting management.
     resources :rooms do
-      resources :scheduled_meetings, only: [:new, :create, :edit, :update] do
+      resources :scheduled_meetings, only: [:new, :create, :edit, :update, :destroy] do
         member do
           post :join
           get :external
