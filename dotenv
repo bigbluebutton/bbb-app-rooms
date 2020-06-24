@@ -44,3 +44,5 @@ RAILS_SERVE_STATIC_FILES=true
 # Check all available options with:
 # ActiveSupport::TimeZone.all.map { |tz| tz.name }
 DEFAULT_TIMEZONE=UTC
+
+APP_NAME=BbbAppRooms
