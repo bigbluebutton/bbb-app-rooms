@@ -1,0 +1,96 @@
+pt:
+  default:
+    app:
+      error:          "Erro"
+    admin:
+      back:           "Voltar"
+      handler:        "Handler"
+      newroom:        "Nova sala"
+      showall:        "Exibir todas"
+      showroom:
+        text:         "Exibir"
+      editroom:
+        text:         "Editar"
+      destroyroom:
+        text:         "Remover"
+        confirmation: "Tem certeza que deseja remover esta sala?"
+    bigbluebutton:
+      moderator:      "Moderador"
+      viewer:         "Participante"
+    room:
+      created:        "A sala foi criada com sucesso"
+      edit:           "Editar"
+      editing:        "Editando sala"
+      show:           "Exibir"
+      showing:        "Exibindo sala"
+      destroy:        "Remover"
+      destroyed:      "A sala foi removida com sucesso"
+      join:           "Entrar"
+      name:           "Nome"
+      description:    "Descrição"
+      welcome:        "Boas-vindas"
+      moderator:      "Chave de moderador"
+      viewer:         "Chave de participante"
+      recordings:     "Gravações"
+      update:         "Atualizar"
+      updated:        "Atualizado"
+      cancel:         "Cancelar"
+      waitmodmsg:        "Por favor espere até que um moderador entre na sala. Você será redirecionado automaticamente."
+      scheduled_meetings: "Reuniões agendadas"
+    meeting:
+      close:           "Fechar janela"
+      close_manually:  "Esta janela deve ser fechada manualmente"
+    scheduled_meeting:
+      allmoderators:  "Todos moderadores"
+      created:        "A reunião foi agendada"
+      durations:
+        5m: "5 minutos"
+        10m: "10 minutos"
+        15m: "15 minutos"
+        20m: "20 minutos"
+        30m: "30 minutos"
+        45m: "45 minutos"
+        1h: "1 hora"
+        2h: "2 horas"
+        3h: "3 horas"
+        4h: "4 horas"
+        more: "Mais que 4 horas"
+      edit:           "Editar"
+      error:
+        invalid_start_at: "A data ou tempo de início é inválido"
+      external:
+        first_name:   "Primeiro nome"
+        join:         "Entrar"
+        last_name:    "Sobrenome"
+      recording:      "Gravação"
+      tooltip:
+        recording:    "A sessão poderá ser gravada"
+        waitmoderator: "Participantes não podem entrar até que um moderador entre"
+        allmoderators: "Todos usuários serão moderadores"
+      updated:        "O agendamento foi atualizado"
+      waitmoderator:  "Aguardar moderador"
+
+  error:
+    http:
+      _401:
+        code:       "Unauthorized"
+        message:    "Acesso não autorizado"
+        suggestion: "Se você está utilizando esta sala via LTI, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+    bigbluebutton:
+      invalidrequest:
+        code:       "BBBAPICallInvalid"
+        message:    "Chamada inválida para o BigBlueButton"
+        suggestion: "Certifique-se de que o servidor BigBlueButton sendo usado está disponível e acessível para o servidor onde a aplicação LTI está instalada."
+    room:
+      forbidden:
+        code:       "AccessForbidden"
+        message:    "A sessão expirou"
+        suggestion: "Se você está utilizando esta sala via LTI, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+      notfound:
+        code:       "NotFound"
+        message:    "A sala não foi encontrada"
+        suggestion: "A sala pode ter sido removida por um administrador. Contate o suporte técnico."
+      invalidsecret:
+        code:       "InvalidSecret"
+        message:    "O token não pode ser validado"
+        suggestion: "O problema pode ser causado pela utilização de uma chave inválida na validação da requisição feita pelo provedor LTI."

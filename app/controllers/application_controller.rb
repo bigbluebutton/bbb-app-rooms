@@ -45,11 +45,11 @@ class ApplicationController < ActionController::Base
 
   def set_current_locale
     al = browser.accept_language.first
-    case al.code # TODO: redundant, here just as an example on how to add languages
-    when 'en'
+    case al.code
+    when 'pt'
       I18n.locale = al.code
     else
-      I18n.locale = 'en'
+      I18n.locale = 'en' # fallback
     end
     response.set_header("Content-Language", I18n.locale)
   end
