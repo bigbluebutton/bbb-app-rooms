@@ -74,7 +74,21 @@ en:
     scheduled_meeting:
       allmoderators:  "All moderators"
       created:        "The meeting was scheduled."
+      durations:
+        5m: "5 minutes"
+        10m: "10 minutes"
+        15m: "15 minutes"
+        20m: "20 minutes"
+        30m: "30 minutes"
+        45m: "45 minutes"
+        1h: "1 hour"
+        2h: "2 hours"
+        3h: "3 hours"
+        4h: "4 hours"
+        more: "More than 4 hours"
       edit:           "Edit"
+      error:
+        invalid_start_at: "Invalid start date or time"
       external:
         first_name:   "First name"
         join:         "Join"

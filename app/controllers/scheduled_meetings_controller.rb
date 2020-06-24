@@ -1,6 +1,8 @@
+# coding: utf-8
 class ScheduledMeetingsController < ApplicationController
   include ApplicationHelper
   include BigBlueButtonHelper
+
   before_action :authenticate_user!, raise: false, except: [:external, :external_post]
   before_action :find_room
   before_action :check_room, except: [:external, :external_post]
@@ -12,8 +14,11 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def create
-    @scheduled_meeting = @room.scheduled_meetings.create(scheduled_meeting_params)
     respond_to do |format|
+      @scheduled_meeting = @room.scheduled_meetings.create(scheduled_meeting_params)
+      if validate_start_at(@scheduled_meeting)
+        @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
+      end
       if @scheduled_meeting.save
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
       else
@@ -27,6 +32,9 @@ class ScheduledMeetingsController < ApplicationController
 
   def update
     respond_to do |format|
+      if validate_start_at(@scheduled_meeting)
+        @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
+      end
       if @scheduled_meeting.update(scheduled_meeting_params)
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.updated') }
       else
@@ -63,7 +71,7 @@ class ScheduledMeetingsController < ApplicationController
 
   def scheduled_meeting_params
     params.require(:scheduled_meeting).permit(
-      :name, :recording, :wait_moderator, :all_moderators
+      :name, :recording, :wait_moderator, :all_moderators, :duration
     )
   end
 
@@ -73,5 +81,18 @@ class ScheduledMeetingsController < ApplicationController
 
   def find_scheduled_meeting
     @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
+  end
+
+  def validate_start_at(scheduled_meeting)
+    begin
+      ScheduledMeeting.parse_start_at(
+        params[:scheduled_meeting][:date], params[:scheduled_meeting][:time]
+      )
+      true
+    rescue Date::Error
+      scheduled_meeting.start_at = nil
+      scheduled_meeting.errors.add(:start_at, t('default.scheduled_meeting.error.invalid_start_at'))
+      false
+    end
   end
 end

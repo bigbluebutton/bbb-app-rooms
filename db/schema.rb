@@ -32,14 +32,14 @@ ActiveRecord::Schema.define(version: 2020_06_23_183830) do
 
   create_table "scheduled_meetings", force: :cascade do |t|
     t.bigint "room_id"
-    t.string "name"
-    t.datetime "start_at"
-    t.datetime "end_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.string "name", null: false
+    t.datetime "start_at", null: false
+    t.integer "duration", null: false
     t.boolean "recording", default: true
     t.boolean "wait_moderator", default: true
     t.boolean "all_moderators", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end
 

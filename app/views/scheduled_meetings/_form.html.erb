@@ -1,37 +1,44 @@
 <%= form_with model: [@room, scheduled_meeting], class: "form fill" do |form| %>
-  <% if scheduled_meeting.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(scheduled_meeting.errors.count, "error") %> prohibited this meeting from being saved:</h2>
-
-      <ul>
-        <% scheduled_meeting.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="field form-group input-group col-6">
     <%= form.label :name %>&nbsp;<span class="text-muted small">*Required</span><br>
-    <%= form.text_field :name, :required => true, size: "45", class: "form-control input col-6" %>
+    <%= form.text_field :name, required: true, class: "form-control input" %>
+  </div>
+
+  <% error = !@scheduled_meeting.errors[:start_at].blank? %>
+  <div class="field form-group input-group col-6">
+    <% if error %> <div class="field_with_errors"> <% end %>
+    <%= form.label :date %>
+    <%= form.text_field :date, value: scheduled_meeting.start_at, required: true, class: "form-control datepicker input" %>
+    <% if error %> </div> <% end %>
+  </div>
+  <div class="field form-group input-group col-6">
+    <% if error %> <div class="field_with_errors"> <% end %>
+    <%= form.label :time %>
+    <%= form.text_field :time, value: scheduled_meeting.start_at_time, required: true, class: "form-control timepicker input" %>
+    <% if error %> </div> <% end %>
   </div>
 
   <div class="field form-group input-group">
-    <%= form.check_box :recording %>&nbsp;
-    <b><%= t('default.scheduled_meeting.recording') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.recording') %>"></i><br>
+    <%= form.label :duration %>
+    <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale), { selected: scheduled_meeting.duration }, { class: "form-control input" } %>
   </div>
 
   <div class="field form-group input-group">
-    <%= form.check_box :wait_moderator %>&nbsp;
-    <b><%= t('default.scheduled_meeting.waitmoderator') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.waitmoderator') %>"></i><br>
+    <%= form.check_box :recording %>
+    <%= form.label :recording %>
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.recording') %>"></i>
   </div>
 
   <div class="field form-group input-group">
-    <%= form.check_box :all_moderators %>&nbsp;
-    <b><%= t('default.scheduled_meeting.allmoderators') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.allmoderators') %>"></i><br>
+    <%= form.check_box :wait_moderator %>
+    <%= form.label :wait_moderator %>
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.waitmoderator') %>"></i>
+  </div>
+
+  <div class="field form-group input-group">
+    <%= form.check_box :all_moderators %>
+    <%= form.label :all_moderators %>
+    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.scheduled_meeting.tooltip.allmoderators') %>"></i>
   </div>
 
   <div class="actions">
