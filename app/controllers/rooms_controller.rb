@@ -23,7 +23,7 @@ class RoomsController < ApplicationController
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
       else
-        format.html { render :error, status: @error[:status] }
+        format.html { render 'shared/error', status: @error[:status] }
         format.json { render json: {error:  @error[:message]}, status: @error[:status] }
       end
     end

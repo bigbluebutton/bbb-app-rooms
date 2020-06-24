@@ -5,7 +5,6 @@ class ScheduledMeetingsController < ApplicationController
 
   before_action :authenticate_user!, raise: false, except: [:external, :external_post]
   before_action :find_room
-  before_action :check_room, except: [:external, :external_post]
   before_action :find_user, except: [:external, :external_post]
   before_action :find_scheduled_meeting, only: [:edit, :update, :join, :external, :external_post]
 
@@ -77,6 +76,11 @@ class ScheduledMeetingsController < ApplicationController
 
   def find_room
     @room = Room.from_param(params[:room_id])
+    unless check_room
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+    end
   end
 
   def find_scheduled_meeting
