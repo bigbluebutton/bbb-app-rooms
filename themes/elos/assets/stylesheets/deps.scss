@@ -1,0 +1,8 @@
+// This file takes precedence over the default in the application
+// so we can include our variables before importing bootstrap and so
+// customize it
+
+@import "theme/definitions";
+
+@import "bootstrap";
+@import "flatpickr/dist/flatpickr.css";

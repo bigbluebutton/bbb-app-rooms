@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+//@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
 $vars: (
   --color-main: #2DCCD3,
   --color-main-hover: #83E0E4,
@@ -21,15 +25,44 @@ $vars: (
   --color-gray-06: #878787,
   --color-gray-07: #706F6F,
   --color-gray-08: #575756,
-  --color-gray-09: #3C3C3B
+  --color-gray-09: #3C3C3B,
+  --font-family: "'IBM Plex Sans', sans-serif",
+  --font-family-title: "'Comfortaa', sans-serif",
+  --font-weight: Regular,
+  --font-size: 22px/38px,
+  --font-size-h1: 2rem,
+  --font-size-h2: 1.5rem,
+  --font-size-h3: 1rem,
 );
 // variables in this map can be used as in:
-// map-get($vars, '--color')
+// map-get($vars, '--color-main')
 
-// Here we transfer the variables from the map to the :root element
+// Transfer the variables from the map to the :root element
+// Logic from https://css-tricks.com/difference-between-types-of-css-variables/
 :root {
   @each $variable, $value in $vars {
-    #{$variable}: $value;
+    #{$variable}: unquote($value);
   }
 }
 
+// Customize bootstrap variables
+// Full list: https://github.com/twbs/bootstrap-rubygem/blob/master/assets/stylesheets/bootstrap/_variables.scss
+$primary:       map-get($vars, '--color-main') !default;
+$secondary:     map-get($vars, '--color-sec') !default;
+$success:       map-get($vars, '--color-ok') !default;
+// $info:          $cyan !default;
+// $warning:       $yellow !default;
+$danger:        map-get($vars, '--color-error') !default;
+$light:         map-get($vars, '--color-gray-01') !default;
+$dark:          map-get($vars, '--color-black') !default;
+$body-color:    map-get($vars, '--color-black') !default;
+$font-family-base: map-get($vars, '--font-family') !default;
+$table-cell-padding:          1.5rem 0 !default;
+// $table-cell-padding-sm:       .3rem !default;
+
+.btn-primary {
+  color: var(--color-white);
+}
+.btn-success {
+  color: var(--color-white);
+}
