@@ -23,13 +23,11 @@
   </td>
   <td>
     <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
-      <text id='recording-text'>
-        <% if recording[:metadata][:name] %>
-          <%= recording[:metadata][:name] %>
-        <% else %>
-          <%= recording[:name] %>
-        <% end %>
-      </text>
+      <% if recording[:metadata][:name] %>
+          <text id='recording-title-text' class="text-wrap recording-text"><%= recording[:metadata][:name] %></text>
+      <% else %>
+        <text id='recording-title-text' class="text-wrap recording-text"><%= recording[:name] %></text>
+      <% end %>
       <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
         <a><i id="edit-record-title" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
       <% end %>
@@ -37,9 +35,7 @@
   </td>
   <td class="text-left">
     <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
-      <text id='recording-description-text' class="text-wrap">
-        <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
-      </text>
+      <text id='recording-description-text' class="text-wrap recording-text"><%= recording[:metadata][:description] %></text>
       <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
         <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
       <% end %>
