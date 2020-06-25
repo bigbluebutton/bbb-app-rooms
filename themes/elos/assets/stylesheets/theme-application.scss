@@ -1,0 +1,24 @@
+@import "theme/definitions";
+
+body.theme-elos {
+  padding: 40px 0;
+
+  h1 {
+    color: var(--color-main);
+  }
+
+  table {
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  #scheduled-meetings-list {
+  }
+
+  #recordings-list {
+    margin-top: 40px;
+
+    #search-bar {
+      margin-bottom: 20px;
+    }
+  }
+}

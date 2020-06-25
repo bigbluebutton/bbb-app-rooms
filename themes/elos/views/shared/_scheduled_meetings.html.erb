@@ -1,0 +1,24 @@
+<div id="scheduled-meetings-list" class="row">
+  <div class="col-12">
+
+    <h1><%= t('scheduled_meetings.title') %></h1>
+
+    <% if scheduled_meetings.count > 0 %>
+      <div class="table-responsive">
+        <table class="table">
+          <tbody>
+            <% scheduled_meetings.find_each do |meeting| %>
+              <%= render "shared/scheduled_meeting_row", user: user, room: room, meeting: meeting %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <%=
+    link_to t('scheduled_meetings.new'),
+     new_room_scheduled_meeting_path(room),
+     class: "btn btn-primary"
+    %>
+  </div>
+</div>

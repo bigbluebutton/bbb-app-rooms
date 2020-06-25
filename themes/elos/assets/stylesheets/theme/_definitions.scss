@@ -1,0 +1,35 @@
+$vars: (
+  --color-main: #2DCCD3,
+  --color-main-hover: #83E0E4,
+  --color-sec: #0F8489,
+  --color-sec-hover: #83E0E4,
+  --color-action: #DD582D,
+  --color-action-hover: #E59123,
+  --color-support: #4F4289,
+  --color-support-hover: #847BAD,
+  --color-ok: #9BC111,
+  --color-ok-hover: #B9D459,
+  --color-error: #CA4B57,
+  --color-error-hover: #DA818A,
+  --color-white: #FFFFFF,
+  --color-black: #202020,
+  --color-gray-01: #EDEDED,
+  --color-gray-02: #DADADA,
+  --color-gray-03: #C6C6C6,
+  --color-gray-04: #B2B2B2,
+  --color-gray-05: #9D9D9C,
+  --color-gray-06: #878787,
+  --color-gray-07: #706F6F,
+  --color-gray-08: #575756,
+  --color-gray-09: #3C3C3B
+);
+// variables in this map can be used as in:
+// map-get($vars, '--color')
+
+// Here we transfer the variables from the map to the :root element
+:root {
+  @each $variable, $value in $vars {
+    #{$variable}: $value;
+  }
+}
+

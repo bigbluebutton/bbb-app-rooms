@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-12">
+    <% unless notice == nil %>
+      <div class="alert alert-info show fade in" role="alert">
+        <%= notice %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>

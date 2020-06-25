@@ -1,0 +1,8 @@
+pt:
+  recordings:
+    search:
+      placeholder: "Buscar em título ou descrição..."
+    title: "Gravações"
+  scheduled_meetings:
+    new: "+ Agendar conferência"
+    title: "Conferências Agendadas"

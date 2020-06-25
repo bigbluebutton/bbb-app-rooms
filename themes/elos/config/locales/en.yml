@@ -1,0 +1,8 @@
+en:
+  recordings:
+    search:
+      placeholder: "Search by title or description..."
+    title: "Recordings"
+  scheduled_meetings:
+    new: "+ Schedule conference"
+    title: "Scheduled Conferences"
