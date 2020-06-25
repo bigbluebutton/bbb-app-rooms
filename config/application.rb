@@ -30,5 +30,13 @@ module BbbAppRooms
 
     config.default_timezone = ENV["DEFAULT_TIMEZONE"]
     config.app_name = ENV["APP_NAME"]
+
+    config.theme = ENV['APP_THEME']
+    unless config.theme.blank?
+      config.paths['app/views']
+        .unshift("#{Rails.root}/themes/#{config.theme}/mailers/views")
+        .unshift("#{Rails.root}/themes/#{config.theme}/views")
+      # see config/initializers/assets for more theme configs
+    end
   end
 end

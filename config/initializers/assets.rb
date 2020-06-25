@@ -14,3 +14,22 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+
+theme = Rails.application.config.theme
+
+unless theme.blank?
+  Rails.application.config.assets.precompile += [
+    Proc.new { |path, fn| fn =~ /themes\/#{theme}/ && !%w(.js .css).include?(File.extname(path)) }
+  ]
+end
+
+# do it in `to_prepare` to make sure they are the first paths searched,
+# so assets in the theme take precedence over default ones
+Rails.application.config.to_prepare do
+  unless theme.blank?
+    Rails.application.config.assets.paths
+      .unshift(Rails.root.join("themes", theme, "assets", "stylesheets"))
+      .unshift(Rails.root.join("themes", theme, "assets", "javascripts"))
+      .unshift(Rails.root.join("themes", theme, "assets", "images"))
+  end
+end

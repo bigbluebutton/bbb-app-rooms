@@ -46,3 +46,6 @@ RAILS_SERVE_STATIC_FILES=true
 DEFAULT_TIMEZONE=UTC
 
 APP_NAME=BbbAppRooms
+
+# rebuild the container to recompile the assets when changing this in prod
+# APP_THEME=
