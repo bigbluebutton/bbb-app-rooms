@@ -24,8 +24,12 @@ $(document).on('turbolinks:load', function(){
     var configure_recording_row = function(recording_text, recording_text_id){
 
       function register_recording_text_event(e){
+        // Remove current window events
+        $(window).off('mousedown keydown');
+
+        // Toggle text to input using jquery.
         let $el = recording_text.find('text');
-        let $input = $('<input/>').val($el.text().trim()).attr('id', $el.attr('id')).attr('class', $el.attr('class'));
+        let $input = $('<input type="text"/>').val($el.text().trim()).attr('id', $el.attr('id')).attr('class', $el.attr('class'));
         $el.replaceWith($input);
 
         var save = function(){
@@ -35,6 +39,9 @@ $(document).on('turbolinks:load', function(){
         };
 
         $input.one('blur', save).focus();
+
+        // Register the events for being able to exit the input box.
+        register_window_event(recording_text, recording_text_id, '#edit-record', 'edit-recordid');
       }
 
       recording_text.find('a').on('click focusout', function(e){
@@ -49,6 +56,35 @@ $(document).on('turbolinks:load', function(){
       recording_text.find('#recording-description-text').on('focusout', function(e){
         $(window).off('mousedown keydown');
         submit_rename_request(recording_text);
+      });
+    }
+
+    // Register window event to submit new name
+    // upon click or upon pressing the enter key
+    var register_window_event = function(element, textfield_id, edit_button_id, edit_button_data){
+      $(window).on('mousedown keydown', function(clickEvent){
+
+        // Return if the text is clicked
+        if(clickEvent.type == "mousedown" && clickEvent.target.id == textfield_id){
+          return;
+        }
+
+        // Return if the edit icon is clicked
+        if(clickEvent.type == "mousedown" && $(clickEvent.target).is(edit_button_id) &&
+          $(clickEvent.target).data(edit_button_data) === element.find(edit_button_id).data(edit_button_data)){
+          return;
+        }
+
+        // Check if event is keydown and enter key is not pressed
+        if(clickEvent.type == "keydown" && clickEvent.which !== 13){
+          return;
+        }
+
+        clickEvent.preventDefault();
+        submit_rename_request(element);
+
+        // Remove window event when ajax call to update name is submitted
+        $(window).off('mousedown keydown');
       });
     }
 

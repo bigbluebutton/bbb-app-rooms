@@ -44,47 +44,47 @@ if [[ ($# == "--help") ||  $# == "-h" ]]; then
 	exit 0
 fi
 
-export CD_REF_SLUG=$1
-export CD_REF_NAME=$2
-if [ -z $CD_REF_NAME ]; then
-  export CD_REF_NAME=$(git branch | grep \* | cut -d ' ' -f2)
+export REF_SLUG=$1
+export REF_NAME=$2
+if [ -z $REF_NAME ]; then
+  export REF_NAME=$(git branch | grep \* | cut -d ' ' -f2)
 fi
 
-if [ "$CD_REF_NAME" != "master" ] && [[ "$CD_REF_NAME" != *"release"* ]] && ( [ -z "$CD_BUILD_ALL" ] || [ "$CD_BUILD_ALL" != "true" ] ); then
-  echo "#### Docker image for $CD_REF_SLUG:$CD_REF_NAME won't be built"
+if [ "$REF_NAME" != "master" ] && [[ "$REF_NAME" != *"release"* ]] && ( [ -z "$BUILD_ALL" ] || [ "$BUILD_ALL" != "true" ] ); then
+  echo "#### Docker image for $REF_SLUG:$REF_NAME won't be built"
   exit 0
 fi
 
 # Set the version tag when it is a release or the commit sha was included.
-if [[ "$CD_REF_NAME" == *"release"* ]]; then
-  export CD_VERSION_CODE=${CD_REF_NAME:8}
+if [[ "$REF_NAME" == *"release"* ]]; then
+  export BUILD_NUMBER=${REF_NAME:8}
 else
-  export CD_VERSION_CODE="$CD_REF_NAME ($(expr substr $(git rev-parse HEAD) 1 7))"
+  export BUILD_NUMBER="$REF_NAME ($(expr substr $(git rev-parse HEAD) 1 7))"
 fi
 
 # Build the image
-if [ -z $CD_DOCKER_REPO ]; then
-  export CD_DOCKER_REPO=$CD_REF_SLUG
+if [ -z $DOCKER_REPO ]; then
+  export DOCKER_REPO=$REF_SLUG
 fi
-echo "#### Docker image $CD_DOCKER_REPO:$CD_REF_NAME is being built"
-docker build --build-arg version_code="${CD_VERSION_CODE}" -t $CD_DOCKER_REPO:$CD_REF_NAME .
+echo "#### Docker image $DOCKER_REPO:$REF_NAME is being built"
+docker build --build-arg BUILD_NUMBER="${BUILD_NUMBER}" -t $DOCKER_REPO:$REF_NAME .
 
-if [ -z "$CD_DOCKER_USERNAME" ] || [ -z "$CD_DOCKER_PASSWORD" ]; then
-  echo "#### Docker image for $CD_DOCKER_REPO can't be published because CD_DOCKER_USERNAME or CD_DOCKER_PASSWORD are missing (Ignore this warning if running outside a CD/CI environment)"
+if [ -z "$DOCKER_USERNAME" ] || [ -z "$DOCKER_PASSWORD" ]; then
+  echo "#### Docker image for $DOCKER_REPO can't be published because DOCKER_USERNAME or DOCKER_PASSWORD are missing (Ignore this warning if running outside a CD/CI environment)"
   exit 0
 fi
 
 # Publish the image
-docker login -u="$CD_DOCKER_USERNAME" -p="$CD_DOCKER_PASSWORD"
-echo "#### Docker image $CD_DOCKER_REPO:$CD_REF_NAME is being published"
-docker push $CD_DOCKER_REPO
+docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+echo "#### Docker image $DOCKER_REPO:$REF_NAME is being published"
+docker push $DOCKER_REPO
 
 # Publish image as latest and v2 if it is a release (excluding alpha and beta)
-if [[ "$CD_REF_NAME" == *"release"* ]] && [[ "$CD_REF_NAME" != *"alpha"* ]] && [[ "$CD_REF_NAME" != *"beta"* ]]; then
-  docker_image_id=$(docker images | grep -E "^$CD_DOCKER_REPO.*$CD_REF_NAME" | awk -e '{print $3}')
-  docker tag $docker_image_id $CD_DOCKER_REPO:latest
-  docker push $CD_DOCKER_REPO:latest
-  docker tag $docker_image_id $CD_DOCKER_REPO:v2
-  docker push $CD_DOCKER_REPO:v2
+if [[ "$REF_NAME" == *"release"* ]] && [[ "$REF_NAME" != *"alpha"* ]] && [[ "$REF_NAME" != *"beta"* ]]; then
+  docker_image_id=$(docker images | grep -E "^$DOCKER_REPO.*$REF_NAME" | awk -e '{print $3}')
+  docker tag $docker_image_id $DOCKER_REPO:latest
+  docker push $DOCKER_REPO:latest
+  docker tag $docker_image_id $DOCKER_REPO:v2
+  docker push $DOCKER_REPO:v2
 fi
 exit 0
