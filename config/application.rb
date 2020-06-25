@@ -34,8 +34,10 @@ module BbbAppRooms
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
       config.paths['app/views']
-        .unshift("#{Rails.root}/themes/#{config.theme}/mailers/views")
-        .unshift("#{Rails.root}/themes/#{config.theme}/views")
+        .unshift(Rails.root.join('themes', config.theme, 'mailers', 'views'))
+        .unshift(Rails.root.join('themes', config.theme, 'views'))
+      I18n.load_path +=
+        Dir[Rails.root.join('themes', config.theme, 'config', 'locales', '*.{rb,yml}')]
       # see config/initializers/assets for more theme configs
     end
   end

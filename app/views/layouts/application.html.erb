@@ -10,9 +10,15 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <% if theme_defined? %>
+      <%= stylesheet_link_tag 'theme-application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <% end %>
   </head>
 
-  <body lang="<%= I18n.locale %>" data-controller="<%= params[:controller] %>" data-action="<%= params[:action] %>" >
+  <body lang="<%= I18n.locale %>"
+        data-controller="<%= params[:controller] %>"
+        data-action="<%= params[:action] %>"
+        class="<%= theme_class %>">
     <%= yield %>
   </body>
 </html>

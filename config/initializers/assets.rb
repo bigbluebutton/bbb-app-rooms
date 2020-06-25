@@ -21,6 +21,8 @@ unless theme.blank?
   Rails.application.config.assets.precompile += [
     Proc.new { |path, fn| fn =~ /themes\/#{theme}/ && !%w(.js .css).include?(File.extname(path)) }
   ]
+  # the entrypoint for the styles of the theme
+  Rails.application.config.assets.precompile += %w( theme-application.css )
 end
 
 # do it in `to_prepare` to make sure they are the first paths searched,

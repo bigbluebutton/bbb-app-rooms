@@ -33,4 +33,12 @@ module ApplicationHelper
   def can_edit?(user, resource)
     Abilities.can?(user, :edit, resource)
   end
+
+  def theme_defined?
+    !Rails.configuration.theme.blank?
+  end
+
+  def theme_class
+    "theme-#{Rails.configuration.theme}" if theme_defined?
+  end
 end
