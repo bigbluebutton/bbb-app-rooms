@@ -80,7 +80,6 @@ $(document).on('turbolinks:load', function(){
           return;
         }
 
-        clickEvent.preventDefault();
         submit_rename_request(element);
 
         // Remove window event when ajax call to update name is submitted
