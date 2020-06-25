@@ -77,7 +77,7 @@ gem 'json'
 
 gem 'bigbluebutton-api-ruby'
 
-gem 'bootstrap-sass', '~> 3.4.1'
+gem 'bootstrap', '~> 4.5.0'
 gem 'font-awesome-rails'
 gem 'jquery-fileupload-rails'
 gem 'jquery-rails'
