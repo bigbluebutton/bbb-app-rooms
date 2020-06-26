@@ -1,7 +1,9 @@
 <tr class="d-flex">
   <td class="col-5 align-middle td-titles">
     <div class="item-title"><%= meeting.name %></div>
-    <div class="item-description">Any fake description just to test it</div>
+    <% unless meeting.description.blank? %>
+      <div class="item-description"><%= meeting.description %></div>
+    <% end %>
   </td>
   <td class="col-2 align-middle">
     <%= format_date(meeting.start_at) %>

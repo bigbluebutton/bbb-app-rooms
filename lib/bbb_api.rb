@@ -28,10 +28,10 @@ module BbbApi
       {
         moderatorPW: room.moderator,
         attendeePW: room.viewer,
-        welcome: room.welcome,
+        welcome: scheduled_meeting.welcome,
         record: scheduled_meeting.recording,
         logoutURL: autoclose_url,
-        'meta_description': room.description,
+        'meta_description': scheduled_meeting.description,
       }
     )
 

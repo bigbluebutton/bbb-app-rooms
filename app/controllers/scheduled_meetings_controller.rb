@@ -90,7 +90,7 @@ class ScheduledMeetingsController < ApplicationController
 
   def scheduled_meeting_params
     params.require(:scheduled_meeting).permit(
-      :name, :recording, :wait_moderator, :all_moderators, :duration
+      :name, :recording, :wait_moderator, :all_moderators, :duration, :description, :welcome
     )
   end
 
