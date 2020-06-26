@@ -52,7 +52,17 @@ body.theme-elos {
     }
 
     td {
-      vertical-align: middle;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      &.td-titles {
+        flex-direction: column;
+
+        > * {
+          align-self: flex-start;
+        }
+      }
     }
 
     .dropdown-opts {
