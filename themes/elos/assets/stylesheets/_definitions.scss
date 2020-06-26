@@ -43,7 +43,11 @@ $vars: (
 // Logic from https://css-tricks.com/difference-between-types-of-css-variables/
 :root {
   @each $variable, $value in $vars {
-    #{$variable}: unquote($value);
+    @if type-of($value) == string {
+      #{$variable}: unquote($value);
+    } @else {
+      #{$variable}: $value;
+    }
   }
 }
 
