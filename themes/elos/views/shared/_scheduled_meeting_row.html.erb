@@ -32,9 +32,12 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-opts-<%= room.to_param %>">
           <%=
-          link_to t('scheduled_meetings.external_link'),
-           external_room_scheduled_meeting_path(room, meeting),
-           class: "dropdown-item"
+          link_to t('scheduled_meetings.external_link'), '#',
+           data: {
+             'clipboard-text': external_room_scheduled_meeting_url(room, meeting),
+             turbolinks: false
+           },
+           class: "dropdown-item copy-to-clipboard"
           %>
           <div class="dropdown-divider"></div>
           <%=

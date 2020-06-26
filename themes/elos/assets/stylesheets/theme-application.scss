@@ -14,10 +14,20 @@ a {
 body.theme-elos {
 
   //
+  // override things that are set in the LTI's default theme
+  //
+
+  .dropdown-item:visited:not(.btn) {
+    &:hover, &:active {
+      color: $dropdown-link-hover-color;
+    }
+  }
+
+  //
   // GLOBAL STYLES
   //
 
-  padding: 40px 0;
+  padding: blocks(5) 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight);
   font-size: var(--font-size);
@@ -99,6 +109,12 @@ body.theme-elos {
     }
   }
 
+  .toast {
+    position: absolute;
+    top: blocks(2);
+    right: blocks(2);
+  }
+
   //
   // PAGE-SPECIFIC STYLES
   //
@@ -126,6 +142,7 @@ body.theme-elos {
 
   #recordings-list {
     margin-top: blocks(10);
+    margin-bottom: blocks(6);
 
     #search-bar {
       margin-top: blocks(2);

@@ -1,6 +1,8 @@
 en:
   _all:
     cancel: "Cancel"
+    clipboard:
+      external_link: "Link copied to the clipboard!"
     schedule: "Schedule"
   helpers:
     label:

@@ -1,6 +1,8 @@
 pt:
   _all:
     cancel: "Cancelar"
+    clipboard:
+      external_link: "Link copiado para o clipboard!"
     schedule: "Agendar"
   helpers:
     label:
