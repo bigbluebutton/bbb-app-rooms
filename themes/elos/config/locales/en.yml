@@ -1,9 +1,22 @@
 en:
   recordings:
+    confirm:
+      destroy: "Are you sure you want to remove this recording?"
+      publish: "Are you sure you want to publish this recording?"
+      unpublish: "Are you sure you want to unpublish this recording?"
+    destroy: "Remove"
     search:
       placeholder: "Search by title or description..."
+    playbacks:
+      presentation: "Playback"
+      presentation_video: "Download"
+    publish: "Publish"
     title: "Recordings"
+    unpublish: "Unpublish"
   scheduled_meetings:
+    destroy: "Remove"
+    edit: "Edit"
+    external_link: "Copy external link"
     new: "+ Schedule conference"
     title: "Scheduled Conferences"
   time:

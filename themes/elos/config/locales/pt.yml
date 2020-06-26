@@ -1,9 +1,22 @@
 pt:
   recordings:
+    confirm:
+      destroy: "Você tem certeza que deseja remover esta gravação?"
+      publish: "Você tem certeza que deseja publicar esta gravação?"
+      unpublish: "Você tem certeza que deseja despublicar esta gravação?"
+    destroy: "Remover"
     search:
       placeholder: "Buscar em título ou descrição..."
+    playbacks:
+      presentation: "Reproduzir"
+      presentation_video: "Baixar"
+    publish: "Publicar"
     title: "Gravações"
+    unpublish: "Despublicar"
   scheduled_meetings:
+    destroy: "Remover"
+    edit: "Editar"
+    external_link: "Copiar link externo"
     new: "+ Agendar conferência"
     title: "Conferências Agendadas"
   time:

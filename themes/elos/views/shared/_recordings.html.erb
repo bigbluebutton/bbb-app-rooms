@@ -12,7 +12,7 @@
       <table class="table">
         <tbody>
           <% recordings.each do |recording| %>
-            <%= render "shared/recording_row", recording: recording %>
+            <%= render "shared/recording_row", user: user, room: room, recording: recording %>
           <% end %>
         </tbody>
       </table>

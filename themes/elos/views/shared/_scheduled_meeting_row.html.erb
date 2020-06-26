@@ -28,23 +28,23 @@
     <% if can_edit?(user, room) %>
       <div class="dropdown dropdown-opts">
         <a href="#" class="dropdown-toggle" id="dropdown-opts-<%= room.to_param %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="icon material-icons icon icon-options-dots">more_vert</i>
+          <i class="icon material-icons">more_vert</i>
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-opts-<%= room.to_param %>">
           <%=
-          link_to 'Copiar link externo', external_room_scheduled_meeting_path(room, meeting),
-           name: t('default.scheduled_meeting.external'),
+          link_to t('scheduled_meetings.external_link'),
+           external_room_scheduled_meeting_path(room, meeting),
            class: "dropdown-item"
           %>
           <div class="dropdown-divider"></div>
           <%=
-          link_to 'Editar', edit_room_scheduled_meeting_path(room, meeting),
-           name: t('default.scheduled_meeting.edit'),
+          link_to t('scheduled_meetings.edit'),
+           edit_room_scheduled_meeting_path(room, meeting),
            class: "dropdown-item"
           %>
           <%=
-          link_to 'Remover', room_scheduled_meeting_path(room, meeting),
-           name: t('default.scheduled_meeting.edit'),
+          link_to t('scheduled_meetings.destroy'),
+           room_scheduled_meeting_path(room, meeting),
            class: "dropdown-item",
            method: :delete,
            data: { confirm: t('default.scheduled_meeting.destroy.confirmation') }

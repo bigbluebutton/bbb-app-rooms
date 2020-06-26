@@ -94,9 +94,6 @@ body.theme-elos {
   // PAGE-SPECIFIC STYLES
   //
 
-  #scheduled-meetings-list {
-  }
-
   #schedule-meeting {
     margin-top: blocks(4);
 
@@ -113,6 +110,14 @@ body.theme-elos {
 
     #search-bar {
       margin-bottom: blocks(4);
+    }
+
+    .recording-published-false {
+      color: var(--color-gray-05);
+
+      .item-title {
+        color: var(--color-gray-05);
+      }
     }
   }
 }
