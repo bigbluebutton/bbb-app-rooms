@@ -3,15 +3,13 @@
     <h2><%= t('scheduled_meetings.title') %></h2>
 
     <% if scheduled_meetings.count > 0 %>
-      <div class="table-responsive">
-        <table class="table">
-          <tbody>
-            <% scheduled_meetings.find_each do |meeting| %>
-              <%= render "shared/scheduled_meeting_row", user: user, room: room, meeting: meeting %>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+      <table class="table">
+        <tbody>
+          <% scheduled_meetings.find_each do |meeting| %>
+            <%= render "shared/scheduled_meeting_row", user: user, room: room, meeting: meeting %>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
 
     <div id="schedule-meeting" class="mx-auto w-50">

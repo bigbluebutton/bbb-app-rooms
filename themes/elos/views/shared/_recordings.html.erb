@@ -9,15 +9,13 @@
 
   <% if recordings.count > 0 %>
     <div class="col-12">
-      <div class="table-responsive">
-        <table class="table">
-          <tbody>
-            <% recordings.each do |recording| %>
-              <%= render "shared/recording_row", recording: recording %>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+      <table class="table">
+        <tbody>
+          <% recordings.each do |recording| %>
+            <%= render "shared/recording_row", recording: recording %>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   <% end %>
 </div>
