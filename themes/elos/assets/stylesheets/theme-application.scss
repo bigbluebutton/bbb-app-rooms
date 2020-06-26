@@ -90,6 +90,15 @@ body.theme-elos {
     }
   }
 
+  .form-actions {
+    text-align: right;
+    margin-top: blocks(6);
+
+    .btn {
+      margin-left: blocks(2);
+    }
+  }
+
   //
   // PAGE-SPECIFIC STYLES
   //
@@ -97,6 +106,12 @@ body.theme-elos {
   #elos-logo {
     margin-top: blocks(3);
     height: 36px;
+  }
+
+  #scheduled-meetings-list {
+    table {
+      margin-top: blocks(2);
+    }
   }
 
   #schedule-meeting {
@@ -113,6 +128,7 @@ body.theme-elos {
     margin-top: blocks(10);
 
     #search-bar {
+      margin-top: blocks(2);
       margin-bottom: blocks(4);
     }
 
@@ -122,6 +138,12 @@ body.theme-elos {
       .item-title {
         color: var(--color-gray-05);
       }
+    }
+  }
+
+  #scheduled-meetings-new, #scheduled-meetings-edit {
+    form {
+      margin-top: blocks(6);
     }
   }
 }

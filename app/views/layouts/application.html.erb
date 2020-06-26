@@ -20,6 +20,8 @@
         data-controller="<%= params[:controller] %>"
         data-action="<%= params[:action] %>"
         class="<%= theme_class %>">
-    <%= yield %>
+    <div class="container">
+      <%= yield %>
+    </div>
   </body>
 </html>

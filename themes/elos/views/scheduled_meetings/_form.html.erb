@@ -1,0 +1,72 @@
+<%= form_with model: [@room, scheduled_meeting] do |form| %>
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true, class: "form-control" %>
+    </div>
+  </div>
+
+  <% error = !@scheduled_meeting.errors[:start_at].blank? %>
+  <div class="form-row">
+
+    <div class="form-group col-4">
+      <% if error %> <div class="field_with_errors"> <% end %>
+        <%= form.label :date %>
+        <%= form.text_field :date, value: scheduled_meeting.start_at_date(I18n.locale), required: true, class: "form-control datepicker", data: { format: t('default.formats.flatpickr.date_js') } %>
+        <% if error %> </div> <% end %>
+    </div>
+
+    <div class="form-group col-4">
+      <% if error %> <div class="field_with_errors"> <% end %>
+        <%= form.label :time %>
+        <%= form.text_field :time, value: scheduled_meeting.start_at_time(I18n.locale), required: true, class: "form-control timepicker", data: { format: t('default.formats.flatpickr.time_js') } %>
+        <% if error %> </div> <% end %>
+    </div>
+
+    <div class="form-group col-4">
+      <%= form.label :duration %>
+      <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale), { selected: scheduled_meeting.duration }, { class: "form-control" } %>
+    </div>
+
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :description %>
+      <%= form.text_area :description, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :welcome %>
+      <%= form.text_area :welcome, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="form-check col-12">
+      <%= form.check_box :recording, class: "form-check-input" %>
+      <%= form.label :recording, class: "form-check-label" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="form-check col-12">
+      <%= form.check_box :wait_moderator, class: "form-check-input" %>
+      <%= form.label :wait_moderator, class: "form-check-label" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="form-check col-12">
+      <%= form.check_box :all_moderators, class: "form-check-input" %>
+      <%= form.label :all_moderators, class: "form-check-label" %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= link_to t('_all.cancel'), room_path(@room), class: "btn btn-light" %>
+    <%= form.submit t('_all.schedule'), class: "btn btn-secondary" %>
+  </div>
+<% end %>

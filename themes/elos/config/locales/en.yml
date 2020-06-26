@@ -1,4 +1,17 @@
 en:
+  _all:
+    cancel: "Cancel"
+    schedule: "Schedule"
+  helpers:
+    label:
+      scheduled_meeting:
+        all_moderators: "Everyone joins as moderator"
+        description: "Description (optional)"
+        duration: "Duration"
+        name: "Conference name"
+        recording: "Allow the conference to be recorded"
+        wait_moderator: "Wait for a moderator to join"
+        welcome: "Welcome message (optional)"
   recordings:
     confirm:
       destroy: "Are you sure you want to remove this recording?"
@@ -15,10 +28,14 @@ en:
     unpublish: "Unpublish"
   scheduled_meetings:
     destroy: "Remove"
-    edit: "Edit"
+    edit:
+      action: "Edit"
+      title: "Edit conference"
     external_link: "Copy external link"
-    new: "+ Schedule conference"
-    title: "Scheduled Conferences"
+    new:
+      add: "+ Schedule conference"
+      title: "Schedule conference"
+    title: "Scheduled conferences"
   time:
     am: am
     formats:

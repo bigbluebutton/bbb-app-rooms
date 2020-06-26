@@ -57,6 +57,9 @@ $block-rem: 0.5rem;
 @function blocks($num) {
   @return ($num * $block);
 }
+@function blocks-rem($num) {
+  @return ($num * $block-rem);
+}
 
 // Customize bootstrap variables
 // Full list: https://github.com/twbs/bootstrap-rubygem/blob/master/assets/stylesheets/bootstrap/_variables.scss
@@ -83,10 +86,33 @@ $dropdown-padding-y: $block !default;
 $dropdown-spacer: $block !default;
 $dropdown-item-padding-y: $block !default;
 $dropdown-item-padding-x: (2 * $block) !default;
+$input-btn-padding-y: blocks-rem(1.5) !default;
+$input-btn-padding-x: blocks-rem(3) !default;
+$btn-padding-y: blocks-rem(2) !default;
+$btn-padding-x: blocks-rem(6) !default;
 
 .btn-primary {
   color: var(--color-white);
 }
+
 .btn-success {
   color: var(--color-white);
+}
+
+.btn-light {
+  background: var(--color-white);
+  border-color: var(--color-sec);
+  color: var(--color-sec);
+
+  &:hover, &:focus, &:active {
+    border-color: var(--color-sec);
+    color: var(--color-sec);
+  }
+}
+
+// customize flatpickr
+.flatpickr-input.form-control {
+  &:disabled, &[readonly] {
+    background: var(--color-white);
+  }
 }

@@ -1,4 +1,17 @@
 pt:
+  _all:
+    cancel: "Cancelar"
+    schedule: "Agendar"
+  helpers:
+    label:
+      scheduled_meeting:
+        all_moderators: "Todos entram como moderadores"
+        description: "Descrição (opcional)"
+        duration: "Duração"
+        name: "Nome da conferência"
+        recording: "Permitir que a conferência seja gravada"
+        wait_moderator: "Aguardar moderador para entrar"
+        welcome: "Mensagem de boas vindas (opcional)"
   recordings:
     confirm:
       destroy: "Você tem certeza que deseja remover esta gravação?"
@@ -15,10 +28,14 @@ pt:
     unpublish: "Despublicar"
   scheduled_meetings:
     destroy: "Remover"
-    edit: "Editar"
+    edit:
+      action: "Editar"
+      title: "Editar conferência"
     external_link: "Copiar link externo"
-    new: "+ Agendar conferência"
-    title: "Conferências Agendadas"
+    new:
+      add: "+ Agendar conferência"
+      title: "Agendar conferência"
+    title: "Conferências agendadas"
   time:
     am: am
     formats:
