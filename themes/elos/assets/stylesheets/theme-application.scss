@@ -94,8 +94,13 @@ body.theme-elos {
   // PAGE-SPECIFIC STYLES
   //
 
+  #elos-logo {
+    margin-top: blocks(3);
+    height: 36px;
+  }
+
   #schedule-meeting {
-    margin-top: blocks(4);
+    margin-top: blocks(3);
 
     .btn {
       max-width: 350px;
@@ -103,7 +108,6 @@ body.theme-elos {
       padding: blocks(2) $block;
     }
   }
-
 
   #recordings-list {
     margin-top: blocks(10);
