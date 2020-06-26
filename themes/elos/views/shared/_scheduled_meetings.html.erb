@@ -1,6 +1,6 @@
 <div id="scheduled-meetings-list" class="row">
   <div class="col-12">
-    <h1><%= t('scheduled_meetings.title') %></h1>
+    <h2><%= t('scheduled_meetings.title') %></h2>
 
     <% if scheduled_meetings.count > 0 %>
       <div class="table-responsive">
@@ -18,7 +18,7 @@
       <%=
       link_to t('scheduled_meetings.new'),
        new_room_scheduled_meeting_path(room),
-       class: "btn btn-success"
+       class: "btn btn-secondary"
       %>
     </div>
   </div>

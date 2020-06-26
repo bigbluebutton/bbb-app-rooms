@@ -1,30 +1,32 @@
-<tr class="d-flex">
-  <td class="col-4">
-    <div id="recording-title">
+<tr>
+  <td class="col-5 align-middle">
+    <div class="item-title">
       <% if recording[:metadata][:name] %>
         <%= recording[:metadata][:name] %>
       <% else %>
         <%= recording[:name] %>
       <% end %>
+    </div>
+    <div class="item-description">
       <text id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
       </text>
     </div>
   </td>
-  <td class="col-3">
-    <%= recording[:startTime] %>
+  <td class="col-2 align-middle">
+    <%= format_date(recording[:startTime]) %>
   </td>
-  <td class="col-2">
-    <%= recording_length(recording[:playbacks]) %>
+  <td class="col-3 align-middle">
+    <%= distance_of_time_in_words(0, recording_duration_secs(recording)).capitalize %>
   </td>
-  <td class="col-2">
+  <td class="col-1 align-middle">
     <% if recording[:published] %>
       <% recording[:playbacks].each do |p| %>
         <%= link_to p[:type].capitalize, p[:url], class: "btn btn-sm btn-primary", target: "_blank" %>
       <% end %>
     <% end %>
   </td>
-  <td class="col-1">
+  <td class="col-1 align-middle">
     <% if can_edit?(@user, @room) %>
       <div class="item-action dropdown">
         <a href="javascript:void(0)" data-toggle="dropdown" class="icon">

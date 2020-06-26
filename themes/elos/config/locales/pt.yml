@@ -6,3 +6,12 @@ pt:
   scheduled_meetings:
     new: "+ Agendar conferência"
     title: "Conferências Agendadas"
+  time:
+    am: am
+    formats:
+      short_custom: "%d/%m/%Y %H:%M"
+  datetime:
+    distance_in_words:
+      x_hours:
+        one: 'an hour'
+        other: '%{count} hours'

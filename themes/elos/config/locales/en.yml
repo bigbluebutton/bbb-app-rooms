@@ -6,3 +6,13 @@ en:
   scheduled_meetings:
     new: "+ Schedule conference"
     title: "Scheduled Conferences"
+  time:
+    am: am
+    formats:
+      short_custom: "%m/%d/%Y %H:%M"
+  datetime:
+    distance_in_words:
+      short:
+        about_x_hours:
+          one: 'an hour'
+          other: '%{count} hours'
