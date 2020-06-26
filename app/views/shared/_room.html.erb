@@ -57,7 +57,7 @@
   </div>
 
   <!-- recordings -->
-  <%= render "shared/components/search_bar", subtitle: t("room.recordings") %>
+  <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
 
   <div class="row">
     <div class="col-12">
@@ -66,26 +66,26 @@
           <table class="table table-hover table-outline table-vcenter text-wrap card-table">
             <thead>
               <tr>
-                <th><%= t("recording.table.formats") %></th>
-                <th class="col-md-2"><%= t("recording.table.name") %></th>
-                <th class="col-md-4"><%= t("recording.table.description") %></th>
-                <th class="col-md-2"><%= t("recording.table.date") %></th>
-                <th class="col-md-1"><%= t("recording.table.duration") %></th>
+                <th><%= t("default.recording.table.formats") %></th>
+                <th class="col-md-2"><%= t("default.recording.table.name") %></th>
+                <th class="col-md-4"><%= t("default.recording.table.description") %></th>
+                <th class="col-md-2"><%= t("default.recording.table.date") %></th>
+                <th class="col-md-1"><%= t("default.recording.table.duration") %></th>
                 <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-                  <th class="text-right col-md-1"><%= t("recording.table.actions") %></th>
+                  <th class="text-right col-md-1"><%= t("default.recording.table.actions") %></th>
                 <% end %>
               </tr>
             </thead>
             <tbody id="recording-table">
               <tr id="no_recordings_found" style="display: none;">
                 <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
-                  <%= t("recording.no_matched_recordings", inject: only_public ? t("recording.visibility.public").downcase + " "  : "") %>
+                  <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                 </td>
               </tr>
               <% if recordings.empty? %>
                 <tr>
                   <td colspan="7" class="text-center h4 p-6 font-weight-normal">
-                    <%= t("recording.no_recordings", inject: only_public ? t("recording.visibility.public").downcase + " "  : "") %>
+                    <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                   </td>
                 </tr>
               <% else %>

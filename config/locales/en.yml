@@ -63,6 +63,7 @@ en:
       moderator:      "Moderator token"
       viewer:         "Viewer token"
       recording:      "Recording"
+      recordings:     "Recordings"
       waitmoderator:  "Wait for moderator"
       allmoderators:  "All moderators"
       update:         "Update"
@@ -72,10 +73,31 @@ en:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
-      waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
+      waitmodmsg:     "Please wait for a moderator to enter the room. You will be redirected automatically."
     meeting:
-      close:           "Close tab/window"
-      close_manually:  "This tab/window must be closed manually"
+      close:          "Close tab/window"
+      close_manually: "This tab/window must be closed manually"
+    recording:
+      action:
+        delete:       "Delete"
+        edit:         "Edit"
+        protect:      "Protect"
+        publish:      "Publish"
+        unprotect:    "Unprotect"
+        unpublish:    "Unpublish"
+      search_placeholder: "Search by Name or Description..."
+      table:
+        actions:      "Actions"
+        formats:      "Formats"
+        name:         "Name"
+        description:  "Description"
+        date:         "Date"
+        duration:     "Duration"
+      visibility:
+        public:       "Public"
+        protected:    "Protected"
+      no_matched_recordings: "No recordings matching search criteria"
+      no_recordings: "No recordings"
 
   error:
     http:
