@@ -27,5 +27,8 @@ module BbbAppRooms
     config.omniauth_root = (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
     config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
+
+    # Mount Action Cable outside main process or domain
+    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/cable"
   end
 end
