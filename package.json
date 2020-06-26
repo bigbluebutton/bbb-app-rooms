@@ -2,6 +2,7 @@
   "name": "bbb-app-rooms",
   "private": true,
   "dependencies": {
+    "clipboard": "^2.0.6",
     "flatpickr": "^4.6.3",
     "jquery": "^3.5.0"
   }
