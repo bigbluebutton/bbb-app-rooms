@@ -54,6 +54,9 @@ $vars: (
 // global spacing blocks
 $block: 8px;
 $block-rem: 0.5rem;
+@function blocks($num) {
+  @return ($num * $block);
+}
 
 // Customize bootstrap variables
 // Full list: https://github.com/twbs/bootstrap-rubygem/blob/master/assets/stylesheets/bootstrap/_variables.scss

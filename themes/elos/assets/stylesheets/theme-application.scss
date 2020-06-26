@@ -67,7 +67,7 @@ body.theme-elos {
 
     .dropdown-opts {
       top: 36px;
-      right: 10px;
+      right: $block;
 
       > a {
         color: var(--font-color);
@@ -76,8 +76,8 @@ body.theme-elos {
   }
 
   .join-room-btn {
-    height: 40px;
-    width: 40px;
+    height: blocks(5);
+    width: blocks(5);
     border-radius: 50%;
     padding: 0;
 
@@ -95,22 +95,24 @@ body.theme-elos {
   //
 
   #scheduled-meetings-list {
-    #schedule-meeting {
-      max-width: 350px;
-      margin-top: 32px;
+  }
 
-      .btn {
-        width: 100%;
-        padding: 1rem 0.75rem;
-      }
+  #schedule-meeting {
+    margin-top: blocks(4);
+
+    .btn {
+      max-width: 350px;
+      width: 100%;
+      padding: blocks(2) $block;
     }
   }
 
+
   #recordings-list {
-    margin-top: 80px;
+    margin-top: blocks(10);
 
     #search-bar {
-      margin-bottom: 24px;
+      margin-bottom: blocks(4);
     }
   }
 }
