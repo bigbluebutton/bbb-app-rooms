@@ -28,8 +28,8 @@ module BbbAppRooms
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
     config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
 
-    config.default_timezone = ENV["DEFAULT_TIMEZONE"]
-    config.app_name = ENV["APP_NAME"]
+    config.default_timezone = ENV["DEFAULT_TIMEZONE"] || 'UTC'
+    config.app_name = ENV["APP_NAME"] || 'BbbAppRooms'
 
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
