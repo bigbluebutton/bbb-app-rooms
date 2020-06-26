@@ -33,6 +33,8 @@ module BbbAppRooms
 
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
+      config.paths['app/helpers']
+        .unshift(Rails.root.join('themes', config.theme, 'helpers'))
       config.paths['app/views']
         .unshift(Rails.root.join('themes', config.theme, 'mailers', 'views'))
         .unshift(Rails.root.join('themes', config.theme, 'views'))
