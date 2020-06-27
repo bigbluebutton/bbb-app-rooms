@@ -15,7 +15,7 @@
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 $(document).on('turbolinks:load', function(){
-    $('.join-room-btn').on('click', function() {
+    $('.join-room-btn-disable-tmp').on('click', function() {
         console.log("click on join room btn");
         var join_room_url = $(this).data('url');
         var room_id = $(this).data('room');

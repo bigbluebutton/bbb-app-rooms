@@ -98,6 +98,10 @@ body.theme-elos {
       line-height: 1;
       padding: 3px 0px 0 1px;
     }
+
+    &.loading {
+      animation: shadow-pulse 1s infinite;
+    }
   }
 
   .form-actions {

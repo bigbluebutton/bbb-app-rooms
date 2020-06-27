@@ -93,6 +93,10 @@ $btn-padding-x: blocks-rem(6) !default;
 
 .btn-primary {
   color: var(--color-white);
+
+  &.disabled {
+    color: var(--color-gray-02);
+  }
 }
 
 .btn-success {
@@ -114,5 +118,15 @@ $btn-padding-x: blocks-rem(6) !default;
 .flatpickr-input.form-control {
   &:disabled, &[readonly] {
     background: var(--color-white);
+  }
+}
+
+@keyframes shadow-pulse
+{
+  0% {
+    box-shadow: 0 0 0 0 rgba(43, 179, 186, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 $block rgba(0, 0, 0, 0);
   }
 }
