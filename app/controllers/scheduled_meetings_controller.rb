@@ -9,7 +9,8 @@ class ScheduledMeetingsController < ApplicationController
   include BbbAppRooms
 
   before_action :authenticate_user!, except: %i[external external_post], raise: false
-  before_action :find_room
+  before_action :find_and_validate_room, except: %i[external external_post]
+  before_action :find_room, only: %i[external external_post]
   before_action :find_user, except: %i[external external_post]
   before_action :find_scheduled_meeting, only: %i[edit update destroy join external external_post]
 

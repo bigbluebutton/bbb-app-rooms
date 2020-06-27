@@ -27,37 +27,34 @@ class ApplicationController < ActionController::Base
     redirect_to errors_path(401) unless Abilities.can?(@user, action, resource)
   end
 
-  def check_room
+  def check_room(only_presence = false)
     # Exit with error if room was not found
     unless @room
       set_room_error('notfound', :not_found)
       return false
     end
 
-    # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-    expired = session[@room.handler].blank? ||
-              session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
-    if expired
-      set_room_error('forbidden', :forbidden)
-      return false
+    unless only_presence
+      # Exit with error by re-setting the room to nil if the session for the room.handler is not set
+      expired = session[@room.handler].blank? ||
+                session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
+      if expired
+        set_room_error('forbidden', :forbidden)
+        return false
+      end
     end
 
     true
   end
 
+  # Finds the room and checks if it's present
   def find_room
-    @room = if params.key?(:room_id)
-              Room.from_param(params[:room_id])
-            else
-              Room.from_param(params[:id])
-            end
+    find_room_internal(true)
+  end
 
-    # render the default error, aborts the rest of the execution if called in a before_action
-    unless check_room
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-    end
+  # Finds the room, checks if it's present and if it's valid (session not expired)
+  def find_and_validate_room
+    find_room_internal(false)
   end
 
   def find_user
@@ -105,5 +102,20 @@ class ApplicationController < ActionController::Base
 
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options')
+  end
+
+  def find_room_internal(only_presence)
+    @room = if params.key?(:room_id)
+              Room.from_param(params[:room_id])
+            else
+              Room.from_param(params[:id])
+            end
+
+    # render the default error, aborts the rest of the execution if called in a before_action
+    unless check_room(only_presence)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+    end
   end
 end

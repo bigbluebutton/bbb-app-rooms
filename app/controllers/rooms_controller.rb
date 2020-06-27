@@ -10,7 +10,7 @@ class RoomsController < ApplicationController
 
   before_action :authenticate_user!, raise: false
   before_action :set_launch_room, only: %i[launch]
-  before_action :find_room, except: %i[launch close index new create]
+  before_action :find_and_validate_room, except: %i[launch close index new create]
   before_action :find_user, except: %i[launch close index new create]
 
   before_action only: %i[show launch close] do
