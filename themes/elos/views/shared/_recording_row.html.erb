@@ -1,5 +1,5 @@
 <tr class="d-flex recording-published-<%= recording[:published] %>">
-  <td class="col-5 align-middle td-titles">
+  <td class="col-5 align-middle td-titles" data-search-field="1">
     <div class="item-title">
       <% if recording[:metadata][:name] %>
         <%= recording[:metadata][:name] %>
@@ -7,10 +7,10 @@
         <%= recording[:name] %>
       <% end %>
     </div>
-    <div class="item-description">
-      <text id='recording-description-text' class="text-wrap">
+    <div class="item-description" data-search-field="1">
+      <div id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:'bbb-recording-description'] ? recording[:metadata][:'bbb-recording-description'] : nil %>
-      </text>
+      </div>
     </div>
   </td>
   <td class="col-2 align-middle">

@@ -3,13 +3,13 @@
     <h2><%= t('recordings.title') %></h2>
   </div>
 
-  <div id="search-bar" class="col-12">
-    <input type="text" class="form-control" placeholder="<%= t('recordings.search.placeholder') %>">
+  <div id="search_bar" class="col-12">
+    <input type="text" data-search="recordings" data-search-table="#recording-table" class="form-control" placeholder="<%= t('recordings.search.placeholder') %>">
   </div>
 
   <% if recordings.count > 0 %>
     <div class="col-12">
-      <table class="table">
+      <table id="recording-table" class="table" data-search-target="1">
         <tbody>
           <% recordings.each do |recording| %>
             <%= render "shared/recording_row", user: user, room: room, recording: recording %>

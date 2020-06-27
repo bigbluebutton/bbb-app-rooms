@@ -14,40 +14,55 @@
 // You should have received a copy of the GNU Lesser General Public License along
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
+// Set data-search="recordings" on the search input.
+// Set data-search-table="#recording-table" on the search input pointing to the table.
+// Set data-search-target="1" on the table being searched.
+// Set data-search-field="1" on the elements inside the table that should be searched.
+// Adds the class 'search-hidden' to <tr> elements to hide them.
+
 $(document).on('turbolinks:load', function(){
-  var controller = $("body").data('controller');
-  var action = $("body").data('action');
 
-  if(controller == "rooms" && action == "show"){
-    search_input = $('#search_bar');
+  $('[data-search=recordings]').each(function(){
+    $input = $(this);
 
-    search_input.bind("keyup", function(event){
+    // in case there's already something in the input
+    filterRecordings($input);
 
-      // Retrieve the current search query
-      search_query = search_input.find(".form-control").val();
-
-      //Search for recordings and display them based on name match
-      var recordings_found = 0;
-
-      recordings = $('#recording-table').find('tr');
-
-      recordings.each(function(){
-        if($(this).find('text').text().toLowerCase().includes(search_query.toLowerCase())){
-          recordings_found = recordings_found + 1;
-          $(this).show();
-        }
-        else{
-          $(this).hide();
-        }
-      });
-
-      // Show "No recordings match your search" if no recordings found
-      if(recordings_found == 0){
-        $('#no_recordings_found').show();
-      }
-      else{
-        $('#no_recordings_found').hide();
-      }
+    $input.on("keyup", function(event){
+      filterRecordings($input);
     });
-  }
+  });
+
 });
+
+let filterRecordings = function($input) {
+  // Retrieve the current search query
+  var query = $input.val().match(/\S+/g);
+  var matcher = null;
+  if (query !== null) {
+    matcher = new RegExp(query.join('|'), 'gi');
+  }
+
+  // Search for recordings and display them based on name match
+  var recordingsFound = 0;
+
+  recordings = $($input.data('search-table')).find('tr');
+  recordings.each(function(){
+    var searchContent = $(this).find('[data-search-field]').text();
+    if(matcher === null || searchContent.match(matcher)){
+      recordingsFound = recordingsFound + 1;
+      $(this).removeClass('search-hidden');
+    }
+    else{
+      $(this).addClass('search-hidden');
+    }
+  });
+
+  // Show "No recordings match your search" if no recordings found
+  if(recordingsFound == 0){
+    $input.addClass('is-invalid');
+  }
+  else{
+    $input.removeClass('is-invalid');
+  }
+};

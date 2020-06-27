@@ -128,6 +128,10 @@ body.theme-elos {
   #scheduled-meetings-list {
     table {
       margin-top: blocks(2);
+
+      tr {
+        min-height: 97px; // the height when there's a name and description in the item
+      }
     }
   }
 
@@ -145,7 +149,7 @@ body.theme-elos {
     margin-top: blocks(10);
     margin-bottom: blocks(6);
 
-    #search-bar {
+    #search_bar {
       margin-top: blocks(2);
       margin-bottom: blocks(4);
     }
@@ -155,6 +159,12 @@ body.theme-elos {
 
       .item-title {
         color: var(--color-gray-05);
+      }
+    }
+
+    table {
+      tr {
+        min-height: 97px; // the height when there's a name and description in the item
       }
     }
   }

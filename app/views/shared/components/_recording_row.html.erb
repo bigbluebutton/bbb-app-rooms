@@ -21,7 +21,7 @@
       <% end %>
     <% end %>
   </td>
-  <td>
+  <td data-search-field="1">
     <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
       <text id='recording-text'>
         <% if recording[:metadata][:name] %>
@@ -35,7 +35,7 @@
       <% end %>
     </div>
   </td>
-  <td class="text-left">
+  <td class="text-left" data-search-field="1">
     <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
       <text id='recording-description-text' class="text-wrap">
         <%= recording[:metadata][:'bbb-recording-description'] ? recording[:metadata][:'bbb-recording-description'] : nil %>

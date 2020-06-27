@@ -17,3 +17,15 @@ html,body,.container {
 div #body {
   height: 100%;
 }
+
+table[data-search-target="1"] tr {
+  max-height: 500px; // bigger than they can ever get
+  transition: max-height 0.1s linear, opacity 0.5s linear;
+
+  &.search-hidden {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0 !important;
+    min-height: 0 !important;
+  }
+}
