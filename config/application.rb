@@ -31,6 +31,9 @@ module BbbAppRooms
     config.default_timezone = ENV["DEFAULT_TIMEZONE"] || 'UTC'
     config.app_name = ENV["APP_NAME"] || 'BbbAppRooms'
 
+    config.session_duration_mins =
+      ENV["APP_SESSION_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
+
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
       config.paths['app/helpers']
