@@ -24,15 +24,11 @@ module BbbApi
 
     room = scheduled_meeting.room
     bbb.create_meeting(
-      scheduled_meeting.name, scheduled_meeting.meeting_id,
-      {
-        moderatorPW: room.moderator,
-        attendeePW: room.viewer,
-        welcome: scheduled_meeting.welcome,
-        record: scheduled_meeting.recording,
-        logoutURL: autoclose_url,
-        'meta_description': scheduled_meeting.description,
-      }
+      scheduled_meeting.name,
+      scheduled_meeting.meeting_id,
+      scheduled_meeting.create_options(user).merge(
+        { logoutURL: autoclose_url }
+      )
     )
 
     is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators

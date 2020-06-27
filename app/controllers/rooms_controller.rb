@@ -145,7 +145,12 @@ class RoomsController < ApplicationController
     launch_nonce = params['launch_nonce'] # || session['omniauth_params']['launch_nonce']
     # Pull the Launch request_parameters
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
-    session_params = JSON.parse(RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"))
+    session_params = JSON.parse(
+      RestClient.get(
+        bbbltibroker_url,
+        'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"
+      )
+    )
 
     # Exit with error if session_params is not valid
     set_room_error('forbidden', :forbidden) && return unless session_params['valid']
@@ -157,12 +162,17 @@ class RoomsController < ApplicationController
     @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
-    user_params = launch_params_to_new_user_params(launch_params)
+    user_params = launch_params_to_new_user_params(launch_params, launch_nonce)
     expires_at = Rails.configuration.session_duration_mins.from_now
     session[@room.handler] = {
       user_params: user_params,
       expires: expires_at
     }
+
+    # Store the data from this launch for easier access
+    AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
+      launch.update(params: launch_params, expires_at: expires_at)
+    end
   end
 
   def room_params
@@ -191,7 +201,7 @@ class RoomsController < ApplicationController
     new_room_params(handler, name, description, record, wait_moderator, all_moderators)
   end
 
-  def launch_params_to_new_user_params(launch_params)
+  def launch_params_to_new_user_params(launch_params, launch_nonce)
     {
       uid: launch_params['user_id'],
       full_name: launch_params['lis_person_name_full'],
@@ -199,6 +209,7 @@ class RoomsController < ApplicationController
       last_name: launch_params['lis_person_name_family'],
       email: launch_params['lis_person_contact_email_primary'],
       roles: launch_params['roles'],
+      launch_nonce: launch_nonce,
     }
   end
 

@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_26_154854) do
+ActiveRecord::Schema.define(version: 2020_06_27_022849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "app_launches", force: :cascade do |t|
+    t.string "nonce"
+    t.jsonb "params"
+    t.datetime "expires_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["nonce"], name: "index_app_launches_on_nonce"
+  end
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"

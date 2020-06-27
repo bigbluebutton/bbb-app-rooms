@@ -52,6 +52,55 @@ class ScheduledMeeting < ApplicationRecord
     "#{room.handler}-#{self.created_at.to_i}"
   end
 
+  def create_options(user)
+    # standard API params
+    opts = {
+      moderatorPW: self.room.moderator,
+      attendeePW: self.room.viewer,
+      welcome: self.welcome,
+      record: self.recording,
+    }
+
+    # will be added as meta_bbb-*
+    meta_bbb = {
+      origin: 'LTI',
+      'recording-name': self.name,
+      'recording-description': self.description,
+      'room-handler': self.room.handler,
+      'meeting-db-id': self.id,
+    }
+
+    # extra launch params, if we can found them
+    launch_params = AppLaunch.find_by(nonce: user.launch_nonce)
+    if launch_params.present?
+      server_url = begin
+                     URI.parse(launch_params.params['lis_outcome_service_url']).host
+                   rescue URI::InvalidURIError
+                     nil
+                   end
+      meta_bbb.merge!(
+        {
+          'origin-server-name': launch_params.params['tool_consumer_info_product_family_code'],
+          'origin-server-url': server_url,
+          'origin-version': launch_params.params['tool_consumer_info_version'],
+          'origin-lti-version': launch_params.params['lti_version'],
+          'context-id': launch_params.params['context_id'],
+          'context-title': launch_params.params['context_title'],
+          'context-label': launch_params.params['context_label'],
+          'context-type': launch_params.params['context_type'],
+          'resource_link_title': launch_params.params['resource_link_title'],
+          'resource_link_id': launch_params.params['lis_course_section_sourcedid'],
+          'course-section-sourcedid': launch_params.params['context_type'],
+          'launch-nonce': launch_params.nonce,
+        }
+      )
+    end
+
+    meta_bbb.each { |k, v| opts["meta_bbb-#{k}"]= v }
+
+    opts
+  end
+
   def start_at_date(locale)
     format = I18n.t('default.formats.flatpickr.date_ruby', locale: locale)
     self.start_at.strftime(format) if self.start_at

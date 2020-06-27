@@ -1,0 +1,2 @@
+class AppLaunch < ApplicationRecord
+end
