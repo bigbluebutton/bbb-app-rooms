@@ -27,7 +27,7 @@ body.theme-elos {
   // GLOBAL STYLES
   //
 
-  padding: blocks(5) 0;
+  padding: blocks(6) 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight);
   font-size: var(--font-size);
@@ -109,10 +109,11 @@ body.theme-elos {
     }
   }
 
-  .toast {
+  #toasts {
     position: absolute;
     top: blocks(2);
     right: blocks(2);
+    left: blocks(2);
   }
 
   //
