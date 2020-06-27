@@ -158,70 +158,33 @@ class RoomsController < ApplicationController
     launch_params = session_params['message']
     set_room_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session['omniauth_auth']['uid']
 
-    # Continue through happy path
-    @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
-      room.update(launch_params_to_new_room_params(launch_params))
-    end
-    user_params = launch_params_to_new_user_params(launch_params, launch_nonce)
     expires_at = Rails.configuration.session_duration_mins.from_now
+
+    # Store the data from this launch for easier access
+    app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
+      launch.update(params: launch_params, expires_at: expires_at)
+    end
+
+    # Create/update the room
+    room_params = app_launch.room_params
+    @room = Room.find_or_create_by(handler: room_params[:handler]) do |room|
+      room.update(params.permit.merge(room_params))
+    end
+
+    # Create the user session
+    user_params = app_launch.user_params
     session[@room.handler] = {
       user_params: user_params,
       expires: expires_at
     }
-
-    # Store the data from this launch for easier access
-    AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
-      launch.update(params: launch_params, expires_at: expires_at)
-    end
   end
 
   def room_params
-    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
-  end
-
-  def new_room_params(handler, name, description, recording = false, wait_moderator = false, all_moderators = false)
-    params.permit.merge(
-      handler: handler,
-      name: name,
-      description: description,
-      welcome: '',
-      recording: recording,
-      wait_moderator: wait_moderator,
-      all_moderators: all_moderators
-    )
-  end
-
-  def launch_params_to_new_room_params(launch_params)
-    handler = resource_handler(launch_params)
-    name = launch_params['resource_link_title']
-    description = launch_params['resource_link_description']
-    record = message_has_custom?(launch_params, 'record')
-    wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
-    all_moderators = message_has_custom?(launch_params, 'all_moderators')
-    new_room_params(handler, name, description, record, wait_moderator, all_moderators)
-  end
-
-  def launch_params_to_new_user_params(launch_params, launch_nonce)
-    {
-      uid: launch_params['user_id'],
-      full_name: launch_params['lis_person_name_full'],
-      first_name: launch_params['lis_person_name_given'],
-      last_name: launch_params['lis_person_name_family'],
-      email: launch_params['lis_person_contact_email_primary'],
-      roles: launch_params['roles'],
-      launch_nonce: launch_nonce,
-    }
-  end
-
-  def message_has_custom?(message, type)
-    message.key?('custom_params') && message['custom_params'].key?('custom_' + type) && message['custom_params']['custom_' + type] == 'true'
+    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer,
+                                 :recording, :wait_moderator, :all_moderators)
   end
 
   def check_for_cancel
     redirect_to(@room) if params[:cancel]
-  end
-
-  def resource_handler(params)
-    Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
   end
 end
