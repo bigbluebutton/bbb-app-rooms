@@ -19,8 +19,12 @@ class Room < ApplicationRecord
     self.viewer = random_password(8, moderator) if viewer.blank?
   end
 
-  def ids_for_get_recordings
-    scheduled_meetings.map { |meeting| meeting.meeting_id }
+  def params_for_get_recordings
+    { 'meta_bbb-room-handler': self.handler }
+  end
+
+  def meeting_id
+    "#{self.handler}-#{self.id}"
   end
 
   private

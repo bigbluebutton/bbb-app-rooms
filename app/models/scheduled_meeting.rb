@@ -49,7 +49,7 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def meeting_id
-    "#{room.handler}-#{self.created_at.to_i}"
+    "#{room.meeting_id}-#{self.id}"
   end
 
   def create_options(user)

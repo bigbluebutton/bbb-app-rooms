@@ -54,7 +54,7 @@ module BbbApi
 
   # Fetches all recordings for a room.
   def get_recordings(room)
-    res = bbb.get_recordings(meetingID: room.ids_for_get_recordings)
+    res = bbb.get_recordings(room.params_for_get_recordings)
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
