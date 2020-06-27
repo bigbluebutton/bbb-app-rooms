@@ -18,15 +18,17 @@
   <%= image_tag "elos-logo.svg", title: "Elos", class: "mx-auto" %>
 </div>
 
-<div id="schedule-meeting" class="row">
-  <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
-    <%=
-    link_to t('scheduled_meetings.new.add'),
-     new_room_scheduled_meeting_path(room),
-     class: "btn btn-secondary"
-    %>
+<% if can_edit?(user, room) %>
+  <div id="schedule-meeting" class="row">
+    <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+      <%=
+      link_to t('scheduled_meetings.new.add'),
+       new_room_scheduled_meeting_path(room),
+       class: "btn btn-secondary"
+      %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <div aria-live="polite" aria-atomic="true" id="toasts" class="d-flex justify-content-center align-items-center">
   <div id="external-link-copied-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">

@@ -20,18 +20,22 @@
     <%= distance_of_time_in_words(0, recording_duration_secs(recording)).capitalize %>
   </td>
   <td class="col-2 align-middle">
-    <% if can_edit?(user, room) %>
-      <div class="dropdown dropdown-opts">
-        <a href="#" class="dropdown-toggle" id="dropdown-opts-<%= recording[:recordID] %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="icon material-icons">more_vert</i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-opts-<%= recording[:recordID] %>">
-          <% if recording[:published] %>
-            <% recording[:playbacks].each do |p| %>
-              <%= link_to t("recordings.playbacks.#{p[:type]}"), p[:url], class: "dropdown-item", target: "_blank" %>
-            <% end %>
+    <div class="dropdown dropdown-opts">
+      <a href="#" class="dropdown-toggle" id="dropdown-opts-<%= recording[:recordID] %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="icon material-icons">more_vert</i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-opts-<%= recording[:recordID] %>">
+
+        <% if recording[:published] %>
+          <% recording[:playbacks].each do |p| %>
+            <%= link_to t("recordings.playbacks.#{p[:type]}"), p[:url], class: "dropdown-item", target: "_blank" %>
+          <% end %>
+          <% if can_edit?(user, room) %>
             <div class="dropdown-divider"></div>
           <% end %>
+        <% end %>
+
+        <% if can_edit?(user, room) %>
           <% if recording[:published] %>
             <%= link_to recording_unpublish_path(room, record_id: recording[:recordID]),
              method: :post,
@@ -53,8 +57,9 @@
            class: "dropdown-item" do %>
             <%= t("recordings.destroy") %>
           <% end %>
-        </div>
+        <% end %>
+
       </div>
-    <% end %>
+    </div>
   </td>
 </tr>
