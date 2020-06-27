@@ -78,10 +78,19 @@ class ApplicationController < ActionController::Base
   private
 
   def set_current_locale
-    al = browser.accept_language.first
-    case al.code
-    when 'pt'
-      I18n.locale = al.code
+    locale = nil
+
+    # try to get the locale from the LTI launch, otherwise use the browser's
+    if @user.present? && !@user.locale.blank?
+      locale = @user.locale
+    else
+      al = browser.accept_language.first
+      locale = al.code
+    end
+
+    case locale
+    when /^pt/
+      I18n.locale = locale
     else
       I18n.locale = 'en' # fallback
     end

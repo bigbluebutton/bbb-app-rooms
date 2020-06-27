@@ -26,6 +26,7 @@ class AppLaunch < ApplicationRecord
       last_name: self.params['lis_person_name_family'],
       email: self.params['lis_person_contact_email_primary'],
       roles: self.params['roles'],
+      locale: self.params['launch_presentation_locale'],
       launch_nonce: self.nonce,
     }
   end

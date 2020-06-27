@@ -2,7 +2,7 @@
 
 module BbbAppRooms
   class User
-    attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles, :launch_nonce
+    attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles, :launch_nonce, :locale
 
     def initialize(params)
       params.each do |key, value|
