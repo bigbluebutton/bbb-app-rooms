@@ -3,9 +3,9 @@ module ElosHelper
   def format_date(date, format=:short_custom, include_time=true)
     if date.present?
       if date.is_a?(Integer) && date.to_s.length == 13
-        value = Time.at(date/1000)
+        value = Time.zone.at(date/1000)
       else
-        value = Time.at(date)
+        value = Time.zone.at(date)
       end
       if include_time
         I18n.l(value, format: format)
