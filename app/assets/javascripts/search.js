@@ -59,7 +59,7 @@ let filterRecordings = function($input) {
   });
 
   // Show "No recordings match your search" if no recordings found
-  if(recordingsFound == 0){
+  if(query !== null && recordingsFound === 0){
     $input.addClass('is-invalid');
   }
   else{
