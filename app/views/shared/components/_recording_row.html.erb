@@ -38,7 +38,7 @@
   <td class="text-left">
     <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
       <text id='recording-description-text' class="text-wrap">
-        <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
+        <%= recording[:metadata][:'bbb-recording-description'] ? recording[:metadata][:'bbb-recording-description'] : nil %>
       </text>
       <% if can_edit?(@user, @room) %>
         <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>

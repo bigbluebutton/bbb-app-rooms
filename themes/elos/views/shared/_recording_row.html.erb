@@ -9,7 +9,7 @@
     </div>
     <div class="item-description">
       <text id='recording-description-text' class="text-wrap">
-        <%= recording[:metadata][:description]? recording[:metadata][:description] : nil %>
+        <%= recording[:metadata][:'bbb-recording-description'] ? recording[:metadata][:'bbb-recording-description'] : nil %>
       </text>
     </div>
   </td>
