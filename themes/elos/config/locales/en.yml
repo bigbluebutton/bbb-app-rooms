@@ -12,6 +12,9 @@ en:
         duration: "Duration"
         name: "Conference name"
         recording: "Allow the conference to be recorded"
+        start_time: "Start date and time"
+        start_time_date: "Date"
+        start_time_time: "Start time"
         wait_moderator: "Wait for a moderator to join"
         welcome: "Welcome message (optional)"
   recordings:

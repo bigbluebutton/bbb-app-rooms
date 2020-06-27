@@ -12,6 +12,9 @@ pt:
         duration: "Duração"
         name: "Nome da conferência"
         recording: "Permitir que a conferência seja gravada"
+        start_time: "Data e hora de início"
+        start_time_date: "Data"
+        start_time_time: "Hora de início"
         wait_moderator: "Aguardar moderador para entrar"
         welcome: "Mensagem de boas vindas (opcional)"
   recordings:
