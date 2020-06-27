@@ -38,7 +38,7 @@ class RoomsController < ApplicationController
     respond_to do |format|
       if @room
         @recordings = get_recordings(@room)
-        @scheduled_meetings = @room.scheduled_meetings # TODO: only active
+        @scheduled_meetings = @room.scheduled_meetings.active
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
       else

@@ -8,6 +8,10 @@ class ScheduledMeeting < ApplicationRecord
 
   after_initialize :init
 
+  scope :active, -> {
+    where("start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc)
+  }
+
   def self.from_param(param)
     find_by(id: param)
   end
