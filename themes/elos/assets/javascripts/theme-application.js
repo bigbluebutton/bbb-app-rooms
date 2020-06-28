@@ -2,8 +2,10 @@
 //= require clipboard
 
 $(document).on('turbolinks:load', function(){
-
   $('.toast').toast();
+  $(".toast.toast-auto").each(function() {
+    $(this).toast('show');
+  });
 
   $(".datepicker").each(function() {
     var format = $(this).data('format');
@@ -27,9 +29,8 @@ $(document).on('turbolinks:load', function(){
   $(".copy-to-clipboard").each(function() {
     clipboard = new ClipboardJS(this);
     clipboard.on('success', function(e) {
-      $('#external-link-copied-toast').toast('dispose');
-      $('#external-link-copied-toast').toast('show');
+      $('.toast', '#external-link-copied-toast').toast('dispose');
+      $('.toast', '#external-link-copied-toast').toast('show');
     });
   });
-
 });

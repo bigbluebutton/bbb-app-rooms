@@ -30,8 +30,8 @@
   </div>
 <% end %>
 
-<div aria-live="polite" aria-atomic="true" id="toasts" class="d-flex justify-content-center align-items-center">
-  <div id="external-link-copied-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">
+<div id="external-link-copied-toast" aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center toast-area">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">
     <div class="toast-header">
       <%= t('_all.clipboard.external_link') %>
       <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
