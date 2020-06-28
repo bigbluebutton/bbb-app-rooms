@@ -17,6 +17,7 @@ body.theme-elos {
   // override things that are set in the LTI's default theme
   //
 
+  line-height: var(--line-height);
   .dropdown-item:visited:not(.btn) {
     &:hover, &:active {
       color: $dropdown-link-hover-color;
@@ -27,10 +28,13 @@ body.theme-elos {
   // GLOBAL STYLES
   //
 
-  padding: blocks(6) 0;
   font-family: var(--font-family);
   font-weight: var(--font-weight);
   font-size: var(--font-size);
+
+  > .container {
+    padding: blocks(6) 0;
+  }
 
   h1, h2, h3, h4, h5 {
     color: var(--color-main);
@@ -216,6 +220,12 @@ body.theme-elos {
       line-height: 2.0vw;
       margin: 1em auto;
       max-width: 40vw;
+    }
+  }
+
+  &[data-controller="errors"] {
+    h1 {
+      margin-bottom: blocks(5);
     }
   }
 }

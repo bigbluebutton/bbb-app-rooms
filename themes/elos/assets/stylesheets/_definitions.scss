@@ -35,6 +35,8 @@ $vars: (
   --font-size-details: 14.3px,
   --font-size-h1: 32px,
   --font-size-h2: 28px,
+  --line-height: 1.5,
+  --border-color: #DADADA,
 );
 // variables in this map can be used as in:
 // map-get($vars, '--color-main')
@@ -90,6 +92,8 @@ $input-btn-padding-y: blocks-rem(1.5) !default;
 $input-btn-padding-x: blocks-rem(2) !default;
 $btn-padding-y: blocks-rem(2) !default;
 $btn-padding-x: blocks-rem(6) !default;
+$line-height-lg: map-get($vars, '--line-height') !default;
+// $line-height-sm:              1.5 !default;
 
 .btn-primary {
   color: var(--color-white);
