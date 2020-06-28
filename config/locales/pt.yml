@@ -36,13 +36,13 @@ pt:
       updated:        "Atualizado"
       cancel:         "Cancelar"
       waitmodmsg:        "Por favor espere até que um moderador entre na sala. Você será redirecionado automaticamente."
-      scheduled_meetings: "Reuniões agendadas"
+      scheduled_meetings: "Sessões agendadas"
     meeting:
       close:           "Fechar janela"
       close_manually:  "Esta janela deve ser fechada manualmente"
     scheduled_meeting:
       allmoderators:  "Todos moderadores"
-      created:        "A reunião foi agendada"
+      created:        "A sessão foi agendada"
       destroy:
         confirmation: "Você tem certeza que deseja remover este agendamento?"
       destroyed:      "O agendamento foi removido"
@@ -72,7 +72,7 @@ pt:
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       wait:
-        message: "Olá <strong>%{name}</strong>, a conferência ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
+        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
       waitmoderator:  "Aguardar moderador"
     formats:
       flatpickr:

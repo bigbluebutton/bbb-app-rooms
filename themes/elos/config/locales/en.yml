@@ -10,8 +10,8 @@ en:
         all_moderators: "Everyone joins as moderator"
         description: "Description (optional)"
         duration: "Duration"
-        name: "Conference name"
-        recording: "Allow the conference to be recorded"
+        name: "Session name"
+        recording: "Allow the session to be recorded"
         start_time: "Start date and time"
         start_time_date: "Date"
         start_time_time: "Start time"
@@ -35,12 +35,12 @@ en:
     destroy: "Remove"
     edit:
       action: "Edit"
-      title: "Edit conference"
+      title: "Edit session"
     external_link: "Copy external link"
     new:
-      add: "+ Schedule conference"
-      title: "Schedule conference"
-    title: "Scheduled conferences"
+      add: "+ Schedule session"
+      title: "Schedule session"
+    title: "Scheduled sessions"
   time:
     am: am
     formats:

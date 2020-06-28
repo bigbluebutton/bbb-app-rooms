@@ -67,16 +67,16 @@ en:
       updated:        "Updated"
       cancel:         "Cancel"
       waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
-      scheduled_meetings: "Scheduled meetings"
+      scheduled_meetings: "Scheduled sessions"
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"
     scheduled_meeting:
       allmoderators:  "All moderators"
-      created:        "The meeting was scheduled"
+      created:        "The session was scheduled"
       destroy:
-        confirmation: "Are you sure you want to remove this scheduled meeting?"
-      destroyed:      "The scheduled meeting was removed"
+        confirmation: "Are you sure you want to remove this scheduled session?"
+      destroyed:      "The scheduled session was removed"
       durations:
         5m: "5 minutes"
         10m: "10 minutes"
@@ -101,9 +101,9 @@ en:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
-      updated:        "The meeting schedule was updated"
+      updated:        "The session schedule was updated"
       wait:
-        message: "Hello <strong>%{name}</strong>, the conference has not started yet. Please wait and you will be automatically redirected once it starts."
+        message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait and you will be automatically redirected once it starts."
       waitmoderator:  "Wait for moderator"
     formats:
       flatpickr:

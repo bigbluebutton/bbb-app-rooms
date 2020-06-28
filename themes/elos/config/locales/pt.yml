@@ -10,8 +10,8 @@ pt:
         all_moderators: "Todos entram como moderadores"
         description: "Descrição (opcional)"
         duration: "Duração"
-        name: "Nome da conferência"
-        recording: "Permitir que a conferência seja gravada"
+        name: "Nome da sessão"
+        recording: "Permitir que a sessão seja gravada"
         start_time: "Data e hora de início"
         start_time_date: "Data"
         start_time_time: "Hora de início"
@@ -35,12 +35,12 @@ pt:
     destroy: "Remover"
     edit:
       action: "Editar"
-      title: "Editar conferência"
+      title: "Editar sessão"
     external_link: "Copiar link externo"
     new:
-      add: "+ Agendar conferência"
-      title: "Agendar conferência"
-    title: "Conferências agendadas"
+      add: "+ Agendar sessão"
+      title: "Agendar sessão"
+    title: "Sessões agendadas"
   time:
     am: am
     formats:
