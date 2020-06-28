@@ -10,8 +10,10 @@
       <%= label_tag :last_name, t('default.scheduled_meeting.external.last_name') %>&nbsp;<span class="text-muted small">*Required</span><br>
       <%= text_field_tag :last_name, nil, required: true, size: "45", class: "form-control input col-6" %>
     </div>
+  </div>
 
-    <div class="actions">
+  <div class="row">
+    <div class="actions col-6 offset-3">
       <%= submit_tag t('default.scheduled_meeting.external.join'), class: "btn btn-primary" %>
     </div>
   </div>

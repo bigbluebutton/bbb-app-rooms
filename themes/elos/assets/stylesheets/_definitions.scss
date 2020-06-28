@@ -94,7 +94,7 @@ $btn-padding-x: blocks-rem(6) !default;
 .btn-primary {
   color: var(--color-white);
 
-  &.disabled {
+  &.disabled, &[disabled] {
     color: var(--color-gray-02);
   }
 }
