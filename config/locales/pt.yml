@@ -72,7 +72,7 @@ pt:
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       wait:
-        message: "A conferência ainda não começou. Por favor aguarde, você será redirecionado(a) automaticamente assim que ela iniciar."
+        message: "Olá <strong>%{name}</strong>, a conferência ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
       waitmoderator:  "Aguardar moderador"
     formats:
       flatpickr:

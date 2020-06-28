@@ -178,4 +178,27 @@ body.theme-elos {
       margin-top: blocks(6);
     }
   }
+
+  // This is a copy of the style of the guest wait page from BigBlueButton/Live
+  // with a few adaptations, but to look as similar as possible
+  &[data-controller="scheduled_meetings"][data-action="wait"] {
+    background-color: #2B2D41;
+    width: auto;
+    margin: auto;
+    text-align: center;
+    font-family: var(--font-family);
+
+    img {
+      width: 40vw;
+      margin: calc(10vw - 48px) 0 0 0;
+    }
+
+    p {
+      color: white;
+      font-size: 1.5vw;
+      line-height: 2.0vw;
+      margin: 1em auto;
+      max-width: 40vw;
+    }
+  }
 }

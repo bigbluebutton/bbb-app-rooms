@@ -109,13 +109,15 @@ class ScheduledMeetingsController < ApplicationController
 
     # users with a session and anonymous users can wait in this page
     # decide here where they will go to when the meeting starts
-    @post_to = if @user.present?
-                 join_room_scheduled_meeting_path(@room, @scheduled_meeting)
-               else
-                 join_room_scheduled_meeting_path(
-                   @room, @scheduled_meeting,
-                   first_name: params[:first_name], last_name: params[:last_name]
-                 )
+    if @user.present?
+      @full_name = @user.full_name
+      @post_to = join_room_scheduled_meeting_path(@room, @scheduled_meeting)
+    else
+      @full_name = "#{params[:first_name]} #{params[:last_name]}"
+      @post_to = join_room_scheduled_meeting_path(
+        @room, @scheduled_meeting,
+        first_name: params[:first_name], last_name: params[:last_name]
+      )
     end
   end
 
