@@ -35,7 +35,7 @@ $(document).on('turbolinks:load', function(){
 
 });
 
-let filterRecordings = function($input) {
+var filterRecordings = function($input) {
   // Retrieve the current search query
   var query = $input.val().match(/\S+/g);
   var matcher = null;
