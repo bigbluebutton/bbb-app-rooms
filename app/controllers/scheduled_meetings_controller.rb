@@ -12,9 +12,10 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_and_validate_room, except: %i[external external_post]
   before_action :find_room, only: %i[external external_post]
   before_action :find_user, except: %i[external external_post]
-  before_action :find_scheduled_meeting, only: %i[edit update destroy join external external_post]
+  before_action :find_scheduled_meeting, only: %i[edit update destroy join external
+                                                  external_post wait]
 
-  before_action only: %i[join external external_post] do
+  before_action only: %i[join external external_post wait] do
     authorize_user!(:show, @scheduled_meeting)
   end
   before_action only: %i[new create edit update destroy] do
@@ -58,11 +59,14 @@ class ScheduledMeetingsController < ApplicationController
   def join
     # make user wait until moderator is in room
     if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
-      render json: { :wait_for_mod => true } , status: :ok
+      redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
     else
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@scheduled_meeting)
+      NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
       redirect_to join_meeting_url(@scheduled_meeting, @user)
     end
+  end
+
+  def wait
   end
 
   def external

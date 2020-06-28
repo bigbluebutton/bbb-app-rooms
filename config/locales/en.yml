@@ -102,6 +102,8 @@ en:
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
       updated:        "The meeting schedule was updated"
+      wait:
+        message: "The conference has not started yet. Please wait, you will be automatically redirected once it starts."
       waitmoderator:  "Wait for moderator"
     formats:
       flatpickr:

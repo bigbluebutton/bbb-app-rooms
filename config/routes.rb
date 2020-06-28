@@ -41,6 +41,7 @@ Rails.application.routes.draw do
           post :join
           get :external
           post :external_post
+          get :wait
         end
       end
     end

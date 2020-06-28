@@ -15,48 +15,43 @@
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 $(document).on('turbolinks:load', function(){
-    $('.join-room-btn-disable-tmp').on('click', function() {
-        console.log("click on join room btn");
-        var join_room_url = $(this).data('url');
-        var room_id = $(this).data('room');
-        var meeting_id = $(this).data('meeting');
 
-        $.ajax({
-            url: join_room_url,
-            type: "POST",
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-            data: "",
-            success: function(data) {
-                if (data.wait_for_mod === true) {
-                    $('#wait-for-mod-msg').show();
-                }
-                App.cable.subscriptions.create({
-                    channel: "WaitChannel",
-                    room: room_id,
-                    meting: meeting_id
-                }, {
-                    connected: function(data) {
-                        console.log("connected");
-                    },
-                    disconnected: function(data) {
-                        console.log("disconnected");
-                        console.log(data);
-                    },
-                    rejected: function() {
-                        console.log("rejected");
-                    },  
-                    received: function(data) {
-                        console.log(data);
+  // $('.join-room-btn').on('click', function() {
+  //   $(this).attr('disabled', true);
+  //   $(this).addClass('disabled');
+  //   $(this).addClass('loading');
+  // });
 
-                        $.ajax({
-                            url: join_room_url,
-                            type: "POST",
-                            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-                            data: ""
-                        });
-                    }
-                });
-            }
-        });
-    })
+  var controller = $("body").data('controller');
+  var action = $("body").data('action');
+
+  if (controller === 'scheduled_meetings' && action === 'wait') {
+    var room = $('#wait-for-moderator').data('room-id');
+    var meeting = $('#wait-for-moderator').data('meeting-id');
+
+    App.cable.subscriptions.create({
+      channel: "WaitChannel",
+      room: room,
+      meeting: meeting
+    }, {
+      connected: function(data) {
+        console.log("connected");
+      },
+      disconnected: function(data) {
+        console.log("disconnected");
+        console.log(data);
+      },
+      rejected: function() {
+        console.log("rejected");
+      },
+      received: function(data) {
+        console.log("received", data);
+        if (data['action'] === 'started') {
+          console.log("submitting form");
+          $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
+          $('#wait-for-moderator').find('form').submit();
+        }
+      }
+    });
+  }
 });

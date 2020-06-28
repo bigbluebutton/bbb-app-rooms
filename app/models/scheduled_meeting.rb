@@ -117,7 +117,7 @@ class ScheduledMeeting < ApplicationRecord
 
   def broadcast_conference_started
     ActionCable.server.broadcast(
-      "wait_channel:room_#{self.room.id}:meeting_#{self.id}",
+      WaitChannel.full_channel_name({ room: self.room.to_param, meeting: self.to_param }),
       action: 'started'
     )
   end
