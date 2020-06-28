@@ -48,7 +48,8 @@ module BbbApi
     bbb.join_meeting_url(
       scheduled_meeting.meeting_id,
       full_name,
-      room.attributes['viewer']
+      room.attributes['viewer'],
+      { guest: true }
     )
   end
 
