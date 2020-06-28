@@ -131,13 +131,13 @@ body.theme-elos {
         border-bottom: none;
       }
 
-      &.toast-notice, &.toast-success {
-        background-color: var(--color-ok-hover);
-      }
+      /* &.toast-notice, &.toast-success { */
+      /*   background-color: var(--color-ok-hover); */
+      /* } */
 
-      &.toast-error {
-        background-color: var(--color-error-hover);
-      }
+      /* &.toast-error { */
+      /*   background-color: var(--color-error-hover); */
+      /* } */
     }
   }
 
