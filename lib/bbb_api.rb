@@ -18,7 +18,7 @@ module BbbApi
     bbb.is_meeting_running?(scheduled_meeting.meeting_id)
   end
 
-  def join_meeting_url(scheduled_meeting, user)
+  def join_api_url(scheduled_meeting, user)
     return unless scheduled_meeting.present? && user.present?
     return unless check_bbb
 
@@ -40,7 +40,7 @@ module BbbApi
     )
   end
 
-  def external_join_meeting_url(scheduled_meeting, full_name)
+  def external_join_api_url(scheduled_meeting, full_name)
     return unless scheduled_meeting.present? && full_name.present?
     return unless check_bbb
 

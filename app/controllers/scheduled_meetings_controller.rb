@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require 'user'
@@ -8,14 +9,21 @@ class ScheduledMeetingsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, except: %i[external external_post], raise: false
-  before_action :find_and_validate_room, except: %i[external external_post]
-  before_action :find_room, only: %i[external external_post]
-  before_action :find_user, except: %i[external external_post]
-  before_action :find_scheduled_meeting, only: %i[edit update destroy join external
-                                                  external_post wait]
+  # actions that can be accessed without a session, without the LTI launch
+  open_actions = %i[external wait join]
 
-  before_action only: %i[join external external_post wait] do
+  # validate the room/session only for routes that are not open
+  before_action :find_and_validate_room, except: open_actions
+  before_action :find_room, only: open_actions
+
+  # some actions throw a 401 when the user is not found/valid
+  # others just check for it but are open to external users
+  before_action :authenticate_user!, except: open_actions, raise: false
+  before_action :authenticate_user, only: open_actions, raise: false
+
+  before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
+
+  before_action only: %i[join external wait] do
     authorize_user!(:show, @scheduled_meeting)
   end
   before_action only: %i[new create edit update destroy] do
@@ -57,29 +65,66 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def join
-    # make user wait until moderator is in room
-    if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
-      redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
+    # if there's a user signed in, always use their info
+    # only way for a meeting to be created is through here
+    if @user.present?
+
+      # make user wait until moderator is in room
+      if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
+        redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
+      else
+        # join as moderator (start the meeting) and notify users
+        NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
+        redirect_to join_api_url(@scheduled_meeting, @user)
+      end
+
+    # no signed in user, expects identification parameters in the url and join
+    # the user always as guest
     else
-      NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
-      redirect_to join_meeting_url(@scheduled_meeting, @user)
+      if params[:first_name].blank? || params[:first_name].strip.blank? ||
+         params[:last_name].blank? || params[:last_name].strip.blank?
+        redirect_to external_room_scheduled_meeting_path(@room, @scheduled_meeting)
+        return
+      end
+
+      if !mod_in_room?(@scheduled_meeting)
+        redirect_to wait_room_scheduled_meeting_path(
+                      @room, @scheduled_meeting,
+                      first_name: params[:first_name], last_name: params[:last_name]
+                    )
+      else
+        # join as guest
+        name = "#{params[:first_name]} #{params[:last_name]}"
+        redirect_to external_join_api_url(@scheduled_meeting, name)
+      end
     end
   end
 
   def wait
+    # no user in the session and no name set, go back to the external join page
+    if @user.nil? && (params[:first_name].blank? || params[:last_name].blank?)
+      redirect_to external_room_scheduled_meeting_path(@room, @scheduled_meeting)
+      return
+    end
+
+    # users with a session and anonymous users can wait in this page
+    # decide here where they will go to when the meeting starts
+    @post_to = if @user.present?
+                 join_room_scheduled_meeting_path(@room, @scheduled_meeting)
+               else
+                 join_room_scheduled_meeting_path(
+                   @room, @scheduled_meeting,
+                   first_name: params[:first_name], last_name: params[:last_name]
+                 )
+    end
   end
 
   def external
-  end
-
-  def external_post
-    # TODO: validate the params
-
-    if !mod_in_room?(@scheduled_meeting)
-      render json: { :wait_for_mod => true } , status: :ok
-    else
-      full_name = "#{params[:first_name]} #{params[:last_name]}"
-      redirect_to external_join_meeting_url(@scheduled_meeting, full_name)
+    # allow signed in users to use this page, but autofill the inputs
+    # and don't let users change them
+    if @user.present?
+      @first_name = @user.first_name
+      @last_name = @user.last_name
     end
   end
 

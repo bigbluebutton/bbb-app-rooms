@@ -7,20 +7,30 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
-  def authenticate_user!
-    return unless omniauth_provider?(:bbbltibroker)
+  def authenticate_user
+    # return true unless omniauth_provider?(:bbbltibroker)
+
+    if @room.present? && session.key?(@room.handler)
+      @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
+    end
 
     # Assume user authenticated if session[:omaniauth_auth] is set
-    return if session['omniauth_auth'] &&
-              Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+    return true if @user.present? &&
+                   session['omniauth_auth'] &&
+                   Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
 
     session[:callback] = request.original_url
     if params['action'] == 'launch'
       redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-      redirect_to(redirector) and return
+      redirect_to(redirector) and return true
     end
 
-    redirect_to(errors_path(401))
+    @user = nil
+    false
+  end
+
+  def authenticate_user!
+    redirect_to(errors_path(401)) unless authenticate_user
   end
 
   def authorize_user!(action, resource)
@@ -55,11 +65,6 @@ class ApplicationController < ActionController::Base
   # Finds the room, checks if it's present and if it's valid (session not expired)
   def find_and_validate_room
     find_room_internal(false)
-  end
-
-  def find_user
-    # @user = User.find_by(uid: session['omniauth_auth']['uid'])
-    @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
   end
 
   def set_room_error(error, status)

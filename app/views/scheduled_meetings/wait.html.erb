@@ -10,9 +10,6 @@
   </div>
 
   <div style="display: none;">
-    <%=
-    button_to '', join_room_scheduled_meeting_path(@room, @scheduled_meeting), method: :post,
-     class: "btn btn-primary join-room-btn"
-    %>
+    <%= button_to '', @post_to, method: :post, class: "btn btn-primary join-room-btn" %>
   </div>
 </div>
