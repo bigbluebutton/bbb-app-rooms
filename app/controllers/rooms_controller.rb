@@ -142,7 +142,7 @@ class RoomsController < ApplicationController
   private
 
   def set_launch_room
-    launch_nonce = params['launch_nonce'] # || session['omniauth_params']['launch_nonce']
+    launch_nonce = params['launch_nonce']
     # Pull the Launch request_parameters
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
     session_params = JSON.parse(

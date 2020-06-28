@@ -7,6 +7,17 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
+  before_action do
+    Rails.logger.info "----------------------------- DEBUG"
+    Rails.logger.info session['omniauth_auth'].inspect
+    if @room.present? && session.key?(@room.handler)
+      Rails.logger.info session[@room.handler].inspect
+    else
+      Rails.logger.info '-- NO ROOM'
+    end
+    Rails.logger.info "-----------------------------"
+  end
+
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
   def authenticate_user
@@ -16,7 +27,6 @@ class ApplicationController < ActionController::Base
     return true if session['omniauth_auth'] &&
                    Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
 
-    session[:callback] = request.original_url
     if params['action'] == 'launch'
       redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
       redirect_to(redirector) and return true
@@ -48,6 +58,13 @@ class ApplicationController < ActionController::Base
       set_room_error('notfound', :not_found)
       return false
     end
+
+    Rails.logger.info "----------------------------- ROOM"
+    if @room.present? && session.key?(@room.handler)
+      Rails.logger.info session[@room.handler].inspect
+    end
+    Rails.logger.info "-----------------------------"
+
 
     unless only_presence
       # Exit with error by re-setting the room to nil if the session for the room.handler is not set
