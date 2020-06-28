@@ -91,8 +91,7 @@ class ApplicationController < ActionController::Base
     if @user.present? && !@user.locale.blank?
       locale = @user.locale
     else
-      al = browser.accept_language.first
-      locale = al.code
+      locale = browser.accept_language.first.try(:code)
     end
 
     case locale
