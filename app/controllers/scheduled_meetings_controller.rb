@@ -17,9 +17,9 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_room, only: open_actions
 
   # some actions throw a 401 when the user is not found/valid
-  # others just check for it but are open to external users
+  # others just search for a user but are open to unauthenticated access
   before_action :authenticate_user!, except: open_actions, raise: false
-  before_action :authenticate_user, only: open_actions, raise: false
+  before_action :find_user, only: open_actions, raise: false
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
 

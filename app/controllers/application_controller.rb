@@ -7,16 +7,13 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
+  # Check if the user authentication exists in the session and is valid (didn't expire).
+  # On launch, go get the credentials needed.
   def authenticate_user
-    # return true unless omniauth_provider?(:bbbltibroker)
-
-    if @room.present? && session.key?(@room.handler)
-      @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
-    end
+    return true unless omniauth_provider?(:bbbltibroker)
 
     # Assume user authenticated if session[:omaniauth_auth] is set
-    return true if @user.present? &&
-                   session['omniauth_auth'] &&
+    return true if session['omniauth_auth'] &&
                    Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
 
     session[:callback] = request.original_url
@@ -25,12 +22,20 @@ class ApplicationController < ActionController::Base
       redirect_to(redirector) and return true
     end
 
-    @user = nil
     false
   end
 
+  # Same as authenticate_user but returns a 401 if the user is not authenticated.
   def authenticate_user!
     redirect_to(errors_path(401)) unless authenticate_user
+  end
+
+  # Find the user info in the session.
+  # It's stored scoped by the room the user is accessing.
+  def find_user
+    if @room.present? && session.key?(@room.handler)
+      @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
+    end
   end
 
   def authorize_user!(action, resource)
