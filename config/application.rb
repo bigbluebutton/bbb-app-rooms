@@ -15,6 +15,7 @@ module BbbAppRooms
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.url_host = ENV['URL_HOST']
+    config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'].blank? ? '' : '/' + ENV['RELATIVE_URL_ROOT']}/rooms"
 
     config.build_number = ENV['BUILD_NUMBER'] || 'v1'
 
@@ -24,9 +25,12 @@ module BbbAppRooms
 
     config.omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/auth"
     config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || 'http://localhost:3000'
-    config.omniauth_root = (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s
+    config.omniauth_root =
+      (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
     config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
+
+    config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'].blank? ? '' : '/' + ENV['RELATIVE_URL_ROOT']}/rooms/assets"
 
     config.default_timezone = ENV["DEFAULT_TIMEZONE"] || 'UTC'
     config.app_name = ENV["APP_NAME"] || 'BbbAppRooms'
