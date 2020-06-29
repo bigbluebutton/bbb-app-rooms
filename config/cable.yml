@@ -1,5 +1,5 @@
 development:
-  adapter: async
+  adapter: <%= ENV['CABLE_ADAPTER'] || 'async' %>
 
 test:
   adapter: async
