@@ -51,3 +51,6 @@ APP_SESSION_DURATION_MINS=30
 
 # rebuild the container to recompile the assets when changing this in prod
 # APP_THEME=
+
+# CABLE_MOUNT_PATH=/rooms/cable
+# CABLE_ADAPTER=postgresql

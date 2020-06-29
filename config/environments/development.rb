@@ -61,4 +61,8 @@ Rails.application.configure do
   config.hosts = nil
 
   config.web_console.whiny_requests = false
+
+  unless ENV['CABLE_MOUNT_PATH'].blank?
+    config.action_cable.mount_path = ENV['CABLE_MOUNT_PATH']
+  end
 end

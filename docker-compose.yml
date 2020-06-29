@@ -12,7 +12,7 @@ services:
     stdin_open: true
     tty: true
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:password@postgres:5433/lti_apps}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:password@postgres:5433/lti_rooms}
       RAILS_ENV: development
     volumes:
       - .:/usr/src/app
