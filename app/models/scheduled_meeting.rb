@@ -77,15 +77,10 @@ class ScheduledMeeting < ApplicationRecord
     # extra launch params, if we can found them
     launch_params = AppLaunch.find_by(nonce: user.launch_nonce)
     if launch_params.present?
-      server_url = begin
-                     URI.parse(launch_params.params['lis_outcome_service_url']).host
-                   rescue URI::InvalidURIError
-                     nil
-                   end
       meta_bbb.merge!(
         {
           'origin-server-name': launch_params.params['tool_consumer_info_product_family_code'],
-          'origin-server-url': server_url,
+          'origin-server-url': launch_params.consumer_domain,
           'origin-version': launch_params.params['tool_consumer_info_version'],
           'origin-lti-version': launch_params.params['lti_version'],
           'context-id': launch_params.params['context_id'],

@@ -41,8 +41,27 @@ class AppLaunch < ApplicationRecord
 
   def resource_handler
     Digest::SHA1.hexdigest(
-      'rooms' + self.params['tool_consumer_instance_guid'] + self.params['resource_link_id']
+      'rooms' + self.consumer_id + self.resource_id
     ).to_s
+  end
+
+  # The LTI attribute that defines which resource it is
+  def resource_id
+    self.params['resource_link_id']
+  end
+
+  # The LTI attribute that defines who the consumer is
+  def consumer_id
+    id = self.params['tool_consumer_instance_guid']
+    id || self.consumer_domain
+  end
+
+  def consumer_domain
+    begin
+      URI.parse(params['lis_outcome_service_url']).host
+    rescue URI::InvalidURIError
+      nil
+    end
   end
 
   private
