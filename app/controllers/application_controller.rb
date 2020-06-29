@@ -7,86 +7,91 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
-  before_action do
-    Rails.logger.info "----------------------------- DEBUG"
-    Rails.logger.info session['omniauth_auth'].inspect
-    if @room.present? && session.key?(@room.handler)
-      Rails.logger.info session[@room.handler].inspect
-    else
-      Rails.logger.info '-- NO ROOM'
-    end
-    Rails.logger.info "-----------------------------"
-  end
-
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
-  def authenticate_user
-    return true unless omniauth_provider?(:bbbltibroker)
-
-    # Assume user authenticated if session[:omaniauth_auth] is set
-    return true if session['omniauth_auth'] &&
-                   Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
-
-    if params['action'] == 'launch'
-      redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-      redirect_to(redirector) and return true
+  def authenticate_user!
+    unless omniauth_provider?(:bbbltibroker)
+      Rails.logger.info "Provider is not bbbltibroker"
+      return true
     end
 
-    false
-  end
+    # Assume user authenticated if session[:omaniauth_auth] is set
+    if session['omniauth_auth'] &&
+       Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+      Rails.logger.info "Found a valid omniauth_auth in the session, user already authenticated"
+      return true
+    end
 
-  # Same as authenticate_user but returns a 401 if the user is not authenticated.
-  def authenticate_user!
-    redirect_to(errors_path(401)) unless authenticate_user
+    Rails.logger.info "Redirecting to the authorization route"
+    redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    redirect_to(redirector) and return true
   end
 
   # Find the user info in the session.
   # It's stored scoped by the room the user is accessing.
   def find_user
     if @room.present? && session.key?(@room.handler)
-      @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
+      user_params = AppLaunch.find_by(nonce: session[@room.handler]['launch']).user_params
+      @user = BbbAppRooms::User.new(user_params)
+      Rails.logger.info "Found the user #{@user.email} (#{@user.uid}, #{@user.launch_nonce})"
     end
+
+    # TODO: temporary for debug
+    Rails.logger.info "----------------------------- FOUND USER"
+    Rails.logger.info @user.inspect
+    if @room.present? && session.key?(@room.handler)
+      Rails.logger.info session[@room.handler].inspect
+    end
+    Rails.logger.info "-----------------------------"
+
+    # TODO: check expiration here?
+    # return true if session['omniauth_auth'] &&
+    #                Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+
   end
 
   def authorize_user!(action, resource)
     redirect_to errors_path(401) unless Abilities.can?(@user, action, resource)
   end
 
-  def check_room(only_presence = false)
+  def find_room
+    @room = if params.key?(:room_id)
+              Room.from_param(params[:room_id])
+            else
+              Room.from_param(params[:id])
+            end
+
     # Exit with error if room was not found
-    unless @room
+    unless @room.present?
+      Rails.logger.info "Couldn't find a room in the URL, returning 404"
       set_room_error('notfound', :not_found)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
       return false
     end
 
-    Rails.logger.info "----------------------------- ROOM"
+    # TODO: temporary for debug
+    Rails.logger.info "----------------------------- FOUND ROOM"
+    Rails.logger.info @room.handler
     if @room.present? && session.key?(@room.handler)
       Rails.logger.info session[@room.handler].inspect
     end
     Rails.logger.info "-----------------------------"
+  end
 
-
-    unless only_presence
-      # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-      expired = session[@room.handler].blank? ||
-                session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
-      if expired
-        set_room_error('forbidden', :forbidden)
-        return false
+  def validate_room
+    # Exit with error by re-setting the room to nil if the session for the room.handler is not set
+    expired = session[@room.handler].blank? ||
+              session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
+    if expired
+      Rails.logger.info "The session set for this room expired: #{session[@room.handler].inspect}"
+      set_room_error('forbidden', :forbidden)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
       end
+      return false
     end
-
-    true
-  end
-
-  # Finds the room and checks if it's present
-  def find_room
-    find_room_internal(true)
-  end
-
-  # Finds the room, checks if it's present and if it's valid (session not expired)
-  def find_and_validate_room
-    find_room_internal(false)
   end
 
   def set_room_error(error, status)
@@ -128,20 +133,5 @@ class ApplicationController < ActionController::Base
 
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options')
-  end
-
-  def find_room_internal(only_presence)
-    @room = if params.key?(:room_id)
-              Room.from_param(params[:room_id])
-            else
-              Room.from_param(params[:id])
-            end
-
-    # render the default error, aborts the rest of the execution if called in a before_action
-    unless check_room(only_presence)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-    end
   end
 end

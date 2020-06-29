@@ -1,5 +1,7 @@
 class AppLaunch < ApplicationRecord
 
+  before_save :set_room_handler
+
   def room_params
     name = self.params['resource_link_title']
     description = self.params['resource_link_description']
@@ -41,5 +43,11 @@ class AppLaunch < ApplicationRecord
     Digest::SHA1.hexdigest(
       'rooms' + self.params['tool_consumer_instance_guid'] + self.params['resource_link_id']
     ).to_s
+  end
+
+  private
+
+  def set_room_handler
+    self.room_handler ||= self.resource_handler
   end
 end

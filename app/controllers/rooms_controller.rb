@@ -8,9 +8,11 @@ class RoomsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, except: %i[close], raise: false
+  before_action :authenticate_user!, only: :launch, raise: false #except: %i[close], raise: false
   before_action :set_launch_room, only: %i[launch]
-  before_action :find_and_validate_room, except: %i[launch close index new create]
+
+  before_action :find_room, except: %i[launch close index new create]
+  before_action :validate_room, except: %i[launch close index new create]
   before_action :find_user, except: %i[close]
 
   before_action only: %i[show launch close] do
@@ -143,8 +145,10 @@ class RoomsController < ApplicationController
 
   def set_launch_room
     launch_nonce = params['launch_nonce']
+
     # Pull the Launch request_parameters
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
+    Rails.logger.info "Making a session request to #{bbbltibroker_url}"
     session_params = JSON.parse(
       RestClient.get(
         bbbltibroker_url,
@@ -152,29 +156,51 @@ class RoomsController < ApplicationController
       )
     )
 
-    # Exit with error if session_params is not valid
-    set_room_error('forbidden', :forbidden) && return unless session_params['valid']
+    unless session_params['valid']
+      Rails.logger.info "The session is not valid, returning a 401"
+      set_room_error('forbidden', :forbidden)
+      return
+    end
 
     launch_params = session_params['message']
-    set_room_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+    unless launch_params['user_id'] == session['omniauth_auth']['uid']
+      Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 401"
+      set_room_error('forbidden', :forbidden)
+      return
+    end
 
     expires_at = Rails.configuration.session_duration_mins.from_now
 
     # Store the data from this launch for easier access
     app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
-      launch.update(params: launch_params, expires_at: expires_at)
+      launch.update(
+        params: launch_params,
+        omniauth_auth: session['omniauth_auth'],
+        expires_at: expires_at
+      )
     end
 
+    # TODO: temporary for debug
+    puts "----------------------- LAUNCHING"
+    puts session['omniauth_auth'].inspect
+    puts "-----------------------"
+    puts app_launch.inspect
+    puts "-----------------------"
+
+    # Use this data only during the launch
+    # From now on, take it from the AppLaunch
+    session.delete('omniauth_auth')
+
     # Create/update the room
-    room_params = app_launch.room_params
-    @room = Room.find_or_create_by(handler: room_params[:handler]) do |room|
-      room.update(params.permit.merge(room_params))
+    local_room_params = app_launch.room_params
+    @room = Room.find_or_create_by(handler: local_room_params[:handler]) do |room|
+      room.update(params.permit.merge(local_room_params))
     end
 
     # Create the user session
-    user_params = app_launch.user_params
+    # Keep it as small as possible, most of the data is in the AppLaunch
     session[@room.handler] = {
-      user_params: user_params,
+      launch: launch_nonce,
       expires: expires_at
     }.stringify_keys # they will be strings in future calls, so make them strings already
   end
