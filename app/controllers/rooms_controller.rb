@@ -162,7 +162,7 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless session[@room.handler]
 
     # Continue through happy path
-    @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
+    @user = BbbAppRooms::User.new(session[@room.handler][:user_params])
   end
 
   def set_launch
