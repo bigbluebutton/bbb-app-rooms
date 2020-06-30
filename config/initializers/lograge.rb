@@ -18,7 +18,7 @@ Rails.application.configure do
 
     hash = { time: event.time }
     hash.merge!({"params" => params}) unless params.blank?
-    # hash.merge!({"session" => event.payload[:session]}) unless event.payload[:session].nil?
+    hash.merge!({"session" => event.payload[:session]}) unless event.payload[:session].nil?
     hash.merge!({"user" => event.payload[:user]}) unless event.payload[:user].nil?
     hash.merge!({"room" => event.payload[:room]}) unless event.payload[:room].nil?
     hash

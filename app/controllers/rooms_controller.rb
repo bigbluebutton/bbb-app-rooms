@@ -192,10 +192,12 @@ class RoomsController < ApplicationController
 
     # Create the user session
     # Keep it as small as possible, most of the data is in the AppLaunch
-    session[@room.handler] = {
-      launch: launch_nonce,
-      expires: expires_at
-    }.stringify_keys # they will be strings in future calls, so make them strings already
+    set_room_session(
+      @room, {
+        launch: launch_nonce,
+        expires: expires_at
+      }
+    )
   end
 
   def room_params

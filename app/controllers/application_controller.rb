@@ -30,8 +30,9 @@ class ApplicationController < ActionController::Base
   # Find the user info in the session.
   # It's stored scoped by the room the user is accessing.
   def find_user
-    if @room.present? && session.key?(@room.handler)
-      user_params = AppLaunch.find_by(nonce: session[@room.handler]['launch']).user_params
+    room_session = get_room_session(@room)
+    if room_session.present?
+      user_params = AppLaunch.find_by(nonce: room_session['launch']).user_params
       @user = BbbAppRooms::User.new(user_params)
       Rails.logger.info "Found the user #{@user.email} (#{@user.uid}, #{@user.launch_nonce})"
     end
@@ -62,18 +63,20 @@ class ApplicationController < ActionController::Base
       end
       return false
     end
+  end
 
   def validate_room
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-    expired = session[@room.handler].blank? ||
-              session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
+    room_session = get_room_session(@room)
+    expired = room_session.blank? || room_session['expires'].to_time <= Time.zone.now.to_time
+
     if expired
-      Rails.logger.info "The session set for this room expired: #{session[@room.handler].inspect}"
+      Rails.logger.info "The session set for this room was not found or expired: #{@room.handler}"
       set_error('room', 'forbidden', :forbidden)
       respond_to do |format|
         format.html { render 'shared/error', status: @error[:status] }
       end
-      return false
+      false
     end
   end
 
@@ -94,11 +97,11 @@ class ApplicationController < ActionController::Base
   def append_info_to_payload(payload)
     super
 
-    # payload[:session] = session['rooms'] unless session.nil?
+    payload[:session] = session['rooms'] unless session.nil?
     payload[:user] = @user unless @user.blank?
     unless @room.blank?
       payload[:room] = @room.to_param
-      payload[:room_session] = session[@room.handler]
+      payload[:room_session] = get_room_session(@room)
     end
   end
 
@@ -131,5 +134,16 @@ class ApplicationController < ActionController::Base
 
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options')
+  end
+
+  def get_room_session(room)
+    session['rooms'] ||= {}
+    session['rooms'][room.handler] if room.present? && session['rooms'].key?(room.handler)
+  end
+
+  def set_room_session(room, data)
+    session['rooms'] ||= {}
+    # they will be strings in future calls, so make them strings already
+    session['rooms'][room.handler] = data.stringify_keys
   end
 end

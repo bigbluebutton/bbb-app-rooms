@@ -40,9 +40,10 @@ class ScheduledMeetingsController < ApplicationController
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
-      if @room.present? && session.key?(@room.handler)
-        @scheduled_meeting.created_by_launch_nonce = session[@room.handler]['launch']
-      end
+
+      room_session = get_room_session(@room)
+      @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
+
       if @scheduled_meeting.save
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
       else
