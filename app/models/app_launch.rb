@@ -40,9 +40,12 @@ class AppLaunch < ApplicationRecord
   end
 
   def resource_handler
-    Digest::SHA1.hexdigest(
+    handler = Digest::SHA1.hexdigest(
       'rooms' + self.consumer_id + self.resource_id
     ).to_s
+    Rails.logger.info "Resource handler=#{handler} calculated based on " \
+                      "consumer_id=#{self.consumer_id}, resource_id=#{self.resource_id}"
+    handler
   end
 
   # The LTI attribute that defines which resource it is
