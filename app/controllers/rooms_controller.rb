@@ -180,13 +180,6 @@ class RoomsController < ApplicationController
       )
     end
 
-    # TODO: temporary for debug
-    puts "----------------------- LAUNCHING"
-    puts session['omniauth_auth'].inspect
-    puts "-----------------------"
-    puts app_launch.inspect
-    puts "-----------------------"
-
     # Use this data only during the launch
     # From now on, take it from the AppLaunch
     session.delete('omniauth_auth')

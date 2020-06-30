@@ -36,14 +36,6 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "Found the user #{@user.email} (#{@user.uid}, #{@user.launch_nonce})"
     end
 
-    # TODO: temporary for debug
-    Rails.logger.info "----------------------------- FOUND USER"
-    Rails.logger.info @user.inspect
-    if @room.present? && session.key?(@room.handler)
-      Rails.logger.info session[@room.handler].inspect
-    end
-    Rails.logger.info "-----------------------------"
-
     # TODO: check expiration here?
     # return true if session['omniauth_auth'] &&
     #                Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
@@ -70,15 +62,6 @@ class ApplicationController < ActionController::Base
       end
       return false
     end
-
-    # TODO: temporary for debug
-    Rails.logger.info "----------------------------- FOUND ROOM"
-    Rails.logger.info @room.handler
-    if @room.present? && session.key?(@room.handler)
-      Rails.logger.info session[@room.handler].inspect
-    end
-    Rails.logger.info "-----------------------------"
-  end
 
   def validate_room
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
