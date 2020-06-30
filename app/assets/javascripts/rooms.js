@@ -26,8 +26,11 @@ $(document).on('turbolinks:load', function(){
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
             data: "",
             success: function(data) {
-                if (data.wait_for_mod === true) {
+                if (data.wait_for_mod === true) { 
                     $('#wait-for-mod-msg').show();
+                } else {
+                    console.log("No moderator needed, redirecting");
+                    window.open(data.meeting);
                 }
                 App.cable.subscriptions.create({
                     channel: "WaitChannel",
