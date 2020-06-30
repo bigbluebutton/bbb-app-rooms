@@ -85,10 +85,10 @@ pt:
       _401:
         code:       "Unauthorized"
         message:    "Acesso não autorizado"
-        suggestion: "Se você está utilizando esta sala via LTI, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+        suggestion: "Tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
         status_code: "401"
     bigbluebutton:
-      invalidrequest:
+      invalid_request:
         code:       "BBBAPICallInvalid"
         message:    "Chamada inválida para o BigBlueButton"
         suggestion: "Certifique-se de que o servidor BigBlueButton sendo usado está disponível e acessível para o servidor onde a aplicação LTI está instalada."
@@ -99,13 +99,19 @@ pt:
         message:    "A sessão expirou"
         suggestion: "Se você está utilizando esta sala via LTI, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
         status_code: "403"
-      notfound:
+      not_found:
         code:       "NotFound"
         message:    "A sala não foi encontrada"
         suggestion: "A sala pode ter sido removida por um administrador. Contate o suporte técnico."
         status_code: "404"
-      invalidsecret:
+      invalid_secret:
         code:       "InvalidSecret"
         message:    "O token não pode ser validado"
         suggestion: "O problema pode ser causado pela utilização de uma chave inválida na validação da requisição feita pelo provedor LTI."
         status_code: "403"
+    scheduled_meeting:
+      not_found:
+        code:       "NotFound"
+        message:    "O agendamento não foi encontrado"
+        suggestion: "Ele pode ter sido removido pelo dono da sala."
+        status_code: "404"

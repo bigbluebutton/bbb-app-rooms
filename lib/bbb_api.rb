@@ -141,9 +141,9 @@ module BbbApi
   def check_bbb
     unless bbb
       @error = {
-        key: t('error.bigbluebutton.invalidrequest.code'),
-        message:  t('error.bigbluebutton.invalidrequest.message'),
-        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
+        key: t('error.bigbluebutton.invalid_request.code'),
+        message:  t('error.bigbluebutton.invalid_request.message'),
+        suggestion: t('error.bigbluebutton.invalid_request.suggestion'),
         status: :internal_server_error
       }
       false

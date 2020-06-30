@@ -116,10 +116,10 @@ en:
       _401:
         code:       "Unauthorized"
         message:    "Unauthorized access"
-        suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
+        suggestion: "Try launching the app again by using the link or refreshing the browser."
         status_code: "401"
     bigbluebutton:
-      invalidrequest:
+      invalid_request:
         code:       "BBBAPICallInvalid"
         message:    "Invalid BigBlueButton API call"
         suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed."
@@ -130,13 +130,19 @@ en:
         message:    "The session has expired"
         suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
         status_code: "403"
-      notfound:
+      not_found:
         code:       "NotFound"
         message:    "The room was not found"
         suggestion: "The room may have been removed by an administrator. Contact technical support."
         status_code: "404"
-      invalidsecret:
+      invalid_secret:
         code:       "InvalidSecret"
         message:    "The token could not be validated"
         suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider."
         status_code: "403"
+    scheduled_meeting:
+      not_found:
+        code:       "NotFound"
+        message:    "The scheduled meeting was not found"
+        suggestion: "It may have been removed by the room owner."
+        status_code: "404"

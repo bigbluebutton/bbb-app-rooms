@@ -158,14 +158,14 @@ class RoomsController < ApplicationController
 
     unless session_params['valid']
       Rails.logger.info "The session is not valid, returning a 401"
-      set_room_error('forbidden', :forbidden)
+      set_error('room', 'forbidden', :forbidden)
       return
     end
 
     launch_params = session_params['message']
     unless launch_params['user_id'] == session['omniauth_auth']['uid']
       Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 401"
-      set_room_error('forbidden', :forbidden)
+      set_error('room', 'forbidden', :forbidden)
       return
     end
 

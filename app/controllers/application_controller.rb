@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
     # Exit with error if room was not found
     unless @room.present?
       Rails.logger.info "Couldn't find a room in the URL, returning 404"
-      set_room_error('notfound', :not_found)
+      set_error('room', 'not_found', :not_found)
       respond_to do |format|
         format.html { render 'shared/error', status: @error[:status] }
       end
@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
               session[@room.handler]['expires'].to_time <= Time.zone.now.to_time
     if expired
       Rails.logger.info "The session set for this room expired: #{session[@room.handler].inspect}"
-      set_room_error('forbidden', :forbidden)
+      set_error('room', 'forbidden', :forbidden)
       respond_to do |format|
         format.html { render 'shared/error', status: @error[:status] }
       end
@@ -94,13 +94,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_room_error(error, status)
-    @room = @user = nil
+  def set_error(model, error, status)
+    @user = nil
+    instance_variable_set("@#{model}".to_sym, nil)
     @error = {
-      key: t("error.room.#{error}.code"),
-      message: t("error.room.#{error}.message"),
-      suggestion: t("error.room.#{error}.suggestion"),
-      code: t("error.room.#{error}.status_code"),
+      key: t("error.#{model}.#{error}.code"),
+      message: t("error.#{model}.#{error}.message"),
+      suggestion: t("error.#{model}.#{error}.suggestion"),
+      code: t("error.#{model}.#{error}.status_code"),
       status: status
     }
   end

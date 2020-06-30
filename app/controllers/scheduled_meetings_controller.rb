@@ -21,6 +21,7 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_user
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
+  before_action :validate_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
 
   before_action only: %i[join external wait] do
     authorize_user!(:show, @scheduled_meeting)
@@ -150,6 +151,16 @@ class ScheduledMeetingsController < ApplicationController
 
   def find_scheduled_meeting
     @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
+  end
+
+  def validate_scheduled_meeting
+    if @scheduled_meeting.blank?
+      set_error('scheduled_meeting', 'not_found', :not_found)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+      false
+    end
   end
 
   def validate_start_at(scheduled_meeting)
