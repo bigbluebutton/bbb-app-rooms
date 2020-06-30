@@ -5,6 +5,10 @@ module BbbApi
     Rails.configuration.bigbluebutton_endpoint
   end
 
+  def bigbluebutton_endpoint_internal
+    Rails.configuration.bigbluebutton_endpoint_internal
+  end
+
   def bigbluebutton_secret
     Rails.configuration.bigbluebutton_secret
   end
@@ -23,7 +27,7 @@ module BbbApi
     return unless check_bbb
 
     room = scheduled_meeting.room
-    bbb.create_meeting(
+    bbb(true).create_meeting(
       scheduled_meeting.name,
       scheduled_meeting.meeting_id,
       scheduled_meeting.create_options(user).merge(
@@ -55,7 +59,7 @@ module BbbApi
 
   # Fetches all recordings for a room.
   def get_recordings(room)
-    res = bbb.get_recordings(room.params_for_get_recordings)
+    res = bbb(true).get_recordings(room.params_for_get_recordings)
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
@@ -98,33 +102,40 @@ module BbbApi
 
   # Deletes a recording from a room.
   def delete_recording(record_id)
-    bbb.delete_recordings(record_id)
+    bbb(true).delete_recordings(record_id)
   end
 
   # Publishes a recording for a room.
   def publish_recording(record_id)
-    bbb.publish_recordings(record_id, true)
+    bbb(true).publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording for a room.
   def unpublish_recording(record_id)
-    bbb.publish_recordings(record_id, false)
+    bbb(true).publish_recordings(record_id, false)
   end
 
   # Update recording for a room.
   def update_recording(record_id, meta)
     meta[:recordID] = record_id
-    bbb.send_api_request('updateRecordings', meta)
+    bbb(true).send_api_request('updateRecordings', meta)
   end
 
   private
 
   # Sets a BigBlueButtonApi object for interacting with the API.
-  def bbb
-    @bbb ||= BigBlueButton::BigBlueButtonApi.new(
-      remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)),
-      bigbluebutton_secret, "0.9", "true"
-    )
+  def bbb(internal = false)
+    if internal && !bigbluebutton_endpoint_internal.blank?
+      @bbb_internal ||= BigBlueButton::BigBlueButtonApi.new(
+        remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint_internal)),
+        bigbluebutton_secret, "0.9", "true"
+      )
+    else
+      @bbb ||= BigBlueButton::BigBlueButtonApi.new(
+        remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)),
+        bigbluebutton_secret, "0.9", "true"
+      )
+    end
   end
 
   def check_bbb

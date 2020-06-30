@@ -20,6 +20,7 @@ module BbbAppRooms
     config.build_number = ENV['BUILD_NUMBER'] || 'v1'
 
     config.bigbluebutton_endpoint = ENV['BIGBLUEBUTTON_ENDPOINT'] || 'http://test-install.blindsidenetworks.com/bigbluebutton/api'
+    config.bigbluebutton_endpoint_internal = ENV['BIGBLUEBUTTON_ENDPOINT_INTERNAL']
     config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET'] || '8cd8ef52e8e101574e400365b55e11a6'
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
 
