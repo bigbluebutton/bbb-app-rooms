@@ -100,6 +100,7 @@ class ApplicationController < ActionController::Base
       key: t("error.room.#{error}.code"),
       message: t("error.room.#{error}.message"),
       suggestion: t("error.room.#{error}.suggestion"),
+      code: t("error.room.#{error}.status_code"),
       status: status
     }
   end

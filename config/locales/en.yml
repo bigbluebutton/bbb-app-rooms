@@ -117,21 +117,26 @@ en:
         code:       "Unauthorized"
         message:    "Unauthorized access"
         suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
+        status_code: "401"
     bigbluebutton:
       invalidrequest:
         code:       "BBBAPICallInvalid"
         message:    "Invalid BigBlueButton API call"
         suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed."
+        status_code: "500"
     room:
       forbidden:
         code:       "AccessForbidden"
         message:    "The session has expired"
         suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser."
+        status_code: "403"
       notfound:
         code:       "NotFound"
         message:    "The room was not found"
         suggestion: "The room may have been removed by an administrator. Contact technical support."
+        status_code: "404"
       invalidsecret:
         code:       "InvalidSecret"
         message:    "The token could not be validated"
         suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider."
+        status_code: "403"
