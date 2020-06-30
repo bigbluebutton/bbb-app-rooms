@@ -8,7 +8,7 @@ class RoomsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, raise: false
+  before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
   before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, only: [:create, :update]
@@ -139,7 +139,6 @@ class RoomsController < ApplicationController
   end
 
   def authenticate_user!
-    # reset_session
     @launch_nonce = params['launch_nonce']
     return unless omniauth_provider?(:bbbltibroker)
     # Assume user authenticated if session [params[launch_nonce]] is set
