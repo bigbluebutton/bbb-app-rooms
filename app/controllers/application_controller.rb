@@ -72,6 +72,7 @@ class ApplicationController < ActionController::Base
 
     if expired
       Rails.logger.info "The session set for this room was not found or expired: #{@room.handler}"
+      remove_room_session(@room)
       set_error('room', 'forbidden', :forbidden)
       respond_to do |format|
         format.html { render 'shared/error', status: @error[:status] }
@@ -145,5 +146,11 @@ class ApplicationController < ActionController::Base
     session['rooms'] ||= {}
     # they will be strings in future calls, so make them strings already
     session['rooms'][room.handler] = data.stringify_keys
+  end
+
+  def remove_room_session(room)
+    if room.present? && session.key?('rooms') && session['rooms'].key?(room.handler)
+      session['rooms'].delete(room.handler)
+    end
   end
 end
