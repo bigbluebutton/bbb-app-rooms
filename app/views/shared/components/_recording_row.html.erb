@@ -34,7 +34,7 @@
     </div>
   </td>
   <td class="text-left">
-    <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+    <div id="recording-description" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>" data-launch-nonce="<%= @launch_nonce %>">
       <text id='recording-description-text' class="text-wrap recording-text"><%= recording[:metadata][:description] %></text>
       <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
         <a><i id="edit-record-description" class="fa fa-edit align-top ml-2" data-edit-recordid="<%= recording[:recordID] %>"></i></a>
@@ -57,15 +57,15 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right">
           <% if recording[:state] == "published" %>
-            <%= button_to recording_unpublish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+            <%= button_to recording_unpublish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
               <i class="dropdown-icon fas fa-book"></i> <%= t("default.recording.action.unpublish") %>
             <% end %>
           <% elsif recording[:state] == "unpublished" %>
-            <%= button_to recording_publish_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+            <%= button_to recording_publish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
               <i class="dropdown-icon fas fa-book-open"></i> <%= t("default.recording.action.publish") %>
             <% end %>
           <% end %>
-          <%= button_to recording_delete_path(@room, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+          <%= button_to recording_delete_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
             <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("default.recording.action.delete") %>
           <% end %>
         </div>

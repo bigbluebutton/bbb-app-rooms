@@ -94,6 +94,7 @@ $(document).on('turbolinks:load', function(){
           setting: "rename_recording",
           record_id: element.data('recordid'),
           record_name: element.find('text').text(),
+          launch_nonce: element.data('launch-nonce'),
         });
       }
       else if(element.is('#recording-description')){
@@ -101,6 +102,7 @@ $(document).on('turbolinks:load', function(){
           setting: "describe_recording",
           record_id: element.data('recordid'),
           record_description: element.find('text').text(),
+          launch_nonce: element.data('launch-nonce'),
         });
       }
     }
@@ -109,7 +111,7 @@ $(document).on('turbolinks:load', function(){
     var submit_update_request = function(data){
       // Send ajax request for update
       $.ajax({
-        url: window.location.pathname + '/recording/' + data['record_id'] + '/update',
+        url: window.location.pathname + '/recording/' + data['record_id'] + '/update?launch_nonce=' + data['launch_nonce'],
         type: "POST",
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         data: data,

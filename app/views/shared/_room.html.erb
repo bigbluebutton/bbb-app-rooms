@@ -37,7 +37,7 @@
 
       <div class="col-6 ">
         <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-        <%= link_to '', edit_room_path(@room), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
+        <%= link_to '', edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
         <% end %>
       </div>
     </div>
@@ -50,7 +50,7 @@
 
     <h3><%= @room.description %></h3>
 
-    <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room), room: @room.id } %>
+    <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: { url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id } %>
 
     <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
     </div>
