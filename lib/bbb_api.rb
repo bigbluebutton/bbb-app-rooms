@@ -1,33 +1,21 @@
 # frozen_string_literal: true
 
 module BbbApi
-  def bigbluebutton_endpoint
-    Rails.configuration.bigbluebutton_endpoint
-  end
-
-  def bigbluebutton_endpoint_internal
-    Rails.configuration.bigbluebutton_endpoint_internal
-  end
-
-  def bigbluebutton_secret
-    Rails.configuration.bigbluebutton_secret
-  end
-
   def wait_for_mod?(scheduled_meeting, user)
     return unless scheduled_meeting and user
     scheduled_meeting.wait_moderator && !user.moderator?(Abilities.moderator_roles)
   end
 
   def mod_in_room?(scheduled_meeting)
-    bbb.is_meeting_running?(scheduled_meeting.meeting_id)
+    room = scheduled_meeting.room
+    bbb(room).is_meeting_running?(scheduled_meeting.meeting_id)
   end
 
   def join_api_url(scheduled_meeting, user)
     return unless scheduled_meeting.present? && user.present?
-    return unless check_bbb
 
     room = scheduled_meeting.room
-    bbb(true).create_meeting(
+    bbb(room).create_meeting(
       scheduled_meeting.name,
       scheduled_meeting.meeting_id,
       scheduled_meeting.create_options(user).merge(
@@ -37,7 +25,7 @@ module BbbApi
 
     is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
-    bbb.join_meeting_url(
+    bbb(room, false).join_meeting_url(
       scheduled_meeting.meeting_id,
       user.username(t("default.bigbluebutton.#{role}")),
       room.attributes[role]
@@ -46,10 +34,9 @@ module BbbApi
 
   def external_join_api_url(scheduled_meeting, full_name)
     return unless scheduled_meeting.present? && full_name.present?
-    return unless check_bbb
 
     room = scheduled_meeting.room
-    bbb.join_meeting_url(
+    bbb(room, false).join_meeting_url(
       scheduled_meeting.meeting_id,
       full_name,
       room.attributes['viewer'],
@@ -59,7 +46,7 @@ module BbbApi
 
   # Fetches all recordings for a room.
   def get_recordings(room)
-    res = bbb(true).get_recordings(room.params_for_get_recordings)
+    res = bbb(room).get_recordings(room.params_for_get_recordings)
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
@@ -101,55 +88,57 @@ module BbbApi
   end
 
   # Deletes a recording from a room.
-  def delete_recording(record_id)
-    bbb(true).delete_recordings(record_id)
+  def delete_recording(room, record_id)
+    bbb(room).delete_recordings(record_id)
   end
 
   # Publishes a recording for a room.
-  def publish_recording(record_id)
-    bbb(true).publish_recordings(record_id, true)
+  def publish_recording(room, record_id)
+    bbb(room).publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording for a room.
-  def unpublish_recording(record_id)
-    bbb(true).publish_recordings(record_id, false)
+  def unpublish_recording(room, record_id)
+    bbb(room).publish_recordings(record_id, false)
   end
 
   # Update recording for a room.
-  def update_recording(record_id, meta)
+  def update_recording(room, record_id, meta)
     meta[:recordID] = record_id
-    bbb(true).send_api_request('updateRecordings', meta)
+    bbb(room).send_api_request('updateRecordings', meta)
   end
 
   private
 
   # Sets a BigBlueButtonApi object for interacting with the API.
-  def bbb(internal = false)
-    if internal && !bigbluebutton_endpoint_internal.blank?
-      @bbb_internal ||= BigBlueButton::BigBlueButtonApi.new(
-        remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint_internal)),
-        bigbluebutton_secret, "0.9", "true"
-      )
-    else
-      @bbb ||= BigBlueButton::BigBlueButtonApi.new(
-        remove_slash(fix_bbb_endpoint_format(bigbluebutton_endpoint)),
-        bigbluebutton_secret, "0.9", "true"
-      )
-    end
-  end
+  def bbb(room, internal = true)
+    consumer_key = room.last_launch.try(:oauth_consumer_key)
+    server = BigbluebuttonServer.find_by(key: consumer_key)
 
-  def check_bbb
-    unless bbb
-      @error = {
-        key: t('error.bigbluebutton.invalid_request.code'),
-        message:  t('error.bigbluebutton.invalid_request.message'),
-        suggestion: t('error.bigbluebutton.invalid_request.suggestion'),
-        status: :internal_server_error
-      }
-      false
+    if server.present?
+      Rails.logger.info "Found the server:#{server.domain} secret:#{server.secret[0..7]} "\
+                        "for the room:#{room.to_param} " \
+                        "using the consumer_key:#{consumer_key}"
+
+      endpoint = if internal && !server.internal_endpoint.blank?
+                   server.internal_endpoint
+                 else
+                   server.endpoint
+                 end
+      secret = server.secret
     else
-      true
+      Rails.logger.info "Using the default server for the room:#{room.to_param}, " \
+                        "couldn't find one for consumer_key:#{consumer_key}"
+
+      ep = Rails.configuration.bigbluebutton_endpoint
+      iep = Rails.configuration.bigbluebutton_endpoint_internal
+      endpoint = internal && !iep.blank? ? iep : ep
+      secret = Rails.configuration.bigbluebutton_secret
     end
+
+    BigBlueButton::BigBlueButtonApi.new(
+      remove_slash(fix_bbb_endpoint_format(endpoint)), secret, "0.9", "true"
+    )
   end
 
   # Fixes BigBlueButton endpoint ending.

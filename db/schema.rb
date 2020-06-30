@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_132136) do
+ActiveRecord::Schema.define(version: 2020_06_30_202435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,15 @@ ActiveRecord::Schema.define(version: 2020_06_30_132136) do
     t.jsonb "omniauth_auth"
     t.string "room_handler"
     t.index ["nonce"], name: "index_app_launches_on_nonce"
+    t.index ["room_handler"], name: "index_app_launches_on_room_handler"
+  end
+
+  create_table "bigbluebutton_servers", force: :cascade do |t|
+    t.string "key"
+    t.string "endpoint"
+    t.string "secret"
+    t.string "internal_endpoint"
+    t.index ["key"], name: "index_bigbluebutton_servers_on_key"
   end
 
   create_table "rooms", force: :cascade do |t|

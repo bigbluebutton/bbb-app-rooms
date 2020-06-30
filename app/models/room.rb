@@ -2,8 +2,13 @@ class Room < ApplicationRecord
   before_save :default_values
 
   has_many :scheduled_meetings
+  has_many :app_launches, primary_key: :handler, foreign_key: :room_handler
 
   attr_accessor :can_grade
+
+  def last_launch
+    app_launches.order('created_at DESC').first
+  end
 
   def to_param
     self.handler
