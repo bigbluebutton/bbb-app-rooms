@@ -146,7 +146,7 @@ class RoomsController < ApplicationController
     @launch_nonce = params['launch_nonce']
     return unless omniauth_provider?(:bbbltibroker)
     # Assume user authenticated if session [params[launch_nonce]] is set
-    return if session[params['launch_nonce']]
+    return if session[@launch_nonce]
 
     redirect_to(omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])) && return if params['action'] == 'launch'
 
