@@ -5,7 +5,7 @@
     <% if scheduled_meetings.count > 0 %>
       <table class="table">
         <tbody>
-          <% scheduled_meetings.find_each do |meeting| %>
+          <% scheduled_meetings.each do |meeting| %>
             <%= render "shared/scheduled_meeting_row", user: user, room: room, meeting: meeting %>
           <% end %>
         </tbody>
