@@ -31,6 +31,10 @@ en:
     publish: "Publish"
     title: "Recordings"
     unpublish: "Unpublish"
+  rooms:
+    close:
+      message: "Thank you for participating and until the next time."
+      title: "Your session has ended"
   scheduled_meetings:
     destroy: "Remove"
     edit:

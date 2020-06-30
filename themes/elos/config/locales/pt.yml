@@ -31,6 +31,10 @@ pt:
     publish: "Publicar"
     title: "Gravações"
     unpublish: "Despublicar"
+  rooms:
+    close:
+      message: "Obrigado pela sua participação e até a próxima."
+      title: "Sua sessão acabou"
   scheduled_meetings:
     destroy: "Remover"
     edit:
