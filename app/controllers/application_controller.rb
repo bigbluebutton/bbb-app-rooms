@@ -105,6 +105,19 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  # The payload is used by lograge. We add more information to it here so that it is saved
+  # in the log.
+  def append_info_to_payload(payload)
+    super
+
+    # payload[:session] = session['rooms'] unless session.nil?
+    payload[:user] = @user unless @user.blank?
+    unless @room.blank?
+      payload[:room] = @room.to_param
+      payload[:room_session] = session[@room.handler]
+    end
+  end
+
   private
 
   def set_current_locale

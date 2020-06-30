@@ -91,3 +91,5 @@ gem 'omniauth-oauth2', '>= 1.6.0'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
 gem 'browser'
+gem 'lograge'
+gem "logstash-event"
