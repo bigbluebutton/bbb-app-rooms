@@ -35,6 +35,7 @@ URL_HOST=lti.jesus.blindside-dev.com
 ## Use to send logs to Standard Output (Optional)
 RAILS_LOG_TO_STDOUT=true
 # LOGRAGE_ENABLED=1
+# LOG_LEVEL=info
 
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true

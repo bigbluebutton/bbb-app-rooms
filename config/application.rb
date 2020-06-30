@@ -39,6 +39,8 @@ module BbbAppRooms
     config.session_duration_mins =
       ENV["APP_SESSION_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
 
+    config.log_level = ENV['LOG_LEVEL'] || :debug
+
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
       config.paths['app/helpers']
