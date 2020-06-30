@@ -45,7 +45,7 @@ $(document).on('turbolinks:load', function(){
                     },
                     rejected: function() {
                         console.log("rejected");
-                    },  
+                    },
                     received: function(data) {
                         console.log(data);
 
@@ -61,4 +61,3 @@ $(document).on('turbolinks:load', function(){
         });
     })
 });
-  

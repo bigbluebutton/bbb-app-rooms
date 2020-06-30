@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
     redirect_to(omniauth_failure_path) && return unless omniauth_auth&.uid
 
     # As authentication did not fail, initialize the session
-    session['omniauth_auth'] = omniauth_auth
+    session[omniauth_params['launch_nonce']] = omniauth_auth.to_hash.slice('uid')
     redirect_to(room_launch_url(launch_nonce: omniauth_params['launch_nonce']))
   end
 

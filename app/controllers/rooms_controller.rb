@@ -9,7 +9,7 @@ class RoomsController < ApplicationController
   include BbbAppRooms
 
   before_action :authenticate_user!, raise: false
-  before_action :set_launch_room, only: %i[launch]
+  before_action :set_launch, only: %i[launch]
   before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
@@ -78,7 +78,7 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirect_to(room_path(@room.id))
+    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce']))
   end
 
   # POST /rooms/:id/meeting/join
@@ -104,13 +104,13 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(params[:record_id])
-    redirect_to(room_path(params[:id]))
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(params[:record_id])
-    redirect_to(room_path(params[:id]))
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -120,13 +120,13 @@ class RoomsController < ApplicationController
     elsif params[:setting] == 'describe_recording'
       update_recording(params[:record_id], 'meta_description' => params[:record_description])
     end
-    redirect_to(room_path(params[:id]))
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(params[:record_id])
-    redirect_to(room_path(params[:id]))
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
   helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles
@@ -139,15 +139,14 @@ class RoomsController < ApplicationController
   end
 
   def authenticate_user!
+    # reset_session
+    @launch_nonce = params['launch_nonce']
     return unless omniauth_provider?(:bbbltibroker)
-    # Assume user authenticated if session[:omaniauth_auth] is set
-    return if session['omniauth_auth'] && Time.now.to_time.to_i < session['omniauth_auth']['credentials']['expires_at'].to_i
+    # Assume user authenticated if session [params[launch_nonce]] is set
+    return if session[@launch_nonce]
 
-    session[:callback] = request.original_url
-    if params['action'] == 'launch'
-      redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
-      redirect_to(redirector) && return
-    end
+    redirect_to(omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])) && return if params['action'] == 'launch'
+
     redirect_to(errors_path(401))
   end
 
@@ -157,30 +156,30 @@ class RoomsController < ApplicationController
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
-    set_error('forbidden', :forbidden) && return unless session[@room.handler] && session[@room.handler]['expires'].to_time > Time.zone.now.to_time
+    set_error('forbidden', :forbidden) && return unless session[@room.handler]
 
     # Continue through happy path
-    @user = BbbAppRooms::User.new(session[@room.handler]['user_params'])
+    @user = BbbAppRooms::User.new(session[@room.handler][:user_params])
   end
 
-  def set_launch_room
-    launch_nonce = params['launch_nonce'] # || session['omniauth_params']['launch_nonce']
+  def set_launch
     # Pull the Launch request_parameters.
-    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}")
+    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     session_params = JSON.parse(RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"))
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
     launch_params = session_params['message']
+
     # Exit with error if user is not authenticated.
-    set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session['omniauth_auth']['uid']
+    set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
     @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
     user_params = launch_params_to_new_user_params(launch_params)
-    session[@room.handler] = { user_params: user_params, expires: 30.minutes.from_now }
+    session[@room.handler] = { user_params: user_params }
   end
 
   def room_params
