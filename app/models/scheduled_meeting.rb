@@ -91,6 +91,7 @@ class ScheduledMeeting < ApplicationRecord
           'resource_link_id': launch_params.params['lis_course_section_sourcedid'],
           'course-section-sourcedid': launch_params.params['context_type'],
           'launch-nonce': launch_params.nonce,
+          'oauth-consumer-key': launch_params.oauth_consumer_key,
         }
       )
     end

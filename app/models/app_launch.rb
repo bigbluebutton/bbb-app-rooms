@@ -64,6 +64,10 @@ class AppLaunch < ApplicationRecord
     end
   end
 
+  def oauth_consumer_key
+    self.params['custom_params']['oauth_consumer_key'] if self.params.key?('custom_params')
+  end
+
   private
 
   def set_room_handler
