@@ -3,8 +3,7 @@ class AppLaunch < ApplicationRecord
   before_save :set_room_handler
 
   def room_params
-    name = self.params['resource_link_title']
-    description = self.params['resource_link_description']
+    name = self.params['context_title']
     record = has_custom?('record')
     wait_moderator = has_custom?('wait_moderator')
     all_moderators = has_custom?('all_moderators')
@@ -12,7 +11,6 @@ class AppLaunch < ApplicationRecord
     {
       handler: resource_handler,
       name: name,
-      description: description,
       welcome: '',
       recording: record,
       wait_moderator: wait_moderator,
@@ -41,16 +39,16 @@ class AppLaunch < ApplicationRecord
 
   def resource_handler
     handler = Digest::SHA1.hexdigest(
-      'rooms' + self.consumer_id + self.resource_id
+      'rooms' + self.consumer_id + self.context_id
     ).to_s
     Rails.logger.info "Resource handler=#{handler} calculated based on " \
-                      "consumer_id=#{self.consumer_id}, resource_id=#{self.resource_id}"
+                      "consumer_id=#{self.consumer_id}, context_id=#{self.context_id}"
     handler
   end
 
   # The LTI attribute that defines which resource it is
-  def resource_id
-    self.params['resource_link_id']
+  def context_id
+    self.params['context_id']
   end
 
   # The LTI attribute that defines who the consumer is
