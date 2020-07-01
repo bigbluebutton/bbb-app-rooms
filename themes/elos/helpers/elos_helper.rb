@@ -20,11 +20,11 @@ module ElosHelper
   def recording_duration_secs(recording)
     playbacks = recording[:playbacks]
     valid_playbacks = playbacks.reject { |p| p[:type] == 'statistics' }
+    return 0 if valid_playbacks.empty?
+
     len = valid_playbacks.first[:length]
-    if len.nil?
-      0
-    else
-      len * 60
-    end
+    return 0 if len.nil?
+
+    len * 60
   end
 end

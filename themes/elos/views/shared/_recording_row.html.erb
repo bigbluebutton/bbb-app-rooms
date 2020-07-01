@@ -17,7 +17,10 @@
     <%= format_date(recording[:startTime]) %>
   </td>
   <td class="col-3 align-middle">
-    <%= distance_of_time_in_words(0, recording_duration_secs(recording)).capitalize %>
+    <% duration = recording_duration_secs(recording) %>
+    <% if duration > 0 %>
+      <%= distance_of_time_in_words(0, duration).capitalize %>
+    <% end %>
   </td>
   <td class="col-2 align-middle">
     <div class="dropdown dropdown-opts">

@@ -40,9 +40,6 @@ class RoomsController < ApplicationController
     respond_to do |format|
       if @room
         @recordings = get_recordings(@room)
-        puts '--- RECORDINGS:'
-        puts @recordings.inspect
-        puts "-----------------"
         @scheduled_meetings = @room.scheduled_meetings.active.order(:start_at)
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }

@@ -9,7 +9,9 @@
     <%= format_date(meeting.start_at) %>
   </td>
   <td class="col-3 align-middle">
-    <%= distance_of_time_in_words(0, meeting.duration).capitalize %>
+    <% if meeting.duration > 0 %>
+      <%= distance_of_time_in_words(0, meeting.duration).capitalize %>
+    <% end %>
   </td>
   <td class="col-1 align-middle">
     <%=
