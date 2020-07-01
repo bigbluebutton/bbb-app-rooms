@@ -113,5 +113,5 @@ pt:
       not_found:
         code:       "NotFound"
         message:    "O agendamento não foi encontrado"
-        suggestion: "Ele pode ter sido removido pelo dono da sala."
+        suggestion: "Ele pode ter sido removido pelo criador da sessão."
         status_code: "404"

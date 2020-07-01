@@ -144,5 +144,5 @@ en:
       not_found:
         code:       "NotFound"
         message:    "The scheduled meeting was not found"
-        suggestion: "It may have been removed by the room owner."
+        suggestion: "It might have been removed by the session creator."
         status_code: "404"
