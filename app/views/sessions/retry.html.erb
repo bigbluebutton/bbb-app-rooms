@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+    <h1><%= t('default.session.retry.title') %></h1>
+
+    <p><%= t('default.session.retry.messages.a') %></p>
+    <p><%= t('default.session.retry.messages.b') %></p>
+    <%=
+    link_to t('default.session.retry.launch_btn'),
+     room_launch_path(launch_nonce: @launch_nonce),
+     target: '_blank', class: 'btn btn-secondary'
+    %>
+
+    <div id="retry-alternatives">
+      <p><%= t('default.session.retry.alternatives.title') %></p>
+      <ul>
+        <li><%= t('default.session.retry.alternatives.a') %></li>
+        <li><%= t('default.session.retry.alternatives.b') %></li>
+        <li><%= t('default.session.retry.alternatives.c') %></li>
+      </ul>
+    </div>
+  </div>
+</div>

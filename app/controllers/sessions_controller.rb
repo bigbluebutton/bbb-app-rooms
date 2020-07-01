@@ -8,9 +8,14 @@ class SessionsController < ApplicationController
   def create
     omniauth_auth = request.env['omniauth.auth']
     omniauth_params = request.env['omniauth.params']
+    Rails.logger.info "Omniauth authentication information auth=#{omniauth_auth.inspect} " \
+                      "params=#{omniauth_params.inspect}"
 
     # Return error if authentication fails
-    redirect_to(omniauth_failure_path) && return unless omniauth_auth&.uid
+    unless omniauth_auth&.uid
+      Rails.logger.info "Authentication failed, redirecting to #{omniauth_retry_path(omniauth_params)}"
+      redirect_to(omniauth_retry_path(omniauth_params)) && return
+    end
 
     # As authentication did not fail, initialize the session
     session['omniauth_auth'] = omniauth_auth
@@ -18,6 +23,10 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    redirect_to(errors_url(500))
+    redirect_to(errors_path(500))
+  end
+
+  def retry
+    @launch_nonce = params['launch_nonce']
   end
 end

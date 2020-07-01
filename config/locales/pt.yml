@@ -74,6 +74,18 @@ pt:
       wait:
         message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
       waitmoderator:  "Aguardar moderador"
+    session:
+      retry:
+        alternatives:
+          title: "Caso mesmo assim não funcione, você pode tentar:"
+          a: "Utilizar outro navegador."
+          b: "Verificar se seu navegador está com cookies habilitados."
+          c: "Desabiltar plugins, principalmente ad-blockers."
+        launch_btn: "Abrir em uma nova aba"
+        messages:
+          a: "Não foi possível iniciar a aplicação. Isso costuma acontecer pois seu navegador está bloqueando o acesso."
+          b: "Por favor tente abrir novamente em uma nova aba utilizando o botão abaixo:"
+        title: "Tente novamente"
     formats:
       flatpickr:
         date_js: "d/m/Y"
