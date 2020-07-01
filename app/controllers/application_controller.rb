@@ -68,9 +68,7 @@ class ApplicationController < ActionController::Base
   def validate_room
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
     room_session = get_room_session(@room)
-    expired = room_session.blank? || room_session['expires'].to_time <= Time.zone.now.to_time
-
-    if expired
+    if room_session.blank?
       Rails.logger.info "The session set for this room was not found or expired: #{@room.handler}"
       remove_room_session(@room)
       set_error('room', 'forbidden', :forbidden)

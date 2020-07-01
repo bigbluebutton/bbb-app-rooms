@@ -51,8 +51,8 @@ module BbbAppRooms
     config.default_timezone = ENV["DEFAULT_TIMEZONE"] || 'UTC'
     config.app_name = ENV["APP_NAME"] || 'BbbAppRooms'
 
-    config.session_duration_mins =
-      ENV["APP_SESSION_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
+    config.launch_duration_mins =
+      ENV["APP_LAUNCH_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
 
     config.log_level = ENV['LOG_LEVEL'] || :debug
 

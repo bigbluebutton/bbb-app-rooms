@@ -169,7 +169,7 @@ class RoomsController < ApplicationController
       return
     end
 
-    expires_at = Rails.configuration.session_duration_mins.from_now
+    expires_at = Rails.configuration.launch_duration_mins.from_now
 
     # Store the data from this launch for easier access
     app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
@@ -193,10 +193,7 @@ class RoomsController < ApplicationController
     # Create the user session
     # Keep it as small as possible, most of the data is in the AppLaunch
     set_room_session(
-      @room, {
-        launch: launch_nonce,
-        expires: expires_at
-      }
+      @room, { launch: launch_nonce }
     )
   end
 

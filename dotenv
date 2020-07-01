@@ -50,7 +50,7 @@ DEFAULT_TIMEZONE=UTC
 
 APP_NAME=BbbAppRooms
 
-APP_SESSION_DURATION_MINS=30
+APP_LAUNCH_DURATION_MINS=30
 
 # rebuild the container to recompile the assets when changing this in prod
 # APP_THEME=
