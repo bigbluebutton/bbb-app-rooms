@@ -22,8 +22,8 @@ class ApplicationController < ActionController::Base
       return true
     end
 
-    Rails.logger.info "Redirecting to the authorization route"
     redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    Rails.logger.info "Redirecting to the authorization route #{redirector}"
     redirect_to(redirector) and return true
   end
 

@@ -23,7 +23,10 @@ class SessionsController < ApplicationController
   end
 
   def failure
-    redirect_to(errors_path(500))
+    # TODO: there are different types of errors, not all require a retry
+    redirect_to(
+      omniauth_retry_path(provider: params['provider'], launch_nonce: params['launch_nonce'])
+    )
   end
 
   def retry
