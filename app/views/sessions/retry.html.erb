@@ -4,10 +4,10 @@
 
     <p><%= t('default.session.retry.messages.a') %></p>
     <p><%= t('default.session.retry.messages.b') %></p>
+
     <%=
-    link_to t('default.session.retry.launch_btn'),
-     room_launch_path(launch_nonce: @launch_nonce),
-     target: '_blank', class: 'btn btn-secondary'
+    link_to t('default.session.retry.launch_btn'), '#',
+     target: '_blank', class: 'btn btn-secondary btn-auth'
     %>
 
     <div id="retry-alternatives">
