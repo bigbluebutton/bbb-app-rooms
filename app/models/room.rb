@@ -32,6 +32,10 @@ class Room < ApplicationRecord
     "#{self.handler}-#{self.id}"
   end
 
+  def next_meetings
+    scheduled_meetings.active.order(:start_at).first(3)
+  end
+
   private
 
   def random_password(length, reference = '')

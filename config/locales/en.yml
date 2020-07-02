@@ -108,15 +108,15 @@ en:
     session:
       retry:
         alternatives:
-          title: "If it still doesn't work, you can try to:"
-          a: "Use another browser."
+          title: "This usually happens because your browser is blocking access. If you want to try alternatives, you can:"
+          a: "Use your browser in the normal mode (not anonymous)."
           b: "Verify if you have cookies enabled in your browser."
           c: "Disable plugins, especially ad-blockers."
-        launch_btn: "Open in a new window"
+        launch_btn: "Join session"
         messages:
-          a: "It wasn't possible to start the application. This usually happens because your browser is blocking access."
-          b: "Please try to open it again in a new window using the button bellow:"
-        title: "Try again"
+          a: "You can join the next session using the button below:"
+          b: "There is no session scheduled near this time yet. Try again later to see here the options to join the session."
+        title: "It was not possible to authenticate your access"
     formats:
       flatpickr:
         date_js: "m/d/Y"

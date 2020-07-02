@@ -77,15 +77,15 @@ pt:
     session:
       retry:
         alternatives:
-          title: "Caso mesmo assim não funcione, você pode tentar:"
-          a: "Utilizar outro navegador."
+          title: "Isso costuma acontecer pois seu navegador está bloqueando o acesso. Caso queira tentar alternativas, você pode:"
+          a: "Utilize o seu navegador em modo normal (não anônimo)."
           b: "Verificar se seu navegador está com cookies habilitados."
           c: "Desabiltar plugins, principalmente ad-blockers."
-        launch_btn: "Abrir em uma nova aba"
+        launch_btn: "Acessar sessão"
         messages:
-          a: "Não foi possível iniciar a aplicação. Isso costuma acontecer pois seu navegador está bloqueando o acesso."
-          b: "Por favor tente abrir novamente em uma nova aba utilizando o botão abaixo:"
-        title: "Tente novamente"
+          a: "Você pode acessar a próxima sessão agendada através do botão abaixo:"
+          b: "Não existe nenhuma sessão agendada para um horário próximo. Tente novamente em outro momento para ver aqui as opções de entrada na sessão."
+        title: "Não foi possível autenticar o seu acesso"
     formats:
       flatpickr:
         date_js: "d/m/Y"

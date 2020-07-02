@@ -54,18 +54,4 @@ $(document).on('turbolinks:load', function(){
       }
     });
   }
-
-  if (controller === 'sessions' && action === 'retry') {
-    $('.btn-auth').on('click', function() {
-      var href = $(this).attr('href');
-      console.log('opening', href);
-      var w = window.open(href);
-      w.addEventListener('load', function() {
-        console.log('fully loaded');
-        w.close();
-        window.location.reload(true);
-      }, true);
-    });
-  }
-
 });
