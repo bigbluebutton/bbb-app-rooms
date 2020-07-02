@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
+  rescue_from ActiveRecord::RecordNotFound, with: :on_404
+  rescue_from ActionController::RoutingError, with: :on_404
+  rescue_from ActionController::RoutingError, with: :on_404
+  rescue_from StandardError, with: :on_500
+
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
   def authenticate_user!
@@ -104,7 +109,35 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def on_error
+    render_error(request.path[1..-1])
+  end
+
+  def on_404
+    render_error(404)
+  end
+
+  def on_500
+    render_error(500)
+  end
+
   private
+
+  def render_error(status)
+    model = 'generic'
+    @error = {
+      key: t("error.#{model}.#{status}.code"),
+      message: t("error.#{model}.#{status}.message"),
+      suggestion: t("error.#{model}.#{status}.suggestion"),
+      code: status,
+      status: status
+    }
+
+    respond_to do |format|
+      format.html { render 'shared/error', status: status }
+      format.json { render json: { error: @error[:message] }, status: status }
+    end
+  end
 
   def set_current_locale
     locale = nil

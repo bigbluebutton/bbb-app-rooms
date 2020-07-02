@@ -136,6 +136,15 @@ en:
         message:    "Invalid BigBlueButton API call"
         suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed."
         status_code: "500"
+    generic:
+      404:
+        code: "NotFound"
+        message: "Not found"
+        suggestion: "The page you tried to access does not exist."
+      500:
+        code: "ServerError"
+        message: "Server error"
+        suggestion: "Please try again later or contact an administrator."
     room:
       forbidden:
         code:       "AccessForbidden"

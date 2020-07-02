@@ -105,6 +105,15 @@ pt:
         message:    "Chamada inválida para o BigBlueButton"
         suggestion: "Certifique-se de que o servidor BigBlueButton sendo usado está disponível e acessível para o servidor onde a aplicação LTI está instalada."
         status_code: "500"
+    generic:
+      404:
+        code: "NotFound"
+        message: "Não encontrado"
+        suggestion: "A página que você tentou acessar não foi encontrada."
+      500:
+        code: "ServerError"
+        message: "Erro no servidor"
+        suggestion: "Por favor tente novamente mais tarde ou entre em contato com um administrador."
     room:
       forbidden:
         code:       "AccessForbidden"
