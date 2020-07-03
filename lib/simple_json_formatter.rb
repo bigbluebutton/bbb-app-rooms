@@ -1,8 +1,13 @@
 class SimpleJsonFormatter < ActiveSupport::Logger::SimpleFormatter
+  @@pid = $$
+
   def call(severity, _time, _progname, msg)
+    @@pid = $$ if @@pid != $$
+
     log = {
       "@timestamp": Time.now.utc,
-      level: severity
+      pid: @@pid,
+      level: severity,
     }
 
     begin
