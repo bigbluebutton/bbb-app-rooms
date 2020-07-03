@@ -7,10 +7,12 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
-  rescue_from ActiveRecord::RecordNotFound, with: :on_404
-  rescue_from ActionController::RoutingError, with: :on_404
-  rescue_from ActionController::RoutingError, with: :on_404
-  rescue_from StandardError, with: :on_500
+  unless Rails.application.config.consider_all_requests_local
+    rescue_from ActiveRecord::RecordNotFound, with: :on_404
+    rescue_from ActionController::RoutingError, with: :on_404
+    rescue_from ActionController::RoutingError, with: :on_404
+    rescue_from StandardError, with: :on_500
+  end
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
