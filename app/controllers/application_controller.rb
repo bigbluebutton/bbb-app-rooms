@@ -29,6 +29,15 @@ class ApplicationController < ActionController::Base
       return true
     end
 
+    # If we got here even after the session was set and we couldn't find it, the browser
+    # is probably blocking cookies, so abort and got to the retry page
+    if params[:session_set]
+      Rails.logger.info "Session should be set but found no user, going to the retry page"
+      return redirect_to(
+        omniauth_retry_path(provider: 'bbbltibroker', launch_nonce: params['launch_nonce'])
+      )
+    end
+
     redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
     Rails.logger.info "Redirecting to the authorization route #{redirector}"
     redirect_to(redirector) and return true

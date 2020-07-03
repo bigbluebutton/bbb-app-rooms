@@ -33,4 +33,12 @@ $(document).on('turbolinks:load', function(){
       $('.toast', '#external-link-copied-toast').toast('show');
     });
   });
+
+  $(".btn-retry").on('click', function() {
+    window.open($(this).data('launch'));
+    $(this).addClass('disabled');
+    $(this).attr('disabled', '1');
+    $(this).removeData('launch');
+    return true;
+  });
 });

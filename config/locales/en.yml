@@ -108,14 +108,12 @@ en:
     session:
       retry:
         alternatives:
-          title: "This usually happens because your browser is blocking access. If you want to try alternatives, you can:"
+          title: "If you want to try alternatives, you can:"
           a: "Use your browser in the normal mode (not anonymous)."
           b: "Verify if you have cookies enabled in your browser."
           c: "Disable plugins, especially ad-blockers."
-        launch_btn: "Join session"
-        messages:
-          a: "You can join the next session using the button below:"
-          b: "There is no session scheduled near this time yet. Try again later to see here the options to join the session."
+        description: "This usually happens because your browser is blocking access. Try to access in a new window using the button below:"
+        launch_btn: "Open in a new window"
         title: "It was not possible to authenticate your access"
     formats:
       flatpickr:

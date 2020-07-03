@@ -1,17 +1,13 @@
 <div class="row">
   <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
     <h1><%= t('default.session.retry.title') %></h1>
+    <p><%= t('default.session.retry.description') %></p>
 
-    <% if @room.present? && @meeting.present? %>
-      <p><%= t('default.session.retry.messages.a') %></p>
-      <%=
-      link_to t('default.session.retry.launch_btn'),
-       external_room_scheduled_meeting_url(@room, @meeting),
-       target: '_blank', class: 'btn btn-secondary'
-      %>
-    <% else %>
-      <p><%= t('default.session.retry.messages.b') %></p>
-    <% end %>
+    <%=
+    link_to t('default.session.retry.launch_btn'), '#',
+     'data-launch': room_launch_path(launch_nonce: @launch_nonce),
+     target: '_blank', class: 'btn btn-secondary btn-retry'
+    %>
 
     <div id="retry-alternatives" class="text-muted">
       <p><%= t('default.session.retry.alternatives.title') %></p>

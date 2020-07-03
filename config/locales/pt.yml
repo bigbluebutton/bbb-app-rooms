@@ -77,14 +77,12 @@ pt:
     session:
       retry:
         alternatives:
-          title: "Isso costuma acontecer pois seu navegador está bloqueando o acesso. Caso queira tentar alternativas, você pode:"
+          title: "Caso queira tentar outras alternativas, você pode:"
           a: "Utilize o seu navegador em modo normal (não anônimo)."
           b: "Verificar se seu navegador está com cookies habilitados."
           c: "Desabiltar plugins, principalmente ad-blockers."
-        launch_btn: "Acessar sessão"
-        messages:
-          a: "Você pode acessar a próxima sessão agendada através do botão abaixo:"
-          b: "Não existe nenhuma sessão agendada para um horário próximo. Tente novamente em outro momento para ver aqui as opções de entrada na sessão."
+        description: "Isso costuma acontecer pois seu navegador está bloqueando o acesso. Tente acessar em uma nova janela utilizando o botão abaixo:"
+        launch_btn: "Abrir em uma nova janela"
         title: "Não foi possível autenticar o seu acesso"
     formats:
       flatpickr:

@@ -169,6 +169,15 @@ class RoomsController < ApplicationController
       return
     end
 
+    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{launch_nonce}/invalidate")
+    Rails.logger.info "Making a session request to #{bbbltibroker_url}"
+    session_params = JSON.parse(
+      RestClient.get(
+        bbbltibroker_url,
+        'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"
+      )
+    )
+
     expires_at = Rails.configuration.launch_duration_mins.from_now
 
     # Store the data from this launch for easier access
