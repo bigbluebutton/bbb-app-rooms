@@ -88,11 +88,16 @@ en:
         2h: "2 hours"
         3h: "3 hours"
         4h: "4 hours"
-        more: "More than 4 hours"
+        5h: "5 hours"
+        6h: "6 hours"
+        8h: "8 hours"
+        12h: "12 hours"
+        24h: "24 hours"
       edit:           "Edit"
       error:
         invalid_start_at: "Invalid start date or time"
       external:
+        ended:        "This session has already ended."
         first_name:   "First name"
         join:         "Join"
         last_name:    "Last name"

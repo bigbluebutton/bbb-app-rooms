@@ -200,9 +200,15 @@ body.theme-elos {
     }
   }
 
-  #scheduled-meetings-new, #scheduled-meetings-edit, #external-join {
+  #scheduled-meetings-new, #scheduled-meetings-edit {
     form {
       margin-top: blocks(6);
+    }
+  }
+
+  #external-join {
+    .meeting-date {
+      margin-bottom: blocks(6);
     }
   }
 

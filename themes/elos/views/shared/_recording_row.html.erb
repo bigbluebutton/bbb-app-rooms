@@ -13,13 +13,15 @@
       </div>
     </div>
   </td>
-  <td class="col-2 align-middle">
+  <td class="col-3 align-middle">
     <%= format_date(recording[:startTime]) %>
   </td>
-  <td class="col-3 align-middle">
+  <td class="col-2 align-middle">
     <% duration = recording_duration_secs(recording) %>
     <% if duration > 0 %>
       <%= distance_of_time_in_words(0, duration).capitalize %>
+    <% else %>
+      <%= t("recordings.duration.less_than_a_minute") %>
     <% end %>
   </td>
   <td class="col-2 align-middle">

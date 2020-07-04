@@ -132,6 +132,7 @@ class ScheduledMeetingsController < ApplicationController
       @first_name = @user.first_name
       @last_name = @user.last_name
     end
+    @ended = !@scheduled_meeting.active? && !mod_in_room?(@scheduled_meeting)
   end
 
   def destroy
