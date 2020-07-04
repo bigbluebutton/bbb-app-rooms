@@ -4,7 +4,7 @@
     <p class="text-muted meeting-date">
       <%= format_date(@scheduled_meeting.start_at) %>
       <% if @scheduled_meeting.duration > 0 %>
-        (<%= distance_of_time_in_words(0, @scheduled_meeting.duration).capitalize %>)
+        (<%= duration_in_hours_and_minutes(@scheduled_meeting.duration).capitalize %>)
       <% end %>
     </p>
 

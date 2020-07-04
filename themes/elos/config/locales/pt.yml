@@ -17,12 +17,21 @@ pt:
         start_time_time: "Hora de início"
         wait_moderator: "Aguardar moderador para entrar"
         welcome: "Mensagem de boas vindas (opcional)"
+    distance_of_time_in_hours_and_minutes:
+      hour:
+        one: "%{count} hora"
+        other: "%{count} horas"
+      minute:
+        one: "%{count} minuto"
+        other: "%{count} minutos"
   recordings:
     confirm:
       destroy: "Você tem certeza que deseja remover esta gravação?"
       publish: "Você tem certeza que deseja publicar esta gravação?"
       unpublish: "Você tem certeza que deseja despublicar esta gravação?"
     destroy: "Remover"
+    duration:
+      less_than_a_minute: "Menos de 1 minuto"
     search:
       placeholder: "Buscar em título ou descrição..."
     playbacks:

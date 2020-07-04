@@ -5,12 +5,12 @@
       <div class="item-description"><%= meeting.description %></div>
     <% end %>
   </td>
-  <td class="col-2 align-middle">
+  <td class="col-3 align-middle">
     <%= format_date(meeting.start_at) %>
   </td>
-  <td class="col-3 align-middle">
+  <td class="col-2 align-middle">
     <% if meeting.duration > 0 %>
-      <%= distance_of_time_in_words(0, meeting.duration).capitalize %>
+      <%= duration_in_hours_and_minutes(meeting.duration).capitalize %>
     <% end %>
   </td>
   <td class="col-1 align-middle">
