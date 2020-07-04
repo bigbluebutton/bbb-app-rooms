@@ -37,8 +37,9 @@ Rails.application.routes.draw do
       get '/errors/:code', to: 'errors#index', as: :errors
     end
 
-    # Handles meeting management.
-    resources :rooms do
+    # NOTE: there are other actions in the rooms controller, but they are not used for now,
+    #       rooms are automatically created when needed and can't be edited
+    resources :rooms, only: :show do
       resources :scheduled_meetings, only: [:new, :create, :edit, :update, :destroy] do
         member do
           post :join
