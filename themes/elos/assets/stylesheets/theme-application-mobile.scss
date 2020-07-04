@@ -1,0 +1,56 @@
+@import "definitions";
+
+
+// small and medium devices (tablets not included)
+@media (max-width: 767.98px) {
+  .hide-on-mobile { display: none !important; }
+  
+  body.theme-elos {
+
+    //
+    // GLOBAL STYLES
+    //
+
+    margin: blocks(2);
+    
+    .table {
+      td {
+        justify-content: center;
+        border: none;
+        padding: blocks(1.5) 0;
+      }
+      
+      .tr-row { border-top: 1px solid map-get($vars, '--border-color'); }
+      .td-titles { order: -2; }
+      .td-dropdown-opts { order: -1; }
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      
+      .btn {
+        width: 49%;
+        padding: blocks-rem(2) 0;
+        margin-left: 0 !important;
+      }
+    }
+
+    //
+    // PAGE-SPECIFIC STYLES
+    //
+    
+    // External join
+    #external-join {
+      .form-actions {
+        .btn { width: 100%; }
+      }
+    }
+  }
+}
+
+// to hide any mobile element
+@media (min-width: 768px) {
+  .mobile { display: none !important; }
+}
