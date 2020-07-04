@@ -8,9 +8,9 @@ class Abilities
     when :show
       true
     when :edit
-      user.admin? || user.moderator?(self.moderator_roles)
+      user.present? && (user.admin? || user.moderator?(self.moderator_roles))
     when :admin
-      user.admin?
+      user.present? && user.admin?
     else
       false
     end
