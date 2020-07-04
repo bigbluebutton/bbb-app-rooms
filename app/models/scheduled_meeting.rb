@@ -32,7 +32,11 @@ class ScheduledMeeting < ApplicationRecord
       '2h': 2 * 60 * 60,
       '3h': 3 * 60 * 60,
       '4h': 4 * 60 * 60,
-      'more': 24 * 60 * 60,
+      '5h': 5 * 60 * 60,
+      '6h': 6 * 60 * 60,
+      '8h': 8 * 60 * 60,
+      '12h': 12 * 60 * 60,
+      '24h': 24 * 60 * 60,
     }.map { |k, v|
       [I18n.t("default.scheduled_meeting.durations.#{k}", locale: locale), v]
     }
