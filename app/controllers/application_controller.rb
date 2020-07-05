@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
   before_action :set_timezone
   before_action :allow_iframe_requests
 
+  # the scope and how many rooms we keep in the session
+  # keeping too many might result in a cookie overflow
+  COOKIE_ROOMS_SCOPE = 'rooms'
+  COOKIE_ROOMS_MAX_KEYS = 3
+
   unless Rails.application.config.consider_all_requests_local
     rescue_from ActiveRecord::RecordNotFound, with: :on_404
     rescue_from ActionController::RoutingError, with: :on_404
@@ -180,19 +185,41 @@ class ApplicationController < ActionController::Base
   end
 
   def get_room_session(room)
-    session['rooms'] ||= {}
-    session['rooms'][room.handler] if room.present? && session['rooms'].key?(room.handler)
+    session[COOKIE_ROOMS_SCOPE] ||= {}
+    if room.present? && session[COOKIE_ROOMS_SCOPE].key?(room.handler)
+      session[COOKIE_ROOMS_SCOPE][room.handler]
+    end
   end
 
   def set_room_session(room, data)
-    session['rooms'] ||= {}
+    session[COOKIE_ROOMS_SCOPE] ||= {}
+
+    # so we know which ones are the oldest ones
+    data['ts'] = DateTime.now.to_i
+
+    cleanup_room_session unless session[COOKIE_ROOMS_SCOPE].key?(room.handler)
+
     # they will be strings in future calls, so make them strings already
-    session['rooms'][room.handler] = data.stringify_keys
+    session[COOKIE_ROOMS_SCOPE][room.handler] = data.stringify_keys
   end
 
   def remove_room_session(room)
-    if room.present? && session.key?('rooms') && session['rooms'].key?(room.handler)
-      session['rooms'].delete(room.handler)
+    if room.present? && session.key?(COOKIE_ROOMS_SCOPE) &&
+       session[COOKIE_ROOMS_SCOPE].key?(room.handler)
+      session[COOKIE_ROOMS_SCOPE].delete(room.handler)
+    end
+  end
+
+  # Cleanup old keys from the session to make room for a new one
+  def cleanup_room_session
+    keys = session[COOKIE_ROOMS_SCOPE].keys
+    if keys.count > COOKIE_ROOMS_MAX_KEYS - 1
+      sorted = keys.sort_by do |k|
+        session[COOKIE_ROOMS_SCOPE][k]['ts']&.to_i || 0
+      end
+      sorted.first(keys.count - COOKIE_ROOMS_MAX_KEYS + 1).each do |k|
+        session[COOKIE_ROOMS_SCOPE].delete(k)
+      end
     end
   end
 end
