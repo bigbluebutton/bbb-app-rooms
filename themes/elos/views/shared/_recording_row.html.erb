@@ -1,5 +1,5 @@
-<tr class="d-flex recording-published-<%= recording[:published] %>">
-  <td class="col-10 col-lg-5 align-middle td-titles" data-search-field="1">
+<tr class="d-flex row tr-row recording-published-<%= recording[:published] %>">
+  <td class="col-10 col-md-5 align-middle td-titles" data-search-field="1">
     <div class="item-title">
       <% if recording[:metadata][:name] %>
         <%= recording[:metadata][:name] %>
@@ -13,16 +13,16 @@
       </div>
     </div>
   </td>
-  <td class="col-6 col-lg-2 align-middle td-meeting-date">
+  <td class="col-6 col-md-2 align-middle td-meeting-date">
     <%= format_date(recording[:startTime]) %>
   </td>
-  <td class="col-6 col-lg-3 align-middle td-meeting-duration">
+  <td class="col-6 col-md-3 align-middle td-meeting-duration">
     <% duration = recording_duration_secs(recording) %>
     <% if duration > 0 %>
       <%= distance_of_time_in_words(0, duration).capitalize %>
     <% end %>
   </td>
-  <td class="col-2 col-lg-2 align-middle td-dropdown-opts">
+  <td class="col-2 col-md-2 align-middle td-dropdown-opts">
     <div class="dropdown dropdown-opts">
       <a href="#" class="dropdown-toggle" id="dropdown-opts-<%= recording[:recordID] %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="icon material-icons">more_vert</i>
