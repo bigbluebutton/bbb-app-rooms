@@ -39,13 +39,23 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
-        @recordings = get_recordings(@room)
         @scheduled_meetings = @room.scheduled_meetings.active.order(:start_at)
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }
       else
         format.html { render 'shared/error', status: @error[:status] }
         format.json { render json: { error: @error[:message] }, status: @error[:status] }
+      end
+    end
+  end
+
+  def recordings
+    respond_to do |format|
+      if @room
+        @recordings = get_recordings(@room)
+        format.html { render :recordings }
+      else
+        format.html { render 'shared/error', status: @error[:status] }
       end
     end
   end
@@ -114,13 +124,13 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(@room, params[:record_id])
-    redirect_to(room_path(@room))
+    redirect_to(recordings_room_path(@room))
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(@room, params[:record_id])
-    redirect_to(room_path(@room))
+    redirect_to(recordings_room_path(@room))
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -130,13 +140,13 @@ class RoomsController < ApplicationController
     elsif params[:setting] == "describe_recording"
       update_recording(@room, params[:record_id], "meta_description" => params[:record_description])
     end
-    redirect_to(room_path(@room))
+    redirect_to(recordings_room_path(@room))
   end
 
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(@room, params[:record_id])
-    redirect_to(room_path(@room))
+    redirect_to(recordings_room_path(@room))
   end
 
   helper_method :recordings, :recording_date, :recording_length

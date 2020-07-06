@@ -166,18 +166,19 @@ body.theme-elos {
     }
   }
 
-  #schedule-meeting {
+  #action-buttons {
     margin-top: blocks(3);
 
     .btn {
       max-width: 350px;
       width: 100%;
       padding: blocks(2) $block;
+      margin-bottom: blocks(2);
     }
   }
 
   #recordings-list {
-    margin-top: blocks(10);
+    margin-top: blocks(2);
     margin-bottom: blocks(6);
 
     #search_bar {

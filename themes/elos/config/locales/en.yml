@@ -32,6 +32,8 @@ en:
     destroy: "Remove"
     duration:
       less_than_a_minute: "Less than 1 minute"
+    index:
+      return: "< go back"
     search:
       placeholder: "Search by title or description..."
     playbacks:
@@ -53,6 +55,8 @@ en:
     new:
       add: "+ Schedule session"
       title: "Schedule session"
+    show:
+      view_recordings: "View recordings"
     title: "Scheduled sessions"
   time:
     am: am

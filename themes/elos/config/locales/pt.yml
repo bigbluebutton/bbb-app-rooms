@@ -32,6 +32,8 @@ pt:
     destroy: "Remover"
     duration:
       less_than_a_minute: "Menos de 1 minuto"
+    index:
+      return: "< voltar"
     search:
       placeholder: "Buscar em título ou descrição..."
     playbacks:
@@ -53,6 +55,8 @@ pt:
     new:
       add: "+ Agendar sessão"
       title: "Agendar sessão"
+    show:
+      view_recordings: "Ver gravações"
     title: "Sessões agendadas"
   time:
     am: am
