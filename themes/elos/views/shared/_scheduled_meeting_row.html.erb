@@ -1,19 +1,19 @@
-<tr class="d-flex">
-  <td class="col-5 align-middle td-titles">
+<tr class="d-flex row tr-row">
+  <td class="col-10 col-md-5 align-middle td-titles">
     <div class="item-title"><%= meeting.name %></div>
     <% unless meeting.description.blank? %>
       <div class="item-description"><%= meeting.description %></div>
     <% end %>
   </td>
-  <td class="col-3 align-middle">
+  <td class="col-12 col-md-3 align-middle td-meeting-date">
     <%= format_date(meeting.start_at) %>
   </td>
-  <td class="col-2 align-middle">
+  <td class="col-12 col-md-2 align-middle td-meeting-duration">
     <% if meeting.duration > 0 %>
       <%= duration_in_hours_and_minutes(meeting.duration).capitalize %>
     <% end %>
   </td>
-  <td class="col-1 align-middle">
+  <td class="col-12 col-md-1 align-middle td-join-room-btn">
     <%=
     link_to join_room_scheduled_meeting_path(room, meeting), method: :post,
      class: "btn btn-primary join-room-btn", target: '_blank' do
@@ -21,7 +21,7 @@
       <i class="icon material-icons">play_arrow</i>
     <% end %>
   </td>
-  <td class="col-1 align-middle">
+  <td class="col-2 col-md-1 align-middle td-dropdown-opts">
     <% if can_edit?(user, room) %>
       <div class="dropdown dropdown-opts">
         <a href="#" class="dropdown-toggle" id="dropdown-opts-<%= room.to_param %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -9,21 +9,21 @@
   <% error = !@scheduled_meeting.errors[:start_at].blank? %>
   <div class="form-row">
 
-    <div class="form-group col-4">
+    <div class="form-group col-md-4">
       <% if error %> <div class="field_with_errors"> <% end %>
         <%= form.label :date, t('helpers.label.scheduled_meeting.start_time_date') %>
         <%= form.text_field :date, value: scheduled_meeting.start_at_date(I18n.locale), required: true, class: "form-control datepicker", data: { format: t('default.formats.flatpickr.date_js') } %>
         <% if error %> </div> <% end %>
     </div>
 
-    <div class="form-group col-4">
+    <div class="form-group col-6 col-md-4">
       <% if error %> <div class="field_with_errors"> <% end %>
         <%= form.label :time, t('helpers.label.scheduled_meeting.start_time_time') %>
         <%= form.text_field :time, value: scheduled_meeting.start_at_time(I18n.locale), required: true, class: "form-control timepicker", data: { format: t('default.formats.flatpickr.time_js') } %>
         <% if error %> </div> <% end %>
     </div>
 
-    <div class="form-group col-4">
+    <div class="form-group col-6 col-md-4">
       <%= form.label :duration %>
       <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale), { selected: scheduled_meeting.duration }, { class: "form-control" } %>
     </div>
