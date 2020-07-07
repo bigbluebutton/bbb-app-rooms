@@ -4,6 +4,7 @@
      data-join-url="<%= join_room_scheduled_meeting_path(@room, @scheduled_meeting) %>"
      data-wait-url="<%= running_room_scheduled_meeting_path(@room, @scheduled_meeting) %>"
      data-wait-interval="<%= Rails.configuration.cable_polling_secs %>"
+     data-is-running="<%= @is_running %>"
      data-join-method="post">
 
   <%= image_tag 'guest-wait.svg' %>

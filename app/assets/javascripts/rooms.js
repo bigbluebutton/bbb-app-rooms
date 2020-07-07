@@ -65,6 +65,13 @@ $(document).on('turbolinks:load', function(){
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
 
+    var running = $('#wait-for-moderator').data('is-running');
+    if (running === true) {
+      console.log('Already running, joining soon');
+      setTimeout(function() { joinSession(); }, 3000);
+      return;
+    }
+
     if (cable === 'true') {
       console.log('Setting up the websocket');
       App.cable.subscriptions.create({
