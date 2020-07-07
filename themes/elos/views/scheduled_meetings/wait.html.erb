@@ -7,7 +7,8 @@
   <%= image_tag 'guest-wait.svg' %>
   <p><%= t('default.scheduled_meeting.wait.message', name: @full_name).html_safe %></p>
 
-  <div style="display: none;">
-    <%= button_to '', @post_to, method: :post, class: "btn btn-primary join-room-btn" %>
+  <div id="wait-for-moderator-back" style="display: none;">
+    <%= button_to t('scheduled_meetings.wait.retry'), @post_to,
+     method: :post, class: "btn btn-primary btn-sm disabled", disabled: true %>
   </div>
 </div>

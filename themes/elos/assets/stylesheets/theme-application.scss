@@ -219,6 +219,12 @@ body.theme-elos {
     }
   }
 
+  #wait-for-moderator {
+    .btn {
+      margin-top: blocks(4);
+    }
+  }
+
   // This is a copy of the style of the guest wait page from BigBlueButton/Live
   // with a few adaptations, but to look as similar as possible
   &[data-controller="scheduled_meetings"][data-action="wait"],

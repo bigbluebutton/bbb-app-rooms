@@ -24,12 +24,13 @@ $(document).on('turbolinks:load', function(){
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
+  var cable = $("body").data('use-cable');
 
   if (controller === 'scheduled_meetings' && action === 'wait') {
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
 
-    if (cable === 'true') {
+    if (cable === true) {
       console.log('Setting up the websocket');
       App.cable.subscriptions.create({
         channel: "WaitChannel",
@@ -55,6 +56,14 @@ $(document).on('turbolinks:load', function(){
           }
         }
       });
+    } else {
+      console.log('Setting up retry button');
+      $('#wait-for-moderator-back').show();
+      setTimeout(function() {
+        console.log('Enabling retry button');
+        $('#wait-for-moderator-back .btn').attr('disabled', null);
+        $('#wait-for-moderator-back .btn').removeClass('disabled');
+      }, 60000);
     }
   }
 });

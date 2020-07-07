@@ -77,7 +77,7 @@ pt:
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       wait:
-        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
+        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde alguns minutos e tente novamente."
       waitmoderator:  "Aguardar moderador"
     session:
       retry:

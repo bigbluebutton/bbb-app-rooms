@@ -58,6 +58,8 @@ en:
     show:
       view_recordings: "View recordings"
     title: "Scheduled sessions"
+    wait:
+      retry: "Try again"
   time:
     am: am
     formats:
