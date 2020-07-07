@@ -71,6 +71,11 @@ body.theme-elos {
       color: var(--color-gray-05);
     }
 
+    tr {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
     td {
       display: flex;
       align-items: center;
@@ -168,6 +173,7 @@ body.theme-elos {
 
   #action-buttons {
     margin-top: blocks(3);
+    text-align: center;
 
     .btn {
       max-width: 350px;

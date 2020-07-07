@@ -1,10 +1,9 @@
 @import "definitions";
 
-
 // small and medium devices (tablets not included)
-@media (max-width: 767.98px) {
+@media (max-width: map-get($grid-breakpoints, 'md')) {
   .hide-on-mobile { display: none !important; }
-  
+
   body.theme-elos {
 
     //
@@ -12,24 +11,36 @@
     //
 
     margin: blocks(2);
-    
+
     .table {
       td {
         justify-content: center;
         border: none;
-        padding: blocks(1.5) 0;
+        padding: blocks(1) 0;
       }
-      
-      .tr-row { border-top: 1px solid map-get($vars, '--border-color'); }
+
+      tr {
+        border-top: 1px solid var(--border-color);
+        margin-left: 0;
+        margin-right: 0;
+        padding: blocks(1) 0;
+      }
+
       .td-titles { order: -2; }
-      .td-dropdown-opts { order: -1; }
+      .td-dropdown-opts {
+        order: -1;
+
+        .dropdown {
+          top: blocks(1.5);
+        }
+      }
     }
-    
+
     .form-actions {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      
+
       .btn {
         width: 49%;
         padding: blocks-rem(2) 0;
@@ -40,7 +51,7 @@
     //
     // PAGE-SPECIFIC STYLES
     //
-    
+
     // External join
     #external-join {
       .form-actions {

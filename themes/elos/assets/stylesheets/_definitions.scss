@@ -135,3 +135,8 @@ $line-height-lg: map-get($vars, '--line-height') !default;
     box-shadow: 0 0 0 $block rgba(0, 0, 0, 0);
   }
 }
+
+// make bootstrap's variables available for use in other places
+@import "bootstrap/mixins";
+@import "bootstrap/functions";
+@import "bootstrap/variables";
