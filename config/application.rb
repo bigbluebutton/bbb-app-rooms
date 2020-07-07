@@ -69,6 +69,9 @@ module BbbAppRooms
       # see config/initializers/assets for more theme configs
     end
 
+    config.cable_enabled = ENV['CABLE_ENABLED'] == '1' || ENV['CABLE_ENABLED'] == 'true'
+    config.cable_polling_secs = ENV['CABLE_POLLING_SECS'] || 30
+
     # use a json formatter to match lograge's logs
     if ENV['LOGRAGE_ENABLED'] == '1'
       config.log_formatter = SimpleJsonFormatter.new

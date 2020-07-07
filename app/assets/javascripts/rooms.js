@@ -16,42 +16,84 @@
 
 $(document).on('turbolinks:load', function(){
 
-  // $('.join-room-btn').on('click', function() {
-  //   $(this).attr('disabled', true);
-  //   $(this).addClass('disabled');
-  //   $(this).addClass('loading');
-  // });
-
   var controller = $("body").data('controller');
   var action = $("body").data('action');
+  var cable = $("body").data('use-cable');
+
+  var isInt = function(value) {
+    return !isNaN(value) &&
+      parseInt(Number(value)) == value &&
+      !isNaN(parseInt(value, 10));
+  };
+
+  var pollIn = function(interval) {
+    var secs = interval;
+    secs = (parseInt(secs) || 0) * 1000;
+    if (!isInt(secs) || secs <= 5000) { // to be extra sure we won't poll too much
+      secs = 30000;
+    }
+    console.log('Setting up polling for', secs);
+    setTimeout(function() { pollStatus(); }, secs);
+  };
+
+  var pollStatus = function() {
+    console.log('Checking if the meeting started');
+    var url = $('#wait-for-moderator').data('wait-url');
+    $.ajax({
+      url: url,
+      dataType: "json",
+      contentType: "application/json",
+      error: function() { console.log('Error checking'); },
+      success: function(data) {
+        console.log("received", data);
+        if (data['running'] === true) {
+          joinSession();
+        } else {
+          pollIn(data['interval']);
+        }
+      }
+    });
+  };
+
+  var joinSession = function() {
+    console.log("Joining session");
+    $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
+    $('#wait-for-moderator').find('form').submit();
+  };
 
   if (controller === 'scheduled_meetings' && action === 'wait') {
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
 
-    App.cable.subscriptions.create({
-      channel: "WaitChannel",
-      room: room,
-      meeting: meeting
-    }, {
-      connected: function(data) {
-        console.log("connected");
-      },
-      disconnected: function(data) {
-        console.log("disconnected");
-        console.log(data);
-      },
-      rejected: function() {
-        console.log("rejected");
-      },
-      received: function(data) {
-        console.log("received", data);
-        if (data['action'] === 'started') {
-          console.log("submitting form");
-          $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
-          $('#wait-for-moderator').find('form').submit();
+    if (cable === 'true') {
+      console.log('Setting up the websocket');
+      App.cable.subscriptions.create({
+        channel: "WaitChannel",
+        room: room,
+        meeting: meeting
+      }, {
+        connected: function(data) {
+          console.log("connected");
+        },
+        disconnected: function(data) {
+          console.log("disconnected");
+          console.log(data);
+        },
+        rejected: function() {
+          console.log("rejected");
+        },
+        received: function(data) {
+          console.log("received", data);
+          if (data['action'] === 'started') {
+            joinSession();
+          }
         }
-      }
-    });
+      });
+
+    // polling
+    } else {
+      var secs = $('#wait-for-moderator').data('wait-interval');
+      pollIn(secs);
+    }
   }
 });
