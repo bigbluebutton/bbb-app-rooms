@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  mount ActionCable.server => Rails.configuration.action_cable.mount_path
+  if Rails.configuration.cable_enabled
+    mount ActionCable.server => Rails.configuration.action_cable.mount_path
+  end
 
   scope ENV['RELATIVE_URL_ROOT'] || '' do
     scope 'rooms' do

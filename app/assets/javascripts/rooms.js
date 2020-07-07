@@ -29,29 +29,32 @@ $(document).on('turbolinks:load', function(){
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
 
-    App.cable.subscriptions.create({
-      channel: "WaitChannel",
-      room: room,
-      meeting: meeting
-    }, {
-      connected: function(data) {
-        console.log("connected");
-      },
-      disconnected: function(data) {
-        console.log("disconnected");
-        console.log(data);
-      },
-      rejected: function() {
-        console.log("rejected");
-      },
-      received: function(data) {
-        console.log("received", data);
-        if (data['action'] === 'started') {
-          console.log("submitting form");
-          $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
-          $('#wait-for-moderator').find('form').submit();
+    if (cable === 'true') {
+      console.log('Setting up the websocket');
+      App.cable.subscriptions.create({
+        channel: "WaitChannel",
+        room: room,
+        meeting: meeting
+      }, {
+        connected: function(data) {
+          console.log("connected");
+        },
+        disconnected: function(data) {
+          console.log("disconnected");
+          console.log(data);
+        },
+        rejected: function() {
+          console.log("rejected");
+        },
+        received: function(data) {
+          console.log("received", data);
+          if (data['action'] === 'started') {
+            console.log("submitting form");
+            $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
+            $('#wait-for-moderator').find('form').submit();
+          }
         }
-      }
-    });
+      });
+    }
   }
 });

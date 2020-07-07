@@ -26,6 +26,7 @@
   <body lang="<%= I18n.locale %>"
         data-controller="<%= params[:controller] %>"
         data-action="<%= params[:action] %>"
+        data-use-cable="<%= Rails.configuration.cable_enabled %>"
         class="<%= theme_class %>">
     <div class="container">
       <%= yield %>
