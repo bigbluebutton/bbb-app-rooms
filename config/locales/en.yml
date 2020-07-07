@@ -108,7 +108,7 @@ en:
         allmoderators: "All users will join as moderators"
       updated:        "The session schedule was updated"
       wait:
-        message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait a few minutes and try again."
+        message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait a few moments and try again."
       waitmoderator:  "Wait for moderator"
     session:
       retry:

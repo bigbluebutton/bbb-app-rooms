@@ -70,6 +70,7 @@ module BbbAppRooms
     end
 
     config.cable_enabled = ENV['CABLE_ENABLED'] == '1' || ENV['CABLE_ENABLED'] == 'true'
+    config.cable_btn_timeout = ENV['CABLE_BTN_TIMEOUT'] || 60000
 
     # use a json formatter to match lograge's logs
     if ENV['LOGRAGE_ENABLED'] == '1'

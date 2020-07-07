@@ -59,7 +59,7 @@ pt:
       view_recordings: "Ver gravações"
     title: "Sessões agendadas"
     wait:
-      retry: "Try again"
+      retry: "Tentar novamente"
   time:
     am: am
     formats:

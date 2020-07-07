@@ -16,11 +16,11 @@
 
 $(document).on('turbolinks:load', function(){
 
-  // $('.join-room-btn').on('click', function() {
-  //   $(this).attr('disabled', true);
-  //   $(this).addClass('disabled');
-  //   $(this).addClass('loading');
-  // });
+  var isInt = function(value) {
+    return !isNaN(value) &&
+    parseInt(Number(value)) == value &&
+      !isNaN(parseInt(value, 10));
+  };
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
@@ -57,13 +57,25 @@ $(document).on('turbolinks:load', function(){
         }
       });
     } else {
-      console.log('Setting up retry button');
+      var timeout = $('#wait-for-moderator').data('btn-timeout');
+      timeout = parseInt(timeout) || 0;
+      if (!isInt(timeout) || timeout <= 5000) {
+        timeout = 60000;
+      }
+      console.log('Setting up retry button in', timeout);
+
       $('#wait-for-moderator-back').show();
       setTimeout(function() {
         console.log('Enabling retry button');
         $('#wait-for-moderator-back .btn').attr('disabled', null);
         $('#wait-for-moderator-back .btn').removeClass('disabled');
-      }, 60000);
+        $('#wait-for-moderator-back form').submit(function(e) {
+          e.preventDefault();
+          this.submit();
+          $('.btn', this).addClass('disabled');
+          $('.btn', this).attr('disabled', 'disabled');
+        });
+      }, timeout);
     }
   }
 });
