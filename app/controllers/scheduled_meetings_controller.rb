@@ -128,6 +128,7 @@ class ScheduledMeetingsController < ApplicationController
         first_name: params[:first_name], last_name: params[:last_name]
       )
     end
+    @is_running = mod_in_room?(@scheduled_meeting)
   end
 
   def external

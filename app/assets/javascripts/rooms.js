@@ -22,6 +22,12 @@ $(document).on('turbolinks:load', function(){
       !isNaN(parseInt(value, 10));
   };
 
+  var joinSession = function() {
+    console.log("Joining session");
+    $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
+    $('#wait-for-moderator').find('form').submit();
+  };
+
   var controller = $("body").data('controller');
   var action = $("body").data('action');
   var cable = $("body").data('use-cable');
@@ -29,6 +35,13 @@ $(document).on('turbolinks:load', function(){
   if (controller === 'scheduled_meetings' && action === 'wait') {
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
+
+    var running = $('#wait-for-moderator').data('is-running');
+    if (running === true) {
+      console.log('Already running, joining soon');
+      setTimeout(function() { joinSession(); }, 200);
+      return;
+    }
 
     if (cable === true) {
       console.log('Setting up the websocket');
