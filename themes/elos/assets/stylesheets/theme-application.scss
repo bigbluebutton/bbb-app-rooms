@@ -172,14 +172,14 @@ body.theme-elos {
   }
 
   #action-buttons {
-    margin-top: blocks(3);
+    margin-bottom: blocks(4);
     text-align: center;
 
     .btn {
       max-width: 350px;
       width: 100%;
       padding: blocks(2) $block;
-      margin-bottom: blocks(2);
+      margin-right: blocks(2);
     }
   }
 

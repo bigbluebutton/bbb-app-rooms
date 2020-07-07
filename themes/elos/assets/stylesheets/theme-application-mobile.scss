@@ -58,6 +58,13 @@
         .btn { width: 100%; }
       }
     }
+
+    #action-buttons {
+      .btn {
+        margin-right: 0;
+        margin-bottom: blocks(1);
+      }
+    }
   }
 }
 
