@@ -101,11 +101,26 @@ $line-height-lg: map-get($vars, '--line-height') !default;
 
   &.disabled, &[disabled] {
     color: var(--color-gray-02);
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
+  }
+}
+
+.btn-secondary {
+  &.disabled, &[disabled] {
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
   }
 }
 
 .btn-success {
   color: var(--color-white);
+
+  &.disabled, &[disabled] {
+    color: var(--color-gray-02);
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
+  }
 }
 
 .btn-light {
