@@ -229,7 +229,7 @@ body.theme-elos {
   // with a few adaptations, but to look as similar as possible
   &[data-controller="scheduled_meetings"][data-action="wait"],
   &[data-controller="rooms"][data-action="close"] {
-    background-color: #2B2D41;
+    background-color: var(--color-black);
     width: auto;
     margin: auto;
     text-align: center;
