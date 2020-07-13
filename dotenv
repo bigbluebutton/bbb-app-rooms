@@ -40,6 +40,9 @@ RAILS_LOG_TO_STDOUT=true
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true
 
+# To serve assets from a CDN
+# ASSET_HOST=http://ks872jadt5c9a8.cloudfront.net
+
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
 
