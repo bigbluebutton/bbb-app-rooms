@@ -42,7 +42,8 @@ class AppLaunch < ApplicationRecord
       'rooms' + self.consumer_id + self.context_id
     ).to_s
     Rails.logger.info "Resource handler=#{handler} calculated based on " \
-                      "consumer_id=#{self.consumer_id}, context_id=#{self.context_id}"
+                      "consumer_id=#{self.consumer_id}, context_id=#{self.context_id} " \
+                      "oauth_consumer_key=#{self.oauth_consumer_key}"
     handler
   end
 
