@@ -4,18 +4,31 @@ class AppLaunch < ApplicationRecord
 
   def room_params
     name = self.params['context_title']
-    record = has_custom?('record')
-    wait_moderator = has_custom?('wait_moderator')
-    all_moderators = has_custom?('all_moderators')
 
-    {
+    p = {
       handler: resource_handler,
       name: name,
-      welcome: '',
-      recording: record,
-      wait_moderator: wait_moderator,
-      all_moderators: all_moderators
+      welcome: ''
     }
+
+    new_room = Room.new
+    p[:recording] = if has_custom_param?('record')
+                      custom_param_value('record')
+                    else
+                      new_room.recording
+                    end
+    p[:wait_moderator] = if has_custom_param?('wait_moderator')
+                           custom_param_value('wait_moderator')
+                         else
+                           new_room.wait_moderator
+                         end
+    p[:all_moderators] = if has_custom_param?('all_moderators')
+                           custom_param_value('all_moderators')
+                         else
+                           new_room.all_moderators
+                         end
+
+    p
   end
 
   def user_params
@@ -31,10 +44,14 @@ class AppLaunch < ApplicationRecord
     }
   end
 
-  def has_custom?(type)
+  def has_custom_param?(name)
     self.params.key?('custom_params') &&
-      self.params['custom_params'].key?('custom_' + type) &&
-      self.params['custom_params']['custom_' + type] == 'true'
+      self.params['custom_params'].key?('custom_' + name)
+  end
+
+  def custom_param_value(name)
+    self.has_custom_param?(name) &&
+      self.params['custom_params']['custom_' + name] == 'true'
   end
 
   def resource_handler

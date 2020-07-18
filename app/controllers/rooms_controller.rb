@@ -147,9 +147,9 @@ class RoomsController < ApplicationController
 
     # Create/update the room
     local_room_params = app_launch.room_params
-    @room = Room.find_or_create_by(handler: local_room_params[:handler]) do |room|
-      room.update(local_room_params)
-    end
+    @room = Room.create_with(local_room_params)
+              .find_or_create_by(handler: local_room_params[:handler])
+    @room.update(local_room_params) if @room.present?
 
     # Create the user session
     # Keep it as small as possible, most of the data is in the AppLaunch

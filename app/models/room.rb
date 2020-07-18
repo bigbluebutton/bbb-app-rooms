@@ -36,6 +36,14 @@ class Room < ApplicationRecord
     scheduled_meetings.active.order(:start_at).first(3)
   end
 
+  def attributes_for_meeting
+    {
+      recording: self.recording,
+      all_moderators: self.all_moderators,
+      wait_moderator: self.wait_moderator
+    }
+  end
+
   private
 
   def random_password(length, reference = '')

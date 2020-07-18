@@ -31,7 +31,7 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def new
-    @scheduled_meeting = ScheduledMeeting.new
+    @scheduled_meeting = ScheduledMeeting.new(@room.attributes_for_meeting)
   end
 
   def create
