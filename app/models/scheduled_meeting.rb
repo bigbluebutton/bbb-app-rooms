@@ -132,6 +132,26 @@ class ScheduledMeeting < ApplicationRecord
     self.start_at = ScheduledMeeting.parse_start_at(params[:date], params[:time], locale, zone)
   end
 
+  # If the users of this room are allowed to change `all_moderators`, returns the value
+  # set in this scheduled meeting. Otherwise returns the default value.
+  def check_all_moderators
+    if self.room.allow_all_moderators
+      self.all_moderators
+    else
+      ScheduledMeeting.new.all_moderators
+    end
+  end
+
+  # If the users of this room are allowed to change `wait_moderator`, returns the value
+  # set in this scheduled meeting. Otherwise returns the default value.
+  def check_wait_moderator
+    if self.room.allow_wait_moderator
+      self.wait_moderator
+    else
+      ScheduledMeeting.new.wait_moderator
+    end
+  end
+
   private
 
   def init

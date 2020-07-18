@@ -3,7 +3,9 @@
 module BbbApi
   def wait_for_mod?(scheduled_meeting, user)
     return unless scheduled_meeting and user
-    scheduled_meeting.wait_moderator && !user.moderator?(Abilities.moderator_roles)
+    scheduled_meeting.check_wait_moderator &&
+      !user.moderator?(Abilities.moderator_roles) &&
+      !scheduled_meeting.check_all_moderators
   end
 
   def mod_in_room?(scheduled_meeting)
@@ -23,7 +25,8 @@ module BbbApi
       )
     )
 
-    is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
+    is_moderator = user.moderator?(Abilities.moderator_roles) ||
+                   scheduled_meeting.check_all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
     bbb(room, false).join_meeting_url(
       scheduled_meeting.meeting_id,

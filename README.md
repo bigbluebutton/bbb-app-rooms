@@ -130,9 +130,15 @@ RAILS_SERVE_STATIC_FILES=true
 
 Custom parameters accepted in the launch:
 
-* `custom_record`: Set to `true` to create the room with the `recording` flag checked. Don't set
+* `custom_recording`: Set to `true` to create the room with this flag checked. Don't set
   it on the launch to use the default value.
 * `custom_all_moderators`:  Set to `true` to create the room with this flag checked. Don't set
   it on the launch to use the default value.
 * `custom_wait_moderator`:  Set to `true` to create the room with this flag checked. Don't set
   it on the launch to use the default value.
+* `custom_allow_all_moderators`: Set to `true` to allow meetings to have this flag turned on/off.
+  Set to any other value to hide this option from users. If this parameter is not set on launch
+  the option will be shown.
+* `custom_allow_wait_moderator`: Set to `true` to allow meetings to have this flag turned on/off.
+  Set to any other value to hide this option from users. If this parameter is not set on launch
+  the option will be shown.

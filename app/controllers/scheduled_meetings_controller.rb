@@ -36,7 +36,13 @@ class ScheduledMeetingsController < ApplicationController
 
   def create
     respond_to do |format|
-      @scheduled_meeting = @room.scheduled_meetings.create(scheduled_meeting_params)
+      # use the attributes from the room as the default
+      # then override with the permitted params incoming from the view
+      @scheduled_meeting = @room.scheduled_meetings.new(
+        @room.attributes_for_meeting.merge(
+          scheduled_meeting_params(@room)
+        )
+      )
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
@@ -60,7 +66,7 @@ class ScheduledMeetingsController < ApplicationController
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
-      if @scheduled_meeting.update(scheduled_meeting_params)
+      if @scheduled_meeting.update(scheduled_meeting_params(@room))
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.updated') }
       else
         format.html { render :edit }
@@ -145,10 +151,13 @@ class ScheduledMeetingsController < ApplicationController
 
   private
 
-  def scheduled_meeting_params
-    params.require(:scheduled_meeting).permit(
-      :name, :recording, :wait_moderator, :all_moderators, :duration, :description, :welcome
-    )
+  def scheduled_meeting_params(room)
+    attrs = [
+      :name, :recording, :duration, :description, :welcome
+    ]
+    attrs << [:wait_moderator] if room.allow_wait_moderator
+    attrs << [:all_moderators] if room.allow_all_moderators
+    params.require(:scheduled_meeting).permit(*attrs)
   end
 
   def find_scheduled_meeting

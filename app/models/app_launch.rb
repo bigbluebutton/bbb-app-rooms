@@ -1,5 +1,4 @@
 class AppLaunch < ApplicationRecord
-
   before_save :set_room_handler
 
   def room_params
@@ -12,21 +11,16 @@ class AppLaunch < ApplicationRecord
     }
 
     new_room = Room.new
-    p[:recording] = if has_custom_param?('record')
-                      custom_param_value('record')
-                    else
-                      new_room.recording
-                    end
-    p[:wait_moderator] = if has_custom_param?('wait_moderator')
-                           custom_param_value('wait_moderator')
-                         else
-                           new_room.wait_moderator
-                         end
-    p[:all_moderators] = if has_custom_param?('all_moderators')
-                           custom_param_value('all_moderators')
-                         else
-                           new_room.all_moderators
-                         end
+    [
+      :recording, :wait_moderator, :all_moderators,
+      :allow_wait_moderator, :allow_all_moderators
+    ].each do |attr|
+      p[attr] = if has_custom_param?(attr.to_s)
+                  custom_param_value(attr.to_s)
+                else
+                  new_room.send(attr)
+                end
+    end
 
     p
   end
