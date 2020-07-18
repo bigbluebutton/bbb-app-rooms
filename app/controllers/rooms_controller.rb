@@ -8,11 +8,11 @@ class RoomsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, only: :launch, raise: false #except: %i[close], raise: false
+  before_action :authenticate_user!, only: :launch, raise: false
   before_action :set_launch_room, only: %i[launch]
 
-  before_action :find_room, except: %i[launch close index new create]
-  before_action :validate_room, except: %i[launch close index new create]
+  before_action :find_room, except: %i[launch close]
+  before_action :validate_room, except: %i[launch close]
   before_action :find_user, except: %i[close]
 
   before_action only: %i[show launch close] do
@@ -21,17 +21,6 @@ class RoomsController < ApplicationController
   before_action only: %i[edit update recording_publish recording_unpublish
                          recording_update recording_delete] do
     authorize_user!(:edit, @room)
-  end
-  before_action only: %i[index new create destroy] do
-    authorize_user!(:admin, @room)
-  end
-
-  before_action :check_for_cancel, only: %i[create update]
-
-  # GET /rooms
-  # GET /rooms.json
-  def index
-    @rooms = Room.all
   end
 
   # GET /rooms/1
@@ -57,53 +46,6 @@ class RoomsController < ApplicationController
       else
         format.html { render 'shared/error', status: @error[:status] }
       end
-    end
-  end
-
-  # GET /rooms/new
-  def new
-    @room = Room.new
-  end
-
-  # GET /rooms/1/edit
-  def edit; end
-
-  # POST /rooms
-  # POST /rooms.json
-  def create
-    @room = Room.new(room_params)
-    respond_to do |format|
-      if @room.save
-        format.html { redirect_to @room, notice: t('default.room.created') }
-        format.json { render :show, status: :created, location: @room }
-      else
-        format.html { render :new }
-        format.json { render json: @error, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /rooms/1
-  # PATCH/PUT /rooms/1.json
-  def update
-    respond_to do |format|
-      if @room.update(room_params)
-        format.html { redirect_to @room, notice: t('default.room.updated') }
-        format.json { render :show, status: :ok, location: @room }
-      else
-        format.html { render :edit }
-        format.json { render json: @error, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /rooms/1
-  # DELETE /rooms/1.json
-  def destroy
-    @room.destroy
-    respond_to do |format|
-      format.html { redirect_to rooms_url, notice: t('default.room.destroyed') }
-      format.json { head :no_content }
     end
   end
 
@@ -206,7 +148,7 @@ class RoomsController < ApplicationController
     # Create/update the room
     local_room_params = app_launch.room_params
     @room = Room.find_or_create_by(handler: local_room_params[:handler]) do |room|
-      room.update(params.permit.merge(local_room_params))
+      room.update(local_room_params)
     end
 
     # Create the user session
@@ -214,14 +156,5 @@ class RoomsController < ApplicationController
     set_room_session(
       @room, { launch: launch_nonce }
     )
-  end
-
-  def room_params
-    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer,
-                                 :recording, :wait_moderator, :all_moderators)
-  end
-
-  def check_for_cancel
-    redirect_to(@room) if params[:cancel]
   end
 end
