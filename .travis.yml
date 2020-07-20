@@ -35,11 +35,13 @@ jobs:
       - bundle exec rubocop
     if: env(TEST_IGNORE) IS NOT present
   - stage: test
-    name: test
+    name: rspec
     before_script:
+      - bundle exec rake db:create
+      - bundle exec rake db:migrate
       - bundle install
     script:
-      - echo "bundle exec rspec"
+      - bundle exec rspec
     if: env(TEST_IGNORE) IS NOT present
 # This build is only triggered when building from a branch.
   - stage: build

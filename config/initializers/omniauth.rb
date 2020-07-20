@@ -22,7 +22,6 @@ Rails.configuration.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET']
 OmniAuth.config.logger = Rails.logger
 
 Rails.application.config.middleware.use(OmniAuth::Builder) do
-  # provider :developer unless Rails.env.production?
   # Initialize the provider
   unless Rails.configuration.omniauth_site.empty? || Rails.configuration.omniauth_key.empty? || Rails.configuration.omniauth_secret.empty?
     provider(
