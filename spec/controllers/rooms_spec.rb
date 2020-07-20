@@ -6,6 +6,7 @@ describe RoomsController, type: :controller do
   let(:rooms) { Room.all }
 
   before :each do
+    OmniAuth.config.test_mode = true
     allow_any_instance_of(RoomsController).to(receive(:authenticate_user!).and_return(:success))
 
     @request.session['handler'] = {
