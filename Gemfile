@@ -48,6 +48,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
   gem 'rspec'
+  gem 'rspec-rails', '~> 4.0.0'
   gem 'rspec_junit_formatter'
   gem 'rubocop', '~> 0.79.0', require: false
   gem 'rubocop-rails', '~> 2.4.0', require: false
@@ -64,11 +65,16 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15', '< 4.0'
+  gem 'capybara' # , '>= 2.15', '< 4.0'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
+  gem 'database_cleaner-active_record'
+  gem 'factory_bot_rails'
+  gem 'faker'
+  gem 'rails-controller-testing'
   gem 'webdrivers'
+  gem 'webmock'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -89,6 +95,7 @@ gem 'rest-client'
 gem 'omniauth', '>= 1.9.1'
 gem 'omniauth-oauth2', '>= 1.6.0'
 
+gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
 gem 'activerecord-session_store'
