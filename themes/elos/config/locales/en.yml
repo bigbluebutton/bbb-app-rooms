@@ -4,10 +4,6 @@ en:
     clipboard:
       external_link: "Link copied to the clipboard!"
     schedule: "Schedule"
-  default:
-    scheduled_meeting:
-      external:
-        disclaimer: "For your safety, your actions in this session will be monitored and registered."
   helpers:
     label:
       scheduled_meeting:

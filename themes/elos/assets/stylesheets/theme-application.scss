@@ -219,9 +219,12 @@ body.theme-elos {
     }
 
     .anonymous-disclaimer {
-      text-align: right;
+      text-align: center;
       font-size: var(--font-size-sm);
-      margin-top: blocks(3);
+      margin-top: blocks(8);
+      padding: blocks(2) 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
     }
   }
 

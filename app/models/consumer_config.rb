@@ -1,0 +1,3 @@
+class ConsumerConfig < ApplicationRecord
+
+end

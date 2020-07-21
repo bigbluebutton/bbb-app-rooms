@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_21_172304) do
+ActiveRecord::Schema.define(version: 2020_07_21_201247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 2020_07_21_172304) do
     t.string "secret"
     t.string "internal_endpoint"
     t.index ["key"], name: "index_bigbluebutton_servers_on_key"
+  end
+
+  create_table "consumer_configs", force: :cascade do |t|
+    t.string "key"
+    t.string "external_disclaimer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_consumer_configs_on_key"
   end
 
   create_table "rooms", force: :cascade do |t|

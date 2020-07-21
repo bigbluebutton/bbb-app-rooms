@@ -136,6 +136,11 @@ class ScheduledMeetingsController < ApplicationController
       @last_name = @user.last_name
     end
     @ended = !@scheduled_meeting.active? && !mod_in_room?(@scheduled_meeting)
+
+    @disclaimer = ConsumerConfig
+                    .select(:external_disclaimer)
+                    .find_by(key: @room.consumer_key)
+                    &.external_disclaimer
   end
 
   def destroy
