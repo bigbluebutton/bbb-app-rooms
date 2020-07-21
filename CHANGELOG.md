@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.0.14 Elos - 2020-07-20
+
+* Fix to use the locale in the launch over the default locale of the browser.
+* Fix validation of the room when accessing open routes for scheduled meetings. Accessing
+  `:room/scheduled_meetings/:id/external`, for example, was not validating the room, so any meeting
+  could be accessed in the scope of any valid room. Now scheduled meetings are only searched
+  in the scope of the current room.
+
+
 ## 0.0.13 Elos - 2020-07-19
 
 * Fix the datetime input in mobile by disabling the native integration. Will show
@@ -17,5 +26,6 @@
   their default values when used (`wait_moderator=true` and `all_moderators=false`).
   * New migration to include the attributes `allow_all_moderators` and `allow_wait_moderator`
     on the table `rooms`.
+
 
 ## 0.0.12 Elos - 2020-07-13
