@@ -15,9 +15,6 @@ class ScheduledMeetingsController < ApplicationController
   # validate the room/session only for routes that are not open
   before_action :find_room
   before_action :validate_room, except: open_actions
-
-  # some actions throw a 401 when the user is not found/valid
-  # others just search for a user but are open to unauthenticated access
   before_action :find_user
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)

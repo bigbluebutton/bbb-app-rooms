@@ -56,6 +56,9 @@ class ApplicationController < ActionController::Base
       user_params = AppLaunch.find_by(nonce: room_session['launch']).user_params
       @user = BbbAppRooms::User.new(user_params)
       Rails.logger.info "Found the user #{@user.email} (#{@user.uid}, #{@user.launch_nonce})"
+
+      # update the locale so we use the user's locale, if any
+      set_current_locale
     end
 
     # TODO: check expiration here?

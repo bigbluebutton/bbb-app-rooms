@@ -13,7 +13,7 @@ class RoomsController < ApplicationController
 
   before_action :find_room, except: %i[launch close]
   before_action :validate_room, except: %i[launch close]
-  before_action :find_user, except: %i[close]
+  before_action :find_user
 
   before_action only: %i[show launch close] do
     authorize_user!(:show, @room)
