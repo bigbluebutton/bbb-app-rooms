@@ -217,6 +217,12 @@ body.theme-elos {
     .meeting-date {
       margin-bottom: blocks(6);
     }
+
+    .anonymous-disclaimer {
+      text-align: right;
+      font-size: var(--font-size-sm);
+      margin-top: blocks(3);
+    }
   }
 
   #wait-for-moderator {
