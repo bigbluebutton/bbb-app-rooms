@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class HealthCheckController < ApplicationController
+
   def all
-    render(plain: 'success')
+    respond_to do |format|
+      format.any { render(plain: 'success') }
+      format.html
+    end
   end
+
 end
