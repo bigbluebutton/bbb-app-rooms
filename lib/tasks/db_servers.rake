@@ -9,9 +9,9 @@ namespace :db do
         internal_endpoint: args[:internal]
       }
       puts "Adding or updating the server #{attrs.inspect}"
-      BigbluebuttonServer.find_or_create_by(key: attrs[:key]) do |server|
-        server.update(attrs)
-      end
+      server = BigbluebuttonServer.create_with(attrs)
+                 .find_or_create_by(key: attrs[:key])
+      server.update(attrs)
     end
   end
 end

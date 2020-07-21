@@ -7,7 +7,8 @@ class AppLaunch < ApplicationRecord
     p = {
       handler: resource_handler,
       name: name,
-      welcome: ''
+      welcome: '',
+      consumer_key: self.consumer_key
     }
 
     new_room = Room.new
@@ -79,6 +80,10 @@ class AppLaunch < ApplicationRecord
 
   def oauth_consumer_key
     self.params['custom_params']['oauth_consumer_key'] if self.params.key?('custom_params')
+  end
+
+  def consumer_key
+    self.oauth_consumer_key
   end
 
   private

@@ -115,7 +115,13 @@ module BbbApi
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb(room, internal = true)
-    consumer_key = room.last_launch.try(:oauth_consumer_key)
+    # TODO: consumer_key should never be blank, keeping this condition here just while
+    # all rooms migrate to the new format. Remove it after a while.
+    consumer_key = if room.consumer_key.blank?
+                     room.last_launch.try(:oauth_consumer_key)
+                   else
+                     room.consumer_key
+                   end
     server = BigbluebuttonServer.find_by(key: consumer_key)
 
     if server.present?

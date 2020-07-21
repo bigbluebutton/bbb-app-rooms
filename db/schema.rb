@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_18_014914) do
+ActiveRecord::Schema.define(version: 2020_07_21_172304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2020_07_18_014914) do
     t.string "handler"
     t.boolean "allow_wait_moderator", default: true
     t.boolean "allow_all_moderators", default: true
+    t.string "consumer_key"
     t.index ["handler"], name: "index_rooms_on_handler"
   end
 
