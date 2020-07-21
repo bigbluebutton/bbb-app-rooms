@@ -2,7 +2,7 @@ pt:
   _all:
     cancel: "Cancelar"
     clipboard:
-      external_link: "Link copiado para o clipboard!"
+      link_copied: "Link copiado para o clipboard!"
     schedule: "Agendar"
   helpers:
     label:
@@ -36,6 +36,7 @@ pt:
       return: "< voltar"
     search:
       placeholder: "Buscar em título ou descrição..."
+    playback_link: "Copiar link de reprodução"
     playbacks:
       presentation: "Reproduzir"
       presentation_video: "Baixar"

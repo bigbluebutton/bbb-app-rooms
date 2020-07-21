@@ -28,10 +28,11 @@ $(document).on('turbolinks:load', function(){
   });
 
   $(".copy-to-clipboard").each(function() {
+    $toast = $('.toast', $(this).data('toast-id'));
     clipboard = new ClipboardJS(this);
     clipboard.on('success', function(e) {
-      $('.toast', '#external-link-copied-toast').toast('dispose');
-      $('.toast', '#external-link-copied-toast').toast('show');
+      $toast.toast('dispose');
+      $toast.toast('show');
     });
   });
 

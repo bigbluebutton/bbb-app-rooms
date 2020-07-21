@@ -32,7 +32,8 @@
           link_to t('scheduled_meetings.external_link'), '#',
            data: {
              'clipboard-text': external_room_scheduled_meeting_url(room, meeting),
-             turbolinks: false
+             turbolinks: false,
+             'toast-id': '#external-link-copied-toast'
            },
            class: "dropdown-item copy-to-clipboard"
           %>

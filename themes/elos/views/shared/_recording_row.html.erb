@@ -35,6 +35,21 @@
           <% recording[:playbacks].each do |p| %>
             <%= link_to t("recordings.playbacks.#{p[:type]}"), p[:url], class: "dropdown-item", target: "_blank" %>
           <% end %>
+
+          <% playback = recording[:playbacks].find { |p| p[:type] == 'presentation' } %>
+          <% if playback.present? %>
+            <div class="dropdown-divider"></div>
+            <%=
+            link_to t('recordings.playback_link'), '#',
+             data: {
+               'clipboard-text': playback[:url],
+               turbolinks: false,
+               'toast-id': '#playback-link-copied-toast'
+             },
+             class: "dropdown-item copy-to-clipboard"
+            %>
+          <% end %>
+
           <% if can_edit?(user, room) %>
             <div class="dropdown-divider"></div>
           <% end %>
