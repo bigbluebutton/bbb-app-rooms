@@ -158,7 +158,7 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def find_scheduled_meeting
-    @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
+    @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
   end
 
   def validate_scheduled_meeting
