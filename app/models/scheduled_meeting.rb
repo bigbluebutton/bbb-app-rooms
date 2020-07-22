@@ -73,6 +73,10 @@ class ScheduledMeeting < ApplicationRecord
       record: self.recording,
     }
 
+    # set the duration + 1h if configured to do so in the consumer
+    config = ConsumerConfig.select(:set_duration).find_by(key: self.room.consumer_key)
+    opts[:duration] = duration_minutes + 60 if !config.blank? && config.set_duration
+
     # will be added as meta_bbb-*
     meta_bbb = {
       origin: 'LTI',
@@ -150,6 +154,10 @@ class ScheduledMeeting < ApplicationRecord
     else
       ScheduledMeeting.new.wait_moderator
     end
+  end
+
+  def duration_minutes
+    duration / 60
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_21_201247) do
+ActiveRecord::Schema.define(version: 2020_07_22_005054) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2020_07_21_201247) do
     t.string "external_disclaimer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "set_duration", default: false
     t.index ["key"], name: "index_consumer_configs_on_key"
   end
 
