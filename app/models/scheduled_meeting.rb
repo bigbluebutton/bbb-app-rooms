@@ -8,8 +8,11 @@ class ScheduledMeeting < ApplicationRecord
 
   after_initialize :init
 
+  # TODO: temporarily added 1h to the interval so people in other timezones won't
+  # be surprised by meetings not appearing, should be fixed with a proper support to
+  # multiple timezones
   scope :active, -> {
-    where("start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc)
+    where("start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - 1.hour)
   }
 
   def self.from_param(param)
