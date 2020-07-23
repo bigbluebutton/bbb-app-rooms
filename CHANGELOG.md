@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.0.15 Elos - 2020-07-22
+
+* Add option to copy the playback link in a recording.
+* Add a table `consumer_configs` to store configurations for each customer. Indexed by the key
+  the consumer uses to launch the LTI.
+* Add a disclaimer in the external access page. Configure for each customer, by default won't
+  show anything.
+* Set the duration on create. By default won't set the duration, only when the consumer is configured
+  to do so. Sets the duration to the duration of the scheduled meeting plus one hour.
+* Serve an html in `/healthz.html` to try to speed up the application boot. Kubernetes will check
+  it right after the pod starts and it will take a while to respond while Rails loads, so this
+  loading time won't affect user requests.
+* Add `Room#consumer_key` to optimize db queries. Uses it directly instead of having to list
+  all app launches to get the latest one.
+* Set `key` as unique in the `bigbluebutton_servers` and `consumer_configs` tables.
+* Show meetings for one hour more than their duration to make it a little better for people in
+  other timezones until we have a proper solution for multiple timezones.
+
+
 ## 0.0.14 Elos - 2020-07-20
 
 * Fix to use the locale in the launch over the default locale of the browser.
