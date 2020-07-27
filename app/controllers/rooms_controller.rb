@@ -56,7 +56,7 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
-        format.html { redirect_to @room, notice: t('default.room.updated') }
+        format.html { redirect_to room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated') }
         format.json { render :show, status: :ok, location: @room }
       else
         format.html { render :edit }
