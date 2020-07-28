@@ -223,7 +223,7 @@ class RoomsController < ApplicationController
   end
 
   def check_for_cancel
-    redirect_to(@room) if params[:cancel]
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce])) if params[:cancel]
   end
 
   def resource_handler(params)
