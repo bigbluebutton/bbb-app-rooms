@@ -56,7 +56,7 @@
           <i class="fas fa-ellipsis-v px-4"></i>
         </a>
         <div class="dropdown-menu dropdown-menu-right">
-          <% if recording[:published] == "true" %>
+          <% if recording[:published] %>
             <%= button_to recording_unpublish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
               <i class="dropdown-icon fas fa-book"></i> <%= t("default.recording.action.unpublish") %>
             <% end %>
