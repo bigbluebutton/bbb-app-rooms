@@ -48,6 +48,13 @@ class ScheduledMeetingsController < ApplicationController
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
 
       if @scheduled_meeting.save
+        unless params[:scheduled_meeting][:repeat].blank?
+          weeks = params[:scheduled_meeting][:repeat].to_i
+
+          # set a maximum to prevent abuse
+          @scheduled_meeting.create_repetitions(weeks) if weeks > 0 && weeks <= 4
+        end
+
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
       else
         format.html { render :new }

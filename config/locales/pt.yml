@@ -71,6 +71,12 @@ pt:
         join:         "Entrar"
         last_name:    "Sobrenome"
       recording:      "Gravação"
+      repeat_options:
+        never: "Não replicar"
+        1w: "Na próxima semana"
+        2w: "Nas próximas 2 semanas"
+        3w: "Nas próximas 3 semanas"
+        4w: "Nas próximas 4 semanas"
       tooltip:
         recording:    "A sessão poderá ser gravada"
         waitmoderator: "Participantes não podem entrar até que um moderador entre"

@@ -45,6 +45,22 @@ class ScheduledMeeting < ApplicationRecord
     }
   end
 
+  def self.repeat_options_for_select(locale)
+    {
+      'never': 0,
+      '1w': 1,
+      '2w': 2,
+      '3w': 3,
+      '4w': 4,
+    }.map { |k, v|
+      [I18n.t("default.scheduled_meeting.repeat_options.#{k}", locale: locale), v]
+    }
+  end
+
+  def self.default_repeat_options_for_select(locale)
+    repeat_options_for_select(locale).first[1]
+  end
+
   def self.parse_start_at(date, time, locale = I18n.locale, zone = Time.zone)
     format_date = I18n.t('default.formats.flatpickr.date_ruby', locale: locale)
     format_time = I18n.t('default.formats.flatpickr.time_ruby', locale: locale)
@@ -161,6 +177,14 @@ class ScheduledMeeting < ApplicationRecord
 
   def duration_minutes
     duration / 60
+  end
+
+  def create_repetitions(weeks = 0)
+    weeks.times do |i|
+      attrs = self.attributes.except('id', 'created_at', 'updated_at')
+      attrs['start_at'] = attrs['start_at'] + (i + 1).weeks
+      ScheduledMeeting.create(attrs)
+    end
   end
 
   private
