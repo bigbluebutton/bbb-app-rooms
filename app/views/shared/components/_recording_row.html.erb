@@ -22,7 +22,7 @@
     <% end %>
   </td>
   <td>
-    <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>">
+    <div id="recording-title" class="form-inline edit_hover_class" data-recordid="<%= recording[:recordID] %>" data-launch-nonce="<%= @launch_nonce %>">
       <% if recording[:metadata][:name] %>
           <text id='recording-title-text' class="text-wrap recording-text"><%= recording[:metadata][:name] %></text>
       <% else %>
