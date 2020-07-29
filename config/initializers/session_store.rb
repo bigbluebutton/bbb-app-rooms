@@ -2,9 +2,15 @@
 
 # Be sure to restart your server when you modify this file.
 
-BbbAppRooms::Application.config.session_store(
-  :cookie_store,
-  key: '_bbb_app_rooms_session',
-  same_site: :none,
-  secure: Rails.env.production?
-)
+attrs = {
+  key: '_bbb_app_rooms_session'
+}
+if ENV['DISABLE_COOKIE_FOR_IFRAME'].blank?
+  attrs = attrs.merge(
+    {
+      same_site: :none,
+      secure: true
+    }
+  )
+end
+Rails.application.config.session_store(:cookie_store, attrs)

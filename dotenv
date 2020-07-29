@@ -61,3 +61,6 @@ APP_LAUNCH_DURATION_MINS=30
 # CABLE_MOUNT_PATH=/rooms/cable
 # CABLE_ADAPTER=postgresql
 CABLE_ENABLED=true
+
+# Don't set cookie attributes to allow the app to run in an iframe
+# DISABLE_COOKIE_FOR_IFRAME=1
