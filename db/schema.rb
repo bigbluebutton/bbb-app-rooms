@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_22_010831) do
+ActiveRecord::Schema.define(version: 2020_07_29_223644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,7 +75,9 @@ ActiveRecord::Schema.define(version: 2020_07_22_010831) do
     t.string "description"
     t.string "welcome"
     t.string "created_by_launch_nonce"
+    t.string "repeat"
     t.index ["created_by_launch_nonce"], name: "index_scheduled_meetings_on_created_by_launch_nonce"
+    t.index ["repeat"], name: "index_scheduled_meetings_on_repeat"
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end
 

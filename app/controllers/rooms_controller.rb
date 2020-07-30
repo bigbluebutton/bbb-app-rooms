@@ -28,6 +28,8 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
+        # TODO: do this also in a worker in the future to speed up this request
+        @room.update_recurring_meetings
         @scheduled_meetings = @room.scheduled_meetings.active.order(:start_at)
         format.html { render :show }
         format.json { render :show, status: :ok, location: @room }

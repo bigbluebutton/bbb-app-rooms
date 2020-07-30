@@ -1,18 +1,37 @@
 class ScheduledMeeting < ApplicationRecord
+  REPEAT_OPTIONS = {
+    weekly: 1.week,
+    every_two_weeks: 2.weeks
+  }.stringify_keys.freeze
+
   belongs_to :room
 
   validates :room, presence: true
   validates :name, presence: true
   validates :start_at, presence: true
   validates :duration, presence: true
+  validates :repeat, inclusion: { in: [nil] + ScheduledMeeting::REPEAT_OPTIONS.keys }
 
   after_initialize :init
 
   # TODO: temporarily added 1h to the interval so people in other timezones won't
   # be surprised by meetings not appearing, should be fixed with a proper support to
   # multiple timezones
-  scope :active, -> {
-    where("start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - 1.hour)
+  scope :active, -> (reverse = false) {
+    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - 1.hour]
+    if reverse
+      where.not(*attrs)
+    else
+      where(*attrs)
+    end
+  }
+
+  scope :inactive, -> {
+    active(true)
+  }
+
+  scope :recurring, -> {
+    where.not(repeat: nil)
   }
 
   def self.from_param(param)
@@ -46,19 +65,9 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def self.repeat_options_for_select(locale)
-    {
-      'never': 0,
-      '1w': 1,
-      '2w': 2,
-      '3w': 3,
-      '4w': 4,
-    }.map { |k, v|
-      [I18n.t("default.scheduled_meeting.repeat_options.#{k}", locale: locale), v]
-    }
-  end
-
-  def self.default_repeat_options_for_select(locale)
-    repeat_options_for_select(locale).first[1]
+    ([nil] + ScheduledMeeting::REPEAT_OPTIONS.keys).map do |k|
+      [I18n.t("default.scheduled_meeting.repeat_options.#{k || 'none'}", locale: locale), k]
+    end
   end
 
   def self.parse_start_at(date, time, locale = I18n.locale, zone = Time.zone)
@@ -75,8 +84,11 @@ class ScheduledMeeting < ApplicationRecord
     )
   end
 
+  # TODO: temporarily added 1h to the interval so people in other timezones won't
+  # be surprised by meetings not appearing, should be fixed with a proper support to
+  # multiple timezones
   def active?
-    self.start_at + duration.seconds >= DateTime.now.utc
+    start_at + duration.seconds >= DateTime.now.utc - 1.hour
   end
 
   def meeting_id
@@ -176,15 +188,16 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def duration_minutes
-    duration / 60
+    self.duration / 60
   end
 
-  def create_repetitions(weeks = 0)
-    weeks.times do |i|
-      attrs = self.attributes.except('id', 'created_at', 'updated_at')
-      attrs['start_at'] = attrs['start_at'] + (i + 1).weeks
-      ScheduledMeeting.create(attrs)
-    end
+  # Update this scheduled meeting to the date it should be in its next iteration.
+  # If this is not a recurring meeting or if this meeting is still active won't do anything.
+  def update_to_next_recurring_date
+    return if self.repeat.blank? || self.active?
+
+    self.start_at += ScheduledMeeting::REPEAT_OPTIONS[self.repeat] while !self.active?
+    self.save
   end
 
   private

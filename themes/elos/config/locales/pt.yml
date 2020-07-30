@@ -12,7 +12,7 @@ pt:
         duration: "Duração"
         name: "Nome da sessão"
         recording: "Permitir que a sessão seja gravada"
-        repeat: "Replicar agendamento"
+        repeat: "Repetir agendamento"
         start_time: "Data e hora de início"
         start_time_date: "Data"
         start_time_time: "Hora de início"

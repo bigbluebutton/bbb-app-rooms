@@ -103,11 +103,9 @@ en:
         last_name:    "Last name"
       recording:      "Recording"
       repeat_options:
-        never: "Don't replicate"
-        1w: "In the next week"
-        2w: "In the next 2 weeks"
-        3w: "In the next 3 weeks"
-        4w: "In the next 4 weeks"
+        none: "Don't repeat"
+        weekly: "Every week"
+        every_two_weeks: "Every two weeks"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"

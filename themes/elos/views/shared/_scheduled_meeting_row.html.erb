@@ -7,6 +7,12 @@
   </td>
   <td class="col-12 col-md-3 align-middle">
     <%= format_date(meeting.start_at) %>
+    <% unless meeting.repeat.blank? %>
+      <span class="badge badge-recurring">
+        <i class="icon material-icons">repeat</i>
+        <%= t("default.scheduled_meeting.repeat_options.#{meeting.repeat}") %>
+      </span>
+    <% end %>
   </td>
   <td class="col-12 col-md-2 align-middle">
     <% if meeting.duration > 0 %>

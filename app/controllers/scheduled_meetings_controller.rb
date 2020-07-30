@@ -27,6 +27,8 @@ class ScheduledMeetingsController < ApplicationController
     authorize_user!(:edit, @room)
   end
 
+  before_action :delete_blank_repeat, only: %i[create update]
+
   def new
     @scheduled_meeting = ScheduledMeeting.new(@room.attributes_for_meeting)
   end
@@ -48,13 +50,6 @@ class ScheduledMeetingsController < ApplicationController
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
 
       if @scheduled_meeting.save
-        unless params[:scheduled_meeting][:repeat].blank?
-          weeks = params[:scheduled_meeting][:repeat].to_i
-
-          # set a maximum to prevent abuse
-          @scheduled_meeting.create_repetitions(weeks) if weeks > 0 && weeks <= 4
-        end
-
         format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
       else
         format.html { render :new }
@@ -160,9 +155,18 @@ class ScheduledMeetingsController < ApplicationController
 
   private
 
+  # Removes :repeat if it's blank, we want it as null in the database
+  def delete_blank_repeat
+    if params.key?(:scheduled_meeting) &&
+       params[:scheduled_meeting].key?(:repeat) &&
+       params[:scheduled_meeting][:repeat].blank?
+      params[:scheduled_meeting].delete(:repeat)
+    end
+  end
+
   def scheduled_meeting_params(room)
     attrs = [
-      :name, :recording, :duration, :description, :welcome
+      :name, :recording, :duration, :description, :welcome, :repeat
     ]
     attrs << [:wait_moderator] if room.allow_wait_moderator
     attrs << [:all_moderators] if room.allow_all_moderators

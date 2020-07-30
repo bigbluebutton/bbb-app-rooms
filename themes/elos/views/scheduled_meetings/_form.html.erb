@@ -44,17 +44,15 @@
     </div>
   </div>
 
-  <% if @scheduled_meeting.new_record? %>
-    <div class="form-row">
-      <div class="form-group col-12">
-        <%= form.label :repeat %>
-        <%= form.select :repeat,
-         ScheduledMeeting.repeat_options_for_select(I18n.locale),
-         { selected: ScheduledMeeting.default_repeat_options_for_select(I18n.locale) },
-         { class: "form-control" } %>
-      </div>
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :repeat %>
+      <%= form.select :repeat,
+       ScheduledMeeting.repeat_options_for_select(I18n.locale),
+       { selected: scheduled_meeting.repeat },
+       { class: "form-control" } %>
     </div>
-  <% end %>
+  </div>
 
   <div class="form-group">
     <div class="form-check col-12">
