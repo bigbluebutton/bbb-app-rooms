@@ -13,4 +13,4 @@ if ENV['DISABLE_COOKIE_FOR_IFRAME'].blank?
     }
   )
 end
-Rails.application.config.session_store(:cookie_store, attrs)
+Rails.application.config.session_store(:cookie_store, **attrs)
