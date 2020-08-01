@@ -10,7 +10,7 @@
     <% unless meeting.repeat.blank? %>
       <span class="badge badge-recurring">
         <i class="icon material-icons">repeat</i>
-        <%= t("default.scheduled_meeting.repeat_options.#{meeting.repeat}") %>
+        <span><%= t("default.scheduled_meeting.repeat_options.#{meeting.repeat}") %></span>
       </span>
     <% end %>
   </td>

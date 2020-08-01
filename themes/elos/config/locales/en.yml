@@ -12,7 +12,7 @@ en:
         duration: "Duration"
         name: "Session name"
         recording: "Allow the session to be recorded"
-        repeat: "Repeat session"
+        repeat: "Recurrence"
         start_time: "Start date and time"
         start_time_date: "Date"
         start_time_time: "Start time"

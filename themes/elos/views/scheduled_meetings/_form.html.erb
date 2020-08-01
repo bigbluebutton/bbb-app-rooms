@@ -32,6 +32,22 @@
 
   <div class="form-row">
     <div class="form-group col-12">
+      <%= form.label :repeat %>
+      <div class="repeat-hint">
+        <ul>
+          <li>O link externo de um agendamento recorrente será sempre o mesmo</li>
+          <li>O novo agendamento aparecerá na lista após o atual ser finalizado</li>
+        </ul>
+      </div>
+      <%= form.select :repeat,
+          ScheduledMeeting.repeat_options_for_select(I18n.locale),
+       { selected: scheduled_meeting.repeat },
+       { class: "form-control" } %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
       <%= form.label :description %>
       <%= form.text_area :description, class: "form-control" %>
     </div>
@@ -41,16 +57,6 @@
     <div class="form-group col-12">
       <%= form.label :welcome %>
       <%= form.text_area :welcome, class: "form-control" %>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-12">
-      <%= form.label :repeat %>
-      <%= form.select :repeat,
-       ScheduledMeeting.repeat_options_for_select(I18n.locale),
-       { selected: scheduled_meeting.repeat },
-       { class: "form-control" } %>
     </div>
   </div>
 

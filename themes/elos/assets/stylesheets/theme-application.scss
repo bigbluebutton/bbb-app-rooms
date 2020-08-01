@@ -173,12 +173,12 @@ body.theme-elos {
       .badge-recurring {
         background-color: var(--color-action);
         color: var(--color-white);
-        padding: blocks(0.5) blocks(1);
+        padding: blocks(1) blocks(1);
         margin-top: blocks(1);
-        font-size: 80%;
+        font-size: 95%;
 
         .icon {
-          font-size: 80%;
+          font-size: 85%;
         }
       }
     }
@@ -223,6 +223,18 @@ body.theme-elos {
   #scheduled-meetings-new, #scheduled-meetings-edit {
     form {
       margin-top: blocks(6);
+
+      .repeat-hint {
+        ul {
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
+          margin-top: -0.2rem;
+          padding-bottom: blocks(1);
+          color: var(--color-gray-05);
+          font-size: 80%;
+        }
+      }
     }
   }
 

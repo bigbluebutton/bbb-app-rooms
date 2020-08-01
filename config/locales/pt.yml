@@ -72,9 +72,9 @@ pt:
         last_name:    "Sobrenome"
       recording:      "Gravação"
       repeat_options:
-        none: "Não repetir"
-        weekly: "Toda semana"
-        every_two_weeks: "A cada duas semanas"
+        none: "Não se repete"
+        weekly: "Semanal"
+        every_two_weeks: "Quinzenal"
       tooltip:
         recording:    "A sessão poderá ser gravada"
         waitmoderator: "Participantes não podem entrar até que um moderador entre"
