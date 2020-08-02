@@ -35,8 +35,8 @@
       <%= form.label :repeat %>
       <div class="repeat-hint">
         <ul>
-          <li>O link externo de um agendamento recorrente será sempre o mesmo</li>
-          <li>O novo agendamento aparecerá na lista após o atual ser finalizado</li>
+          <li><%= t('helpers.hint.repeat.a') %></li>
+          <li><%= t('helpers.hint.repeat.b') %></li>
         </ul>
       </div>
       <%= form.select :repeat,
