@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.0.16 Elos - 2020-08-02
+
+* Add recurring events with the options: weekly and biweekly. The event is reused, it just
+  updates its date on rooms/show if it already expired.
+
+
 ## 0.0.15 Elos - 2020-07-22
 
 * Add option to copy the playback link in a recording.
