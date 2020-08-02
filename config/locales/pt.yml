@@ -143,3 +143,10 @@ pt:
         message:    "O agendamento não foi encontrado"
         suggestion: "Ele pode ter sido removido pelo criador da sessão."
         status_code: "404"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: "&hellip;"

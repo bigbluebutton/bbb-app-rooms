@@ -174,3 +174,10 @@ en:
         message:    "The scheduled meeting was not found"
         suggestion: "It might have been removed by the session creator."
         status_code: "404"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: "&hellip;"

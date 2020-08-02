@@ -37,7 +37,11 @@
       <div class="table-footnote">
         <%= t('scheduled_meetings.table.footnote', zone: current_formatted_time_zone) %>
       </div>
+      <div class="table-pagination">
+        <%= paginate scheduled_meetings %>
+      </div>
     <% end %>
+
   </div>
 </div>
 

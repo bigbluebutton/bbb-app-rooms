@@ -73,29 +73,36 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data'
 
+# Base
 gem 'json'
-
-gem 'bigbluebutton-api-ruby'
-
 gem 'bootstrap', '~> 4.5.0'
 gem 'font-awesome-rails'
 gem 'jquery-fileupload-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
-gem 'rest-client'
+# API
+gem 'bigbluebutton-api-ruby'
 
+# Authentication
+gem 'rest-client'
 gem 'omniauth', '>= 1.9.1'
 gem 'omniauth-oauth2', '>= 1.6.0'
-
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
-gem 'browser'
+# Logging
 gem 'lograge'
 gem "logstash-event"
 
+# Use the browser's timezone
 # Using this fork mostly because of these changes:
 # https://github.com/mconf/browser-timezone-rails/commit/5bcc66fe8585ce6504e271aaec46dc77f9afa14f
 # https://github.com/mconf/browser-timezone-rails/commit/0f112459d8577ac9c5de354ffe5a97056587b2fb
 # https://github.com/mconf/browser-timezone-rails/commit/2f98ada4c005ff82aba2a40c2851c097fd06175f
 gem 'browser-timezone-rails', git: 'https://github.com/mconf/browser-timezone-rails.git'
+
+# Pagination
+gem 'kaminari'
+
+# Other
+gem 'browser'

@@ -1,4 +1,6 @@
 class ScheduledMeeting < ApplicationRecord
+  paginates_per 10
+
   REPEAT_OPTIONS = {
     weekly: 1.week,
     every_two_weeks: 2.weeks

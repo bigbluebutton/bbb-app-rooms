@@ -169,6 +169,13 @@ body.theme-elos {
     color: var(--color-gray-05);
   }
 
+  .table-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: blocks(6);
+  }
+
+
   //
   // PAGE-SPECIFIC STYLES
   //
