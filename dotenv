@@ -62,5 +62,7 @@ APP_LAUNCH_DURATION_MINS=30
 # CABLE_ADAPTER=postgresql
 CABLE_ENABLED=true
 
-# Don't set cookie attributes to allow the app to run in an iframe
-# DISABLE_COOKIE_FOR_IFRAME=1
+# By default the cookies will set SameSite=None and Secure
+# Set the flags below to alter this behavior
+# COOKIES_SECURE_OFF=1
+# COOKIES_SAME_SITE=1

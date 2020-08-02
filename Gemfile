@@ -93,3 +93,9 @@ gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbb
 gem 'browser'
 gem 'lograge'
 gem "logstash-event"
+
+# Using this fork mostly because of these changes:
+# https://github.com/mconf/browser-timezone-rails/commit/5bcc66fe8585ce6504e271aaec46dc77f9afa14f
+# https://github.com/mconf/browser-timezone-rails/commit/0f112459d8577ac9c5de354ffe5a97056587b2fb
+# https://github.com/mconf/browser-timezone-rails/commit/2f98ada4c005ff82aba2a40c2851c097fd06175f
+gem 'browser-timezone-rails', git: 'https://github.com/mconf/browser-timezone-rails.git'

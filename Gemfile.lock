@@ -4,6 +4,14 @@ GIT
   specs:
     omniauth-bbbltibroker (0.1.2)
 
+GIT
+  remote: https://github.com/mconf/browser-timezone-rails.git
+  revision: 2f98ada4c005ff82aba2a40c2851c097fd06175f
+  specs:
+    browser-timezone-rails (1.1.0)
+      js_cookie_rails
+      rails (>= 3.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -132,6 +140,8 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    js_cookie_rails (2.2.0)
+      railties (>= 3.1)
     json (2.3.0)
     jwt (2.2.1)
     listen (3.1.5)
@@ -332,6 +342,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.5.0)
   browser
+  browser-timezone-rails!
   byebug
   capybara (>= 2.15, < 4.0)
   coffee-rails (~> 5.0)

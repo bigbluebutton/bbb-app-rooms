@@ -4,7 +4,6 @@ require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
   before_action :set_current_locale
-  before_action :set_timezone
   before_action :allow_iframe_requests
 
   # the scope and how many rooms we keep in the session
@@ -175,12 +174,6 @@ class ApplicationController < ActionController::Base
       I18n.locale = 'en' # fallback
     end
     response.set_header("Content-Language", I18n.locale)
-  end
-
-  def set_timezone
-    tz = ActiveSupport::TimeZone[Rails.application.config.default_timezone]
-    tz = ActiveSupport::TimeZone['UTC'] if tz.nil?
-    Time.zone = tz
   end
 
   def allow_iframe_requests

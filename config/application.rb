@@ -76,5 +76,10 @@ module BbbAppRooms
     if ENV['LOGRAGE_ENABLED'] == '1'
       config.log_formatter = SimpleJsonFormatter.new
     end
+
+    config.browser_time_zone_secure_cookie = ENV['COOKIES_SECURE_OFF'].blank?
+    config.browser_time_zone_same_site_cookie =
+      ENV['COOKIES_SAME_SITE'].blank? ? 'None' : "#{ENV['COOKIES_SAME_SITE']}"
+    config.browser_time_zone_default_tz = config.default_timezone
   end
 end
