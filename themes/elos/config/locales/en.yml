@@ -13,9 +13,8 @@ en:
         one: "%{count} minute"
         other: "%{count} minutes"
     hint:
-      repeat:
-        a: "The external link of a recurring meeting will always be the same"
-        b: "The schedule is updated in the list after the current meeting ends"
+      repeat: "The external link of a recurring meeting will always be the same. The schedule is updated in the list after the current meeting ends."
+      time: "You are using the time zone: %{zone}"
     label:
       scheduled_meeting:
         all_moderators: "Everyone joins as moderator"
@@ -39,13 +38,15 @@ en:
       less_than_a_minute: "Less than 1 minute"
     index:
       return: "< go back"
-    search:
-      placeholder: "Search by title or description..."
     playback_link: "Copy playback link"
     playbacks:
       presentation: "Playback"
       presentation_video: "Download"
     publish: "Publish"
+    search:
+      placeholder: "Search by title or description..."
+    table:
+      footnote: "Dates shown in the time zone: %{zone}"
     title: "Recordings"
     unpublish: "Unpublish"
   rooms:
@@ -63,6 +64,8 @@ en:
       title: "Schedule session"
     show:
       view_recordings: "View recordings"
+    table:
+      footnote: "Dates shown in the time zone: %{zone}"
     title: "Scheduled sessions"
     wait:
       retry: "Try again"

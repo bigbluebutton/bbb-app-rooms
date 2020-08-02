@@ -53,4 +53,8 @@ module ElosHelper
 
     words
   end
+
+  def current_formatted_time_zone
+    ActiveSupport::TimeZone[Time.zone.name].to_s.gsub(/[^\s]*\//, '').gsub(/_/, ' ')
+  end
 end

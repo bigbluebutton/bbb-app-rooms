@@ -18,7 +18,10 @@
 
     <div class="form-group col-6 col-md-4">
       <% if error %> <div class="field_with_errors"> <% end %>
-        <%= form.label :time, t('helpers.label.scheduled_meeting.start_time_time') %>
+        <%= form.label :time do %>
+          <%= t('helpers.label.scheduled_meeting.start_time_time') %>
+          <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.time', zone: current_formatted_time_zone) %>">help</i>
+        <% end %>
         <%= form.text_field :time, value: scheduled_meeting.start_at_time(I18n.locale), required: true, class: "form-control timepicker", data: { format: t('default.formats.flatpickr.time_js') } %>
         <% if error %> </div> <% end %>
     </div>
@@ -32,13 +35,10 @@
 
   <div class="form-row">
     <div class="form-group col-12">
-      <%= form.label :repeat %>
-      <div class="repeat-hint">
-        <ul>
-          <li><%= t('helpers.hint.repeat.a') %></li>
-          <li><%= t('helpers.hint.repeat.b') %></li>
-        </ul>
-      </div>
+      <%= form.label :repeat do %>
+        <%= t('helpers.label.scheduled_meeting.repeat') %>
+        <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.repeat') %>">help</i>
+      <% end %>
       <%= form.select :repeat,
           ScheduledMeeting.repeat_options_for_select(I18n.locale),
        { selected: scheduled_meeting.repeat },

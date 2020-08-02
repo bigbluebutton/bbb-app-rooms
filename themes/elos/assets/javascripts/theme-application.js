@@ -7,6 +7,8 @@ $(document).on('turbolinks:load', function(){
     $(this).toast('show');
   });
 
+  $('[data-toggle="tooltip"]').tooltip();
+
   $(".datepicker").each(function() {
     var format = $(this).data('format');
     $(this).flatpickr({

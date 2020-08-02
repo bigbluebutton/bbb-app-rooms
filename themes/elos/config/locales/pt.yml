@@ -13,9 +13,8 @@ pt:
         one: "%{count} minuto"
         other: "%{count} minutos"
     hint:
-      repeat:
-        a: "O link externo de um agendamento recorrente será sempre o mesmo"
-        b: "O novo agendamento aparecerá na lista após o atual ser finalizado"
+      repeat: "O link externo de um agendamento recorrente será sempre o mesmo. O novo agendamento aparecerá na lista após o atual ser finalizado."
+      time: "Você está usando o fuso horário: %{zone}"
     label:
       scheduled_meeting:
         all_moderators: "Todos entram como moderadores"
@@ -39,13 +38,15 @@ pt:
       less_than_a_minute: "Menos de 1 minuto"
     index:
       return: "< voltar"
-    search:
-      placeholder: "Buscar em título ou descrição..."
     playback_link: "Copiar link de reprodução"
     playbacks:
       presentation: "Reproduzir"
       presentation_video: "Baixar"
     publish: "Publicar"
+    search:
+      placeholder: "Buscar em título ou descrição..."
+    table:
+      footnote: "Datas exibidas no fuso horário: %{zone}"
     title: "Gravações"
     unpublish: "Despublicar"
   rooms:
@@ -63,6 +64,8 @@ pt:
       title: "Agendar sessão"
     show:
       view_recordings: "Ver gravações"
+    table:
+      footnote: "Datas exibidas no fuso horário: %{zone}"
     title: "Sessões agendadas"
     wait:
       retry: "Tentar novamente"

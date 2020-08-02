@@ -153,6 +153,22 @@ body.theme-elos {
     }
   }
 
+  form {
+    label {
+      .icon-label-hint {
+        font-size: var(--font-size-md);
+        cursor: pointer;
+        color: var(--color-main);
+      }
+    }
+  }
+
+  .table-footnote {
+    text-align: right;
+    font-size: var(--font-size-details);
+    color: var(--color-gray-05);
+  }
+
   //
   // PAGE-SPECIFIC STYLES
   //
