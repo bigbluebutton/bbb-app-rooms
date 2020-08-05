@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker build -t $IMAGE_NAME --build-arg APP_THEME=$APP_THEME -f $DOCKERFILE_PATH .
