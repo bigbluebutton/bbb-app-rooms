@@ -40,6 +40,11 @@ Rails.application.configure do
     config.action_controller.asset_host = ENV['ASSET_HOST']
   end
 
+  # Set a cache-control for all assets
+  config.public_file_server.headers = {
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=31536000'
+  }
+
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
