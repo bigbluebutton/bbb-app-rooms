@@ -49,6 +49,8 @@ class AppLaunch < ApplicationRecord
       self.params['custom_params']['custom_' + name] == 'true'
   end
 
+  # Note: this is how a handler of a room is defined after launch, changing this
+  # might change the rooms that are associated with a given course/lms/launch.
   def resource_handler
     handler = Digest::SHA1.hexdigest(
       'rooms' + self.consumer_id + self.context_id
@@ -66,8 +68,23 @@ class AppLaunch < ApplicationRecord
 
   # The LTI attribute that defines who the consumer is
   def consumer_id
-    id = self.params['tool_consumer_instance_guid']
-    id || self.consumer_domain
+    id = self.oauth_consumer_key
+
+    if id.blank?
+      Rails.logger.warn "Empty oauth_consumer_key when calculating the handler on " \
+                        "consumer_id=#{self.consumer_id}, context_id=#{self.context_id} " \
+                        "oauth_consumer_key=#{self.oauth_consumer_key}"
+      id = self.params['tool_consumer_instance_guid']
+    end
+
+    if id.blank?
+      Rails.logger.warn "Empty tool_consumer_instance_guid when calculating the handler on " \
+                        "consumer_id=#{self.consumer_id}, context_id=#{self.context_id} " \
+                        "oauth_consumer_key=#{self.oauth_consumer_key}"
+      id = self.consumer_domain
+    end
+
+    id
   end
 
   def consumer_domain
