@@ -17,7 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 module BbbAppRooms
   class User
-    attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles
+    attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles, :locale
 
     def initialize(params)
       params.each do |key, value|

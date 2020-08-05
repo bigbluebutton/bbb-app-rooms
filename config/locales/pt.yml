@@ -1,0 +1,125 @@
+pt:
+  default:
+    app:
+      error:          "Erro"
+    admin:
+      back:           "Voltar"
+      handler:        "Handler"
+      newroom:        "Nova sala"
+      showall:        "Exibir todas"
+      showroom:
+        text:         "Exibir"
+      editroom:
+        text:         "Editar"
+      destroyroom:
+        text:         "Remover"
+        confirmation: "Tem certeza que deseja remover esta sala?"
+    bigbluebutton:
+      moderator:      "Moderador"
+      viewer:         "Participante"
+    room:
+      created:        "A sala foi criada com sucesso"
+      edit:           "Editar"
+      editing:        "Editando sala"
+      show:           "Exibir"
+      showing:        "Exibindo sala"
+      destroy:        "Remover"
+      destroyed:      "A sala foi removida com sucesso"
+      join:           "Entrar"
+      name:           "Nome"
+      description:    "Descrição"
+      welcome:        "Boas-vindas"
+      moderator:      "Chave de moderador"
+      viewer:         "Chave de participante"
+      recording:      "Gravação"
+      recordings:     "Gravações"
+      waitmoderator:  "Aguarde moderador"
+      allmoderators:  "Todos moderadores"
+      update:         "Atualizar"
+      updated:        "Atualizado"
+      cancel:         "Cancelar"
+      tooltip:
+        recording:    "A sessão poderá ser gravada"
+        waitmoderator: "Participantes não podem entrar até que um moderador entre"
+        allmoderators: "Todos usuários serão moderadores"
+      waitmodmsg:        "Por favor espere até que um moderador entre na sala. Você será redirecionado automaticamente."
+    meeting:
+      close:           "Fechar janela"
+      close_manually:  "Esta janela deve ser fechada manualmente"
+    recording:
+        action:
+            delete:       "Delete pt"
+            edit:         "Editar"
+            protect:      "protect pt"
+            publish:      "Publish"
+            unprotect:    "Unprotect"
+            unpublish:    "Unpublish"
+        search_placeholder: "Search by Name or Description..."
+        table:
+            actions:      "Actions pt"
+            formats:      "Formats"
+            name:         "NamePt"
+            description:  "DescriptionPt"
+            date:         "DatePt"
+            duration:     "DurationPt"
+        visibility:
+            public:       "Public"
+            protected:    "Protected"
+        no_matched_recordings: "No recordings matching search criteria"
+        no_recordings: "No recordings pt"
+        formats:
+          video:        "Video"
+          presentation: "Presentation"
+          statistics:   "Statistics"
+ 
+  error:
+    http:
+      _401:
+        code:       "Unauthorized"
+        message:    "Acesso não autorizado"
+        suggestion: "Tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+        status_code: "401"
+    bigbluebutton:
+      invalid_request:
+        code:       "BBBAPICallInvalid"
+        message:    "Chamada inválida para o BigBlueButton"
+        suggestion: "Certifique-se de que o servidor BigBlueButton sendo usado está disponível e acessível para o servidor onde a aplicação LTI está instalada."
+        status_code: "500"
+    generic:
+      404:
+        code: "NotFound"
+        message: "Não encontrado"
+        suggestion: "A página que você tentou acessar não foi encontrada."
+      500:
+        code: "ServerError"
+        message: "Erro no servidor"
+        suggestion: "Por favor tente novamente mais tarde ou entre em contato com um administrador."
+    room:
+      forbidden:
+        code:       "AccessForbidden"
+        message:    "A sessão expirou"
+        suggestion: "Se você está utilizando esta sala via LTI, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+        status_code: "403"
+      not_found:
+        code:       "NotFound"
+        message:    "A sala não foi encontrada"
+        suggestion: "A sala pode ter sido removida por um administrador. Contate o suporte técnico."
+        status_code: "404"
+      invalid_secret:
+        code:       "InvalidSecret"
+        message:    "O token não pode ser validado"
+        suggestion: "O problema pode ser causado pela utilização de uma chave inválida na validação da requisição feita pelo provedor LTI."
+        status_code: "403"
+    scheduled_meeting:
+      not_found:
+        code:       "NotFound"
+        message:    "O agendamento não foi encontrado"
+        suggestion: "Ele pode ter sido removido pelo criador da sessão."
+        status_code: "404"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: "&hellip;"

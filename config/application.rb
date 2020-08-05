@@ -27,6 +27,10 @@ Bundler.require(*Rails.groups)
 
 module BbbAppRooms
   class Application < Rails::Application
+    # Configure I18n localization.
+    config.i18n.available_locales = [:en, :pt]
+    config.i18n.default_locale = :en
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

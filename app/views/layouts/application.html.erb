@@ -26,7 +26,9 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body data-controller="<%= params[:controller] %>" data-action="<%= params[:action] %>" >
+  <body lang="<%= I18n.locale %>" 
+        data-controller="<%= params[:controller] %>" 
+        data-action="<%= params[:action] %>" >
     <%= yield %>
   </body>
 </html>

@@ -29,6 +29,7 @@ class RoomsController < ApplicationController
   before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
+  before_action :set_current_locale
 
   # GET /rooms/1
   # GET /rooms/1.json
@@ -231,6 +232,7 @@ class RoomsController < ApplicationController
       last_name: launch_params['lis_person_name_family'],
       email: launch_params['lis_person_contact_email_primary'],
       roles: launch_params['roles'],
+      locale: launch_params['launch_presentation_locale'],
     }
   end
 
@@ -248,5 +250,25 @@ class RoomsController < ApplicationController
 
   def allow_iframe_requests
     response.headers.delete('X-Frame-Options')
+  end
+
+  def set_current_locale
+    locale = nil
+
+    # try to get the locale from the LTI launch, otherwise use the browser's
+    if @user.present? && @user.locale.present?
+      locale = @user.locale
+    elsif !request.env['HTTP_ACCEPT_LANGUAGE'].nil?
+      locale = request.env['HTTP_ACCEPT_LANGUAGE'].first
+    end
+
+    I18n.available_locales.each do |av_loc|
+      if /^#{av_loc}/i.match?(locale)
+        I18n.locale = av_loc
+        break
+      end
+    end
+
+    response.set_header('Content-Language', I18n.locale)
   end
 end
