@@ -24,6 +24,11 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
+  # Set a cache-control for all assets
+  config.public_file_server.headers = {
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=31536000'
+  }
+
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
@@ -39,11 +44,6 @@ Rails.application.configure do
   unless ENV['ASSET_HOST'].blank?
     config.action_controller.asset_host = ENV['ASSET_HOST']
   end
-
-  # Set a cache-control for all assets
-  config.public_file_server.headers = {
-    'Cache-Control' => 'public, s-maxage=31536000, max-age=31536000'
-  }
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
