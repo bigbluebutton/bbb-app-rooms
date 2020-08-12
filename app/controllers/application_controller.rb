@@ -12,10 +12,10 @@ class ApplicationController < ActionController::Base
   COOKIE_ROOMS_MAX_KEYS = 3
 
   unless Rails.application.config.consider_all_requests_local
-    rescue_from ActiveRecord::RecordNotFound, with: :on_404
-    rescue_from ActionController::RoutingError, with: :on_404
-    rescue_from ActionController::RoutingError, with: :on_404
     rescue_from StandardError, with: :on_500
+    rescue_from ActionController::RoutingError, with: :on_404
+    rescue_from ActiveRecord::RecordNotFound, with: :on_404
+    rescue_from ActionController::UnknownFormat, with: :on_406
   end
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
@@ -138,6 +138,11 @@ class ApplicationController < ActionController::Base
     render_error(404)
   end
 
+  # 406 Not Acceptable
+  def on_406
+    render_error(406)
+  end
+
   def on_500
     render_error(500)
   end
@@ -157,6 +162,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html { render 'shared/error', status: status }
       format.json { render json: { error: @error[:message] }, status: status }
+      format.all  { render 'shared/error', status: status, content_type: 'text/html' }
     end
   end
 

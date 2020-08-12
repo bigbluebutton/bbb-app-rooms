@@ -117,6 +117,11 @@ pt:
         code: "NotFound"
         message: "Não encontrado"
         suggestion: "A página que você tentou acessar não foi encontrada."
+      406:
+        code:       "NotAcceptable"
+        message:    "Formato não aceito"
+        suggestion: "A URL que você digitou provavelmente está incorreta."
+        status_code: "406"
       500:
         code: "ServerError"
         message: "Erro no servidor"
