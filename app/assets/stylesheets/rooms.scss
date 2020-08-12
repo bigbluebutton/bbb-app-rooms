@@ -33,7 +33,47 @@ html,body,.container {
 }
 
 .dropdown {
+  position: relative;
+  text-align: center;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content{
+  display: none;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 9;
+}
+
+/* Links inside the dropdown */
+.dropdown-content .btn {
+  color: black;
+  padding: 12px 16px;
+  border: none;
+  text-decoration: none;
+  display: block;
+  z-index: 9
+}
+
+/* The ellipses button */
+.dropbtn {
+  background-color: white;
+  color: #0A5EAC;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
   position: absolute;
+}
+
+.dropbtn:hover {
+  color: #0a5eacb2;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content .btn:hover {
+  color: white;
+  background-color: #0f70d7;
 }
 
 div #body {
