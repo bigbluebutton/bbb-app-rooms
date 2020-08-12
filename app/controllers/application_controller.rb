@@ -78,12 +78,10 @@ class ApplicationController < ActionController::Base
             end
 
     # Exit with error if room was not found
-    unless @room.present?
+    if @room.blank?
       Rails.logger.info "Couldn't find a room in the URL, returning 404"
       set_error('room', 'not_found', :not_found)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
+      respond_with_error(@error)
       return false
     end
   end
@@ -95,10 +93,8 @@ class ApplicationController < ActionController::Base
       Rails.logger.info "The session set for this room was not found or expired: #{@room.handler}"
       remove_room_session(@room)
       set_error('room', 'forbidden', :forbidden)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-      false
+      respond_with_error(@error)
+      return false
     end
   end
 
@@ -112,6 +108,13 @@ class ApplicationController < ActionController::Base
       code: t("error.#{model}.#{error}.status_code"),
       status: status
     }
+  end
+
+  def respond_with_error(error)
+    respond_to do |format|
+      format.html { render 'shared/error', status: error[:status] }
+      format.json { render json: { error: error[:message] }, status: error[:status] }
+    end
   end
 
   # The payload is used by lograge. We add more information to it here so that it is saved

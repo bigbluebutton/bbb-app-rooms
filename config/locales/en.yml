@@ -161,7 +161,7 @@ en:
       not_found:
         code:       "NotFound"
         message:    "The room was not found"
-        suggestion: "The room may have been removed by an administrator. Contact technical support."
+        suggestion: "The room you tried to access doesn't exist."
         status_code: "404"
       invalid_secret:
         code:       "InvalidSecret"

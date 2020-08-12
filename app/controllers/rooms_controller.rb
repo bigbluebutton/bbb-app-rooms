@@ -24,38 +24,26 @@ class RoomsController < ApplicationController
   end
 
   # GET /rooms/1
-  # GET /rooms/1.json
   def show
     respond_to do |format|
-      if @room
-        # TODO: do this also in a worker in the future to speed up this request
-        @room.update_recurring_meetings
+      # TODO: do this also in a worker in the future to speed up this request
+      @room.update_recurring_meetings
 
-        @scheduled_meetings = @room.scheduled_meetings.active
-                                .order(:start_at).page(params[:page])
+      @scheduled_meetings = @room.scheduled_meetings.active
+                              .order(:start_at).page(params[:page])
 
-        format.html { render :show }
-        format.json { render :show, status: :ok, location: @room }
-      else
-        format.html { render 'shared/error', status: @error[:status] }
-        format.json { render json: { error: @error[:message] }, status: @error[:status] }
-      end
+      format.html { render :show }
     end
   end
 
   def recordings
     respond_to do |format|
-      if @room
-        @recordings = get_recordings(@room)
-        format.html { render :recordings }
-      else
-        format.html { render 'shared/error', status: @error[:status] }
-      end
+      @recordings = get_recordings(@room)
+      format.html { render :recordings }
     end
   end
 
   # GET /launch
-  # GET /launch.json?
   def launch
     redirect_to(room_path(@room))
   end
@@ -114,15 +102,17 @@ class RoomsController < ApplicationController
     )
 
     unless session_params['valid']
-      Rails.logger.info "The session is not valid, returning a 401"
+      Rails.logger.info "The session is not valid, returning a 403"
       set_error('room', 'forbidden', :forbidden)
+      respond_with_error(@error)
       return
     end
 
     launch_params = session_params['message']
-    unless launch_params['user_id'] == session['omniauth_auth']['uid']
-      Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 401"
+    if launch_params['user_id'] != session['omniauth_auth']['uid']
+      Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 403"
       set_error('room', 'forbidden', :forbidden)
+      respond_with_error(@error)
       return
     end
 

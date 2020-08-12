@@ -130,7 +130,7 @@ pt:
       not_found:
         code:       "NotFound"
         message:    "A sala não foi encontrada"
-        suggestion: "A sala pode ter sido removida por um administrador. Contate o suporte técnico."
+        suggestion: "A sala que você tentou acessar não foi encontrada."
         status_code: "404"
       invalid_secret:
         code:       "InvalidSecret"
