@@ -27,17 +27,17 @@
   <% end %>
 
   <div class="field form-group input-group col-6">
-    <%= form.label :name %>&nbsp;<span class="text-muted small">*Required</span><br>
+    <%= form.label t('default.room.name') %>&nbsp;<span class="text-muted small">*Required</span><br>
     <%= form.text_field :name, :required => true, size: "45", class: "form-control input col-6" %>
   </div>
 
   <div class="field form-group input-group col-8">
-    <%= form.label :description %>
+    <%= form.label t('default.room.description') %>
     <%= form.text_area :description, size: "45x4", class: 'form-control input col-8' %>
   </div>
 
   <div class="field form-group input-group col-8">
-    <%= form.label :welcome %>
+    <%= form.label t('default.room.welcome') %>
     <%= form.text_area :welcome, size: "45x4", class: 'form-control input col-8' %>
   </div>
 
@@ -63,7 +63,7 @@
   </div>
 
   <div class="actions">
-    <%= form.submit class: "btn btn-primary" %>
+    <%= form.submit t('default.room.update'), class: "btn btn-primary" %>
     <%= form.button t('default.room.cancel'), class: "btn btn-default", name: "cancel" %>
   </div>
 <% end %>

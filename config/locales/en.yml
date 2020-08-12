@@ -111,6 +111,10 @@ en:
         protected:    "Protected"
       no_matched_recordings: "No recordings matching search criteria"
       no_recordings: "No recordings"
+      formats:
+        video:        "Video"
+        presentation: "Presentation"
+        statistics:   "Statistics"
 
   error:
     http:

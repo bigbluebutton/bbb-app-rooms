@@ -85,6 +85,10 @@ module BbbApi
 
   # Helper for converting BigBlueButton dates into the desired format.
   def recording_date(date)
+    # note: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
+    # .ordinalize does not work with other locales
+    return date.strftime("%B #{date.day}, %Y.") unless I18n.locale.eql?(:en)
+
     date.strftime("%B #{date.day.ordinalize}, %Y.")
   end
 
