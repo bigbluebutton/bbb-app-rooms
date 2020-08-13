@@ -15,4 +15,10 @@
 
 # Be sure to restart your server when you modify this file.
 
-BbbAppRooms::Application.config.session_store(:active_record_store)
+attrs = {
+  key: '_bbb_app_rooms_session',
+  secure: ENV['COOKIES_SECURE_OFF'].blank?,
+  same_site: ENV['COOKIES_SAME_SITE'].presence || 'None',
+}
+
+BbbAppRooms::Application.config.session_store(:active_record_store, **attrs)
