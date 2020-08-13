@@ -68,7 +68,7 @@ POSTGRES_USER=postgres
 # You can generate a secure one through the Greenlight docker image
 # with the command.
 #
-#   docker run --rm bigbluebutton/greenlight:v2 bundle exec rake secret
+#   docker run --rm bigbluebutton/bbb-app-rooms:latest bundle exec rake secret
 #
 SECRET_KEY_BASE=
 
