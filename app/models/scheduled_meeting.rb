@@ -16,11 +16,8 @@ class ScheduledMeeting < ApplicationRecord
 
   after_initialize :init
 
-  # TODO: temporarily added 1h to the interval so people in other timezones won't
-  # be surprised by meetings not appearing, should be fixed with a proper support to
-  # multiple timezones
   scope :active, -> (reverse = false) {
-    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - 1.hour]
+    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc]
     if reverse
       where.not(*attrs)
     else
@@ -86,11 +83,8 @@ class ScheduledMeeting < ApplicationRecord
     )
   end
 
-  # TODO: temporarily added 1h to the interval so people in other timezones won't
-  # be surprised by meetings not appearing, should be fixed with a proper support to
-  # multiple timezones
   def active?
-    start_at + duration.seconds >= DateTime.now.utc - 1.hour
+    start_at + duration.seconds >= DateTime.now.utc
   end
 
   def meeting_id
