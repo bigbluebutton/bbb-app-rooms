@@ -37,7 +37,7 @@ RAILS_LOG_TO_STDOUT=true
 # LOGRAGE_ENABLED=1
 # LOG_LEVEL=info
 
-## Use to serve assets through the app (Required for now)
+# Serve assets through the app
 RAILS_SERVE_STATIC_FILES=true
 
 # To serve assets from a CDN
@@ -50,6 +50,8 @@ RAILS_SERVE_STATIC_FILES=true
 # Check all available options with:
 # ActiveSupport::TimeZone.all.map { |tz| tz.name }
 DEFAULT_TIMEZONE=UTC
+# If set, will ignore the timezone in the cookie (gem browser-timezone-rails)
+# FORCE_DEFAULT_TIMEZONE=true
 
 APP_NAME=BbbAppRooms
 

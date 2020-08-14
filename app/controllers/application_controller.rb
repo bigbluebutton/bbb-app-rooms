@@ -227,4 +227,14 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  # TODO: temporary, disable the timezone via cookie until it's 100%
+  # Overrides https://github.com/mconf/browser-timezone-rails/blob/master/lib/browser-timezone-rails.rb#L29
+  def browser_timezone
+    if Rails.application.config.force_default_timezone
+      Rails.application.config.default_timezone
+    else
+      cookies['browser.timezone']
+    end
+  end
 end

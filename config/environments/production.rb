@@ -20,14 +20,16 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  if ENV['RAILS_SERVE_STATIC_FILES'].present?
+    # Disable serving static files from the `/public` folder by default since
+    # Apache or NGINX already handles this.
+    config.public_file_server.enabled = true
 
-  # Set a cache-control for all assets
-  config.public_file_server.headers = {
-    'Cache-Control' => 'public, s-maxage=31536000, max-age=31536000'
-  }
+    # Set a cache-control for all assets
+    config.public_file_server.headers = {
+      'Cache-Control' => 'public, s-maxage=31536000, max-age=31536000'
+    }
+  end
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier

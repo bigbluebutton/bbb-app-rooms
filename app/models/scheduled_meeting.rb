@@ -17,7 +17,10 @@ class ScheduledMeeting < ApplicationRecord
   after_initialize :init
 
   scope :active, -> (reverse = false) {
-    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc]
+    # TODO: temporary, disable the timezone via cookie until it's 100%
+    tolerance = Rails.application.config.force_default_timezone ? 1.hour : 0.seconds
+
+    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - tolerance]
     if reverse
       where.not(*attrs)
     else
@@ -84,7 +87,10 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def active?
-    start_at + duration.seconds >= DateTime.now.utc
+    # TODO: temporary, disable the timezone via cookie until it's 100%
+    tolerance = Rails.application.config.force_default_timezone ? 1.hour : 0.seconds
+
+    start_at + duration.seconds >= DateTime.now.utc - tolerance
   end
 
   def meeting_id

@@ -52,6 +52,8 @@ module BbbAppRooms
                            end
 
     config.default_timezone = ENV["DEFAULT_TIMEZONE"] || 'UTC'
+    config.force_default_timezone = ENV['FORCE_DEFAULT_TIMEZONE'] == 'true'
+
     config.app_name = ENV["APP_NAME"] || 'BbbAppRooms'
 
     config.launch_duration_mins =
