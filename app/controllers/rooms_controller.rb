@@ -202,7 +202,7 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
   end
 
-  def new_room_params(handler, name, description, recording = false, wait_moderator = false, all_moderators = false)
+  def new_room_params(handler, name, description, recording = true, wait_moderator = false, all_moderators = false)
     params.permit.merge(
       handler: handler,
       name: name,
@@ -218,7 +218,7 @@ class RoomsController < ApplicationController
     handler = resource_handler(launch_params)
     name = launch_params['resource_link_title']
     description = launch_params['resource_link_description']
-    record = message_has_custom?(launch_params, 'record')
+    record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
     wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
     new_room_params(handler, name, description, record, wait_moderator, all_moderators)
