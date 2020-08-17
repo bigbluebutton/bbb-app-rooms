@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.1.0 Elos - 2020-08-16
+
+* [ELOSP-457] Use `oauth_consumer_key` when generating room handlers. This key is set by the broker
+  in the launch, so it's more secured, can't be edited by the LMS. This makes it more certain
+  that handlers will be unique for each key used, so different clients won't mess with
+  others' rooms.
+* Add favicons to `public/rooms/`, so they don't use the fingerprints when served. The links in
+  the XML the broker serves use this URL.
+* Auto join the user if going to /wait and the meeting is running.
+* Set `cache-control` for all assets when serving assets in production.
+* Paginate the list of scheduled meetings with kaminari.
+* Use the browser's timezone over the default timezone. After a request, a js sets the timezone in
+  a cookie so the server can use it. In the first request it won't be there, so it will use the
+  default timezone set in the env variable.
+* Add env variable `FORCE_DEFAULT_TIMEZONE` to force the default timezone and ignore the one
+  in the cookie. Brings back the old behaviour.
+* Show the user the time zone being used in the dates right below the tables and in the tooltip
+  of the form components that have a date/time.
+* Better errors in general, mostly when URLs are not found (weird links). Less false 500 errors.
+
+
 ## 0.0.16 Elos - 2020-08-02
 
 * Add recurring events with the options: weekly and biweekly. The event is reused, it just

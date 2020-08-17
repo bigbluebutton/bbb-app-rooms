@@ -67,4 +67,4 @@ CABLE_ENABLED=true
 # By default the cookies will set SameSite=None and Secure
 # Set the flags below to alter this behavior
 # COOKIES_SECURE_OFF=1
-# COOKIES_SAME_SITE=1
+# COOKIES_SAME_SITE=None
