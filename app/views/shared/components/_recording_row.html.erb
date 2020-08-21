@@ -50,12 +50,12 @@
     <%= recording_length(recording[:playbacks]) %>
   </td>
   <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-    <td class="pull-right">
+    <td>
       <div class="item-action dropdown">
         <a href="javascript:void(0)" data-toggle="dropdown" class="icon">
-          <i class="fas fa-ellipsis-v px-4"></i>
+          <i class="fas fa-ellipsis-v dropbtn"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-content dropdown-menu dropdown-menu-right">
           <% if recording[:published] %>
             <%= button_to recording_unpublish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
               <i class="dropdown-icon fas fa-book"></i> <%= t("default.recording.action.unpublish") %>
