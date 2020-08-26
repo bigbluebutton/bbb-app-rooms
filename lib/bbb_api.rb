@@ -38,6 +38,17 @@ module BbbApi
     bbb.is_meeting_running?(@room.handler)
   end
 
+  def meeting_info
+    # return unless mod_in_room?
+    bbb.get_meeting_info(@room.handler, @user)
+  end
+
+  def end_meeting
+    return bbb.end_meeting(@room.handler, meeting_info[:moderatorPW]) if mod_in_room?
+
+    mod_in_room?
+  end
+
   def join_meeting_url
     return unless @room && @user
 

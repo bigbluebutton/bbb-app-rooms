@@ -30,6 +30,7 @@ class RoomsController < ApplicationController
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
+  after_action :broadcast_meeting, only: [:show, :launch, :meeting_join]
 
   # GET /rooms/1
   # GET /rooms/1.json
@@ -109,7 +110,14 @@ class RoomsController < ApplicationController
 
   # GET /rooms/:id/meeting/end
   # GET /rooms/:id/meeting/end.json
-  def meeting_end; end
+  def meeting_end
+    end_meeting
+    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@room, action: 'end')
+  end
+
+  def broadcast_meeting
+    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_now(@room, meeting_in_progress: mod_in_room?)
+  end
 
   # GET /rooms/:id/meeting/close
   def meeting_close
@@ -146,7 +154,7 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles
+  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :mod_in_room?
 
   private
 

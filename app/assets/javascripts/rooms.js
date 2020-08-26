@@ -18,7 +18,6 @@
 
 $(document).on('turbolinks:load', function(){
     $('#join-room-btn').on('click', function() {
-        console.log("click on join room btn");
         var join_room_url = $(this).data('url');
         var room_id = $(this).data('room');
 
@@ -31,7 +30,6 @@ $(document).on('turbolinks:load', function(){
                 if (data.wait_for_mod === true) { 
                     $('#wait-for-mod-msg').show();
                 } else {
-                    console.log("No moderator needed, redirecting");
                     window.open(data.meeting);
                 }
                 App.cable.subscriptions.create({
@@ -39,17 +37,17 @@ $(document).on('turbolinks:load', function(){
                     room: room_id
                 }, {
                     connected: function(data) {
-                        console.log("connected");
+                        console.log("connected to wait");
                     },
                     disconnected: function(data) {
-                        console.log("disconnected");
+                        console.log("disconnected to wait");
                         console.log(data);
                     },
                     rejected: function() {
-                        console.log("rejected");
+                        console.log("rejected from wait");
                     },
                     received: function(data) {
-                        console.log(data);
+                        console.log("This is the wait data: " + data);
 
                         $.ajax({
                             url: join_room_url,
@@ -60,6 +58,20 @@ $(document).on('turbolinks:load', function(){
                     }
                 });
             }
+        });
+
+        
+    })
+
+    $('#end-meeting-btn').on('click', function() {
+        var end_meeting_url = $(this).data('url');
+        var room_id = $(this).data('room');
+
+        $.ajax({
+            url: end_meeting_url,
+            type: "POST",
+            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+            data: "",
         });
     })
 });

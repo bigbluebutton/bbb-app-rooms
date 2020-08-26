@@ -50,5 +50,7 @@ module BbbAppRooms
 
     # Mount Action Cable outside main process or domain
     config.action_cable.url = "wss://#{ENV['URL_HOST']}#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/cable"
+
+    config.generators.javascript_engine = :js
   end
 end
