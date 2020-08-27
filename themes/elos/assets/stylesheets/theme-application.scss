@@ -136,12 +136,19 @@ body.theme-elos {
     right: blocks(2);
     left: blocks(2);
     flex-direction: column;
+    z-index: var(--z-index-toast);
 
     .toast {
       margin-bottom: blocks(1);
+      max-width: 60%;
+
+      // so hidden toasts don't mess with visible toasts
+      height: 0;
+      &.show { height: auto; }
 
       .toast-header {
         border-bottom: none;
+        padding: 0.5rem 1.5rem;
       }
 
       /* &.toast-notice, &.toast-success { */
