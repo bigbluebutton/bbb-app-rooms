@@ -32,6 +32,7 @@
 en:
   default:
     app:
+      bigbluebutton_error: "Error contacting the conference server. Please try again later or contact support. (%{status})"
       error:          "Error"
     admin:
       back:           "Back"

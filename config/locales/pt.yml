@@ -1,6 +1,7 @@
 pt:
   default:
     app:
+      bigbluebutton_error: "Erro de comunicação com o servidor de conferência. Por favor tente novamente ou entre em contato com o suporte. (%{status})"
       error:          "Erro"
     admin:
       back:           "Voltar"

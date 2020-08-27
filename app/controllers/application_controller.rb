@@ -12,11 +12,21 @@ class ApplicationController < ActionController::Base
   COOKIE_ROOMS_MAX_KEYS = 3
 
   unless Rails.application.config.consider_all_requests_local
-    rescue_from StandardError, with: :on_500
+    rescue_from StandardError do |e|
+      on_500(e)
+    end
     rescue_from ActionController::RoutingError, with: :on_404
     rescue_from ActiveRecord::RecordNotFound, with: :on_404
     rescue_from ActionController::UnknownFormat, with: :on_406
   end
+
+    rescue_from BigBlueButton::BigBlueButtonException do |e|
+      Rails.logger.error "Exception caught: error=#{e.key} " \
+                         "class=#{e.class.name} message='#{e.message}'"
+
+      redirect_back(fallback_location: room_path(@room),
+                    notice: t('default.app.bigbluebutton_error', status: e.key))
+    end
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
@@ -143,7 +153,9 @@ class ApplicationController < ActionController::Base
     render_error(406)
   end
 
-  def on_500
+  def on_500(exception = nil)
+    Rails.logger.error "Exception caught: class=#{exception.class.name} " \
+                       "message='#{exception.message}'"
     render_error(500)
   end
 
