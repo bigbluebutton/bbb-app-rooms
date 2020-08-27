@@ -137,6 +137,11 @@ en:
         message:    "Unauthorized access"
         suggestion: "Try launching the app again by using the link or refreshing the browser."
         status_code: "401"
+      _404:
+        code:       "NotFound"
+        message:    "Not found"
+        suggestion: "The page you tried to access does not exist."
+        status_code: "404"
     bigbluebutton:
       invalid_request:
         code:       "BBBAPICallInvalid"

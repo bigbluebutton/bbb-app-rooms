@@ -19,6 +19,9 @@ pt:
       scheduled_meeting:
         all_moderators: "Todos entram como moderadores"
         description: "Descrição (opcional)"
+        disable_external_link: "Desabilitar link externo"
+        disable_private_chat: "Desabilitar chats privados"
+        disable_note: "Desabilitar notas compartilhadas"
         duration: "Duração"
         name: "Nome da sessão"
         recording: "Permitir que a sessão seja gravada"

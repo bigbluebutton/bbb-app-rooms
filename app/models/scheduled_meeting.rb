@@ -104,6 +104,8 @@ class ScheduledMeeting < ApplicationRecord
       attendeePW: self.room.viewer,
       welcome: self.welcome,
       record: self.recording,
+      lockSettingsDisablePrivateChat: self.disable_private_chat,
+      lockSettingsDisableNote: self.disable_note
     }
 
     # set the duration + 1h if configured to do so in the consumer

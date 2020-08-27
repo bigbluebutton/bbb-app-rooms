@@ -19,6 +19,9 @@ en:
       scheduled_meeting:
         all_moderators: "Everyone joins as moderator"
         description: "Description (optional)"
+        disable_external_link: "Disable external link"
+        disable_private_chat: "Disable private chats"
+        disable_note: "Disable shared notes"
         duration: "Duration"
         name: "Session name"
         recording: "Allow the session to be recorded"

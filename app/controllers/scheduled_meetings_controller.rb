@@ -132,6 +132,11 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def external
+    # If the external link is disabled, users should get an error
+    # whether are they signed in or not
+    if @scheduled_meeting.disable_external_link
+      redirect_to errors_path(404)
+    end
     # allow signed in users to use this page, but autofill the inputs
     # and don't let users change them
     if @user.present?
@@ -167,7 +172,8 @@ class ScheduledMeetingsController < ApplicationController
 
   def scheduled_meeting_params(room)
     attrs = [
-      :name, :recording, :duration, :description, :welcome, :repeat
+      :name, :recording, :duration, :description, :welcome, :repeat,
+      :disable_external_link, :disable_private_chat, :disable_note
     ]
     attrs << [:wait_moderator] if room.allow_wait_moderator
     attrs << [:all_moderators] if room.allow_all_moderators
