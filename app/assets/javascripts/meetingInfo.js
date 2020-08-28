@@ -8,16 +8,13 @@ $(document).on('turbolinks:load', function(){
   
     },
     received: function(data) {
-        console.log("received data: " + JSON.stringify(data));
-        if (data.meeting_in_progress == true){
-          console.log("meeting in progress")
-          show_end_meeting_btn();
-        }
-        if (data.action == "end"){
-          console.log("ended meeting");
-          hide_end_meeting_btn();
-          
-        }
+      console.log("received data: " + JSON.stringify(data));
+      if (data.meeting_in_progress == true){
+        show_end_meeting_btn();
+      }
+      if (data.action == "end"){
+        hide_end_meeting_btn();          
+      }
     }
   });
 });

@@ -16,10 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
+require 'user'
+require 'bbb_api'
 class NotifyMeetingWatcherJob < ApplicationJob
+  include BbbApi
+  include BbbAppRooms
+  include ApplicationHelper
+
   queue_as :default
 
   def perform(room, data)
+    @room = room
+    data[:meeting_in_progress] = mod_in_room?
     MeetingInfoChannel.broadcast_to(room, data)
   end
 end
