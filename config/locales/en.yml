@@ -82,6 +82,7 @@ en:
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
+      endmeeting:     "End Session"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"

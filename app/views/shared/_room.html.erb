@@ -51,8 +51,17 @@
     <h3><%= @room.description %></h3>
 
     <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+    
+    <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+      <% if !mod_in_room? %>
+        <% style =  "display:none;"%> 
+      <% end %>  
+
+      <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "btn btn-danger", id: 'end-meeting-btn', style: style, data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+    <% end %> 
 
     <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
+    
     </div>
   </div>
 
