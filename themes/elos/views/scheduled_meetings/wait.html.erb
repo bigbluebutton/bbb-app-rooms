@@ -4,10 +4,17 @@
      data-join-url="<%= join_room_scheduled_meeting_path(@room, @scheduled_meeting) %>"
      data-btn-timeout="<%= Rails.configuration.cable_btn_timeout %>"
      data-is-running="<%= @is_running %>"
+     data-auto="<%= @auto_join %>"
      data-join-method="post">
 
   <%= image_tag 'guest-wait.svg' %>
-  <p><%= t('default.scheduled_meeting.wait.message', name: @full_name).html_safe %></p>
+  <p>
+    <% if @auto_join %>
+      <%= t('default.scheduled_meeting.wait.message_auto', name: @full_name).html_safe %>
+    <% else %>
+      <%= t('default.scheduled_meeting.wait.message', name: @full_name).html_safe %>
+    <% end %>
+  </p>
 
   <div id="wait-for-moderator-back" style="display: none;">
     <%= button_to t('scheduled_meetings.wait.retry'), @post_to,

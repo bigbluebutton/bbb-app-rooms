@@ -116,6 +116,14 @@ class ScheduledMeetingsController < ApplicationController
       return
     end
 
+    # if this flag is set in the session, wait a short while and try to join again
+    # this happens when users try to create a meeting that's already being created
+    auto = get_from_room_session(@room, 'auto_join')
+    if auto.present?
+      remove_from_room_session(@room, 'auto_join')
+      @auto_join = true
+    end
+
     # users with a session and anonymous users can wait in this page
     # decide here where they will go to when the meeting starts
     if @user.present?

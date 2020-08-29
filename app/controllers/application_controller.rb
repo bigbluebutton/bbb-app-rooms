@@ -24,8 +24,13 @@ class ApplicationController < ActionController::Base
       Rails.logger.error "Exception caught: error=#{e.key} " \
                          "class=#{e.class.name} message='#{e.message}'"
 
-      redirect_back(fallback_location: room_path(@room),
-                    notice: t('default.app.bigbluebutton_error', status: e.key))
+      if e.key.to_s == 'meetingAlreadyBeingCreated' && @room.present? && @scheduled_meeting.present?
+        add_to_room_session(@room, 'auto_join', 'true')
+        redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
+      else
+        redirect_back(fallback_location: room_path(@room),
+                      notice: t('default.app.bigbluebutton_error', status: e.key))
+      end
     end
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
@@ -221,9 +226,26 @@ class ApplicationController < ActionController::Base
   end
 
   def remove_room_session(room)
-    if room.present? && session.key?(COOKIE_ROOMS_SCOPE) &&
-       session[COOKIE_ROOMS_SCOPE].key?(room.handler)
+    if room.present? && session.dig(COOKIE_ROOMS_SCOPE, room.handler)
       session[COOKIE_ROOMS_SCOPE].delete(room.handler)
+    end
+  end
+
+  def add_to_room_session(room, key, value)
+    if session.dig(COOKIE_ROOMS_SCOPE, room.handler)
+      session[COOKIE_ROOMS_SCOPE][key] = value
+    end
+  end
+
+  def get_from_room_session(room, key)
+    if session.dig(COOKIE_ROOMS_SCOPE, room.handler)
+      session[COOKIE_ROOMS_SCOPE][key]
+    end
+  end
+
+  def remove_from_room_session(room, key)
+    if session.dig(COOKIE_ROOMS_SCOPE, room.handler, key)
+      session[COOKIE_ROOMS_SCOPE][room.handler].delete(key)
     end
   end
 

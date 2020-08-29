@@ -83,6 +83,7 @@ pt:
       updated:        "O agendamento foi atualizado"
       wait:
         message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde alguns instantes e tente novamente."
+        message_auto: "Olá <strong>%{name}</strong>, sua sessão está sendo criada, por favor aguarde alguns instantes."
       waitmoderator:  "Aguardar moderador"
     session:
       retry:

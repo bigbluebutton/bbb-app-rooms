@@ -43,6 +43,14 @@ $(document).on('turbolinks:load', function(){
       return;
     }
 
+    var auto = $('#wait-for-moderator').data('auto');
+    if (auto === true) {
+      console.log('Auto joining in a few seconds');
+      var delay = 2000 + Math.floor(Math.random()*1000);
+      setTimeout(function() { joinSession(); }, delay);
+      return;
+    }
+
     if (cable === true) {
       console.log('Setting up the websocket');
       App.cable.subscriptions.create({

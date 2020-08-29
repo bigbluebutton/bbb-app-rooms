@@ -114,6 +114,7 @@ en:
       updated:        "The session schedule was updated"
       wait:
         message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait a few moments and try again."
+        message_auto: "Hello <strong>%{name}</strong>, your session is being created, please wait a few moments."
       waitmoderator:  "Wait for moderator"
     session:
       retry:
