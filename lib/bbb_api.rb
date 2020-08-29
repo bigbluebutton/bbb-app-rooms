@@ -17,13 +17,16 @@ module BbbApi
     return unless scheduled_meeting.present? && user.present?
 
     room = scheduled_meeting.room
-    bbb(room).create_meeting(
-      scheduled_meeting.name,
-      scheduled_meeting.meeting_id,
-      scheduled_meeting.create_options(user).merge(
-        { logoutURL: autoclose_url }
+
+    unless bbb(room).is_meeting_running?(scheduled_meeting.meeting_id)
+      bbb(room).create_meeting(
+        scheduled_meeting.name,
+        scheduled_meeting.meeting_id,
+        scheduled_meeting.create_options(user).merge(
+          { logoutURL: autoclose_url }
+        )
       )
-    )
+    end
 
     is_moderator = user.moderator?(Abilities.moderator_roles) ||
                    scheduled_meeting.check_all_moderators
