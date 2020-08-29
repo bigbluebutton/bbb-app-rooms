@@ -82,8 +82,12 @@ class ScheduledMeetingsController < ApplicationController
       if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
         redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
       else
-        # join as moderator (start the meeting) and notify users
-        NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
+        # notify users if cable is enabled
+        if Rails.application.config.cable_enabled
+          NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
+        end
+
+        # join as moderator (creates the meeting if not created yet)
         redirect_to join_api_url(@scheduled_meeting, @user)
       end
 
