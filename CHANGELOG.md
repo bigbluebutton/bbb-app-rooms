@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.1.1 Elos - 2020-08-29
+
+* Better rescue for BigBlueButton exceptions so they won't throw a 500 error, instead they will
+  show a toast with the error for the user. Also log all 500 errors so we can track them.
+* Auto join the user after a few seconds if a `meetingAlreadyBeingCreated` error happens.
+* Create the meeting only if it's not already running. Would create the meeting always when a user
+  with permission to create would try to join.
+* [ELOSP-498] Fix toasts not being closable.
+* Notify connected users that a meeting was created only if cable is enabled.
+
+
 ## 0.1.0 Elos - 2020-08-16
 
 * [ELOSP-457] Use `oauth_consumer_key` when generating room handlers. This key is set by the broker
