@@ -27,6 +27,8 @@ class NotifyMeetingWatcherJob < ApplicationJob
 
   def perform(room, data)
     @room = room
+    data[:elapsed_time] = meeting_start_time
+    data[:participant_count] = participant_count
     data[:meeting_in_progress] = mod_in_room?
     MeetingInfoChannel.broadcast_to(room, data)
   end
