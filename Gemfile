@@ -48,8 +48,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
   gem 'rspec'
-  gem 'rspec-rails', '~> 4.0.0'
   gem 'rspec_junit_formatter'
+  gem 'rspec-rails', '~> 4.0.0'
   gem 'rubocop', '~> 0.90.0', require: false
   gem 'rubocop-rails', '~> 2.4.0', require: false
 end
