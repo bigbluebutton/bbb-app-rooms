@@ -194,13 +194,14 @@ class RoomsController < ApplicationController
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
+    tenant = session_params['tenant']
     launch_params = session_params['message']
 
     # Exit with error if user is not authenticated.
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
+    @room = Room.find_or_create_by(tenant: tenant, handler: resource_handler(launch_params)) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
     user_params = launch_params_to_new_user_params(launch_params)

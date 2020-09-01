@@ -1,21 +1,3 @@
-# frozen_string_literal: true
-
-#  BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
-#
-#  Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
-#
-#  This program is free software; you can redistribute it and/or modify it under the
-#  terms of the GNU Lesser General Public License as published by the Free Software
-#  Foundation; either version 3.0 of the License, or (at your option) any later
-#  version.
-#
-#  BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
-#  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-#  PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-#
-#  You should have received a copy of the GNU Lesser General Public License along
-#  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -28,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_30_170530) do
+ActiveRecord::Schema.define(version: 2020_09_01_140520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +27,8 @@ ActiveRecord::Schema.define(version: 2020_06_30_170530) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "handler"
-    t.index ["handler"], name: "index_rooms_on_handler"
+    t.string "tenant"
+    t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
