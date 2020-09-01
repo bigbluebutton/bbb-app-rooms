@@ -68,6 +68,17 @@
           <%= button_to recording_delete_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
             <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("default.recording.action.delete") %>
           <% end %>
+          <% if recording[:protected] != nil # check if protected field exists %>
+            <% if recording[:protected] == "true" %>
+                <%= button_to recording_unprotect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+                  <i class="dropdown-icon fas fa-unlock-alt"></i> <%= t("default.recording.action.unprotect") %>
+                <% end %>
+            <% else %>
+                <%= button_to recording_protect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+                  <i class="dropdown-icon fas fa-lock"></i> <%= t("default.recording.action.protect") %>
+                <% end %>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </td>
