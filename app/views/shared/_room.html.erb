@@ -112,7 +112,7 @@
                   <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                 </td>
               </tr>
-              <% if recordings.empty? %>
+              <% if recordings.empty? || Rails.configuration.disable_recordings %>
                 <tr>
                   <td colspan="7" class="text-center h4 p-6 font-weight-normal">
                     <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>

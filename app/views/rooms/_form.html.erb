@@ -44,11 +44,13 @@
   <%= form.hidden_field :moderator, value: @room.moderator %>
   <%= form.hidden_field :viewer, value: @room.viewer %>
 
-  <div class="field form-group input-group">
-    <%= form.check_box :recording %>&nbsp;
-    <b><%= t('default.room.recording') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
-  </div>
+  <% if !Rails.configuration.disable_recordings %>
+    <div class="field form-group input-group">
+      <%= form.check_box :recording %>&nbsp;
+      <b><%= t('default.room.recording') %></b>&nbsp;
+      <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
+    </div>
+  <% end %>
 
   <div class="field form-group input-group">
     <%= form.check_box :wait_moderator %>&nbsp;
