@@ -30,7 +30,7 @@ class RoomsController < ApplicationController
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
-  after_action :broadcast_meeting, only: [:show, :launch, :meeting_join]
+  after_action :broadcast_meeting, only: [:show, :launch, :meeting_end]
 
   # GET /rooms/1
   # GET /rooms/1.json
@@ -104,6 +104,7 @@ class RoomsController < ApplicationController
   def meeting_join
     # make user wait until moderator is in room
     wait = wait_for_mod? && !mod_in_room?
+    broadcast_meeting(action: 'join', delay: true) unless wait
     NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room) unless wait
     render(json: { wait_for_mod: wait, meeting: join_meeting_url }, status: :ok)
   end
@@ -112,18 +113,21 @@ class RoomsController < ApplicationController
   # GET /rooms/:id/meeting/end.json
   def meeting_end
     end_meeting
-    broadcast_meeting('end')
   end
 
-  def broadcast_meeting(action = 'none')
-    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@room, action: action)
+  def broadcast_meeting(action: 'none', delay: false)
+    if delay
+      NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@room, action: action)
+    else
+      NotifyMeetingWatcherJob.perform_now(@room, action: action)
+    end
   end
 
   # GET /rooms/:id/meeting/close
   def meeting_close
     respond_to do |format|
+      broadcast_meeting(action: 'someone left', delay: true)
       format.html { render :autoclose }
-      broadcast_meeting('end')
     end
   end
 

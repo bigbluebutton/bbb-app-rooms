@@ -20,6 +20,7 @@ class MeetingInfoChannel < ApplicationCable::Channel
   def subscribed
     @room = Room.find(params[:room_id])
     stream_for(@room)
+    NotifyMeetingWatcherJob.perform_now(@room, {})
   end
 
   def unsubscribed
