@@ -5,7 +5,6 @@ $(document).on('turbolinks:load', function(){
         console.log("Connected to meeting info channel");
     },
     disconnected: function() {
-      startTime = 0; // reset
     },
     received: function(data) {
       console.log("received data: " + JSON.stringify(data));
