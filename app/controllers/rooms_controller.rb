@@ -123,7 +123,7 @@ class RoomsController < ApplicationController
   def meeting_close
     respond_to do |format|
       format.html { render :autoclose }
-      broadcast_meeting('end')
+      mod_in_room? ? broadcast_meeting : broadcast_meeting('end')
     end
   end
 
