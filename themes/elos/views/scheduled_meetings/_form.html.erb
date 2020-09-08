@@ -60,30 +60,57 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <div class="form-check col-12">
-      <%= form.check_box :recording, class: "form-check-input" %>
-      <%= form.label :recording, class: "form-check-label" %>
+  <div class="form-row">
+    <div class="form-group col-12 col-md-6">
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :recording, class: "form-check-input" %>
+          <%= form.label :recording, class: "form-check-label" %>
+        </div>
+      </div>
+
+      <% if @room.allow_wait_moderator %>
+        <div class="form-group">
+          <div class="form-check">
+            <%= form.check_box :wait_moderator, class: "form-check-input" %>
+            <%= form.label :wait_moderator, class: "form-check-label" %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @room.allow_all_moderators %>
+        <div class="form-group">
+          <div class="form-check">
+            <%= form.check_box :all_moderators, class: "form-check-input" %>
+            <%= form.label :all_moderators, class: "form-check-label" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-group col-12 col-md-6">
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_external_link, class: "form-check-input" %>
+          <%= form.label :disable_external_link, class: "form-check-label" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_private_chat, class: "form-check-input" %>
+          <%= form.label :disable_private_chat, class: "form-check-label" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_note, class: "form-check-input" %>
+          <%= form.label :disable_note, class: "form-check-label" %>
+        </div>
+      </div>
     </div>
   </div>
-
-  <% if @room.allow_wait_moderator %>
-    <div class="form-group">
-      <div class="form-check col-12">
-        <%= form.check_box :wait_moderator, class: "form-check-input" %>
-        <%= form.label :wait_moderator, class: "form-check-label" %>
-      </div>
-    </div>
-  <% end %>
-
-  <% if @room.allow_all_moderators %>
-    <div class="form-group">
-      <div class="form-check col-12">
-        <%= form.check_box :all_moderators, class: "form-check-input" %>
-        <%= form.label :all_moderators, class: "form-check-label" %>
-      </div>
-    </div>
-  <% end %>
 
   <div class="form-actions">
     <%= link_to t('_all.cancel'), room_path(@room), class: "btn btn-light" %>
