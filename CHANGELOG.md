@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.1.2 Elos - 2020-09-13
+
+* [ELOSP-454] New configuration options in conferences (by default they are all false, so
+  that the features are enabled):
+  * Disable the external link;
+  * Disable private chat;
+  * Disable shared notes.
+
+
 ## 0.1.1 Elos - 2020-08-29
 
 * Better rescue for BigBlueButton exceptions so they won't throw a 500 error, instead they will
