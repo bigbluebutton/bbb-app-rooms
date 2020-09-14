@@ -198,14 +198,15 @@ class RoomsController < ApplicationController
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
-    tenant = session_params['tenant']
     launch_params = session_params['message']
 
     # Exit with error if user is not authenticated.
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @room = Room.find_or_create_by(tenant: tenant, handler: resource_handler(launch_params)) do |room|
+    tenant_uid =  session_params['tenant'] || ''
+    resource_handler = Digest::SHA1.hexdigest('rooms' + tenant_uid + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
+    @room = Room.find_or_create_by(handler: resource_handler, tenant: session_params['tenant']) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
     user_params = launch_params_to_new_user_params(launch_params)
@@ -229,7 +230,6 @@ class RoomsController < ApplicationController
   end
 
   def launch_params_to_new_room_params(launch_params)
-    handler = resource_handler(launch_params)
     name = launch_params['resource_link_title']
     description = launch_params['resource_link_description']
     record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
@@ -256,10 +256,6 @@ class RoomsController < ApplicationController
 
   def check_for_cancel
     redirect_to(room_path(@room, launch_nonce: params[:launch_nonce])) if params[:cancel]
-  end
-
-  def resource_handler(params)
-    Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
   end
 
   def allow_iframe_requests
