@@ -51,6 +51,11 @@ module BbbAppRooms
     # Mount Action Cable outside main process or domain
     config.action_cable.url = "wss://#{ENV['URL_HOST']}#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/cable"
 
+    # Settings for external services.
+    config.cache_enabled = ENV['CACHE_ENABLED'] || true
+    config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
+    config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
+
     config.generators.javascript_engine = :js
   end
 end

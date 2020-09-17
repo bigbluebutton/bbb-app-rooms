@@ -194,7 +194,8 @@ class RoomsController < ApplicationController
   def set_launch
     # Pull the Launch request_parameters.
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
-    session_params = JSON.parse(RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"))
+    get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+    session_params = JSON.parse(get_response)
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
@@ -204,9 +205,9 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    tenant_uid =  session_params['tenant'] || ''
-    resource_handler = Digest::SHA1.hexdigest('rooms' + tenant_uid + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
-    @room = Room.find_or_create_by(handler: resource_handler, tenant: session_params['tenant']) do |room|
+    @tenant =  session_params['tenant']
+    resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
+    @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
     user_params = launch_params_to_new_user_params(launch_params)
@@ -217,9 +218,8 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
   end
 
-  def new_room_params(handler, name, description, recording = true, wait_moderator = false, all_moderators = false)
+  def new_room_params(name, description, recording = true, wait_moderator = false, all_moderators = false)
     params.permit.merge(
-      handler: handler,
       name: name,
       description: description,
       welcome: '',
@@ -235,7 +235,7 @@ class RoomsController < ApplicationController
     record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
     wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
-    new_room_params(handler, name, description, record, wait_moderator, all_moderators)
+    new_room_params(name, description, record, wait_moderator, all_moderators)
   end
 
   def launch_params_to_new_user_params(launch_params)
