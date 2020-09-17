@@ -17,7 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 class ErrorsController < ApplicationController
-  include ApplicationHelper
+  include OmniauthHelper
 
   def index
     @error = { code: params[:code],

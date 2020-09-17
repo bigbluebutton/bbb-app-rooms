@@ -16,13 +16,14 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'user'
+require 'bbb_app_rooms/user'
 require 'bbb_api'
 
 class RoomsController < ApplicationController
-  include ApplicationHelper
   include BbbApi
   include BbbAppRooms
+  include BbbHelper
+  include OmniauthHelper
 
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]

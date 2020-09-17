@@ -16,25 +16,29 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'bbb_app_rooms/user'
-require 'bbb_api'
-class NotifyMeetingWatcherJob < ApplicationJob
-  include BbbApi
-  include BbbAppRooms
-  include ApplicationHelper
+module OmniauthHelper
+  def omniauth_bbbltibroker_url(path = nil)
+    url = Rails.configuration.omniauth_site
+    url += Rails.configuration.omniauth_root if Rails.configuration.omniauth_root.present?
+    url += path unless path.nil?
+    url
+  end
 
-  queue_as :default
+  def omniauth_client_token(lti_broker_url)
+    oauth_options = {
+      grant_type: 'client_credentials',
+      client_id: Rails.configuration.omniauth_key,
+      client_secret: Rails.configuration.omniauth_secret,
+    }
+    response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
+    JSON.parse(response)['access_token']
+  end
 
-  def perform(room, data)
-    @room = room
-    data[:meeting_in_progress] = mod_in_room?
-    if !data[:meeting_in_progress]
-      data[:action] = 'end'
-    else
-      data[:elapsed_time] = meeting_start_time
-      data[:participant_count] = participant_count
+  def omniauth_provider?(code)
+    provider = code.to_s
+    OmniAuth.strategies.each do |strategy|
+      return true if provider.downcase == strategy.to_s.demodulize.downcase
     end
-
-    MeetingInfoChannel.broadcast_to(room, data)
+    false
   end
 end

@@ -20,7 +20,6 @@ require 'net/http'
 require 'xmlsimple'
 
 module BbbApi
-
   # Rereives info from External Tenant Manager in regards to the tenant.
   def retrieve_tenant_info(tenant)
       # Check up cached info.

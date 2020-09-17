@@ -15,6 +15,7 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+
 module BbbAppRooms
   class User
     attr_accessor :uid, :full_name, :first_name, :last_name, :email, :roles, :locale
