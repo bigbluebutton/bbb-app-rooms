@@ -17,6 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 class ErrorsController < ApplicationController
+  # Include concerns.
   include OmniauthHelper
 
   def index

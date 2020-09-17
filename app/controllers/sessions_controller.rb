@@ -17,6 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 class SessionsController < ApplicationController
+  # Include concerns.
   include OmniauthHelper
 
   def new; end

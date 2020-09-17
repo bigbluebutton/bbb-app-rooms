@@ -17,11 +17,13 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb_app_rooms/user'
-require 'bbb_api'
+
 class NotifyMeetingWatcherJob < ApplicationJob
-  include BbbApi
+  # Include libraries.
   include BbbAppRooms
-  include ApplicationHelper
+  # Include concerns.
+  include BbbHelper
+  include OmniauthHelper
 
   queue_as :default
 

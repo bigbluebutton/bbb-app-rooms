@@ -17,11 +17,11 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb_app_rooms/user'
-require 'bbb_api'
 
 class RoomsController < ApplicationController
-  include BbbApi
+  # Include libraries.
   include BbbAppRooms
+  # Include concerns.
   include BbbHelper
   include OmniauthHelper
 
