@@ -123,26 +123,5 @@ module Bbb
         "#{len} min"
       end
     end
-
-    # Deletes a recording from a room.
-    def delete_recording(record_id)
-      bbb.delete_recordings(record_id)
-    end
-
-    # Publishes a recording for a room.
-    def publish_recording(record_id)
-      bbb.publish_recordings(record_id, true)
-    end
-
-    # Unpublishes a recording for a room.
-    def unpublish_recording(record_id)
-      bbb.publish_recordings(record_id, false)
-    end
-
-    # Update recording for a room.
-    def update_recording(record_id, meta)
-      meta[:recordID] = record_id
-      bbb.send_api_request('updateRecordings', meta)
-    end
   end
 end

@@ -44,63 +44,68 @@ module Bbb
 
     def bbb_credentials
       # Return default credentials if no tenant has been set.
-      return {
+      if @room.tenant.blank?
+        return {
           endpoint: Rails.configuration.bigbluebutton_endpoint,
           secret: Rails.configuration.bigbluebutton_secret,
-        } if @room.tenant.nil? || @room.tenant.empty?
+        }
+      end
       # Return credentials retrieved from External Tenant Manager.
       tenant_info = retrieve_tenant_info(@room.tenant)
-      return {
-          endpoint: tenant_info['apiURL'],
-          secret: tenant_info['secret'],
-        } unless tenant_info.nil?
+      return if tenant_info.nil?
+
+      {
+        endpoint: tenant_info['apiURL'],
+        secret: tenant_info['secret'],
+      }
     end
 
     # Rereives info from External Tenant Manager in regards to the tenant.
     def retrieve_tenant_info(tenant)
-        # Check up cached info.
-        if Rails.configuration.cache_enabled
-          cached_tenant = Rails.cache.fetch("#{tenant}/api")
-          return cached_tenant unless cached_tenant.nil?
-        end
+      # Check up cached info.
+      if Rails.configuration.cache_enabled
+        cached_tenant = Rails.cache.fetch("#{tenant}/api")
+        return cached_tenant unless cached_tenant.nil?
+      end
 
-        # Build the URI.
-        uri = encode_url(
-          Rails.configuration.external_multitenant_endpoint + 'api/getUser',
-            Rails.configuration.external_multitenant_secret,
-            { name: tenant }
-        )
-        logger.info uri
+      # Build the URI.
+      uri = encode_url(
+        Rails.configuration.external_multitenant_endpoint + 'api/getUser',
+        Rails.configuration.external_multitenant_secret,
+        { name: tenant }
+      )
+      logger.info(uri)
 
-        # Make the request.
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == 'https')
-        response = http.get(uri.request_uri)
+      # Make the request.
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = (uri.scheme == 'https')
+      response = http.get(uri.request_uri)
 
-        raise 'Error on response' unless response.is_a?(Net::HTTPSuccess)
+      raise 'Error on response' unless response.is_a?(Net::HTTPSuccess)
 
-        # Parse XML.
-        doc = XmlSimple.xml_in(response.body, 'ForceArray' => false)
+      # Parse XML.
+      doc = XmlSimple.xml_in(response.body, 'ForceArray' => false)
 
-        raise doc['message'] unless response.is_a?(Net::HTTPSuccess)
+      raise doc['message'] unless response.is_a?(Net::HTTPSuccess)
 
-        # Return the user credentials if the request succeeded on the External Tenant Manager.
-        Rails.cache.fetch("#{tenant}/api", expires_in: 1.hours) do
-            doc['user']
-        end
+      # Return the user credentials if the request succeeded on the External Tenant Manager.
+      Rails.cache.fetch("#{tenant}/api", expires_in: 1.hour) do
+        doc['user']
+      end
 
-        # Return the user credentials if the request succeeded on the External Tenant Manager.
-        return doc['user'] if doc['returncode'] == 'SUCCESS'
+      # Return the user credentials if the request succeeded on the External Tenant Manager.
+      return doc['user'] if doc['returncode'] == 'SUCCESS'
 
-        raise "User with tenant #{tenant} does not exist." if doc['messageKey'] == 'noSuchUser'
-        raise "API call #{url} failed with #{doc['messageKey']}."
+      raise "User with tenant #{tenant} does not exist." if doc['messageKey'] == 'noSuchUser'
+
+      raise "API call #{url} failed with #{doc['messageKey']}."
     end
 
     def encode_url(endpoint, secret, params)
-        encoded_params = params.to_param
-        string = 'getUser' + encoded_params + secret
-        checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
-        URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
+      encoded_params = params.to_param
+      string = 'getUser' + encoded_params + secret
+      checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
+      URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
     end
   end
 end

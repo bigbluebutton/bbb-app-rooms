@@ -206,7 +206,7 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @tenant =  session_params['tenant']
+    @tenant = session_params['tenant']
     resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
     @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
