@@ -21,6 +21,41 @@ require 'xmlsimple'
 
 module Bbb
   module Api
+    # Sets a BigBlueButtonApi object for interacting with the API.
+    def bbb
+      BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bbb_credentials[:endpoint])), bbb_credentials[:secret], '0.9', 'true')
+    end
+
+    private
+
+    # Fixes BigBlueButton endpoint ending.
+    def fix_bbb_endpoint_format(url)
+      # Fix endpoint format only if required.
+      url += '/' unless url.ends_with?('/')
+      url += 'api/' if url.ends_with?('bigbluebutton/')
+      url += 'bigbluebutton/api/' unless url.ends_with?('bigbluebutton/api/')
+      url
+    end
+
+    # Removes trailing forward slash from a URL.
+    def remove_slash(str)
+      str.nil? ? nil : str.chomp('/')
+    end
+
+    def bbb_credentials
+      # Return default credentials if no tenant has been set.
+      return {
+          endpoint: Rails.configuration.bigbluebutton_endpoint,
+          secret: Rails.configuration.bigbluebutton_secret,
+        } if @room.tenant.nil? || @room.tenant.empty?
+      # Return credentials retrieved from External Tenant Manager.
+      tenant_info = retrieve_tenant_info(@room.tenant)
+      return {
+          endpoint: tenant_info['apiURL'],
+          secret: tenant_info['secret'],
+        } unless tenant_info.nil?
+    end
+
     # Rereives info from External Tenant Manager in regards to the tenant.
     def retrieve_tenant_info(tenant)
         # Check up cached info.
@@ -66,41 +101,6 @@ module Bbb
         string = 'getUser' + encoded_params + secret
         checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
         URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
-    end
-
-    def bbb_credentials
-      # Return default credentials if no tenant has been set.
-      return {
-          endpoint: Rails.configuration.bigbluebutton_endpoint,
-          secret: Rails.configuration.bigbluebutton_secret,
-        } if @room.tenant.nil? || @room.tenant.empty?
-      # Return credentials retrieved from External Tenant Manager.
-      tenant_info = retrieve_tenant_info(@room.tenant)
-      return {
-          endpoint: tenant_info['apiURL'],
-          secret: tenant_info['secret'],
-        } unless tenant_info.nil?
-    end
-
-    private
-
-    # Sets a BigBlueButtonApi object for interacting with the API.
-    def bbb
-      @bbb = BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bbb_credentials[:endpoint])), bbb_credentials[:secret], '0.9', 'true')
-    end
-
-    # Fixes BigBlueButton endpoint ending.
-    def fix_bbb_endpoint_format(url)
-      # Fix endpoint format only if required.
-      url += '/' unless url.ends_with?('/')
-      url += 'api/' if url.ends_with?('bigbluebutton/')
-      url += 'bigbluebutton/api/' unless url.ends_with?('bigbluebutton/api/')
-      url
-    end
-
-    # Removes trailing forward slash from a URL.
-    def remove_slash(str)
-      str.nil? ? nil : str.chomp('/')
     end
   end
 end
