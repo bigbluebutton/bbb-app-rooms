@@ -27,7 +27,7 @@ class RoomsController < ApplicationController
 
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
+  before_action :set_room, except: %i[launch]
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
