@@ -104,7 +104,7 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/meeting/join.json
   def meeting_join
     # make user wait until moderator is in room
-    wait = wait_for_mod? && !mod_in_room?
+    wait = wait_for_mod? && !meeting_running?
     broadcast_meeting(action: 'join', delay: true) unless wait
     NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room) unless wait
     render(json: { wait_for_mod: wait, meeting: join_meeting_url }, status: :ok)
@@ -160,7 +160,7 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :mod_in_room?
+  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :meeting_running?
 
   private
 

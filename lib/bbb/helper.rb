@@ -22,26 +22,6 @@ module Bbb
       Rails.configuration.bigbluebutton_moderator_roles.split(',')
     end
 
-    def mod_in_room?
-      bbb.is_meeting_running?(@room.handler)
-    end
-
-    def meeting_info
-      bbb.get_meeting_info(@room.handler, @user)
-    end
-
-    def participant_count
-      return false unless mod_in_room?
-
-      meeting_info[:participantCount]
-    end
-
-    def meeting_start_time
-      return nil unless mod_in_room?
-
-      meeting_info[:startTime]
-    end
-
     def join_meeting_url
       return unless @room && @user
 
@@ -110,6 +90,11 @@ module Bbb
       else
         "#{len} min"
       end
+    end
+
+    # Removes trailing forward slash from a URL.
+    def remove_slash(str)
+      str.nil? ? nil : str.chomp('/')
     end
   end
 end

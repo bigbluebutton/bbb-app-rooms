@@ -26,30 +26,85 @@ module BbbHelper
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
-    BigBlueButton::BigBlueButtonApi.new(@bbb_credentials.endpoint(@room.tenant), @bbb_credentials.secret(@room.tenant), '0.9', 'true')
+    BigBlueButton::BigBlueButtonApi.new(remove_slash(@bbb_credentials.endpoint(@room.tenant)), @bbb_credentials.secret(@room.tenant), '0.9', 'true')
   end
 
-  # Ends a meeting.
+  # Generates URL for joining the current @room meeting.
+  def join_meeting_url
+    return unless @room && @user
+
+    unless bbb
+      @error = {
+        key: t('error.bigbluebutton.invalidrequest.code'),
+        message: t('error.bigbluebutton.invalidrequest.message'),
+        suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
+        status: :internal_server_error,
+      }
+      return
+    end
+
+    create_meeting
+    role = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators ? 'moderator' : 'viewer'
+    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
+  end
+
+  # Create meeting for the current @room.
+  def create_meeting
+    create_options = {
+      moderatorPW: @room.moderator,
+      attendeePW: @room.viewer,
+      welcome: @room.welcome,
+      record: @room.recording,
+      logoutURL: autoclose_url,
+      "meta_description": @room.description
+    }
+
+    # Send the create request.
+    begin
+      meeting = bbb.create_meeting(@room.name, @room.handler, create_options)
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info "BigBlueButton failed on create: #{e.key}: #{e.message}"
+      raise e
+    end
+
+  end
+
+  # Perform ends meeting for the current @room.
   def end_meeting
     bbb.end_meeting(@room.handler, @room.moderator)
   end
 
-  # Deletes a recording from a room.
+  # Retrieves meeting info for the current Room.
+  def meeting_info
+    info = {returncode: 'FAILED'}
+    begin
+      info = bbb.get_meeting_info(@room.handler, @user)
+    rescue BigBlueButton::BigBlueButtonException => e
+    end
+    info
+  end
+
+  # Checks if the meeting for current @room is running.
+  def meeting_running?
+      bbb.is_meeting_running?(@room.handler)
+  end
+
+  # Deletes a recording.
   def delete_recording(record_id)
     bbb.delete_recordings(record_id)
   end
 
-  # Publishes a recording for a room.
+  # Publishes a recording.
   def publish_recording(record_id)
     bbb.publish_recordings(record_id, true)
   end
 
-  # Unpublishes a recording for a room.
+  # Unpublishes a recording.
   def unpublish_recording(record_id)
     bbb.publish_recordings(record_id, false)
   end
 
-  # Update recording for a room.
+  # Updates a recording.
   def update_recording(record_id, meta)
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
@@ -60,6 +115,18 @@ module BbbHelper
     return unless @room && @user
 
     @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
+  end
+
+  # Return the number of participants in a meeting for the current room.
+  def participant_count
+    info = meeting_info
+    return info[:participantCount] if info[:returncode] == 'SUCCESS'
+  end
+
+  # Return the meeting start time for the current room.
+  def meeting_start_time
+    info = meeting_info
+    return info[:startTime] if info[:returncode] == 'SUCCESS'
   end
 
   private
