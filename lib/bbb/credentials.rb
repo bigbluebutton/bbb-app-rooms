@@ -23,14 +23,15 @@ module Bbb
   class Credentials
     attr_writer :cache          # Rails.cache store is assumed.
     attr_writer :cache_enabled  # Enabled by default.
+    attr_writer :multitenant_api_endpoint, :multitenant_api_secret
 
-    def initialize(endpoint, secret, multitenant_api_endpoint, multitenant_api_secret)
+    def initialize(endpoint, secret)
       # Set default credentials.
       @endpoint = endpoint
       @secret = secret
-      @multitenant_api_endpoint = multitenant_api_endpoint
-      @multitenant_api_secret = multitenant_api_secret
-      @cache_enabled = false
+      @multitenant_api_endpoint = nil
+      @multitenant_api_secret = nil
+      @cache_enabled = true
     end
 
     def endpoint(tenant)
@@ -63,9 +64,11 @@ module Bbb
     end
 
     def fetch_tenant_info(tenant)
+      raise 'Multitenant API not defined' if @multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?
+
       # Check up cached info.
       if @cache_enabled
-        cached_tenant = Rails.cache.fetch("#{tenant}/api")
+        cached_tenant = @cache.fetch("#{tenant}/api")
         return cached_tenant unless cached_tenant.nil?
       end
 
@@ -80,7 +83,7 @@ module Bbb
       response = parse_response(http_response)
 
       # Return the user credentials if the request succeeded on the External Tenant Manager.
-      Rails.cache.fetch("#{tenant}/api", expires_in: 1.hour) do
+      @cache.fetch("#{tenant}/api", expires_in: 1.hour) do
         response
       end
     end

@@ -48,10 +48,6 @@ module Bbb
       meeting_info[:startTime]
     end
 
-    def end_meeting
-      return bbb.end_meeting(@room.handler, @room.moderator)
-    end
-
     def join_meeting_url
       return unless @room && @user
 

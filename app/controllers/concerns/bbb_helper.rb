@@ -16,7 +16,6 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'bbb/api'
 require 'bbb/credentials'
 require 'bbb/helper'
 
@@ -28,6 +27,11 @@ module BbbHelper
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
     BigBlueButton::BigBlueButtonApi.new(remove_slash(@bbb_credentials.endpoint(@room.tenant)), @bbb_credentials.secret(@room.tenant), '0.9', 'true')
+  end
+
+  # Ends a meeting.
+  def end_meeting
+    bbb.end_meeting(@room.handler, @room.moderator)
   end
 
   # Deletes a recording from a room.
@@ -54,7 +58,9 @@ module BbbHelper
   private
 
   def initialize_bbb_credentials
-    bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret, Rails.configuration.external_multitenant_endpoint, Rails.configuration.external_multitenant_secret)
+    bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret)
+    bbb_credentials.multitenant_api_endpoint = Rails.configuration.external_multitenant_endpoint
+    bbb_credentials.multitenant_api_secret = Rails.configuration.external_multitenant_secret
     bbb_credentials.cache = Rails.cache
     bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
     bbb_credentials
