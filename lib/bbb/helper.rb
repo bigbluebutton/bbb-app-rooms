@@ -22,29 +22,6 @@ module Bbb
       Rails.configuration.bigbluebutton_moderator_roles.split(',')
     end
 
-    def join_meeting_url
-      return unless @room && @user
-
-      unless bbb
-        @error = {
-          key: t('error.bigbluebutton.invalidrequest.code'),
-          message: t('error.bigbluebutton.invalidrequest.message'),
-          suggestion: t('error.bigbluebutton.invalidrequest.suggestion'),
-          status: :internal_server_error,
-        }
-        return
-      end
-      bbb.create_meeting(@room.name, @room.handler,
-                         moderatorPW: @room.moderator,
-                         attendeePW: @room.viewer,
-                         welcome: @room.welcome,
-                         record: @room.recording,
-                         logoutURL: autoclose_url,
-                         "meta_description": @room.description)
-      role = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators ? 'moderator' : 'viewer'
-      bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
-    end
-
     # Fetches all recordings for a room.
     def recordings
       res = bbb.get_recordings(meetingID: @room.handler)
