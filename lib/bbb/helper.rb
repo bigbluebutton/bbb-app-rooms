@@ -49,9 +49,7 @@ module Bbb
     end
 
     def end_meeting
-      return bbb.end_meeting(@room.handler, meeting_info[:moderatorPW]) if mod_in_room?
-
-      mod_in_room?
+      return bbb.end_meeting(@room.handler, @room.moderator)
     end
 
     def join_meeting_url
