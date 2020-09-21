@@ -121,5 +121,10 @@ module Bbb
         "#{len} min"
       end
     end
+
+    # Removes trailing forward slash from a URL.
+    def remove_slash(str)
+      str.nil? ? nil : str.chomp('/')
+    end
   end
 end

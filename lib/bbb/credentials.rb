@@ -2,7 +2,7 @@
 
 #  BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
 #
-#  Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+#  Copyright (c) 2020 BigBlueButton Inc. and by respective authors (see below).
 #
 #  This program is free software; you can redistribute it and/or modify it under the
 #  terms of the GNU Lesser General Public License as published by the Free Software
@@ -20,78 +20,86 @@ require 'net/http'
 require 'xmlsimple'
 
 module Bbb
-  module Api
-    # Sets a BigBlueButtonApi object for interacting with the API.
-    def bbb
-      BigBlueButton::BigBlueButtonApi.new(remove_slash(fix_bbb_endpoint_format(bbb_credentials[:endpoint])), bbb_credentials[:secret], '0.9', 'true')
+  class Credentials
+    attr_writer :cache          # Rails.cache store is assumed.
+    attr_writer :cache_enabled  # Enabled by default.
+
+    def initialize(endpoint, secret, multitenant_api_endpoint, multitenant_api_secret)
+      # Set default credentials.
+      @endpoint = endpoint
+      @secret = secret
+      @multitenant_api_endpoint = multitenant_api_endpoint
+      @multitenant_api_secret = multitenant_api_secret
+      @cache_enabled = false
+    end
+
+    def endpoint(tenant)
+      return fix_bbb_endpoint_format(@endpoint) if tenant.blank?
+
+      fix_bbb_endpoint_format(tenant_endpoint(tenant))
+    end
+
+    def secret(tenant)
+      return @secret if tenant.blank?
+
+      tenant_secret(tenant)
     end
 
     private
 
-    # Fixes BigBlueButton endpoint ending.
-    def fix_bbb_endpoint_format(url)
-      # Fix endpoint format only if required.
-      url += '/' unless url.ends_with?('/')
-      url += 'api/' if url.ends_with?('bigbluebutton/')
-      url += 'bigbluebutton/api/' unless url.ends_with?('bigbluebutton/api/')
-      url
+    def tenant_endpoint(tenant)
+      tenant_info(tenant, 'apiURL')
     end
 
-    # Removes trailing forward slash from a URL.
-    def remove_slash(str)
-      str.nil? ? nil : str.chomp('/')
+    def tenant_secret(tenant)
+      tenant_info(tenant, 'secret')
     end
 
-    def bbb_credentials
-      # Return default credentials if no tenant has been set.
-      if @room.tenant.blank?
-        return {
-          endpoint: Rails.configuration.bigbluebutton_endpoint,
-          secret: Rails.configuration.bigbluebutton_secret,
-        }
-      end
-      # Return credentials retrieved from External Tenant Manager.
-      tenant_info = retrieve_tenant_info(@room.tenant)
-      return if tenant_info.nil?
+    def tenant_info(tenant, key)
+      info = fetch_tenant_info(tenant)
+      return if info.nil?
 
-      {
-        endpoint: tenant_info['apiURL'],
-        secret: tenant_info['secret'],
-      }
+      info[key]
     end
 
-    # Rereives info from External Tenant Manager in regards to the tenant.
-    def retrieve_tenant_info(tenant)
+    def fetch_tenant_info(tenant)
       # Check up cached info.
-      if Rails.configuration.cache_enabled
+      if @cache_enabled
         cached_tenant = Rails.cache.fetch("#{tenant}/api")
         return cached_tenant unless cached_tenant.nil?
       end
 
       # Build the URI.
-      uri = encode_url(
-        Rails.configuration.external_multitenant_endpoint + 'api/getUser',
-        Rails.configuration.external_multitenant_secret,
+      uri = encoded_url(
+        @multitenant_api_endpoint + 'api/getUser',
+        @multitenant_api_secret,
         { name: tenant }
       )
-      logger.info(uri)
 
+      http_response = http_request(uri)
+      response = parse_response(http_response)
+
+      # Return the user credentials if the request succeeded on the External Tenant Manager.
+      Rails.cache.fetch("#{tenant}/api", expires_in: 1.hour) do
+        response
+      end
+    end
+
+    def http_request(uri)
       # Make the request.
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
       response = http.get(uri.request_uri)
-
       raise 'Error on response' unless response.is_a?(Net::HTTPSuccess)
 
+      response
+    end
+
+    def parse_response(response)
       # Parse XML.
       doc = XmlSimple.xml_in(response.body, 'ForceArray' => false)
 
       raise doc['message'] unless response.is_a?(Net::HTTPSuccess)
-
-      # Return the user credentials if the request succeeded on the External Tenant Manager.
-      Rails.cache.fetch("#{tenant}/api", expires_in: 1.hour) do
-        doc['user']
-      end
 
       # Return the user credentials if the request succeeded on the External Tenant Manager.
       return doc['user'] if doc['returncode'] == 'SUCCESS'
@@ -101,11 +109,20 @@ module Bbb
       raise "API call #{url} failed with #{doc['messageKey']}."
     end
 
-    def encode_url(endpoint, secret, params)
+    def encoded_url(endpoint, secret, params)
       encoded_params = params.to_param
       string = 'getUser' + encoded_params + secret
       checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
       URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
+    end
+
+    # Fixes BigBlueButton endpoint ending.
+    def fix_bbb_endpoint_format(endpoint)
+      # Fix endpoint format only if required.
+      endpoint += '/' unless endpoint.ends_with?('/')
+      endpoint += 'api/' if endpoint.ends_with?('bigbluebutton/')
+      endpoint += 'bigbluebutton/api/' unless endpoint.ends_with?('bigbluebutton/api/')
+      endpoint
     end
   end
 end

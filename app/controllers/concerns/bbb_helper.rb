@@ -17,12 +17,18 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb/api'
+require 'bbb/credentials'
 require 'bbb/helper'
 
 module BbbHelper
   extend ActiveSupport::Concern
-  include Bbb::Api
   include Bbb::Helper
+
+  # Sets a BigBlueButtonApi object for interacting with the API.
+  def bbb
+    @bbb_credentials ||= initialize_bbb_credentials
+    BigBlueButton::BigBlueButtonApi.new(remove_slash(@bbb_credentials.endpoint(@room.tenant)), @bbb_credentials.secret(@room.tenant), '0.9', 'true')
+  end
 
   # Deletes a recording from a room.
   def delete_recording(record_id)
@@ -43,5 +49,14 @@ module BbbHelper
   def update_recording(record_id, meta)
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
+  end
+
+  private
+
+  def initialize_bbb_credentials
+    bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret, Rails.configuration.external_multitenant_endpoint, Rails.configuration.external_multitenant_secret)
+    bbb_credentials.cache = Rails.cache
+    bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
+    bbb_credentials
   end
 end
