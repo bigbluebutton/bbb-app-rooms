@@ -55,6 +55,13 @@ module BbbHelper
     bbb.send_api_request('updateRecordings', meta)
   end
 
+  # Check if the current @user must wait_for_moderator to join the current @room.
+  def wait_for_mod?
+    return unless @room && @user
+
+    @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
+  end
+
   private
 
   def initialize_bbb_credentials

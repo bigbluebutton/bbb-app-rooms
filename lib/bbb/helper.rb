@@ -22,12 +22,6 @@ module Bbb
       Rails.configuration.bigbluebutton_moderator_roles.split(',')
     end
 
-    def wait_for_mod?
-      return unless @room && @user
-
-      @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
-    end
-
     def mod_in_room?
       bbb.is_meeting_running?(@room.handler)
     end
