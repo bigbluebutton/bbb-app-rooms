@@ -54,17 +54,10 @@ module BbbHelper
       welcome: @room.welcome,
       record: @room.recording,
       logoutURL: autoclose_url,
-      "meta_description": @room.description
+      'meta_description': @room.description,
     }
-
     # Send the create request.
-    begin
-      meeting = bbb.create_meeting(@room.name, @room.handler, create_options)
-    rescue BigBlueButton::BigBlueButtonException => e
-      logger.info "BigBlueButton failed on create: #{e.key}: #{e.message}"
-      raise e
-    end
-
+    bbb.create_meeting(@room.name, @room.handler, create_options)
   end
 
   # Perform ends meeting for the current @room.
@@ -74,17 +67,18 @@ module BbbHelper
 
   # Retrieves meeting info for the current Room.
   def meeting_info
-    info = {returncode: 'FAILED'}
+    info = { returncode: 'FAILED' }
     begin
       info = bbb.get_meeting_info(@room.handler, @user)
-    rescue BigBlueButton::BigBlueButtonException => e
+    rescue BigBlueButton::BigBlueButtonException
+      logger.info('We could not find a meeting with that meeting ID')
     end
     info
   end
 
   # Checks if the meeting for current @room is running.
   def meeting_running?
-      bbb.is_meeting_running?(@room.handler)
+    bbb.is_meeting_running?(@room.handler)
   end
 
   # Fetches all recordings for a room.
