@@ -17,11 +17,9 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb/credentials'
-require 'bbb/helper'
 
 module BbbHelper
   extend ActiveSupport::Concern
-  include Bbb::Helper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
@@ -89,6 +87,28 @@ module BbbHelper
       bbb.is_meeting_running?(@room.handler)
   end
 
+  # Fetches all recordings for a room.
+  def recordings
+    res = bbb.get_recordings(meetingID: @room.handler)
+
+    # Format playbacks in a more pleasant way.
+    res[:recordings].each do |r|
+      next if r.key?(:error)
+
+      r[:playbacks] = if !r[:playback] || !r[:playback][:format]
+                        []
+                      elsif r[:playback][:format].is_a?(Array)
+                        r[:playback][:format]
+                      else
+                        [r[:playback][:format]]
+                      end
+
+      r.delete(:playback)
+    end
+
+    res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+  end
+
   # Deletes a recording.
   def delete_recording(record_id)
     bbb.delete_recordings(record_id)
@@ -129,8 +149,38 @@ module BbbHelper
     return info[:startTime] if info[:returncode] == 'SUCCESS'
   end
 
+  def bigbluebutton_moderator_roles
+    Rails.configuration.bigbluebutton_moderator_roles.split(',')
+  end
+
+  # Helper for converting BigBlueButton dates into the desired format.
+  def recording_date(date)
+    # note: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
+    # .ordinalize does not work with other locales
+    return date.strftime("%B #{date.day}, %Y.") unless I18n.locale.eql?(:en)
+
+    date.strftime("%B #{date.day.ordinalize}, %Y.")
+  end
+
+  # Helper for converting BigBlueButton dates into a nice length string.
+  def recording_length(playbacks)
+    # Stats format currently doesn't support length.
+    valid_playbacks = playbacks.reject { |p| p[:type] == 'statistics' }
+    return '0 min' if valid_playbacks.empty?
+
+    len = valid_playbacks.first[:length]
+    if len > 60
+      "#{(len / 60).round} hrs"
+    elsif len.zero?
+      '< 1 min'
+    else
+      "#{len} min"
+    end
+  end
+
   private
 
+  # Emulates a builder for initializing the a newly created Bbb::Credentials object.
   def initialize_bbb_credentials
     bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret)
     bbb_credentials.multitenant_api_endpoint = Rails.configuration.external_multitenant_endpoint
@@ -138,5 +188,10 @@ module BbbHelper
     bbb_credentials.cache = Rails.cache
     bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
     bbb_credentials
+  end
+
+  # Removes trailing forward slash from a URL.
+  def remove_slash(str)
+    str.nil? ? nil : str.chomp('/')
   end
 end
