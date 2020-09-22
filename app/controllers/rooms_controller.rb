@@ -144,6 +144,18 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
+  # POST /rooms/:id/recording/:record_id/protect
+  def recording_protect
+    update_recording(params[:record_id], protect: true)
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+  end
+
+  # POST /rooms/:id/recording/:record_id/unprotect
+  def recording_unprotect
+    update_recording(params[:record_id], protect: false)
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+  end
+
   # POST /rooms/:id/recording/:record_id/update
   def recording_update
     if params[:setting] == 'rename_recording'
@@ -160,7 +172,7 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :meeting_running?
+  helper_method :recordings, :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles, :bigbluebutton_recording_public_formats
 
   private
 
