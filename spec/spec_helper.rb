@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'coveralls'
+
+Coveralls.wear!
+
 require 'webmock/rspec'
 require 'omniauth'
 require 'capybara/rspec'
