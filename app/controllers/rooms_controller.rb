@@ -171,7 +171,7 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :mod_in_room?
+  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :mod_in_room?, :bigbluebutton_recording_public_formats
 
   private
 

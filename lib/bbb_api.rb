@@ -28,6 +28,10 @@ module BbbApi
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
   end
 
+  def bigbluebutton_recording_public_formats
+    Rails.configuration.bigbluebutton_recording_public_formats.split(',')
+  end
+
   def wait_for_mod?
     return unless @room && @user
 

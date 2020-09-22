@@ -17,7 +17,10 @@
   <td class="text-left" style='white-space: nowrap'>
     <% if recording[:published] %>
       <% recording[:playbacks].each do |p| %>
-        <%= link_to t("default.recording.formats.#{p[:type].downcase}"), p[:url], class: "btn btn-sm btn-primary", target: "_blank" %>
+        <% # Don't show playback if user isn't moderator and the type isn't set as public %>
+        <% unless !(@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) && !bigbluebutton_recording_public_formats.include?(p[:type]) %>
+          <%= link_to t("default.recording.formats.#{p[:type].downcase}"), p[:url], class: "btn btn-sm btn-primary", target: "_blank" %>
+        <% end %>
       <% end %>
     <% end %>
   </td>
