@@ -15,34 +15,30 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
-module LtiToolProvider
-  module Helpers
-    def string_to_hash(str)
-      Hash[
-        str.split(',').map do |pair|
-          k, v = pair.split(':', 2)
-          [k, v]
-        end
-      ]
-    end
 
-    def tokenize(str, secret, salt)
-      crypt = crypter(secret, salt)
-      crypt.encrypt_and_sign(str.ljust(128, ' '))
-    rescue StandardError
-      nil
-    end
+module OmniauthHelper
+  def omniauth_bbbltibroker_url(path = nil)
+    url = Rails.configuration.omniauth_site
+    url += Rails.configuration.omniauth_root if Rails.configuration.omniauth_root.present?
+    url += path unless path.nil?
+    url
+  end
 
-    def untokenize(str, secret, salt)
-      crypt = crypter(secret, salt)
-      crypt.decrypt_and_verify(str).strip
-    rescue StandardError
-      nil
-    end
+  def omniauth_client_token(lti_broker_url)
+    oauth_options = {
+      grant_type: 'client_credentials',
+      client_id: Rails.configuration.omniauth_key,
+      client_secret: Rails.configuration.omniauth_secret,
+    }
+    response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
+    JSON.parse(response)['access_token']
+  end
 
-    def crypter(secret, salt)
-      key = ActiveSupport::KeyGenerator.new(secret).generate_key(salt, 32)
-      ActiveSupport::MessageEncryptor.new(key, cipher: 'aes-256-cbc', digest: 'SHA1', serializer: Marshal)
+  def omniauth_provider?(code)
+    provider = code.to_s
+    OmniAuth.strategies.each do |strategy|
+      return true if provider.downcase == strategy.to_s.demodulize.downcase
     end
+    false
   end
 end

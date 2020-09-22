@@ -16,17 +16,18 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'user'
-require 'bbb_api'
+require 'bbb_app_rooms/user'
 
 class RoomsController < ApplicationController
-  include ApplicationHelper
-  include BbbApi
+  # Include libraries.
   include BbbAppRooms
+  # Include concerns.
+  include BbbHelper
+  include OmniauthHelper
 
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
-  before_action :set_room, only: %i[show edit update destroy meeting_join meeting_end meeting_close]
+  before_action :set_room, except: %i[launch]
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
@@ -103,7 +104,7 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/meeting/join.json
   def meeting_join
     # make user wait until moderator is in room
-    wait = wait_for_mod? && !mod_in_room?
+    wait = wait_for_mod? && !meeting_running?
     broadcast_meeting(action: 'join', delay: true) unless wait
     NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room) unless wait
     render(json: { wait_for_mod: wait, meeting: join_meeting_url }, status: :ok)
@@ -171,7 +172,7 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :bigbluebutton_moderator_roles, :mod_in_room?, :bigbluebutton_recording_public_formats
+  helper_method :recordings, :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles, :bigbluebutton_recording_public_formats
 
   private
 
@@ -206,7 +207,8 @@ class RoomsController < ApplicationController
   def set_launch
     # Pull the Launch request_parameters.
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
-    session_params = JSON.parse(RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}"))
+    get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+    session_params = JSON.parse(get_response)
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
@@ -216,7 +218,9 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @room = Room.find_or_create_by(handler: resource_handler(launch_params)) do |room|
+    @tenant = session_params['tenant']
+    resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
+    @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
     user_params = launch_params_to_new_user_params(launch_params)
@@ -227,9 +231,8 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
   end
 
-  def new_room_params(handler, name, description, recording = true, wait_moderator = false, all_moderators = false)
+  def new_room_params(name, description, recording = true, wait_moderator = false, all_moderators = false)
     params.permit.merge(
-      handler: handler,
       name: name,
       description: description,
       welcome: '',
@@ -240,13 +243,12 @@ class RoomsController < ApplicationController
   end
 
   def launch_params_to_new_room_params(launch_params)
-    handler = resource_handler(launch_params)
     name = launch_params['resource_link_title']
     description = launch_params['resource_link_description']
     record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
     wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
-    new_room_params(handler, name, description, record, wait_moderator, all_moderators)
+    new_room_params(name, description, record, wait_moderator, all_moderators)
   end
 
   def launch_params_to_new_user_params(launch_params)
@@ -267,10 +269,6 @@ class RoomsController < ApplicationController
 
   def check_for_cancel
     redirect_to(room_path(@room, launch_nonce: params[:launch_nonce])) if params[:cancel]
-  end
-
-  def resource_handler(params)
-    Digest::SHA1.hexdigest('rooms' + params['tool_consumer_instance_guid'] + params['resource_link_id']).to_s
   end
 
   def allow_iframe_requests

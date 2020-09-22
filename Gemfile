@@ -29,8 +29,7 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
-gem 'redis'
-# gem 'redis', '~> 4.0'
+gem 'redis', '~> 4.2'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -48,9 +47,9 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
   gem 'rspec'
-  gem 'rspec-rails', '~> 4.0.0'
   gem 'rspec_junit_formatter'
-  gem 'rubocop', '~> 0.79.0', require: false
+  gem 'rspec-rails', '~> 4.0.0'
+  gem 'rubocop', '~> 0.90.0', require: false
   gem 'rubocop-rails', '~> 2.4.0', require: false
 end
 
@@ -99,3 +98,5 @@ gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
 gem 'activerecord-session_store'
+
+gem 'coveralls', require: false
