@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 # BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+
 # Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+
 # This program is free software; you can redistribute it and/or modify it under the
 # terms of the GNU Lesser General Public License as published by the Free Software
 # Foundation; either version 3.0 of the License, or (at your option) any later
 # version.
+
 # BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
@@ -144,10 +147,6 @@ module BbbHelper
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
   end
 
-  def bigbluebutton_recording_public_formats
-    Rails.configuration.bigbluebutton_recording_public_formats.split(',')
-  end
-
   # Helper for converting BigBlueButton dates into the desired format.
   def recording_date(date)
     # note: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
@@ -178,8 +177,8 @@ module BbbHelper
   # Emulates a builder for initializing the a newly created Bbb::Credentials object.
   def initialize_bbb_credentials
     bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret)
-    bbb_credentials.multitenant_api_endpoint = Rails.configuration.external_multitenant_endpoint
-    bbb_credentials.multitenant_api_secret = Rails.configuration.external_multitenant_secret
+    bbb_credentials.multitenant_api_endpoint = Rails.configuration.multitenant_api_endpoint
+    bbb_credentials.multitenant_api_secret = Rails.configuration.multitenant_api_secret
     bbb_credentials.cache = Rails.cache
     bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
     bbb_credentials

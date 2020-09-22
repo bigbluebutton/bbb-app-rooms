@@ -53,9 +53,9 @@ module BbbAppRooms
     config.action_cable.url = "wss://#{ENV['URL_HOST']}#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/cable"
 
     # Settings for external services.
-    config.cache_enabled = ENV['CACHE_ENABLED'] || true
-    config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
-    config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
+    config.cache_enabled = ENV['RAILS_CACHE_ENABLED'] || true
+    config.multitenant_api_endpoint = ENV['MULTITENANT_API_ENDPOINT']
+    config.multitenant_api_secret = ENV['MULTITENANT_API_SECRET']
 
     config.generators.javascript_engine = :js
   end
