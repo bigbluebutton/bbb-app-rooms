@@ -92,21 +92,30 @@
       <div class="form-group">
         <div class="form-check">
           <%= form.check_box :disable_external_link, class: "form-check-input" %>
-          <%= form.label :disable_external_link, class: "form-check-label" %>
+          <%= form.label :disable_external_link, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_external_link') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_external_link') %>">help</i>
+          <% end %>
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-check">
           <%= form.check_box :disable_private_chat, class: "form-check-input" %>
-          <%= form.label :disable_private_chat, class: "form-check-label" %>
+          <%= form.label :disable_private_chat, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_private_chat') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_private_chat') %>">help</i>
+          <% end %>
         </div>
       </div>
 
       <div class="form-group">
         <div class="form-check">
           <%= form.check_box :disable_note, class: "form-check-input" %>
-          <%= form.label :disable_note, class: "form-check-label" %>
+          <%= form.label :disable_note, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_note') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_note') %>">help</i>
+          <% end %>
         </div>
       </div>
     </div>

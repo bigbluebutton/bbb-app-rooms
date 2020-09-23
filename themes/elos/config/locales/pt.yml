@@ -13,6 +13,9 @@ pt:
         one: "%{count} minuto"
         other: "%{count} minutos"
     hint:
+      disable_external_link: "O acesso à sala virtual será restrito aos alunos autenticados."
+      disable_private_chat: "O aluno ainda poderá enviar mensagens privadas para o professor. Este recurso pode ser reativado dentro da sala através da opção \"Restringir participantes\"."
+      disable_note: "O professor ainda poderá utilizar as notas compartilhadas, mas os alunos poderão apenas visualizar o conteúdo, não editar. Este recurso pode ser reativado dentro da sala através da opção \"Restringir participantes\"."
       repeat: "O link externo de um agendamento recorrente será sempre o mesmo. O novo agendamento aparecerá na lista após o atual ser finalizado."
       time: "Você está usando o fuso horário: %{zone}"
     label:
