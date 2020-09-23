@@ -74,7 +74,7 @@ en:
       footnote: "Dates shown in the time zone: %{zone}"
     title: "Scheduled sessions"
     wait:
-      retry: "Try again"
+      retry: "Join"
   time:
     am: am
     formats:

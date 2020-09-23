@@ -74,7 +74,7 @@ pt:
       footnote: "Datas exibidas no fuso horário: %{zone}"
     title: "Sessões agendadas"
     wait:
-      retry: "Tentar novamente"
+      retry: "Entrar"
   time:
     am: am
     formats:
