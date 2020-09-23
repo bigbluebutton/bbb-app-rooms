@@ -79,7 +79,9 @@
         </p>
       </div>
    
-      <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
+      <% if !@user.admin? && !@user.moderator?(bigbluebutton_moderator_roles) %>
+        <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
+      <% end %>
   
     </div>
   </div>

@@ -23,4 +23,8 @@ class WaitChannel < ApplicationCable::Channel
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
   end
+
+  def notify_join
+    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(Room.find(params[:room]), action: 'joined from wait')
+  end
 end

@@ -27,40 +27,40 @@ $(document).on('turbolinks:load', function(){
             beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
             data: "",
             success: function(data) {
-                if (data.wait_for_mod === true) { 
-                    $('#wait-for-mod-msg').show();
+                var meeting_url = data.meeting;
+                if (data.wait_for_mod !== true) { 
+                    window.open(meeting_url);
                 } else {
-                    window.open(data.meeting);
+                    $('#wait-for-mod-msg').show();
+
+                    App.waiter = App.cable.subscriptions.create({
+                        channel: "WaitChannel",
+                        room: room_id
+                    }, {
+                        connected: function(data) {
+                            console.log("connected to wait");
+                        },
+                        disconnected: function(data) {
+                            console.log("disconnected to wait");
+                            console.log(data);
+                        },
+                        rejected: function() {
+                            console.log("rejected from wait");
+                        },
+                        received: function(data) {
+                            console.log("This is the wait data: " + JSON.stringify(data));
+                            if (data.action == "started"){
+                                $('#wait-for-mod-msg').hide();
+                                window.open(meeting_url);
+                                this.perform("notify_join");
+                                App.waiter.unsubscribe();
+                            }
+                        }
+                    });
                 }
-                App.cable.subscriptions.create({
-                    channel: "WaitChannel",
-                    room: room_id
-                }, {
-                    connected: function(data) {
-                        console.log("connected to wait");
-                    },
-                    disconnected: function(data) {
-                        console.log("disconnected to wait");
-                        console.log(data);
-                    },
-                    rejected: function() {
-                        console.log("rejected from wait");
-                    },
-                    received: function(data) {
-                        console.log("This is the wait data: " + data);
-
-                        $.ajax({
-                            url: join_room_url,
-                            type: "POST",
-                            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-                            data: ""
-                        });
-                    }
-                });
+                
             }
-        });
-
-        
+        });   
     })
 
     $('#end-meeting-btn').on('click', function() {

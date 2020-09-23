@@ -29,11 +29,13 @@ var in_progress = false;
 var show_elems = function(){
   $('#end-meeting-btn').show();
   $('#meeting-info-msg').show();
+  $('#wait-for-mod-msg').hide();
 }
 
 var hide_elements = function(){
   $('#end-meeting-btn').hide();
   $('#meeting-info-msg').hide();
+  $('#wait-for-mod-msg').hide();
 }
 
 var display_participant_count = function(participantCount){
