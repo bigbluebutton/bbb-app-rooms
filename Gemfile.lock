@@ -7,6 +7,8 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    action-cable-testing (0.6.1)
+      actioncable (>= 5.0)
     actioncable (6.0.3.2)
       actionpack (= 6.0.3.2)
       nio4r (~> 2.0)
@@ -369,6 +371,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action-cable-testing
   activerecord-session_store
   bigbluebutton-api-ruby
   bootsnap (>= 1.1.0)
