@@ -20,10 +20,10 @@ module RoomsHelper
     'javascript:window.close();'
   end
 
-  def elapsed_time(start_time)
+  def elapsed_time(start_time, curr_time)
     return 0 if start_time.nil?
 
-    time = DateTime.now - start_time
+    time = curr_time - start_time
 
     hrs = (time * 24).floor
     time -= hrs / 24.to_f
