@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.1.3 Elos - 2020-09-24
+
+* [ELOSP-454] New hints for the new configuration options added in 0.1.3.
+* Change the text in the "try again" button to "join", "try again" gives a false impression
+  that an error happened.
+
+
 ## 0.1.2 Elos - 2020-09-13
 
 * [ELOSP-454] New configuration options in conferences (by default they are all false, so
