@@ -53,3 +53,10 @@ RAILS_SERVE_STATIC_FILES=true
 
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
+
+## Use cache for optimizing requests to external servers.
+# RAILS_CACHE_ENABLED=true
+
+## Use to retrieve credentials for a BigBlueButton server per tenant. (Optional)
+# EXTERNAL_MULTITENANT_ENDPOINT=
+# EXTERNAL_MULTITENANT_SECRET=
