@@ -46,26 +46,41 @@
   <!-- room -->
   <div class="row">
     <div class="col-12">
-    <h1><%= @room.name %></h1>
+      <h1><%= @room.name %></h1>
 
-    <h3><%= @room.description %></h3>
+      <h3><%= @room.description %></h3>
+      <% visible = "display: none;" %>
+      <div class = "pull-left">
+        <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+        
+        <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+          <% if meeting_running? %>
+            <% meeting_info_dict = meeting_info %>
+            <% elapsedTime = elapsed_time(meeting_info_dict[:startTime], DateTime.now) %>
+            <% pplPresent = meeting_info_dict[:participantCount] %>
+            <% if pplPresent == 1 %>
+              <% pplprson = "person" %>
+            <% else %>
+              <% pplprson = "people" %>
+            <% end %>
+            <% visible = nil %>
+          <% end %>  
+          <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "btn btn-danger", id: 'end-meeting-btn', style: visible, data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+        <% end %> 
+      </div>
 
-    <div class = "pull-left">
-      <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-
-      <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-        <% if meeting_running? %>
-          <% NotifyMeetingWatcherJob.perform_now(@room, {}) %>
-        <% end %>
-        <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "btn btn-danger", id: 'end-meeting-btn', style: "display:none;", data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-      <% end %>
-    </div>
-
-    <%= content_tag(:p, '', :class => "pull-left" , :style => "display:none; margin-left: 5px; margin-top: 5px", :id => 'meeting-info-msg') %>
-    <%= content_tag(:p, '', :class => "pull-left", :style => "display:none; margin-left: 5px; margin-top: 5px", :id => 'elapsed-time-msg') %>
-
-    <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
-
+      <div class = "pull-left" style = "margin-left: 5px; margin-top: 5px"> 
+        <p id= "meeting-info-msg" style = "<%= visible %>" > 
+          <span id="num-ppl-in-meeting-elem"> <%= pplPresent %> </span>
+          <span id="ppl-or-person-elem"> <%= pplprson %> </span>
+          present. The session has been running for 
+          <span id="elapsed-time-elem"> <%= elapsedTime %> </span> 
+          seconds.
+        </p>
+      </div>
+   
+      <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
+  
     </div>
   </div>
 

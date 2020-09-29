@@ -19,4 +19,26 @@ module RoomsHelper
   def autoclose_url
     'javascript:window.close();'
   end
+
+  def elapsed_time(start_time, curr_time)
+    return 0 if start_time.nil?
+
+    time = curr_time - start_time
+
+    hrs = (time * 24).floor
+    time -= hrs / 24.to_f
+
+    mins = (time * 24 * 60).floor
+    time -= mins / 1440.to_f
+
+    secs = (time * 24 * 60 * 60).floor
+
+    "#{add_zero_maybe(hrs)}:#{add_zero_maybe(mins)}:#{add_zero_maybe(secs)}"
+  end
+
+  def add_zero_maybe(num)
+    num = '0' + num.to_s if num < 10
+
+    num
+  end
 end

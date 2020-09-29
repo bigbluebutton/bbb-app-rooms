@@ -11,9 +11,9 @@ $(document).on('turbolinks:load', function(){
       if (data.meeting_in_progress == true){
         startTime = data.elapsed_time
         in_progress = true;
-        show_end_meeting_btn();
-        display_participant_count(data.participant_count);
         start_elapsed_time();
+        display_participant_count(data.participant_count);
+        show_elems(); 
       }
       if (data.action == "end"){
         in_progress = false;
@@ -26,14 +26,14 @@ $(document).on('turbolinks:load', function(){
 var startTime = 0;
 var in_progress = false;
 
-var show_end_meeting_btn = function(){
+var show_elems = function(){
   $('#end-meeting-btn').show();
+  $('#meeting-info-msg').show();
 }
 
 var hide_elements = function(){
   $('#end-meeting-btn').hide();
   $('#meeting-info-msg').hide();
-  $('#elapsed-time-msg').hide();
 }
 
 var display_participant_count = function(participantCount){
@@ -42,8 +42,8 @@ var display_participant_count = function(participantCount){
   } else {
     var pplprson = "people";
   }
-  document.getElementById('meeting-info-msg').innerHTML = participantCount + " " + pplprson + " present. ";
-  $('#meeting-info-msg').show();
+  document.getElementById('num-ppl-in-meeting-elem').innerHTML = participantCount;
+  document.getElementById('ppl-or-person-elem').innerHTML = pplprson;
 }
 
 var start_elapsed_time = function(){
@@ -57,14 +57,8 @@ var start_elapsed_time = function(){
   secs = addZeroMaybe(secs);
   hrs = addZeroMaybe(hrs);
 
-  document.getElementById('elapsed-time-msg').innerHTML =  " The session has been running for " + hrs + ":" + mins + ":" + secs + " seconds.";
+  document.getElementById('elapsed-time-elem').innerHTML =  hrs + ":" + mins + ":" + secs;
 
-  $('#elapsed-time-msg').show();
-
-  if (!in_progress) {
-    $('#elapsed-time-msg').hide();
-    return; 
-  }
   setTimeout(start_elapsed_time, 500);
 }
 
