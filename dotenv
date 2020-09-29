@@ -26,10 +26,13 @@ RELATIVE_URL_ROOT=apps
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
 # BIGBLUEBUTTON_SECRET=8cd8ef52e8e101574e400365b55e11a6
 # BIGBLUEBUTTON_MODERATOR_ROLES=Instructor,Faculty,Teacher,Mentor,Administrator,Admin
+
+## Enable recording functionality. It is true by default.
+# BIGBLUEBUTTON_RECORDING_ENABLED = false
 # BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS=presentation,capture
 
 ## BigBlueButton LTI Broker configuration
-# In the broker run
+# For assing new applications in the broker run:
 # rake db:apps:add[name,redirect_uri,uid,secret,root] as in
 # rake db:apps:add[rooms,https://lti.jesus.blindside-dev.com/apps/rooms/auth/bbbltibroker/callback,b21211c29d27,3590e00d7ebd]
 # OMNIAUTH_BBBLTIBROKER_SITE=http://localhost
@@ -54,6 +57,9 @@ RAILS_SERVE_STATIC_FILES=true
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
 
-## Enable recordings in the main rooms page as well as the option to record in BIGBLUEBUTTON_ENDPOINT
-## It is true by default
-# BIGBLUEBUTTON_RECORDING_ENABLED = false
+## Use cache for optimizing requests to external servers.
+# RAILS_CACHE_ENABLED=true
+
+## Use to retrieve credentials for a BigBlueButton server per tenant. (Optional)
+# EXTERNAL_MULTITENANT_ENDPOINT=
+# EXTERNAL_MULTITENANT_SECRET=

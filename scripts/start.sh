@@ -1,13 +1,5 @@
 #!/bin/sh
 
-if [ "$RAILS_ENV" = "production" ] && [ "$DB_ADAPTER" = "postgresql" ]; then
-  while ! curl http://$DB_HOST:-localhost:${DB_PORT:-5432}/ 2>&1 | grep '52'
-  do
-    echo "Waiting for postgres to start up ..."
-    sleep 1
-  done
-fi
-
 db_create=$(RAILS_ENV=$RAILS_ENV bundle exec rake db:create)
 echo $db_create
 
