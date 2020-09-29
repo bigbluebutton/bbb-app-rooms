@@ -27,7 +27,7 @@ class Room < ApplicationRecord
   end
 
   def broadcast_room_start
-    ActionCable.server.broadcast("room_#{id}", action: 'started')
+    ActionCable.server.broadcast("wait_channel:room_#{id}", action: 'started')
   end
 
   private
