@@ -36,13 +36,11 @@ class NotifyMeetingWatcherJob < ApplicationJob
 
   def job_data(data)
     info = meeting_info
-    data[:action] = 'end'
-    data[:meeting_in_progress] = (info[:returncode] == 'SUCCESS')
+    data[:meeting_in_progress] = (info[:returncode] == 'SUCCESS' || info[:running] == true)
     # Data for meeting not in progress.
-    return data unless data[:meeting_in_progress]
+    (data[:action] = 'end') && (return data) unless data[:meeting_in_progress]
 
     # Data for meeting in progress.
-    data.delete[:action]
     data[:elapsed_time] = info[:startTime]
     data[:participant_count] = info[:participantCount]
     data
