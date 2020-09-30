@@ -27,16 +27,16 @@ describe RoomsController, type: :controller do
   describe '#create' do
     it 'creates a new room with room information' do
       expect do
-        post :create, params: {
-          room: {
-            name: 'rspec room',
-            description: 'description',
-            handler: :launch_params,
-            recording: false,
-            wait_moderator: false,
-            all_moderators: false,
-          },
-        }
+        post(:create, params: {
+               room: {
+                 name: 'rspec room',
+                 description: 'description',
+                 handler: :launch_params,
+                 recording: false,
+                 wait_moderator: false,
+                 all_moderators: false,
+               },
+             })
       end.to(change { Room.count }.by(1))
     end
   end
@@ -49,7 +49,7 @@ describe RoomsController, type: :controller do
 
   describe '#destroy' do
     it 'should delete the room' do
-      expect { delete :destroy, params: { id: @room.id } }.to(change { Room.count }.by(-1))
+      expect { delete(:destroy, params: { id: @room.id }) }.to(change { Room.count }.by(-1))
     end
   end
 

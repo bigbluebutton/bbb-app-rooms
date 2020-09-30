@@ -38,11 +38,11 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
-        format.html { render :show }
-        format.json { render :show, status: :ok, location: @room }
+        format.html { render(:show) }
+        format.json { render(:show, status: :ok, location: @room) }
       else
-        format.html { render :error, status: @error[:status] }
-        format.json { render json: { error: @error[:message] }, status: @error[:status] }
+        format.html { render(:error, status: @error[:status]) }
+        format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
       end
     end
   end
@@ -61,11 +61,11 @@ class RoomsController < ApplicationController
     @room = Room.new(room_params)
     respond_to do |format|
       if @room.save
-        format.html { redirect_to @room, notice: t('default.room.created') }
-        format.json { render :show, status: :created, location: @room }
+        format.html { redirect_to(@room, notice: t('default.room.created')) }
+        format.json { render(:show, status: :created, location: @room) }
       else
-        format.html { render :new }
-        format.json { render json: @error, status: :unprocessable_entity }
+        format.html { render(:new) }
+        format.json { render(json: @error, status: :unprocessable_entity) }
       end
     end
   end
@@ -75,11 +75,11 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
-        format.html { redirect_to room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated') }
-        format.json { render :show, status: :ok, location: @room }
+        format.html { redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated')) }
+        format.json { render(:show, status: :ok, location: @room) }
       else
-        format.html { render :edit }
-        format.json { render json: @error, status: :unprocessable_entity }
+        format.html { render(:edit) }
+        format.json { render(json: @error, status: :unprocessable_entity) }
       end
     end
   end
@@ -89,8 +89,8 @@ class RoomsController < ApplicationController
   def destroy
     @room.destroy
     respond_to do |format|
-      format.html { redirect_to rooms_url, notice: t('default.room.destroyed') }
-      format.json { head :no_content }
+      format.html { redirect_to(rooms_url, notice: t('default.room.destroyed')) }
+      format.json { head(:no_content) }
     end
   end
 
@@ -128,7 +128,7 @@ class RoomsController < ApplicationController
   def meeting_close
     respond_to do |format|
       broadcast_meeting(action: 'someone left', delay: true)
-      format.html { render :autoclose }
+      format.html { render(:autoclose) }
     end
   end
 
