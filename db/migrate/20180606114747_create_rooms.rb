@@ -17,7 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class CreateRooms < ActiveRecord::Migration[5.2]
   def change
-    create_table :rooms do |t|
+    create_table(:rooms) do |t|
       t.string(:name)
       t.string(:description)
       t.string(:welcome)

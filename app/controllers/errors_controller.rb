@@ -27,8 +27,8 @@ class ErrorsController < ApplicationController
                suggestion: t("error.http._#{params[:code]}.suggestion"),
                status: params[:code], }
     respond_to do |format|
-      format.html { render :index, status: params[:code] }
-      format.json { render json: { error:  @error }, status: @error[:code] }
+      format.html { render(:index, status: params[:code]) }
+      format.json { render(json: { error:  @error }, status: @error[:code]) }
     end
   end
 end
