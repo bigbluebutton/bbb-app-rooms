@@ -45,11 +45,12 @@ module BbbHelper
 
   # Create meeting for the current @room.
   def create_meeting
+    record = bigbluebutton_recording_enabled ? @room.recording : false
     create_options = {
       moderatorPW: @room.moderator,
       attendeePW: @room.viewer,
       welcome: @room.welcome,
-      record: @room.recording,
+      record: record,
       logoutURL: autoclose_url,
       'meta_description': @room.description,
     }
@@ -146,6 +147,10 @@ module BbbHelper
 
   def bigbluebutton_recording_public_formats
     Rails.configuration.bigbluebutton_recording_public_formats.split(',')
+  end
+
+  def bigbluebutton_recording_enabled
+    ActiveModel::Type::Boolean.new.cast(Rails.configuration.bigbluebutton_recording_enabled)
   end
 
   # Helper for converting BigBlueButton dates into the desired format.

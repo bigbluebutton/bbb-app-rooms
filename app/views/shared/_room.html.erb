@@ -82,6 +82,7 @@
       <% if !@user.admin? && !@user.moderator?(bigbluebutton_moderator_roles) %>
         <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
       <% end %>
+
     </div>
   </div>
 
@@ -111,7 +112,7 @@
                   <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                 </td>
               </tr>
-              <% if recordings.empty? %>
+              <% if !bigbluebutton_recording_enabled || recordings.empty? %>
                 <tr>
                   <td colspan="7" class="text-center h4 p-6 font-weight-normal">
                     <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
