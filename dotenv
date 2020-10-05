@@ -48,6 +48,9 @@ URL_HOST=lti.jesus.blindside-dev.com
 ## Use only with postgres instance outside the one pre-packaged with docker-compose (Optional)
 # DATABASE_URL=postgres://postgres:password@localhost
 
+## Enable redis for actioncable (Optional)
+# REDIS_URL=redis://myuser:mypass@localhost
+
 ## Use to send logs to Standard Output (Optional)
 RAILS_LOG_TO_STDOUT=true
 
@@ -57,7 +60,7 @@ RAILS_SERVE_STATIC_FILES=true
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
 
-## Use cache for optimizing requests to external servers.
+## Use cache for optimizing requests to external servers.  (Optional)
 # RAILS_CACHE_ENABLED=true
 
 ## Use to retrieve credentials for a BigBlueButton server per tenant. (Optional)
