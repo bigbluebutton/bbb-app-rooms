@@ -17,6 +17,10 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 Rails.application.routes.draw do
+  get '/health_check', to: 'health_check#all'
+  get '/healthz', to: 'health_check#all'
+  root to: 'health_check#all'
+
   mount ActionCable.server => "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/cable"
 
   scope ENV['RELATIVE_URL_ROOT'] || '' do
