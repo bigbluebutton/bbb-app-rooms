@@ -73,10 +73,10 @@ jobs:
       - sudo minikube start --vm-driver=none --kubernetes-version=v1.17.0
       - minikube update-context
     script:
-      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_BRANCH_SERVER --token=$KUBERNETES_TOKEN get deployment $KUBERNETES_DEPLOYMENT -o json > deployment.json
+      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_BRANCH_SERVER --token=$KUBERNETES_BRANCH_TOKEN get deployment $KUBERNETES_DEPLOYMENT -o json > deployment.json
       # Update the deployment.yaml file with $DOCKER_REPO:$TRAVIS_BRANCH.
       - ruby scripts/ci_k8s_deployment_update.rb $DOCKER_REPO:$TRAVIS_BRANCH deployment.json
-      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_BRANCH_SERVER --token=$KUBERNETES_TOKEN apply -f deployment.json
+      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_BRANCH_SERVER --token=$KUBERNETES_BRANCH_TOKEN apply -f deployment.json
     if: type = push AND env(DEPLOY_IGNORE) IS NOT present AND (branch = master OR tag IS blank AND env(DEPLOY_ALL) IS present)
 # This deployment is only triggered when building from a branch.
   - stage: deploy
@@ -89,8 +89,8 @@ jobs:
       - sudo minikube start --vm-driver=none --kubernetes-version=v1.17.0
       - minikube update-context
     script:
-      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_RELEASE_SERVER --token=$KUBERNETES_TOKEN get deployment $KUBERNETES_DEPLOYMENT -o json > deployment.json
+      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_RELEASE_SERVER --token=$KUBERNETES_RELEASE_TOKEN get deployment $KUBERNETES_DEPLOYMENT -o json > deployment.json
       # Update the deployment.yaml file with $DOCKER_REPO:$TRAVIS_TAG.
       - ruby scripts/ci_k8s_deployment_update.rb $DOCKER_REPO:$TRAVIS_TAG deployment.json
-      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_RELEASE_SERVER --token=$KUBERNETES_TOKEN apply -f deployment.json
+      - kubectl --insecure-skip-tls-verify --kubeconfig="/dev/null" --server=$KUBERNETES_RELEASE_SERVER --token=$KUBERNETES_RELEASE_TOKEN apply -f deployment.json
     if: env(DEPLOY_IGNORE) IS NOT present AND tag IS NOT blank
