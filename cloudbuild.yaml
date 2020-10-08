@@ -8,7 +8,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build',
          '--build-arg',
-         'version_code=${TAG_NAME}',
+         'BUILD_NUMBER=${TAG_NAME}',
          '-t',
          'gcr.io/$PROJECT_ID/${_URL}:${TAG_NAME}.${SHORT_SHA}',
          '-t',
@@ -18,10 +18,10 @@ steps:
          '.']
 - name: 'gcr.io/cloud-builders/kubectl'
   args: [
-   'set', 
-   'image', 
-   'deployment', 
-   '${_APP_NAME}', 
+   'set',
+   'image',
+   'deployment',
+   '${_APP_NAME}',
    '${_IMAGE_NAME}=gcr.io/$PROJECT_ID/${_URL}:${TAG_NAME}.${SHORT_SHA}'
   ]
   env:
