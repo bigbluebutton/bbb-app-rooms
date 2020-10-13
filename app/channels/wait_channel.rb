@@ -17,7 +17,8 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class WaitChannel < ApplicationCable::Channel
   def subscribed
-    stream_from("wait_channel:room_#{params[:room]}")
+    @room = Room.find(params[:room_id])
+    stream_for(@room)
   end
 
   def unsubscribed
@@ -25,6 +26,6 @@ class WaitChannel < ApplicationCable::Channel
   end
 
   def notify_join
-    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(Room.find(params[:room]), action: 'joined from wait')
+    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(Room.find(params[:room_id]), action: 'joined from wait')
   end
 end
