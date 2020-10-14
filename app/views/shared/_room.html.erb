@@ -51,8 +51,13 @@
       <h3><%= @room.description %></h3>
       <% visible = "display: none;" %>
       <div class = "pull-left">
-        <%= button_tag t('default.room.join'), :type => 'button', :class => "btn btn-primary", id: 'join-room-btn', data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-        
+      
+        <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
+            <%= button_tag t('default.room.join') ,:type => 'submit', style: "display:inline; margin-right: 5px", :class => "btn btn-primary", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+        <% end %>  
+      </div>
+
+      <div>    
         <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
           <% if meeting_running? %>
             <% meeting_info_dict = meeting_info %>
@@ -63,9 +68,9 @@
             <% else %>
               <% pplprson = "people" %>
             <% end %>
-            <% visible = nil %>
+            <% visible = "display: inline;" %>
           <% end %>  
-          <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "btn btn-danger", id: 'end-meeting-btn', style: visible, data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+         <span> <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "pull-left btn btn-danger", id: 'end-meeting-btn', style: visible, data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %></span>
         <% end %> 
       </div>
 

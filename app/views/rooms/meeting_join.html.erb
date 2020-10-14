@@ -1,0 +1,43 @@
+<head>
+
+    <style>
+
+        .header {
+            padding: 60px;
+            text-align: left;
+            background: white;
+            color: white;
+            font-size: 30px;
+        }
+
+        .message-2{
+            text-align: center; 
+            position: relative;
+            background-color: #F5F7FB;
+            margin-top: 15px;
+            padding-top: 8%;
+            padding-bottom: 8%
+        }
+        
+    </style>
+
+</head>
+<body data-meeting = <%=@meeting%>>
+<div class="container-fluid">
+    <div class = "row">
+        <div class ="w3-container w3-white ">
+            <img style ="top:50%" alt="" src="https://raw.githubusercontent.com/bigbluebutton/greenlight/master/app/assets/images/logo_with_text.png">
+        </div>
+    </div>
+    <div class = "row w3-container w3-blue d-flex justify-content-center" style="width:100%; height: 30%" >
+        <div class = "col-xs-12 font-weight-400 message-2" >
+            <h1 class="row"> Hang tight... </h1> <br>
+        
+            <span> <div class="loader row" style ="margin:auto; padding: 10px"></div> </span> <br>   
+
+            <h1 class="row">You will be redirected once the meeting starts</h1>
+        </div>
+    </div>
+
+    <div class="row" style="background-color: blue; background: blue; "> </div>
+</body>
