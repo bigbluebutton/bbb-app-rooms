@@ -17,14 +17,23 @@ class SessionsController < ApplicationController
       Rails.logger.info "Authentication failed, redirecting to #{omniauth_retry_path(params)}"
       redirect_to(omniauth_retry_path(params)) && return
     end
-
     # As authentication did not fail, initialize the session
-    session['omniauth_auth'] = omniauth_auth
-    redirect_to(
-      room_launch_url(
-        launch_nonce: params['launch_nonce'], provider: params['provider'], session_set: true
+
+    provider = params['provider']
+    session['omniauth_auth'] ||= {}
+    session['omniauth_auth'][provider] = omniauth_auth
+
+    omniauth_params = request.env['omniauth.params']
+    if provider == 'brightspace'
+      scheduled_meeting_id = omniauth_params['scheduled_meeting']
+      redirect_to brightspace_send_calendar_event_url scheduled_meeting_id
+    elsif provider == 'bbbltibroker'
+      redirect_to(
+        room_launch_url(
+          launch_nonce: params['launch_nonce'], provider: provider, session_set: true
+        )
       )
-    )
+    end
   end
 
   def failure

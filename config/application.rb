@@ -38,12 +38,16 @@ module BbbAppRooms
                                   else
                                     "/#{ENV['RELATIVE_URL_ROOT']}/rooms/auth"
                                   end
-    config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || 'http://localhost:3000'
-    config.omniauth_root = (
+    config.omniauth_site = {}
+    config.omniauth_site[:bbbltibroker] = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || 'http://localhost:3000'
+    config.omniauth_root = {}
+    config.omniauth_root[:bbbltibroker] = (
       ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : ''
     ).to_s
-    config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
-    config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
+    config.omniauth_key = {}
+    config.omniauth_key[:bbbltibroker] = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
+    config.omniauth_secret = {}
+    config.omniauth_secret[:bbbltibroker] = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
 
     config.assets.prefix = if ENV['RELATIVE_URL_ROOT'].blank?
                              '/rooms/assets'

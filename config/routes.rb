@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
 
       # Handles launches.
-      get 'launch', to: 'rooms#launch', as: :room_launch
+      get '/launch', to: 'rooms#launch', as: :room_launch
 
       # Handles sessions.
       get '/sessions/create'
@@ -54,6 +54,12 @@ Rails.application.routes.draw do
         end
       end
     end
+  end
+
+  scope :brightspace do
+    get '/send_calendar_event/:scheduled_meeting_id',
+      to: 'brightspace#send_calendar_event',
+      as: :brightspace_send_calendar_event
   end
 
   # To treat errors on pages that don't fall on any other controller

@@ -103,6 +103,14 @@ class AppLaunch < ApplicationRecord
     self.oauth_consumer_key
   end
 
+  def bigbluebutton_server
+    BigbluebuttonServer.find_by_key consumer_key
+  end
+
+  def brightspace_oauth
+    bigbluebutton_server&.brightspace_oauth
+  end
+
   private
 
   def set_room_handler

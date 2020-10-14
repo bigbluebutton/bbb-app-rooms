@@ -12,6 +12,13 @@ GIT
       js_cookie_rails
       rails (>= 3.1)
 
+GIT
+  remote: https://github.com/mconf/omniauth-brightspace.git
+  revision: 5012b08b3ad69dd0c78ca10cf9ce44f536f2e998
+  specs:
+    omniauth-brightspace (1.0.0)
+      omniauth-oauth2 (~> 1.6)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -371,6 +378,7 @@ DEPENDENCIES
   logstash-event
   omniauth (>= 1.9.1)
   omniauth-bbbltibroker!
+  omniauth-brightspace!
   omniauth-oauth2 (>= 1.6.0)
   pg (~> 1.0)
   puma (~> 3.12)

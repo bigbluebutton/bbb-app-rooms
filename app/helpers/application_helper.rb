@@ -6,8 +6,8 @@ module ApplicationHelper
   include BbbApi
 
   def omniauth_bbbltibroker_url(path = nil)
-    url = Rails.configuration.omniauth_site
-    url += Rails.configuration.omniauth_root if Rails.configuration.omniauth_root.present?
+    url = Rails.configuration.omniauth_site[:bbbltibroker]
+    url += Rails.configuration.omniauth_root[:bbbltibroker] if Rails.configuration.omniauth_root[:bbbltibroker].present?
     url += path unless path.nil?
     url
   end
@@ -15,8 +15,8 @@ module ApplicationHelper
   def omniauth_client_token(lti_broker_url)
     oauth_options = {
       grant_type: 'client_credentials',
-      client_id: Rails.configuration.omniauth_key,
-      client_secret: Rails.configuration.omniauth_secret,
+      client_id: Rails.configuration.omniauth_key[:bbbltibroker],
+      client_secret: Rails.configuration.omniauth_secret[:bbbltibroker],
     }
     response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
     JSON.parse(response)['access_token']

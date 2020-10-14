@@ -50,7 +50,16 @@ class ScheduledMeetingsController < ApplicationController
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
 
       if @scheduled_meeting.save
-        format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
+        format.html do
+          app = AppLaunch.find_by_nonce @scheduled_meeting.created_by_launch_nonce
+          if app.brightspace_oauth
+            Rails.logger.info 'Found brightspace, sending calendar event'
+            redirect_to brightspace_send_calendar_event_url @scheduled_meeting
+          else
+            Rails.logger.info "Brightspace not found"
+            redirect_to @room, notice: t('default.scheduled_meeting.created')
+          end
+        end
       else
         format.html { render :new }
       end

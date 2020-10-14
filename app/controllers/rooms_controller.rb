@@ -8,7 +8,8 @@ class RoomsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, only: :launch, raise: false
+  before_action -> {authenticate_with_oauth! :bbbltibroker},
+    only: :launch, raise: false
   before_action :set_launch_room, only: %i[launch]
 
   before_action :find_room, except: %i[launch close]
@@ -109,7 +110,7 @@ class RoomsController < ApplicationController
     end
 
     launch_params = session_params['message']
-    if launch_params['user_id'] != session['omniauth_auth']['uid']
+    if launch_params['user_id'] != session['omniauth_auth']['bbbltibroker']['uid']
       Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 403"
       set_error('room', 'forbidden', :forbidden)
       respond_with_error(@error)
@@ -131,7 +132,7 @@ class RoomsController < ApplicationController
     app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
       launch.update(
         params: launch_params,
-        omniauth_auth: session['omniauth_auth'],
+        omniauth_auth: session['omniauth_auth']['bbbltibroker'],
         expires_at: expires_at
       )
     end

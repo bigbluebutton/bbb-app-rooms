@@ -89,6 +89,7 @@ gem 'rest-client'
 gem 'omniauth', '>= 1.9.1'
 gem 'omniauth-oauth2', '>= 1.6.0'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+gem 'omniauth-brightspace', git: 'https://github.com/mconf/omniauth-brightspace.git'
 
 # Logging
 gem 'lograge'
