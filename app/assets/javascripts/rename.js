@@ -40,8 +40,13 @@ $(document).on('turbolinks:load', function(){
           submit_rename_request(recording_text)
         };
 
-        $input.one('blur', save).focus();
-
+        $input.on('blur keyup', function(e) {
+          if (e.type === 'blur' || e.keyCode === 13)  { // keycode is depreciated by still recognized by browsers, it's alt (.key) doesnt work in firefox
+            save();
+            this.focus();
+          }
+        });
+       
         // Register the events for being able to exit the input box.
         register_window_event(recording_text, recording_text_id, '#edit-record', 'edit-recordid');
       }
