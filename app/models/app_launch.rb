@@ -104,7 +104,7 @@ class AppLaunch < ApplicationRecord
   end
 
   def bigbluebutton_server
-    BigbluebuttonServer.find_by_key consumer_key
+    ConsumerConfig.find_by_key(consumer_key)&.server
   end
 
   def brightspace_oauth

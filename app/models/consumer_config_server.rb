@@ -1,7 +1,7 @@
-class BigbluebuttonServer < ApplicationRecord
+class ConsumerConfigServer < ApplicationRecord
   belongs_to :brightspace_oauth
 
-  validates :key, uniqueness: true
+  belongs_to :consumer_config
 
   def domain
     begin
