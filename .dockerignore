@@ -25,3 +25,4 @@ Dockerfile
 .travis.yml
 spec
 test
+data/postgres
