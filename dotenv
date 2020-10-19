@@ -80,3 +80,7 @@ RAILS_SERVE_STATIC_FILES=true
 # For details, see: https://github.com/puma/puma#clustered-mode
 # Default: 1
 # WEB_CONCURRENCY=1
+
+## Define log level in production.
+# Default 'warn'.
+# LOG_LEVEL=warn
