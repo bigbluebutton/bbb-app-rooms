@@ -25,8 +25,9 @@ class SessionsController < ApplicationController
 
     omniauth_params = request.env['omniauth.params']
     if provider == 'brightspace'
-      scheduled_meeting_id = omniauth_params['scheduled_meeting']
-      redirect_to brightspace_send_calendar_event_url scheduled_meeting_id
+      room_param = omniauth_params['room']
+      scheduled_meeting_param = omniauth_params['scheduled_meeting']
+      redirect_to send_calendar_event_room_scheduled_meeting_path(room_param, scheduled_meeting_param)
     elsif provider == 'bbbltibroker'
       redirect_to(
         room_launch_url(

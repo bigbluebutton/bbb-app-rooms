@@ -4,16 +4,24 @@ class BrightspaceController < ApplicationController
   include ApplicationHelper
   include BrightspaceHelper
 
+  # make sure the user has access to the room and meeting
+  before_action :find_room
+  before_action :validate_room
+  before_action :find_user
+  before_action :find_scheduled_meeting
+  before_action :validate_scheduled_meeting
+
   before_action -> {
-    authenticate_with_oauth! :brightspace,
-      { scheduled_meeting: params['scheduled_meeting_id'] }
+    params = {
+      room: @room.to_param,
+      scheduled_meeting: @scheduled_meeting.to_param
+    }
+    authenticate_with_oauth! :brightspace, params
   }, only: :send_calendar_event, raise: false
 
   def send_calendar_event
-    scheduled_meeting_id = params['scheduled_meeting_id']
-    scheduled_meeting = ScheduledMeeting.find scheduled_meeting_id
-    calendar_url = build_calendar_url(scheduled_meeting)
-    calendar_payload = build_calendar_payload(scheduled_meeting)
+    calendar_url = build_calendar_url(@scheduled_meeting)
+    calendar_payload = build_calendar_payload(@scheduled_meeting)
 
     omniauth_auth = session['omniauth_auth']['brightspace']
     access_token = omniauth_auth['credentials']['token']
@@ -28,12 +36,11 @@ class BrightspaceController < ApplicationController
       payload = JSON.parse(response)
 
       event_id = payload['CalendarEventId']
-      scheduled_meeting.update(brightspace_calendar_event_id: event_id)
+      @scheduled_meeting.update(brightspace_calendar_event_id: event_id)
     rescue RestClient::ExceptionWithResponse => e
       Rails.logger.error "Could not send calendar event: #{e.response}"
     end
 
-    room = scheduled_meeting.room
-    redirect_to room, notice: t('default.scheduled_meeting.created')
+    redirect_to @room, notice: t('default.scheduled_meeting.created')
   end
 end

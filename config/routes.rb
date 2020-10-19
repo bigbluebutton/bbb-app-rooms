@@ -51,15 +51,10 @@ Rails.application.routes.draw do
           post :join
           get :external
           get :wait
+          get :send_calendar_event, to: 'brightspace#send_calendar_event'
         end
       end
     end
-  end
-
-  scope :brightspace do
-    get '/send_calendar_event/:scheduled_meeting_id',
-      to: 'brightspace#send_calendar_event',
-      as: :brightspace_send_calendar_event
   end
 
   # To treat errors on pages that don't fall on any other controller
