@@ -82,5 +82,6 @@ RAILS_SERVE_STATIC_FILES=true
 # WEB_CONCURRENCY=1
 
 ## Define log level in production.
+# [debug|info|warn|error|fatal]
 # Default 'warn'.
 # LOG_LEVEL=warn
