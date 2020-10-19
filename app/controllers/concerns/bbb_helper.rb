@@ -52,7 +52,7 @@ module BbbHelper
       welcome: @room.welcome,
       record: record,
       logoutURL: autoclose_url,
-      'meta_description': @room.description,
+      'meta_description': @room.description.truncate(128, separator: ' '),
     }
     # Send the create request.
     bbb.create_meeting(@room.name, @room.handler, create_options)
