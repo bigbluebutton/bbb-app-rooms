@@ -67,8 +67,10 @@ RAILS_SERVE_STATIC_FILES=true
 # EXTERNAL_MULTITENANT_ENDPOINT=
 # EXTERNAL_MULTITENANT_SECRET=
 
+## Enable redis as the Action Cable adapter.
+# CABLE_ADAPTER=redis
+
 ## Web server settings
-#
 # The size of the thread pool per worker used by Greenlight's web server.
 # For details, see: https://github.com/puma/puma#thread-pool
 # Default: 5
