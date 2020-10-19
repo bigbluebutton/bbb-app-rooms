@@ -1,3 +1,5 @@
+require 'brightspace_helper'
+
 class BrightspaceController < ApplicationController
   include ApplicationHelper
   include BrightspaceHelper
