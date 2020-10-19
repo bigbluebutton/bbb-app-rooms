@@ -10,11 +10,13 @@ namespace :db do
           scope: "core:*:*" # it only accepts this for now
         }
         puts "Adding or updating the omniauth brightspace #{attrs.inspect}"
-        oauth_brightspace = BrightspaceOauth.create_with(attrs)
-          .find_or_create_by(url: attrs[:url])
-        server = BigbluebuttonServer.find_by_key args[:key]
-        oauth_brightspace.update(attrs)
-        server.update(brightspace_oauth: oauth_brightspace)
+
+        config = ConsumerConfig.find_or_create_by(key: args[:key])
+        if config.brightspace_oauth.present?
+          config.brightspace_oauth.update(attrs)
+        else
+          config.create_brightspace_oauth(attrs)
+        end
       end
     end
   end

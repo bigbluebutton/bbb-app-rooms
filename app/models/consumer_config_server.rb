@@ -1,6 +1,4 @@
 class ConsumerConfigServer < ApplicationRecord
-  belongs_to :brightspace_oauth
-
   belongs_to :consumer_config
 
   def domain
