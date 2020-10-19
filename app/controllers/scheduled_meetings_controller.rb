@@ -51,10 +51,10 @@ class ScheduledMeetingsController < ApplicationController
 
       if @scheduled_meeting.save
         format.html do
-          app = AppLaunch.find_by_nonce @scheduled_meeting.created_by_launch_nonce
+          app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
           if app.brightspace_oauth
             Rails.logger.info 'Found brightspace, sending calendar event'
-            redirect_to brightspace_send_calendar_event_url @scheduled_meeting
+            redirect_to send_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
           else
             Rails.logger.info "Brightspace not found"
             redirect_to @room, notice: t('default.scheduled_meeting.created')
@@ -199,20 +199,6 @@ class ScheduledMeetingsController < ApplicationController
     attrs << [:wait_moderator] if room.allow_wait_moderator
     attrs << [:all_moderators] if room.allow_all_moderators
     params.require(:scheduled_meeting).permit(*attrs)
-  end
-
-  def find_scheduled_meeting
-    @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
-  end
-
-  def validate_scheduled_meeting
-    if @scheduled_meeting.blank?
-      set_error('scheduled_meeting', 'not_found', :not_found)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-      false
-    end
   end
 
   def validate_start_at(scheduled_meeting)

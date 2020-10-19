@@ -115,6 +115,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_scheduled_meeting
+    @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
+  end
+
+  def validate_scheduled_meeting
+    if @scheduled_meeting.blank?
+      set_error('scheduled_meeting', 'not_found', :not_found)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+      false
+    end
+  end
+
   def set_error(model, error, status)
     @user = nil
     instance_variable_set("@#{model}".to_sym, nil)

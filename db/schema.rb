@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_13_190647) do
+ActiveRecord::Schema.define(version: 2020_10_18_212845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,22 +27,22 @@ ActiveRecord::Schema.define(version: 2020_10_13_190647) do
     t.index ["room_handler"], name: "index_app_launches_on_room_handler"
   end
 
-  create_table "bigbluebutton_servers", force: :cascade do |t|
-    t.string "key"
-    t.string "endpoint"
-    t.string "secret"
-    t.string "internal_endpoint"
-    t.bigint "brightspace_oauth_id"
-    t.index ["brightspace_oauth_id"], name: "index_bigbluebutton_servers_on_brightspace_oauth_id"
-    t.index ["key"], name: "index_bigbluebutton_servers_on_key", unique: true
-  end
-
-  create_table "brightspace_oauths", force: :cascade do |t|
+  create_table "consumer_config_brightspace_oauths", force: :cascade do |t|
     t.string "url"
     t.string "client_id"
     t.string "client_secret"
     t.string "scope"
-    t.index ["url"], name: "index_brightspace_oauths_on_url"
+    t.bigint "consumer_config_id"
+    t.index ["consumer_config_id"], name: "index_consumer_config_brightspace_oauths_on_consumer_config_id"
+    t.index ["url"], name: "index_consumer_config_brightspace_oauths_on_url"
+  end
+
+  create_table "consumer_config_servers", force: :cascade do |t|
+    t.string "endpoint"
+    t.string "secret"
+    t.string "internal_endpoint"
+    t.bigint "consumer_config_id"
+    t.index ["consumer_config_id"], name: "index_consumer_config_servers_on_consumer_config_id"
   end
 
   create_table "consumer_configs", force: :cascade do |t|
@@ -95,5 +95,6 @@ ActiveRecord::Schema.define(version: 2020_10_13_190647) do
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end
 
-  add_foreign_key "bigbluebutton_servers", "brightspace_oauths"
+  add_foreign_key "consumer_config_brightspace_oauths", "consumer_configs"
+  add_foreign_key "consumer_config_servers", "consumer_configs"
 end
