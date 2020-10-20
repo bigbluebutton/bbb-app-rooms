@@ -10,6 +10,7 @@ class BrightspaceController < ApplicationController
   before_action :find_user
   before_action :find_scheduled_meeting
   before_action :validate_scheduled_meeting
+  before_action :prevent_event_duplication, only: :send_calendar_event
 
   before_action -> {
     params = {
@@ -42,5 +43,15 @@ class BrightspaceController < ApplicationController
     end
 
     redirect_to @room, notice: t('default.scheduled_meeting.created')
+  end
+
+  private
+
+  def prevent_event_duplication
+    event_id = @scheduled_meeting.brightspace_calendar_event_id
+    if event_id
+      Rails.logger.info "Brightspace calendar event #{event_id} already sent."
+      redirect_to @room
+    end
   end
 end
