@@ -92,51 +92,52 @@
   </div>
 
   <!-- recordings -->
-  <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
+  <% if bigbluebutton_recording_enabled %>
+    <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
 
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div>
-          <table class="table table-hover table-outline table-vcenter text-wrap card-table">
-            <thead>
-              <tr>
-                <th><%= t("default.recording.table.formats") %></th>
-                <th class="col-md-2"><%= t("default.recording.table.name") %></th>
-                <th class="col-md-4"><%= t("default.recording.table.description") %></th>
-                <th class="col-md-2"><%= t("default.recording.table.date") %></th>
-                <th class="col-md-1"><%= t("default.recording.table.duration") %></th>
-                <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-                  <th class="text-center col-md-1"><%= t("default.recording.table.actions") %></th>
-                <% end %>
-              </tr>
-            </thead>
-            <tbody id="recording-table">
-              <tr id="no_recordings_found" style="display: none;">
-                <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
-                  <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
-                </td>
-              </tr>
-              <% if !bigbluebutton_recording_enabled || recordings.empty? %>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div>
+            <table class="table table-hover table-outline table-vcenter text-wrap card-table">
+              <thead>
                 <tr>
-                  <td colspan="7" class="text-center h4 p-6 font-weight-normal">
-                    <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
+                  <th><%= t("default.recording.table.formats") %></th>
+                  <th class="col-md-2"><%= t("default.recording.table.name") %></th>
+                  <th class="col-md-4"><%= t("default.recording.table.description") %></th>
+                  <th class="col-md-2"><%= t("default.recording.table.date") %></th>
+                  <th class="col-md-1"><%= t("default.recording.table.duration") %></th>
+                  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+                    <th class="text-center col-md-1"><%= t("default.recording.table.actions") %></th>
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody id="recording-table">
+                <tr id="no_recordings_found" style="display: none;">
+                  <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
+                    <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                   </td>
                 </tr>
-              <% else %>
-                <% recordings.each do |recording| %>
-                  <% if only_public %>
-                    <%= render "shared/components/public_recording_row", recording: recording %>
-                  <% else %>
-                    <%= render "shared/components/recording_row", recording: recording %>
+                <% if recordings.empty? %>
+                  <tr>
+                    <td colspan="7" class="text-center h4 p-6 font-weight-normal">
+                      <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
+                    </td>
+                  </tr>
+                <% else %>
+                  <% recordings.each do |recording| %>
+                    <% if only_public %>
+                      <%= render "shared/components/public_recording_row", recording: recording %>
+                    <% else %>
+                      <%= render "shared/components/recording_row", recording: recording %>
+                    <% end %>
                   <% end %>
                 <% end %>
-              <% end %>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
+  <% end %>
 </div>
