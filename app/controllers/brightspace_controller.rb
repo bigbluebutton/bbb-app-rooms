@@ -10,6 +10,7 @@ class BrightspaceController < ApplicationController
   before_action :find_user
   before_action :find_scheduled_meeting
   before_action :validate_scheduled_meeting
+  before_action -> { authorize_user!(:edit, @room) }, only: :send_calendar_event
   before_action :prevent_event_duplication, only: :send_calendar_event
 
   before_action -> {
