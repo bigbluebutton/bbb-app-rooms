@@ -161,6 +161,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def push_redirect_to_session! session_name, url, args={}
+    session[session_name] = [ url, args ]
+  end
+
+  def pop_redirect_from_session! session_name
+    url, args = session.delete(session_name)
+    args = args.map{|k,v| [k.to_sym, v]}.to_h
+    [url, args]
+  end
+
   def on_error
     render_error(request.path[1..-1])
   end

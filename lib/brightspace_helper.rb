@@ -1,13 +1,10 @@
 module BrightspaceHelper
-  def build_calendar_url(scheduled_meeting)
-    app = AppLaunch.find_by_nonce scheduled_meeting.created_by_launch_nonce
-
+  def build_calendar_url(app, event_id='')
     brightspace_oauth = app.brightspace_oauth
     domain = brightspace_oauth.url
     version = "1.34"
     org_unit = app.context_id
-
-    "#{domain}/d2l/api/le/#{version}/#{org_unit}/calendar/event/"
+    "#{domain}/d2l/api/le/#{version}/#{org_unit}/calendar/event/#{event_id}"
   end
 
   def build_calendar_payload(scheduled_meeting)

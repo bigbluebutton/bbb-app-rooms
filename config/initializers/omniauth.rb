@@ -40,10 +40,17 @@ end
 # This will be called before every request_phase and callback_phase
 brightspace_setup_phase = lambda do |env|
   req = Rack::Request.new(env)
-  scheduled_meeting_id = req.GET['scheduled_meeting'] ||
-                         env['rack.session']['omniauth.params']&.[]('scheduled_meeting')
-  scheduled_meeting = ScheduledMeeting.find scheduled_meeting_id
-  app = AppLaunch.find_by_nonce scheduled_meeting.created_by_launch_nonce
+  app_id = req.GET['app_id'] ||
+           env['rack.session']['omniauth.params']&.[]('app_id')
+  if app_id
+    app = AppLaunch.find app_id
+  else
+    scheduled_meeting_id = req.GET['id'] ||
+                         env['rack.session']['omniauth.params']&.[]('id')
+    scheduled_meeting = ScheduledMeeting.find scheduled_meeting_id
+    app = AppLaunch.find_by_nonce scheduled_meeting.created_by_launch_nonce
+  end
+
   brightspace_oauth = app.brightspace_oauth
 
   env['omniauth.strategy'].options[:client_id] = brightspace_oauth.client_id
