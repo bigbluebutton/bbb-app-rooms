@@ -12,25 +12,8 @@ class BrightspaceController < ApplicationController
   before_action :validate_scheduled_meeting, except: :send_delete_calendar_event
   before_action -> { authorize_user!(:edit, @room) }
   before_action :prevent_event_duplication, only: :send_create_calendar_event
-
-  before_action -> {
-    @custom_params = params.permit(:room_id, :id).merge({
-    event: :create_calendar_event
-  }).to_h }, only: :send_create_calendar_event
-
-  before_action -> {
-    @custom_params = params.permit(:room_id, :id).merge({
-    event: :update_calendar_event
-  }).to_h }, only: :send_update_calendar_event
-
-  before_action -> {
-    @custom_params = params.permit(:room_id, :id, :app_id, :event_id).merge({
-    event: :delete_calendar_event
-  }).to_h }, only: :send_delete_calendar_event
-
-  before_action -> {
-    authenticate_with_oauth! :brightspace, @custom_params
-  }
+  before_action :set_event
+  before_action -> { authenticate_with_oauth! :brightspace, @custom_params }
 
   def send_create_calendar_event
     event = build_event :create
@@ -95,13 +78,22 @@ class BrightspaceController < ApplicationController
 
       event = [calendar_url, calendar_payload.to_json, headers]
     when :delete
-      app = AppLaunch.find params['app_id']
+      app = AppLaunch.find permitted_params['app_id']
 
-      event_id = params['event_id']
+      event_id = permitted_params['event_id']
       calendar_url = build_calendar_url(app, event_id)
 
       event = [calendar_url, headers]
     end
     event
+  end
+
+  def set_event
+    @custom_params = permitted_params.to_h
+    @custom_params[:event] = action_name
+  end
+
+  def permitted_params
+    params.permit(:room_id, :id, :app_id, :event_id)
   end
 end

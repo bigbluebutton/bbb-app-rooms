@@ -48,18 +48,10 @@ class ScheduledMeetingsController < ApplicationController
 
       room_session = get_room_session(@room)
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
-
       if @scheduled_meeting.save
         format.html do
-          app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
-          if app.brightspace_oauth
-            Rails.logger.info 'Found brightspace, sending create calendar event'
-            push_redirect_to_session! "brightspace_return_to", room_path(@room), { notice: t('default.scheduled_meeting.created') }
-            redirect_to send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
-          else
-            Rails.logger.info "Brightspace not found"
-            redirect_to @room, notice: t('default.scheduled_meeting.created')
-          end
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.created') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
         end
       else
         format.html { render :new }
@@ -77,14 +69,8 @@ class ScheduledMeetingsController < ApplicationController
       end
       if @scheduled_meeting.update(scheduled_meeting_params(@room))
         format.html do
-          app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
-          if app.brightspace_oauth
-            Rails.logger.info 'Found brightspace, sending update calendar event'
-            push_redirect_to_session! "brightspace_return_to", room_path(@room), { notice: t('default.scheduled_meeting.updated') }
-            redirect_to send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
-          else
-            redirect_to @room, notice: t('default.scheduled_meeting.updated')
-          end
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.updated') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
         end
       else
         format.html { render :edit }
@@ -186,12 +172,9 @@ class ScheduledMeetingsController < ApplicationController
     event_id = @scheduled_meeting.brightspace_calendar_event_id
     if event_id
       Rails.logger.info 'Found brightspace event, sending delete calendar event'
-      app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
-      push_redirect_to_session! "brightspace_return_to", room_path(@room), { notice: t('default.scheduled_meeting.destroyed') }
-      redirect_to send_delete_calendar_event_room_scheduled_meeting_path(
-        @room, @scheduled_meeting,
-        { app_id: app.id,
-          event_id: @scheduled_meeting.brightspace_calendar_event_id })
+
+      return_path = room_path(@room), { notice: t('default.scheduled_meeting.destroyed') }
+      redirect_if_brightspace(return_path) || redirect_to(*return_path)
     else
       Rails.logger.info "Brightspace event not found"
       respond_to do |format|
@@ -232,6 +215,28 @@ class ScheduledMeetingsController < ApplicationController
     rescue Date::Error
       scheduled_meeting.start_at = nil
       scheduled_meeting.errors.add(:start_at, t('default.scheduled_meeting.error.invalid_start_at'))
+      false
+    end
+  end
+
+  def redirect_if_brightspace return_path
+    app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
+    if app.brightspace_oauth
+      Rails.logger.info "Found brightspace, sending calendar event"
+      push_redirect_to_session! "brightspace_return_to", *return_path
+      case action_name
+      when "create"
+        redirect_to send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
+      when "update"
+        redirect_to send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
+      when "destroy"
+        redirect_to send_delete_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting,
+          { app_id: app.id,
+            event_id: @scheduled_meeting.brightspace_calendar_event_id })
+      end
+      true
+    else
+      Rails.logger.info "Brightspace not found"
       false
     end
   end
