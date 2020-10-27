@@ -35,4 +35,4 @@
 .env
 public
 
-data/postgres
+data
