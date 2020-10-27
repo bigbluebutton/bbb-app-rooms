@@ -21,7 +21,8 @@ module BbbHelper
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
-    BigBlueButton::BigBlueButtonApi.new(remove_slash(@bbb_credentials.endpoint(@room.tenant)), @bbb_credentials.secret(@room.tenant), '0.9')
+    BigBlueButton::BigBlueButtonApi.new(remove_slash(@bbb_credentials.endpoint(@room.tenant)), @bbb_credentials.secret(@room.tenant), '0.9',
+                                        (Rails.configuration.log_level.to_s == 'debug'))
   end
 
   # Generates URL for joining the current @room meeting.
