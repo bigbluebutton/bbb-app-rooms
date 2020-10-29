@@ -61,7 +61,13 @@ module BbbHelper
 
   # Perform ends meeting for the current @room.
   def end_meeting
-    bbb.end_meeting(@room.handler, @room.moderator)
+    response = { returncode: 'FAILED' }
+    begin
+      response = bbb.end_meeting(@room.handler, @room.moderator)
+    rescue BigBlueButton::BigBlueButtonException
+      # this can be thrown if all participants left (clicked 'x' before pressing the end button)
+    end
+    response
   end
 
   # Retrieves meeting info for the current Room.

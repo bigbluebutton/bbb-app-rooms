@@ -10,6 +10,7 @@ $(document).on('turbolinks:load', function(){
           console.log("Connected to meeting info channel");
       },
       disconnected: function() {
+        console.log("Disconnected from meeting info channel");
       },
       received: function(data) {
         console.log("received data: " + JSON.stringify(data));

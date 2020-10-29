@@ -103,18 +103,17 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/meeting/join
   # POST /rooms/:id/meeting/join.json
   def meeting_join
-    # make user wait until moderator is in room
     wait = wait_for_mod? && !meeting_running?
-    broadcast_meeting(action: 'join', delay: true) unless wait
-
-    NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room, { action: 'started' }) unless wait
     @meeting = join_meeting_url
+
     if wait
       respond_to do |format|
         format.html
         format.json { render(json: { wait_for_mod: wait, meeting: @meeting }) }
       end
     else
+      broadcast_meeting(action: 'join', delay: true)
+      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room, { action: 'started' }) if @room.wait_moderator
       redirect_to(@meeting)
     end
   end
@@ -123,6 +122,7 @@ class RoomsController < ApplicationController
   # GET /rooms/:id/meeting/end.json
   def meeting_end
     end_meeting
+    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) # fallback if actioncable doesn't work
   end
 
   def broadcast_meeting(action: 'none', delay: false)
