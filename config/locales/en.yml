@@ -74,6 +74,9 @@ en:
       close_manually:  "This tab/window must be closed manually"
     scheduled_meeting:
       allmoderators:  "All moderators"
+      calendar:
+        description:
+          visit:      "Visit the scheduling page to access this class."
       created:        "The session was scheduled"
       destroy:
         confirmation: "Are you sure you want to remove this scheduled session?"

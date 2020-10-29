@@ -83,6 +83,11 @@ class ApplicationController < ActionController::Base
 
   end
 
+  def find_app_launch
+    room_session = get_room_session(@room)
+    @app_launch = AppLaunch.find_by(nonce: room_session['launch']) if room_session.present?
+  end
+
   def authorize_user!(action, resource)
     redirect_to errors_path(401) unless Abilities.can?(@user, action, resource)
   end
@@ -161,14 +166,21 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def push_redirect_to_session! session_name, url, args={}
-    session[session_name] = [ url, args ]
+  def push_redirect_to_session!(session_name, url, args = {})
+    session[session_name] = [url, args]
   end
 
-  def pop_redirect_from_session! session_name
+  def pop_redirect_from_session!(session_name)
     url, args = session.delete(session_name)
-    args = args.map{|k,v| [k.to_sym, v]}.to_h
-    [url, args]
+    url ||= room_path(@room)
+
+    ret = [url]
+    if args
+      args = args.map { |k, v| [k.to_sym, v] }.to_h
+      ret.push(args)
+    end
+
+    ret
   end
 
   def on_error

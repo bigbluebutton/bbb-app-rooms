@@ -12,57 +12,63 @@ class BrightspaceController < ApplicationController
   before_action :validate_scheduled_meeting, except: :send_delete_calendar_event
   before_action -> { authorize_user!(:edit, @room) }
   before_action :prevent_event_duplication, only: :send_create_calendar_event
+  before_action :find_app_launch
   before_action :set_event
   before_action -> { authenticate_with_oauth! :brightspace, @custom_params }
 
   def send_create_calendar_event
-    event = build_event :create
+    event = build_event(:create)
 
     begin
       response = RestClient.post(*event)
       payload = JSON.parse(response)
 
       event_id = payload['CalendarEventId']
-      @scheduled_meeting.update(brightspace_calendar_event_id: event_id)
+      BrightspaceCalendarEvent.create(event_id: event_id,
+                                      scheduled_meeting_id: @scheduled_meeting.id,
+                                      room_id: @scheduled_meeting.room_id)
     rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error "Could not send calendar event: #{e.response}"
+      Rails.logger.error("Could not send calendar event: #{e.response}")
     end
-    redirect_to *pop_redirect_from_session!("brightspace_return_to")
+    redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_update_calendar_event
-    event = build_event :update
+    event = build_event(:update)
 
     begin
-      response = RestClient.put(*event)
+      RestClient.put(*event)
     rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error "Could not send calendar event: #{e.response}"
+      Rails.logger.error("Could not send calendar event: #{e.response}")
     end
-    redirect_to *pop_redirect_from_session!("brightspace_return_to")
+    redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_delete_calendar_event
-    event = build_event :delete
+    event = build_event(:delete)
 
     begin
-      response = RestClient.delete(*event)
+      RestClient.delete(*event)
+
+      BrightspaceCalendarEvent.destroy_by(room_id: @room,
+                                          scheduled_meeting_id: permitted_params[:id])
     rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error "Could not send calendar event: #{e.response}"
+      Rails.logger.error("Could not send calendar event: #{e.response}")
     end
-    redirect_to *pop_redirect_from_session!("brightspace_return_to")
+    redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   private
 
   def prevent_event_duplication
-    event_id = @scheduled_meeting.brightspace_calendar_event_id
-    if event_id
-      Rails.logger.info "Brightspace calendar event #{event_id} already sent."
-      redirect_to @room
-    end
+    event = @scheduled_meeting.brightspace_calendar_event
+    return unless event
+
+    Rails.logger.info('Brightspace calendar event already sent.')
+    redirect_to(@room)
   end
 
-  def build_event type
+  def build_event(type)
     omniauth_auth = session['omniauth_auth']['brightspace']
     access_token = omniauth_auth['credentials']['token']
     refresh_token = omniauth_auth['credentials']['refresh_token']
@@ -70,19 +76,18 @@ class BrightspaceController < ApplicationController
     headers = build_calendar_headers(access_token)
     case type
     when :create, :update
-      app = AppLaunch.find_by_nonce @scheduled_meeting.created_by_launch_nonce
-
-      event_id = @scheduled_meeting.brightspace_calendar_event_id || ''
-      calendar_url = build_calendar_url(app, event_id)
+      event_id = @scheduled_meeting.brightspace_calendar_event&.event_id || ''
+      calendar_url = build_calendar_url(@app_launch, event_id)
       calendar_payload = build_calendar_payload(@scheduled_meeting)
 
       event = [calendar_url, calendar_payload.to_json, headers]
     when :delete
-      app = AppLaunch.find permitted_params['app_id']
+      event = BrightspaceCalendarEvent.find_by(room_id: @room,
+                                               scheduled_meeting_id: permitted_params[:id])
+      event_id = event&.event_id
+      return nil unless event_id
 
-      event_id = permitted_params['event_id']
-      calendar_url = build_calendar_url(app, event_id)
-
+      calendar_url = build_calendar_url(@app_launch, event_id)
       event = [calendar_url, headers]
     end
     event

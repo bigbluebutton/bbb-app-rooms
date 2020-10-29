@@ -16,6 +16,7 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_room
   before_action :validate_room, except: open_actions
   before_action :find_user
+  before_action :find_app_launch, only: %i[create update destroy]
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
   before_action :validate_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
@@ -169,14 +170,14 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def destroy
-    event_id = @scheduled_meeting.brightspace_calendar_event_id
+    event_id = @scheduled_meeting.brightspace_calendar_event&.event_id
     if event_id
-      Rails.logger.info 'Found brightspace event, sending delete calendar event'
+      Rails.logger.info('Found brightspace event, sending delete calendar event')
 
       return_path = room_path(@room), { notice: t('default.scheduled_meeting.destroyed') }
       redirect_if_brightspace(return_path) || redirect_to(*return_path)
     else
-      Rails.logger.info "Brightspace event not found"
+      Rails.logger.info('Brightspace event not found')
       respond_to do |format|
         format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
         format.json { head :no_content }
@@ -219,24 +220,21 @@ class ScheduledMeetingsController < ApplicationController
     end
   end
 
-  def redirect_if_brightspace return_path
-    app = AppLaunch.find_by(nonce: @scheduled_meeting.created_by_launch_nonce)
-    if app.brightspace_oauth
-      Rails.logger.info "Found brightspace, sending calendar event"
-      push_redirect_to_session! "brightspace_return_to", *return_path
+  def redirect_if_brightspace(return_path)
+    if @app_launch.brightspace_oauth
+      Rails.logger.info('Found brightspace, sending calendar event')
+      push_redirect_to_session!('brightspace_return_to', *return_path)
       case action_name
-      when "create"
-        redirect_to send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
-      when "update"
-        redirect_to send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting)
-      when "destroy"
-        redirect_to send_delete_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting,
-          { app_id: app.id,
-            event_id: @scheduled_meeting.brightspace_calendar_event_id })
+      when 'create'
+        redirect_to(send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'update'
+        redirect_to(send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'destroy'
+        redirect_to(send_delete_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
       end
       true
     else
-      Rails.logger.info "Brightspace not found"
+      Rails.logger.info('Brightspace not found')
       false
     end
   end

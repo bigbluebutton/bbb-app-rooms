@@ -34,6 +34,8 @@ module BrightspaceHelper
       RepeatUntilDate: repeat_until_date.utc
     }
 
+    description = add_visit_message_to(description)
+
     calendar_payload = {
       Title: title,
       Description: description,
@@ -78,5 +80,11 @@ module BrightspaceHelper
     else
       [1, 0]
     end
+  end
+
+  def add_visit_message_to(description)
+    t('default.scheduled_meeting.calendar.description.visit') +
+    "\n" +
+    description
   end
 end
