@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       # Handles meeting management.
       scope ':id/meeting' do
         post '/join', to: 'rooms#meeting_join', as: :meeting_join
+        get '/join', to: 'rooms#meeting_join'
         post '/end', to: 'rooms#meeting_end', as: :meeting_end
         get '/close', to: 'rooms#meeting_close', as: :autoclose
       end

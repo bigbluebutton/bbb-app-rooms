@@ -26,46 +26,51 @@
     </div>
   <% end %>
 
-  <div class="field form-group input-group col-6">
-    <%= form.label t('default.room.name') %>&nbsp;<span class="text-muted small">*Required</span><br>
-    <%= form.text_field :name, :required => true, size: "45", class: "form-control input col-6" %>
-  </div>
+  <div class="field form-group block input-group w-full rounded pt-8">
+    <p>
+      <%= form.label t('default.room.name') , style: "display: inline" %> 
+      <span class="text-muted small text-red-500" style="display: inline"> *Required  </span>
+    </p>
+    <%= form.text_field :name, :required => true,  class: "form-control rounded-none rounded input mt-1 block w-full" %>
+  </div> 
 
-  <div class="field form-group input-group col-8">
+  <div class="field form-group input-group w-full pt-4">
     <%= form.label t('default.room.description') %>
-    <%= form.text_area :description, size: "45x4", class: 'form-control input col-8' %>
+    <%= form.text_area :description, size: "45x4", class: 'form-control input' %>
   </div>
 
-  <div class="field form-group input-group col-8">
+  <div class="field form-group input-group w-full">
     <%= form.label t('default.room.welcome') %>
-    <%= form.text_area :welcome, size: "45x4", class: 'form-control input col-8' %>
+    <%= form.text_area :welcome, size: "45x4", class: 'form-control w-full input form-input' %>
   </div>
 
   <%= form.hidden_field :moderator, value: @room.moderator %>
   <%= form.hidden_field :viewer, value: @room.viewer %>
 
   <% if bigbluebutton_recording_enabled %>
-    <div class="field form-group input-group">
+    <div class="field form-group input-group flex justify-center pt-4">
       <%= form.check_box :recording %>&nbsp;
       <b><%= t('default.room.recording') %></b>&nbsp;
       <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
     </div>
   <% end %>
 
-  <div class="field form-group input-group">
+  <div class="field form-group input-group flex justify-center">
     <%= form.check_box :wait_moderator %>&nbsp;
     <b><%= t('default.room.waitmoderator') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>"></i><br>
   </div>
 
-  <div class="field form-group input-group">
+  <div class="field form-group input-group flex justify-center">
     <%= form.check_box :all_moderators %>&nbsp;
     <b><%= t('default.room.allmoderators') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>"></i><br>
   </div>
 
-  <div class="actions">
-    <%= form.submit t('default.room.update'), class: "btn btn-primary" %>
+  <div class="actions flex justify-center pt-6">
+    <div>
+    <%= form.submit t('default.room.update'), class: "btn btn-primary " %>
     <%= form.button t('default.room.cancel'), class: "btn btn-default", name: "cancel" %>
+  </div>
   </div>
 <% end %>

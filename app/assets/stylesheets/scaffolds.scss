@@ -40,10 +40,6 @@ pre {
 a {
   color: #000;
 
-  &:visited:not(.btn) {
-    color: #666;
-  }
-
   &:hover {
     color: #fff;
     background-color: #000;

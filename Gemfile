@@ -99,6 +99,7 @@ gem 'font-awesome-rails'
 gem 'jquery-fileupload-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'material_icons'
 
 gem 'rest-client'
 
