@@ -24,9 +24,10 @@ class BrightspaceController < ApplicationController
       payload = JSON.parse(response)
 
       event_id = payload['CalendarEventId']
-      BrightspaceCalendarEvent.create(event_id: event_id,
-                                      scheduled_meeting_id: @scheduled_meeting.id,
-                                      room_id: @scheduled_meeting.room_id)
+      local_params = { event_id: event_id,
+                       scheduled_meeting_id: @scheduled_meeting.id,
+                       room_id: @scheduled_meeting.room_id, }
+      BrightspaceCalendarEvent.find_or_create_by(local_params)
     rescue RestClient::ExceptionWithResponse => e
       Rails.logger.error("Could not send calendar event: #{e.response}")
     end
@@ -50,6 +51,9 @@ class BrightspaceController < ApplicationController
     begin
       RestClient.delete(*event)
 
+      # Even though scheduled_meeting_id is unique, it's important to filter
+      # by room_id, so an authorized person can't delete an event from another
+      # room
       BrightspaceCalendarEvent.destroy_by(room_id: @room,
                                           scheduled_meeting_id: permitted_params[:id])
     rescue RestClient::ExceptionWithResponse => e
@@ -82,6 +86,9 @@ class BrightspaceController < ApplicationController
 
       event = [calendar_url, calendar_payload.to_json, headers]
     when :delete
+      # Even though scheduled_meeting_id is unique, it's important to filter
+      # by room_id, so an authorized person can't delete an event from another
+      # room
       event = BrightspaceCalendarEvent.find_by(room_id: @room,
                                                scheduled_meeting_id: permitted_params[:id])
       event_id = event&.event_id

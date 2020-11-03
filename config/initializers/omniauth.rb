@@ -45,7 +45,7 @@ brightspace_setup_phase = lambda do |env|
   room_handler = req.GET&.[]('room_id') ||
                  env['rack.session']&.[]('omniauth.params')&.[]('room_id')
 
-  # Fix this. This is the get_room_session in ApplicationController, but
+  # FIXME. This is the get_room_session in ApplicationController, but
   # we can't access that method here
   room = Room.find_by(handler: room_handler)
   room_session = session&.[](ApplicationController::COOKIE_ROOMS_SCOPE) || {}
@@ -53,7 +53,7 @@ brightspace_setup_phase = lambda do |env|
     room_session[room.handler]
   end
 
-  # Fix this. This is the find_app_launch in ApplicationController, but
+  # FIXME. This is the find_app_launch in ApplicationController, but
   # we can't access that method here
   app = if room_session_handler.present?
     AppLaunch.find_by(nonce: room_session_handler['launch'])
