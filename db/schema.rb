@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2020_10_28_181808) do
     t.bigint "room_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["event_id", "scheduled_meeting_id", "room_id"], name: "idx_brightspace_calendar_events_event_scheduled_meeting_room", unique: true
+    t.index ["event_id", "room_id"], name: "index_brightspace_calendar_events_on_event_id_and_room_id", unique: true
     t.index ["room_id"], name: "index_brightspace_calendar_events_on_room_id"
     t.index ["scheduled_meeting_id"], name: "index_brightspace_calendar_events_on_scheduled_meeting_id"
   end
