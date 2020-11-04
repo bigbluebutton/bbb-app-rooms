@@ -23,7 +23,7 @@ Rails.application.routes.draw do
       end
 
       # Handles launches.
-      get 'launch', to: 'rooms#launch', as: :room_launch
+      get '/launch', to: 'rooms#launch', as: :room_launch
 
       # Handles sessions.
       get '/sessions/create'
@@ -51,6 +51,9 @@ Rails.application.routes.draw do
           post :join
           get :external
           get :wait
+          get :send_create_calendar_event, to: 'brightspace#send_create_calendar_event'
+          get :send_update_calendar_event, to: 'brightspace#send_update_calendar_event'
+          get :send_delete_calendar_event, to: 'brightspace#send_delete_calendar_event'
         end
       end
     end

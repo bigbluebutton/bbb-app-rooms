@@ -16,6 +16,7 @@ class ScheduledMeetingsController < ApplicationController
   before_action :find_room
   before_action :validate_room, except: open_actions
   before_action :find_user
+  before_action :find_app_launch, only: %i[create update destroy]
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
   before_action :validate_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
@@ -48,9 +49,11 @@ class ScheduledMeetingsController < ApplicationController
 
       room_session = get_room_session(@room)
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
-
       if @scheduled_meeting.save
-        format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
+        format.html do
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.created') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
+        end
       else
         format.html { render :new }
       end
@@ -66,7 +69,10 @@ class ScheduledMeetingsController < ApplicationController
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
       if @scheduled_meeting.update(scheduled_meeting_params(@room))
-        format.html { redirect_to @room, notice: t('default.scheduled_meeting.updated') }
+        format.html do
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.updated') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
+        end
       else
         format.html { render :edit }
       end
@@ -164,11 +170,20 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def destroy
-    @scheduled_meeting.destroy
-    respond_to do |format|
-      format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
-      format.json { head :no_content }
+    event_id = @scheduled_meeting.brightspace_calendar_event&.event_id
+    if event_id
+      Rails.logger.info('Found brightspace event, sending delete calendar event')
+
+      return_path = room_path(@room), { notice: t('default.scheduled_meeting.destroyed') }
+      redirect_if_brightspace(return_path) || redirect_to(*return_path)
+    else
+      Rails.logger.info('Brightspace event not found')
+      respond_to do |format|
+        format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
+        format.json { head :no_content }
+      end
     end
+    @scheduled_meeting.destroy
   end
 
   private
@@ -192,20 +207,6 @@ class ScheduledMeetingsController < ApplicationController
     params.require(:scheduled_meeting).permit(*attrs)
   end
 
-  def find_scheduled_meeting
-    @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
-  end
-
-  def validate_scheduled_meeting
-    if @scheduled_meeting.blank?
-      set_error('scheduled_meeting', 'not_found', :not_found)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-      false
-    end
-  end
-
   def validate_start_at(scheduled_meeting)
     begin
       ScheduledMeeting.parse_start_at(
@@ -215,6 +216,25 @@ class ScheduledMeetingsController < ApplicationController
     rescue Date::Error
       scheduled_meeting.start_at = nil
       scheduled_meeting.errors.add(:start_at, t('default.scheduled_meeting.error.invalid_start_at'))
+      false
+    end
+  end
+
+  def redirect_if_brightspace(return_path)
+    if @app_launch.brightspace_oauth
+      Rails.logger.info('Found brightspace, sending calendar event')
+      push_redirect_to_session!('brightspace_return_to', *return_path)
+      case action_name
+      when 'create'
+        redirect_to(send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'update'
+        redirect_to(send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'destroy'
+        redirect_to(send_delete_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      end
+      true
+    else
+      Rails.logger.info('Brightspace not found')
       false
     end
   end

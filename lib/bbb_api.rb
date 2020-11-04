@@ -125,7 +125,7 @@ module BbbApi
                    else
                      room.consumer_key
                    end
-    server = BigbluebuttonServer.find_by(key: consumer_key)
+    server = ConsumerConfig.find_by(key: consumer_key)&.server
 
     if server.present?
       Rails.logger.info "Found the server:#{server.domain} secret:#{server.secret[0..7]} "\

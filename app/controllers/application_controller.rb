@@ -35,15 +35,15 @@ class ApplicationController < ActionController::Base
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.
-  def authenticate_user!
-    unless omniauth_provider?(:bbbltibroker)
-      Rails.logger.info "Provider is not bbbltibroker"
+  def authenticate_with_oauth!(provider, auth_args = {})
+    unless omniauth_provider?(provider)
+      Rails.logger.info "Provider is not #{provider}"
       return true
     end
 
     # Assume user authenticated if session[:omaniauth_auth] is set
-    if session['omniauth_auth'] &&
-       Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+    if session['omniauth_auth']&.[](provider.to_s) &&
+       Time.now.to_time.to_i < session['omniauth_auth'][provider.to_s]["credentials"]["expires_at"].to_i
       Rails.logger.info "Found a valid omniauth_auth in the session, user already authenticated"
       return true
     end
@@ -53,11 +53,13 @@ class ApplicationController < ActionController::Base
     if params[:session_set]
       Rails.logger.info "Session should be set but found no user, going to the retry page"
       return redirect_to(
-        omniauth_retry_path(provider: 'bbbltibroker', launch_nonce: params['launch_nonce'])
+        omniauth_retry_path(provider: provider, launch_nonce: params['launch_nonce'])
       )
     end
-
-    redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    if params['launch_nonce']
+      auth_args.merge!({launch_nonce: params['launch_nonce']})
+    end
+    redirector = omniauth_authorize_path(provider, auth_args)
     Rails.logger.info "Redirecting to the authorization route #{redirector}"
     redirect_to(redirector) and return true
   end
@@ -76,9 +78,14 @@ class ApplicationController < ActionController::Base
     end
 
     # TODO: check expiration here?
-    # return true if session['omniauth_auth'] &&
-    #                Time.now.to_time.to_i < session['omniauth_auth']["credentials"]["expires_at"].to_i
+    # return true if session['omniauth_auth']['bbbltibroker'] &&
+    #                Time.now.to_time.to_i < session['omniauth_auth']['bbbltibroker']["credentials"]["expires_at"].to_i
 
+  end
+
+  def find_app_launch
+    room_session = get_room_session(@room)
+    @app_launch = AppLaunch.find_by(nonce: room_session['launch']) if room_session.present?
   end
 
   def authorize_user!(action, resource)
@@ -113,6 +120,20 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def find_scheduled_meeting
+    @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
+  end
+
+  def validate_scheduled_meeting
+    if @scheduled_meeting.blank?
+      set_error('scheduled_meeting', 'not_found', :not_found)
+      respond_to do |format|
+        format.html { render 'shared/error', status: @error[:status] }
+      end
+      false
+    end
+  end
+
   def set_error(model, error, status)
     @user = nil
     instance_variable_set("@#{model}".to_sym, nil)
@@ -143,6 +164,23 @@ class ApplicationController < ActionController::Base
       payload[:room] = @room.to_param
       payload[:room_session] = get_room_session(@room)
     end
+  end
+
+  def push_redirect_to_session!(session_name, url, args = {})
+    session[session_name] = [url, args]
+  end
+
+  def pop_redirect_from_session!(session_name)
+    url, args = session.delete(session_name)
+    url ||= room_path(@room)
+
+    ret = [url]
+    if args
+      args = args.map { |k, v| [k.to_sym, v] }.to_h
+      ret.push(args)
+    end
+
+    ret
   end
 
   def on_error

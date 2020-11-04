@@ -7,6 +7,7 @@ class ScheduledMeeting < ApplicationRecord
   }.stringify_keys.freeze
 
   belongs_to :room
+  has_one :brightspace_calendar_event
 
   validates :room, presence: true
   validates :name, presence: true
