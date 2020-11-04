@@ -40,15 +40,23 @@ end
 # This will be called before every request_phase and callback_phase
 brightspace_setup_phase = lambda do |env|
   req = Rack::Request.new(env)
-  app_id = req.GET['app_id'] ||
-           env['rack.session']['omniauth.params']&.[]('app_id')
-  if app_id
-    app = AppLaunch.find app_id
-  else
-    scheduled_meeting_id = req.GET['id'] ||
-                         env['rack.session']['omniauth.params']&.[]('id')
-    scheduled_meeting = ScheduledMeeting.find scheduled_meeting_id
-    app = AppLaunch.find_by_nonce scheduled_meeting.created_by_launch_nonce
+  session = env['rack.session']
+
+  room_handler = req.GET&.[]('room_id') ||
+                 env['rack.session']&.[]('omniauth.params')&.[]('room_id')
+
+  # FIXME. This is the get_room_session in ApplicationController, but
+  # we can't access that method here
+  room = Room.find_by(handler: room_handler)
+  room_session = session&.[](ApplicationController::COOKIE_ROOMS_SCOPE) || {}
+  room_session_handler = if room.present? && room_session.key?(room.handler)
+    room_session[room.handler]
+  end
+
+  # FIXME. This is the find_app_launch in ApplicationController, but
+  # we can't access that method here
+  app = if room_session_handler.present?
+    AppLaunch.find_by(nonce: room_session_handler['launch'])
   end
 
   brightspace_oauth = app.brightspace_oauth

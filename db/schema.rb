@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_18_212845) do
+ActiveRecord::Schema.define(version: 2020_10_28_181808) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 2020_10_18_212845) do
     t.string "room_handler"
     t.index ["nonce"], name: "index_app_launches_on_nonce"
     t.index ["room_handler"], name: "index_app_launches_on_room_handler"
+  end
+
+  create_table "brightspace_calendar_events", force: :cascade do |t|
+    t.integer "event_id"
+    t.bigint "scheduled_meeting_id"
+    t.bigint "room_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["event_id", "room_id"], name: "index_brightspace_calendar_events_on_event_id_and_room_id", unique: true
+    t.index ["room_id"], name: "index_brightspace_calendar_events_on_room_id"
+    t.index ["scheduled_meeting_id"], name: "index_brightspace_calendar_events_on_scheduled_meeting_id"
   end
 
   create_table "consumer_config_brightspace_oauths", force: :cascade do |t|
@@ -89,12 +100,12 @@ ActiveRecord::Schema.define(version: 2020_10_18_212845) do
     t.boolean "disable_external_link", default: false
     t.boolean "disable_private_chat", default: false
     t.boolean "disable_note", default: false
-    t.integer "brightspace_calendar_event_id"
     t.index ["created_by_launch_nonce"], name: "index_scheduled_meetings_on_created_by_launch_nonce"
     t.index ["repeat"], name: "index_scheduled_meetings_on_repeat"
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end
 
+  add_foreign_key "brightspace_calendar_events", "rooms"
   add_foreign_key "consumer_config_brightspace_oauths", "consumer_configs"
   add_foreign_key "consumer_config_servers", "consumer_configs"
 end

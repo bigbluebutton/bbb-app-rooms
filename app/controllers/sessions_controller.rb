@@ -33,8 +33,7 @@ class SessionsController < ApplicationController
       when 'send_update_calendar_event'
         redirect_to send_update_calendar_event_room_scheduled_meeting_path(room_param, scheduled_meeting_param)
       when 'send_delete_calendar_event'
-        redirect_to send_delete_calendar_event_room_scheduled_meeting_path(room_param, scheduled_meeting_param,
-          { app_id: omniauth_params["app_id"], event_id: omniauth_params["event_id"] } )
+        redirect_to send_delete_calendar_event_room_scheduled_meeting_path(room_param, scheduled_meeting_param)
       end
     elsif provider == 'bbbltibroker'
       redirect_to(
