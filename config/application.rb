@@ -59,6 +59,7 @@ module BbbAppRooms
     config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
     config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
 
+    config.developer_mode_enabled = (ENV['DEVELOPER_MODE_ENABLED'] == 'true')
     config.generators.javascript_engine = :js
   end
 end

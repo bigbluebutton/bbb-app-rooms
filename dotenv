@@ -45,6 +45,8 @@ RAILS_LOG_TO_STDOUT=true
 # RAILS_LOG_REMOTE_TAG=bbb-lti-broker
 # RAILS_LOG_TO_STDOUT=false
 
+# DEVELOPER_MODE_ENABLED=true
+
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true
 
