@@ -1,16 +1,3 @@
-# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
-# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
-# This program is free software; you can redistribute it and/or modify it under the
-# terms of the GNU Lesser General Public License as published by the Free Software
-# Foundation; either version 3.0 of the License, or (at your option) any later
-# version.
-#
-# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-# You should have received a copy of the GNU Lesser General Public License along
-# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
-
 # Create a Secret Key for Rails
 #
 # You can generate a secure one through the Greenlight docker image
@@ -22,7 +9,7 @@ SECRET_KEY_BASE=secret
 
 RELATIVE_URL_ROOT=apps
 
-## BigBlueButton configuration
+## BigBlueButton configuration (Required)
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
 # BIGBLUEBUTTON_SECRET=8cd8ef52e8e101574e400365b55e11a6
 # BIGBLUEBUTTON_MODERATOR_ROLES=Instructor,Faculty,Teacher,Mentor,Administrator,Admin
@@ -40,8 +27,6 @@ RELATIVE_URL_ROOT=apps
 # OMNIAUTH_BBBLTIBROKER_KEY=b21211c29d27
 # OMNIAUTH_BBBLTIBROKER_SECRET=3590e00d7ebd
 
-#WHITELIST_HOST=broker.example.com
-
 ## Set the hostname using your own domain (Required)
 URL_HOST=lti.jesus.blindside-dev.com
 
@@ -54,16 +39,24 @@ URL_HOST=lti.jesus.blindside-dev.com
 ## Use to send logs to Standard Output (Optional)
 RAILS_LOG_TO_STDOUT=true
 
+## Use to send logs to external repository (Optional)
+# RAILS_LOG_REMOTE_NAME=xxx.papertrailapp.com
+# RAILS_LOG_REMOTE_PORT=99999
+# RAILS_LOG_REMOTE_TAG=bbb-lti-broker
+# RAILS_LOG_TO_STDOUT=false
+
+# DEVELOPER_MODE_ENABLED=true
+
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true
 
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
 
-## Use cache for optimizing requests to external servers.  (Optional)
+## Use cache for optimizing requests to external servers (Optional)
 # RAILS_CACHE_ENABLED=true
 
-## Use to retrieve credentials for a BigBlueButton server per tenant. (Optional)
+## Use to retrieve credentials for a BigBlueButton server per tenant (Optional)
 # EXTERNAL_MULTITENANT_ENDPOINT=
 # EXTERNAL_MULTITENANT_SECRET=
 

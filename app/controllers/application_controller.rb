@@ -19,4 +19,10 @@
 require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
+  before_action :print_parameters if Rails.configuration.developer_mode_enabled
+
+  def print_parameters
+    logger.debug('>>>>>>>>> Params:')
+    logger.debug(params.to_json)
+  end
 end

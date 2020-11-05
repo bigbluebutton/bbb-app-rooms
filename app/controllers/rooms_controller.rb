@@ -219,6 +219,11 @@ class RoomsController < ApplicationController
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
+    if Rails.configuration.developer_mode_enabled
+      logger.debug('>>>>>>>>> Session Params:')
+      logger.debug(session_params.to_json)
+    end
+
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
@@ -229,7 +234,8 @@ class RoomsController < ApplicationController
 
     # Continue through happy path.
     @tenant = session_params['tenant']
-    resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + launch_params['tool_consumer_instance_guid'] + launch_params['resource_link_id'])
+    guid = launch_params['tool_consumer_instance_guid'] || launch_params['tool_consumer_instance_url']
+    resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + guid + launch_params['resource_link_id'])
     @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
