@@ -223,6 +223,8 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
     launch_params = session_params['message']
+    logger.debug('>>>>>>>>> Launch Params:')
+    logger.debug(launch_params.to_json)
 
     # Exit with error if user is not authenticated.
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']

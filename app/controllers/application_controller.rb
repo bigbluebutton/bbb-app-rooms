@@ -24,6 +24,5 @@ class ApplicationController < ActionController::Base
   def print_parameters
     logger.debug('>>>>>>>>> Params:')
     logger.debug(params.to_json)
-    logger.debug(params[:id_token])
   end
 end
