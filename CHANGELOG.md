@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.2.0 Elos - 2020-11-07
+
+* [ELOSP-455] Integration with Brightspace's calendar. Includes a refactor of the configurations
+  in the database. Use the rake task `db:brightspace:add` to configure a Brightspace for a consumer
+  key and enable the integration with its calendar.
+* [ELOSP-574] Edit and remove events in Brightspace's calendar when they are edited or removed
+  in the application.
+
+
 ## 0.1.3 Elos - 2020-09-24
 
 * [ELOSP-454] New hints for the new configuration options added in 0.1.3.
