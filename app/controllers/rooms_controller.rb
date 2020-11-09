@@ -31,7 +31,7 @@ class RoomsController < ApplicationController
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
-  after_action :broadcast_meeting, only: [:show, :launch, :meeting_end]
+  after_action :broadcast_meeting, only: [:meeting_end]
 
   # GET /rooms/1
   # GET /rooms/1.json
