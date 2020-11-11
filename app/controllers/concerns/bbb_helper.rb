@@ -17,6 +17,8 @@ require 'bbb/credentials'
 
 module BbbHelper
   extend ActiveSupport::Concern
+  attr_writer :cache          # Rails.cache store is assumed.
+  attr_writer :cache_enabled  # Enabled by default.
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
@@ -88,6 +90,9 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
+    cached_rec = Rails.cache.fetch("#{@room.handler}/#{__method__}")
+    return cached_rec unless cached_rec.nil?
+
     res = bbb.get_recordings(meetingID: @room.handler)
 
     # Format playbacks in a more pleasant way.
@@ -105,7 +110,13 @@ module BbbHelper
       r.delete(:playback)
     end
 
-    res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+    recs = res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+
+    Rails.cache.fetch("#{@room.handler}/#{__method__}", expires_in: 30.minutes) do
+      recs
+    end
+
+    recs
   end
 
   # Deletes a recording.
