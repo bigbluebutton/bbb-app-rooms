@@ -172,7 +172,6 @@ class RoomsController < ApplicationController
     elsif params[:setting] == 'describe_recording'
       update_recording(params[:record_id], 'meta_description' => params[:record_description])
     end
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
   # POST /rooms/:id/recording/:record_id/delete
