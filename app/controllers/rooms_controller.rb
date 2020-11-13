@@ -85,6 +85,19 @@ class RoomsController < ApplicationController
     redirect_to(recordings_room_path(@room))
   end
 
+  def error
+    error_code = params[:code]
+    path = room_path(@room)
+    redirect_args = [path]
+
+    case error_code
+    when 'oauth_error'
+      notice = t('default.rooms.error.oauth')
+      redirect_args << { notice: notice }
+    end
+    redirect_to(*redirect_args)
+  end
+
   helper_method :recordings, :recording_date, :recording_length
 
   private
