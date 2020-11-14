@@ -1,0 +1,11 @@
+<%= render "shared/notifications" %>
+
+<div class="container">
+  <%=
+  link_to t('reports.index.return'),
+   room_path(@room),
+   class: "btn btn-light btn-sm"
+  %>
+
+  <%= render "shared/reports", room: @room, reports: @reports %>
+</div>
