@@ -25,10 +25,6 @@ class ReportsController < ApplicationController
     redirect_to url
   end
 
-  def list_all_files
-    list_bucket_files
-  end
-
   def check_spaces_credentials
     unless spaces_configured?
       Rails.logger.error "A Spaces credential is missing from the .env file"

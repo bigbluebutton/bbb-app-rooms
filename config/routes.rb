@@ -53,7 +53,6 @@ Rails.application.routes.draw do
 
       member do
         get :reports, to: 'reports#index'
-        get :list_files, to: 'reports#list_all_files'
       end
 
       resources :scheduled_meetings, only: [:new, :create, :edit, :update, :destroy] do
