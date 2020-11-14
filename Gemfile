@@ -84,6 +84,9 @@ gem 'jquery-ui-rails'
 # API
 gem 'bigbluebutton-api-ruby'
 
+# AWS S3 API (to access Spaces API)
+gem 'aws-sdk-s3', '~> 1'
+
 # Authentication
 gem 'rest-client'
 gem 'omniauth', '>= 1.9.1'
