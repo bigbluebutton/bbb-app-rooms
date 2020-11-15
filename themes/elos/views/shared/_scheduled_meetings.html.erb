@@ -1,6 +1,6 @@
 <div id="action-buttons" class="row">
   <% if can_edit?(user, room) %>
-    <div id="schedule-meeting" class="col-12 col-sm-4 col-md-4 col-lg-4">
+    <div id="schedule-meeting" class="col-12 col-sm-12 col-md-4 col-lg-4">
       <%=
       link_to t('scheduled_meetings.new.add'),
        new_room_scheduled_meeting_path(room),
@@ -10,9 +10,9 @@
   <% end %>
 
   <% if can_edit?(user, room) %>
-    <div id="view-recordings" class="col-12 col-sm-4 col-md-4 col-lg-4">
+    <div id="view-recordings" class="col-12 col-sm-12 col-md-4 col-lg-4">
   <% else %>
-      <div id="view-recordings" class="col-12 col-sm-6 col-md-6 col-lg-4 offset-lg-4">
+    <div id="view-recordings" class="col-12 col-sm-6 col-md-6 col-lg-4 offset-lg-4">
   <% end %>
     <%=
     link_to t('scheduled_meetings.show.view_recordings'),
@@ -22,7 +22,7 @@
   </div>
 
   <% if can_edit?(user, room) && spaces_configured? %>
-    <div id="view-reports" class="col-12 col-sm-4 col-md-4 col-lg-4">
+    <div id="view-reports" class="col-12 col-sm-12 col-md-4 col-lg-4">
       <%=
       link_to t('reports.view_reports'),
       room_reports_path(room),
