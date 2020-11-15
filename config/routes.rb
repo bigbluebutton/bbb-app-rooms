@@ -22,6 +22,11 @@ Rails.application.routes.draw do
         post '/delete', to: 'rooms#recording_delete', as: :recording_delete
       end
 
+      # Handles reports.
+      scope ':id/report/' do
+        get '/download', to: 'reports#download', as: :report_download
+      end
+
       # Handles launches.
       get '/launch', to: 'rooms#launch', as: :room_launch
 
@@ -44,6 +49,10 @@ Rails.application.routes.draw do
     resources :rooms, only: :show do
       member do
         get :recordings
+      end
+
+      member do
+        get :reports, to: 'reports#index'
       end
 
       resources :scheduled_meetings, only: [:new, :create, :edit, :update, :destroy] do

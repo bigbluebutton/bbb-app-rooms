@@ -55,6 +55,18 @@ en:
       footnote: "Dates shown in the time zone: %{zone}"
     title: "Recordings"
     unpublish: "Unpublish"
+  reports:
+    download: "Download"
+    download_options:
+      csv: "Spreadsheet of meetings (CSV)"
+      pdf: "Consolidated report (PDF)"
+      xls: "Spreadsheet of meetings (Excel XLS)"
+    empty_list: "No reports found :("
+    index:
+      return: "< go back"
+    table_footnote: "Reports updated daily."
+    title: "Reports"
+    view_reports: "View reports"
   rooms:
     close:
       message: "Thank you for participating and until the next time."

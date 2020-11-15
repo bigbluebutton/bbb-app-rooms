@@ -2,6 +2,7 @@ pt:
   default:
     app:
       bigbluebutton_error: "Erro de comunicação com o servidor de conferência. Por favor tente novamente ou entre em contato com o suporte. (%{status})"
+      spaces_error:   "Erro de comunicação com o servidor de armazenamento de relatórios. Por favor, tente novamente ou entre em contato com o suporte."
       error:          "Erro"
     admin:
       back:           "Voltar"

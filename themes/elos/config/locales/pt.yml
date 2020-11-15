@@ -55,6 +55,18 @@ pt:
       footnote: "Datas exibidas no fuso horário: %{zone}"
     title: "Gravações"
     unpublish: "Despublicar"
+  reports:
+    download: "Baixar"
+    download_options:
+      csv: "Planilha de reuniões (CSV)"
+      pdf: "Relatório consolidado (PDF)"
+      xls: "Planilha de reuniões (Excel XLS)"
+    empty_list: "Nenhum relatório encontrado :("
+    index:
+      return: "< voltar"
+    table_footnote: "Relatórios atualizados diariamente."
+    title: "Relatórios"
+    view_reports: "Ver relatórios"
   rooms:
     close:
       message: "Obrigado pela sua participação e até a próxima."

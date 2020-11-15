@@ -20,18 +20,24 @@ class ApplicationController < ActionController::Base
     rescue_from ActionController::UnknownFormat, with: :on_406
   end
 
-    rescue_from BigBlueButton::BigBlueButtonException do |e|
-      Rails.logger.error "Exception caught: error=#{e.key} " \
-                         "class=#{e.class.name} message='#{e.message}'"
+  rescue_from BigBlueButton::BigBlueButtonException do |e|
+    Rails.logger.error "Exception caught: error=#{e.key} " \
+                        "class=#{e.class.name} message='#{e.message}'"
 
-      if e.key.to_s == 'meetingAlreadyBeingCreated' && @room.present? && @scheduled_meeting.present?
-        add_to_room_session(@room, 'auto_join', 'true')
-        redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
-      else
-        redirect_back(fallback_location: room_path(@room),
-                      notice: t('default.app.bigbluebutton_error', status: e.key))
-      end
+    if e.key.to_s == 'meetingAlreadyBeingCreated' && @room.present? && @scheduled_meeting.present?
+      add_to_room_session(@room, 'auto_join', 'true')
+      redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
+    else
+      redirect_back(fallback_location: room_path(@room),
+                    notice: t('default.app.bigbluebutton_error', status: e.key))
     end
+  end
+
+  rescue_from Aws::S3::Errors::ServiceError do |e|
+    Rails.logger.error "Exception caught trying to contact Spaces bucket: message='#{e.message}'"
+    redirect_back(fallback_location: room_path(@room),
+                      notice: t('default.app.spaces_error'))
+  end
 
   # Check if the user authentication exists in the session and is valid (didn't expire).
   # On launch, go get the credentials needed.

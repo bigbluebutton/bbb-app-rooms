@@ -38,6 +38,11 @@ module ApplicationHelper
     !Rails.configuration.theme.blank?
   end
 
+  def spaces_configured?
+    !Rails.configuration.spaces_key.blank? && !Rails.configuration.spaces_secret.blank? &&
+    !Rails.configuration.spaces_bucket.blank?
+  end
+
   def theme_class
     "theme-#{Rails.configuration.theme}" if theme_defined?
   end

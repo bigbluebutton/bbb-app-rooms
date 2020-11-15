@@ -49,6 +49,13 @@ module BbbAppRooms
     config.omniauth_secret = {}
     config.omniauth_secret[:bbbltibroker] = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
 
+    # Spaces API config
+    config.spaces_key = ENV['SPACES_KEY'] || ''
+    config.spaces_secret = ENV['SPACES_SECRET'] || ''
+    config.spaces_bucket = ENV['SPACES_BUCKET'] || ''
+    config.spaces_endpoint = ENV['SPACES_ENDPOINT'] || 'https://nyc3.digitaloceanspaces.com'
+    config.spaces_common_prefix = ENV['SPACES_COMMON_PREFIX'] || 'lti/'
+
     config.assets.prefix = if ENV['RELATIVE_URL_ROOT'].blank?
                              '/rooms/assets'
                            else
