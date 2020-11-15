@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.0 Elos - 2020-11-15
+
+* [ELOSP-585] Add a new page to list the reports for an LTI room. Reports are stored in
+  DigitalOcean's Spaces and might or might not exist for a room. It builds the list dynamically
+  and allows the user to download directly from Spaces using authenticated temporary URLs.
+* [ELOSP-602] Fix an error when the app couldn't find an AppLaunch when trying to authenticate
+  on a Brightspace LMS as part of the integration with their calendar.
+
+
 ## 0.2.0 Elos - 2020-11-07
 
 * [ELOSP-455] Integration with Brightspace's calendar. Includes a refactor of the configurations
