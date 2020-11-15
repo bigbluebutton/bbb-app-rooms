@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bigbluebutton_api'
+require 'user'
 
 class ApplicationController < ActionController::Base
   before_action :set_current_locale

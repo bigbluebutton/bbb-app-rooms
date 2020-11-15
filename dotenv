@@ -68,3 +68,10 @@ CABLE_ENABLED=true
 # Set the flags below to alter this behavior
 # COOKIES_SECURE_OFF=1
 # COOKIES_SAME_SITE=None
+
+# To load report files from DO's Spaces
+# SPACES_KEY=key
+# SPACES_SECRET=secret
+# SPACES_ENDPOINT=https://nyc3.digitaloceanspaces.com
+# SPACES_BUCKET=bucket-name
+# SPACES_COMMON_PREFIX=lti/

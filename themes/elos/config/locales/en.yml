@@ -59,12 +59,11 @@ en:
     download: "Download"
     download_options:
       csv: "Spreadsheet of meetings (CSV)"
-      pdf: "Consolidated report (PDF)"
       xls: "Spreadsheet of meetings (Excel XLS)"
     empty_list: "No reports found :("
     index:
       return: "< go back"
-    table_footnote: "Reports updated daily."
+    table_footnote: "The reports for the current month are updated daily."
     title: "Reports"
     view_reports: "View reports"
   rooms:

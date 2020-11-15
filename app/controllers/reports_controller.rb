@@ -21,9 +21,11 @@ class ReportsController < ApplicationController
 
   # GET /rooms/:id/report/download
   def download
-    url = report_download_url(@room, params[:period], params[:file_format])
+    url = get_report_download_url(@room, params[:period], params[:file_format])
     redirect_to url
   end
+
+  private
 
   def check_spaces_credentials
     unless spaces_configured?
@@ -32,5 +34,4 @@ class ReportsController < ApplicationController
                       notice: t('default.app.spaces_error'))
     end
   end
-
 end

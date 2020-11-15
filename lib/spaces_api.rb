@@ -24,7 +24,7 @@ module SpacesApi
   end
 
   # Generates a presigned url with 5 minutes expiration to download a report file
-  def report_download_url(room, period, file_format)
+  def get_report_download_url(room, period, file_format)
     key = default_prefix(room) + period + "/report-#{I18n.locale}." + file_format
     signer = Aws::S3::Presigner.new(client: client)
     url = signer.presigned_url(
@@ -38,7 +38,7 @@ module SpacesApi
   end
 
   private
-  
+
   def client
     client = Aws::S3::Client.new(
       access_key_id: Rails.configuration.spaces_key,

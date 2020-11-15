@@ -11,26 +11,14 @@
       <%= t('reports.download') %>
     </a>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="download-report-<%= report %>">
-      <%=
-      link_to t('reports.download_options.csv'),
-      report_download_path(room, period: report, file_format: 'csv'),
-      class: "dropdown-item",
-      target: '_blank'
-      %>
-      <div class="dropdown-divider"></div>
-      <%=
-      link_to t('reports.download_options.xls'),
-      report_download_path(room, period: report, file_format: 'xls'),
-      class: "dropdown-item",
-      target: '_blank'
-      %>
-      <div class="dropdown-divider"></div>
-      <%=
-      link_to t('reports.download_options.pdf'),
-      report_download_path(room, period: report, file_format: 'pdf'),
-      class: "dropdown-item",
-      target: '_blank'
-      %>
+      <% [:csv, :xls].each do |format| %>
+        <%=
+        link_to t("reports.download_options.#{format}"),
+        download_room_reports_path(room, period: report, file_format: format.to_s),
+        class: "dropdown-item",
+        target: '_blank'
+        %>
+      <% end %>
     </div>
   </td>
 </tr>

@@ -112,7 +112,7 @@ pt:
       _401:
         code:       "Unauthorized"
         message:    "Acesso não autorizado"
-        suggestion: "Tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+        suggestion: "Você não possui acesso à esta página. Se você acredita que isso é um erro, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
         status_code: "401"
       _404:
         code:       "NotFound"
