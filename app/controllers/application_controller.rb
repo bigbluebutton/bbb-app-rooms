@@ -252,9 +252,15 @@ class ApplicationController < ActionController::Base
 
   def get_room_session(room)
     session[COOKIE_ROOMS_SCOPE] ||= {}
-    if room.present? && session[COOKIE_ROOMS_SCOPE].key?(room.handler)
-      session[COOKIE_ROOMS_SCOPE][room.handler]
+    return if room.blank?
+
+    if room.is_a?(Room)
+      room_handler = room.handler
+    elsif room.is_a?(String)
+      room_handler = room
     end
+    session[COOKIE_ROOMS_SCOPE].key?(room_handler)
+    session[COOKIE_ROOMS_SCOPE][room_handler]
   end
 
   def set_room_session(room, data)

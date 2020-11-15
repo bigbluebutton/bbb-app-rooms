@@ -31,9 +31,12 @@ module OmniAuth
 end
 
 OmniAuth.config.on_failure = Proc.new do |env|
-  request = Rack::Request.new(env)
-  request.update_param(:provider, :bbbltiprovider)
-  SessionsController.action(:failure).call(env)
+  case env['omniauth.strategy']&.name
+  when 'bbbltiprovider'
+    request = Rack::Request.new(env)
+    request.update_param(:provider, :bbbltiprovider)
+    SessionsController.action(:failure).call(env)
+  end
 end
 # OmniAuth.config.failure_raise_out_environments = []
 
@@ -43,23 +46,30 @@ brightspace_setup_phase = lambda do |env|
   session = env['rack.session']
 
   room_handler = req.GET&.[]('room_id') ||
-                 env['rack.session']&.[]('omniauth.params')&.[]('room_id')
+                 session&.[]('omniauth.params')&.[]('room_id')
 
   # FIXME. This is the get_room_session in ApplicationController, but
   # we can't access that method here
   room = Room.find_by(handler: room_handler)
   room_session = session&.[](ApplicationController::COOKIE_ROOMS_SCOPE) || {}
-  room_session_handler = if room.present? && room_session.key?(room.handler)
-    room_session[room.handler]
-  end
+  room_session_handler = room_session[room.handler] if room.present? &&
+                                                       room_session.key?(room.handler)
 
   # FIXME. This is the find_app_launch in ApplicationController, but
   # we can't access that method here
-  app = if room_session_handler.present?
-    AppLaunch.find_by(nonce: room_session_handler['launch'])
-  end
+  app = AppLaunch.find_by(nonce: room_session_handler['launch']) if room_session_handler.present?
+  brightspace_oauth = app&.brightspace_oauth
 
-  brightspace_oauth = app.brightspace_oauth
+  if app.blank? || brightspace_oauth.blank?
+    # FIXME. We should use url_helpers like so:
+    #   routes = redirect_path_on_failure = Rails.application.routes.url_helpers
+    #   redirect_path_on_failure = routes.room_url(room_handler)
+    # But it returns /rooms/rooms/:id, instead of /rooms/:id
+    redirect_path_on_failure = "/rooms/#{room_handler}/error/oauth_error"
+    env['omniauth.strategy'].options[:redirect_path_on_failure] = redirect_path_on_failure
+    env['omniauth.strategy'].fail!(:setup_failure)
+    return
+  end
 
   env['omniauth.strategy'].options[:client_id] = brightspace_oauth.client_id
   env['omniauth.strategy'].options[:client_secret] = brightspace_oauth.client_secret

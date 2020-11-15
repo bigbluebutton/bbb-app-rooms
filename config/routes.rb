@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     resources :rooms, only: :show do
       member do
         get :recordings
+        get '/error/:code', to: 'rooms#error'
       end
 
       member do
