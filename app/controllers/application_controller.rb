@@ -260,7 +260,6 @@ class ApplicationController < ActionController::Base
     elsif room.is_a?(String)
       room_handler = room
     end
-    session[COOKIE_ROOMS_SCOPE].key?(room_handler)
     session[COOKIE_ROOMS_SCOPE][room_handler]
   end
 
