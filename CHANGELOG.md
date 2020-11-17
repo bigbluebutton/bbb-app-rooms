@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.1 Elos - 2020-11-16
+
+* [PR#10] Small fixes to try to remove an error in the authentication for some users. The first
+  lines of the error look like:
+    ```
+    \nNoMethodError (undefined method `[]' for nil:NilClass):\n  \nrack (2.2.3) lib/rack/etag.rb:38:in `call'\nrack (2.2.3) lib/rack/conditional_get.rb:27:in `call' \nrack (2.2.3) lib/rack/head.rb:12:in `call'\nactionpack (6.0.3.1)
+    ```
+
+
 ## 0.3.0 Elos - 2020-11-15
 
 * [ELOSP-585] Add a new page to list the reports for an LTI room. Reports are stored in
