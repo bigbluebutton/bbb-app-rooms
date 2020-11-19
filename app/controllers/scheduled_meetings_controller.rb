@@ -28,7 +28,7 @@ class ScheduledMeetingsController < ApplicationController
     authorize_user!(:edit, @room)
   end
 
-  before_action :delete_blank_repeat, only: %i[create update]
+  before_action :set_blank_repeat_as_nil, only: %i[create update]
 
   def new
     @scheduled_meeting = ScheduledMeeting.new(@room.attributes_for_meeting)
@@ -188,12 +188,11 @@ class ScheduledMeetingsController < ApplicationController
 
   private
 
-  # Removes :repeat if it's blank, we want it as null in the database
-  def delete_blank_repeat
-    if params.key?(:scheduled_meeting) &&
-       params[:scheduled_meeting].key?(:repeat) &&
-       params[:scheduled_meeting][:repeat].blank?
-      params[:scheduled_meeting].delete(:repeat)
+  # Sets :repeat as nil if it's blank. We want it as nil in the database in order
+  # for a non-recurring meeting to work
+  def set_blank_repeat_as_nil
+    if params.dig(:scheduled_meeting, :repeat)&.blank?
+      params[:scheduled_meeting][:repeat] = nil
     end
   end
 
