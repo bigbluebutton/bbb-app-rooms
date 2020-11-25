@@ -48,7 +48,7 @@ pt:
       allmoderators:  "Todos moderadores"
       calendar:
         description:
-          visit:      "Visite a página de agendamento para acessar esta aula."
+          link:       "<a href=\"%{url}\">Clique aqui para acessar esta aula.</a>"
       created:        "A sessão foi agendada"
       destroy:
         confirmation: "Você tem certeza que deseja remover este agendamento?"
