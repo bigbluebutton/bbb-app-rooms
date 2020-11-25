@@ -79,7 +79,7 @@ en:
       allmoderators:  "All moderators"
       calendar:
         description:
-          visit:      "Visit the scheduling page to access this class."
+          link:       "Click here to access this class."
       created:        "The session was scheduled"
       destroy:
         confirmation: "Are you sure you want to remove this scheduled session?"

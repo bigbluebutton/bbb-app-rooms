@@ -15,6 +15,7 @@ class RoomsController < ApplicationController
   before_action :find_room, except: %i[launch close]
   before_action :validate_room, except: %i[launch close]
   before_action :find_user
+  before_action :find_app_launch, only: %i[launch]
 
   before_action only: %i[show launch close] do
     authorize_user!(:show, @room)
@@ -46,7 +47,13 @@ class RoomsController < ApplicationController
 
   # GET /launch
   def launch
-    redirect_to(room_path(@room))
+    scheduled_meeting_id = @app_launch.custom_param('scheduled_meeting')
+    scheduled_meeting = ScheduledMeeting.find_by_id(scheduled_meeting_id)
+    if scheduled_meeting
+      redirect_to(external_room_scheduled_meeting_path(@room, scheduled_meeting))
+    else
+      redirect_to(room_path(@room))
+    end
   end
 
   # GET /rooms/close
