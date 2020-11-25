@@ -79,7 +79,7 @@ en:
       allmoderators:  "All moderators"
       calendar:
         description:
-          link:       "<a href=\"%{url}\">Click here to access this class.</a>"
+          link:       "Click here to access this class."
       created:        "The session was scheduled"
       destroy:
         confirmation: "Are you sure you want to remove this scheduled session?"

@@ -152,9 +152,8 @@ module BrightspaceHelper
       domain = app.brightspace_oauth.url
       public_url = lti_quicklink_data['PublicUrl']
                    .sub('{orgUnitId}', app.context_id)
-      quicklink = t('default.scheduled_meeting.calendar.description.link',
-                    url: "#{domain}#{public_url}")
-      payload = build_calendar_payload(scheduled_meeting, quicklink)
+      quicklink_url = "#{domain}#{public_url}"
+      payload = build_calendar_payload(scheduled_meeting, quicklink_url)
       event = [url, payload.to_json, headers]
     when :delete_calendar_entry
       scheduled_meeting_id = args[:scheduled_meeting_id]
@@ -248,12 +247,12 @@ module BrightspaceHelper
     "#{domain}/d2l/api/le/#{version}/#{org_unit}/calendar/event/#{event_id}"
   end
 
-  def build_calendar_payload(scheduled_meeting, quicklink)
+  def build_calendar_payload(scheduled_meeting, quicklink_url)
     repeat_type, repeat_every = calendar_repeat_type(scheduled_meeting.repeat)
     weak_day = scheduled_meeting.start_at.wday
 
     title = scheduled_meeting.name
-    description = build_description(scheduled_meeting.description, quicklink)
+    description = build_description(scheduled_meeting.description, quicklink_url)
     start_date_time = scheduled_meeting.start_at
     end_date_time = (start_date_time + scheduled_meeting.duration)
 
@@ -301,8 +300,11 @@ module BrightspaceHelper
     calendar_payload
   end
 
-  def build_description(description, quicklink)
-    description = "#{quicklink}\n#{description}"
+  def build_description(description, quicklink_url)
+    link_text = t('default.scheduled_meeting.calendar.description.link')
+    link = "<a href=\"#{quicklink_url}\" target=\"_blank\">#{link_text}</a>"
+    description = "#{link}\n#{description}"
+
     # Split each line into paragraphs
     description.split("\n").map { |line| "<p>#{line}</p>" }.join
   end
