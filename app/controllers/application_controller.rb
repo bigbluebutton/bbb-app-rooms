@@ -22,13 +22,14 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from BigBlueButton::BigBlueButtonException do |e|
-    Rails.logger.error "Exception caught: error=#{e.key} " \
-                        "class=#{e.class.name} message='#{e.message}'"
-
     if e.key.to_s == 'meetingAlreadyBeingCreated' && @room.present? && @scheduled_meeting.present?
+      Rails.logger.warn "Meeting already being created: error=#{e.key} " \
+                        "class=#{e.class.name} message='#{e.message}'"
       add_to_room_session(@room, 'auto_join', 'true')
       redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
     else
+      Rails.logger.error "Exception caught: error=#{e.key} " \
+                         "class=#{e.class.name} message='#{e.message}'"
       redirect_back(fallback_location: room_path(@room),
                     notice: t('default.app.bigbluebutton_error', status: e.key))
     end
