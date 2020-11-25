@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_28_181808) do
+ActiveRecord::Schema.define(version: 2020_11_24_200408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,7 +33,9 @@ ActiveRecord::Schema.define(version: 2020_10_28_181808) do
     t.bigint "room_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "link_id"
     t.index ["event_id", "room_id"], name: "index_brightspace_calendar_events_on_event_id_and_room_id", unique: true
+    t.index ["link_id", "room_id"], name: "index_brightspace_calendar_events_on_link_id_and_room_id", unique: true
     t.index ["room_id"], name: "index_brightspace_calendar_events_on_room_id"
     t.index ["scheduled_meeting_id"], name: "index_brightspace_calendar_events_on_scheduled_meeting_id"
   end
