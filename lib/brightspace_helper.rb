@@ -53,7 +53,7 @@ module BrightspaceHelper
       send_delete_calendar_entry(app, scheduled_meeting_id, room)
 
       # delete link (and quicklink)
-      send_delete_link(app, scheduled_meeting)
+      send_delete_link(app, scheduled_meeting_id)
     end
   end
 
