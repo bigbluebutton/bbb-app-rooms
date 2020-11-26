@@ -17,48 +17,42 @@ class BrightspaceController < ApplicationController
   before_action -> { authenticate_with_oauth! :brightspace, @custom_params }
 
   def send_create_calendar_event
-    event = build_event(:create)
+    event_data = send_calendar_event(:create,
+                                     @app_launch,
+                                     scheduled_meeting: @scheduled_meeting)
 
-    begin
-      response = RestClient.post(*event)
-      payload = JSON.parse(response)
+    local_params = { event_id: event_data[:event_id],
+                     link_id: event_data[:lti_link_id],
+                     scheduled_meeting_id: @scheduled_meeting.id,
+                     room_id: @scheduled_meeting.room_id, }
+    BrightspaceCalendarEvent.find_or_create_by(local_params)
 
-      event_id = payload['CalendarEventId']
-      local_params = { event_id: event_id,
-                       scheduled_meeting_id: @scheduled_meeting.id,
-                       room_id: @scheduled_meeting.room_id, }
-      BrightspaceCalendarEvent.find_or_create_by(local_params)
-    rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error("Could not send calendar event: #{e.response}")
-    end
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_update_calendar_event
-    event = build_event(:update)
+    event_data = send_calendar_event(:update,
+                                     @app_launch,
+                                     scheduled_meeting: @scheduled_meeting)
+    local_params = { event_id: event_data[:event_id],
+                     link_id: event_data[:lti_link_id], }
+    BrightspaceCalendarEvent
+      .find_by(scheduled_meeting_id: @scheduled_meeting.id)
+      &.update(local_params)
 
-    begin
-      RestClient.put(*event)
-    rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error("Could not send calendar event: #{e.response}")
-    end
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_delete_calendar_event
-    event = build_event(:delete)
+    send_calendar_event(:delete,
+                        @app_launch,
+                        scheduled_meeting_id: permitted_params[:id],
+                        room: @room)
+    BrightspaceCalendarEvent
+      .find_by(scheduled_meeting_id: permitted_params[:id],
+               room_id: @room.id)
+      &.delete
 
-    begin
-      RestClient.delete(*event)
-
-      # Even though scheduled_meeting_id is unique, it's important to filter
-      # by room_id, so an authorized person can't delete an event from another
-      # room
-      BrightspaceCalendarEvent.destroy_by(room_id: @room,
-                                          scheduled_meeting_id: permitted_params[:id])
-    rescue RestClient::ExceptionWithResponse => e
-      Rails.logger.error("Could not send calendar event: #{e.response}")
-    end
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
@@ -70,34 +64,6 @@ class BrightspaceController < ApplicationController
 
     Rails.logger.info('Brightspace calendar event already sent.')
     redirect_to(@room)
-  end
-
-  def build_event(type)
-    omniauth_auth = session['omniauth_auth']['brightspace']
-    access_token = omniauth_auth['credentials']['token']
-    refresh_token = omniauth_auth['credentials']['refresh_token']
-
-    headers = build_calendar_headers(access_token)
-    case type
-    when :create, :update
-      event_id = @scheduled_meeting.brightspace_calendar_event&.event_id || ''
-      calendar_url = build_calendar_url(@app_launch, event_id)
-      calendar_payload = build_calendar_payload(@scheduled_meeting)
-
-      event = [calendar_url, calendar_payload.to_json, headers]
-    when :delete
-      # Even though scheduled_meeting_id is unique, it's important to filter
-      # by room_id, so an authorized person can't delete an event from another
-      # room
-      event = BrightspaceCalendarEvent.find_by(room_id: @room,
-                                               scheduled_meeting_id: permitted_params[:id])
-      event_id = event&.event_id
-      return nil unless event_id
-
-      calendar_url = build_calendar_url(@app_launch, event_id)
-      event = [calendar_url, headers]
-    end
-    event
   end
 
   def set_event

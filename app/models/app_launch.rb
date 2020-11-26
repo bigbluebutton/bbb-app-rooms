@@ -17,7 +17,7 @@ class AppLaunch < ApplicationRecord
       :allow_wait_moderator, :allow_all_moderators
     ].each do |attr|
       p[attr] = if has_custom_param?(attr.to_s)
-                  custom_param_value(attr.to_s)
+                  is_custom_param_true?(attr.to_s)
                 else
                   new_room.send(attr)
                 end
@@ -44,9 +44,12 @@ class AppLaunch < ApplicationRecord
       self.params['custom_params'].key?('custom_' + name)
   end
 
-  def custom_param_value(name)
-    self.has_custom_param?(name) &&
-      self.params['custom_params']['custom_' + name] == 'true'
+  def custom_param(name)
+    params['custom_params']&.[]('custom_' + name)
+  end
+
+  def custom_param_true?(name)
+    params['custom_params']&.[]('custom_' + name) == 'true'
   end
 
   # Note: this is how a handler of a room is defined after launch, changing this
