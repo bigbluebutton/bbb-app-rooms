@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.4.0 Elos - (to be released)
+
+* [ELOSP-578] Include a link to the LTI meeting in the event created in Brigthspace's calendar.
+  The link opens a new tab, launches the LTI and directs the user to the meeting's page (for now
+  this is the external page, since there's no meetings#show).
+* [ELOSP-607] Fix an error that would occur related to the integration with Brigthspace's calendar.
+  It happened after a launch with an expired AppLaunch was made and resulted in an ugly error page
+  for users. It now shows the proper error page as it did before.
+* [ELOSP-577] Fix editing a meeting to be non recurring after it was created being a recurring
+  meeting (it was not possible, it would be recurring forever).
+
+
 ## 0.3.1 Elos - 2020-11-16
 
 * [PR#10] Small fixes to try to remove an error in the authentication for some users. The first
