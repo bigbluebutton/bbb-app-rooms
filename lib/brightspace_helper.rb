@@ -3,45 +3,36 @@
 module BrightspaceHelper
   def send_calendar_event(method, app, args)
     case method
-    when :create
+    when :create, :update
       scheduled_meeting = args[:scheduled_meeting]
+      brightspace_event = BrightspaceCalendarEvent
+                          .find_by(scheduled_meeting_id: scheduled_meeting)
 
-      # create link
+      if brightspace_event.present?
+        # The API doesn't allow to delete the quicklink directly, the only way
+        # is by destroying the link that generated the quicklink.
+        # So, instead of updating the link, we destroy it, so it destroy the
+        # quicklink as well, and then we create it again.
+        send_delete_link(app, scheduled_meeting)
+      end
+
+      # (re)create link
       lti_link_data = send_create_link(app, scheduled_meeting)
 
-      # create quicklink
+      # (re)create quicklink
       lti_quicklink_data = send_create_quicklink(app,
                                                  scheduled_meeting,
                                                  lti_link_data)
 
-      # create calendar entry
-      calendar_event_data = send_create_calendar_entry(app,
-                                                       scheduled_meeting,
-                                                       lti_quicklink_data)
-
-      { event_id: calendar_event_data['CalendarEventId'],
-        lti_link_id: lti_link_data['LtiLinkId'], }
-    when :update
-      scheduled_meeting = args[:scheduled_meeting]
-
-      # The API doesn't allow to delete the quicklink directly, the only way
-      # is by destroying the link that generated the quicklink.
-      # So, instead of updating the link, we destroy it, so it destroy the
-      # quicklink as well, and then we create it again.
-      send_delete_link(app, scheduled_meeting)
-
-      # recreate link
-      lti_link_data = send_create_link(app, scheduled_meeting)
-
-      # recreate quicklink
-      lti_quicklink_data = send_create_quicklink(app,
-                                                 scheduled_meeting,
-                                                 lti_link_data)
-
-      # update calendar entry
-      calendar_event_data = send_update_calendar_entry(app,
-                                                       scheduled_meeting,
-                                                       lti_quicklink_data)
+      calendar_event_data = if brightspace_event.present?
+                              send_update_calendar_entry(app,
+                                                         scheduled_meeting,
+                                                         lti_quicklink_data)
+                            else
+                              send_create_calendar_entry(app,
+                                                         scheduled_meeting,
+                                                         lti_quicklink_data)
+                            end
 
       { event_id: calendar_event_data['CalendarEventId'],
         lti_link_id: lti_link_data['LtiLinkId'], }
