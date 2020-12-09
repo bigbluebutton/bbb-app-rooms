@@ -88,7 +88,7 @@ describe RoomsController, type: :controller do
   describe '#meeting_end' do
     it 'should end the meeting' do
       post :meeting_end, params: { id: @room.id }
-      expect(response). to(have_http_status(:success))
+      expect(response). to(have_http_status(:found))
     end
   end
 end

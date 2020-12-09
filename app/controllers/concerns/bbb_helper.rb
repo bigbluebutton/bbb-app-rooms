@@ -17,6 +17,8 @@ require 'bbb/credentials'
 
 module BbbHelper
   extend ActiveSupport::Concern
+  attr_writer :cache          # Rails.cache store is assumed.
+  attr_writer :cache_enabled  # Enabled by default.
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
@@ -61,7 +63,13 @@ module BbbHelper
 
   # Perform ends meeting for the current @room.
   def end_meeting
-    bbb.end_meeting(@room.handler, @room.moderator)
+    response = { returncode: 'FAILED' }
+    begin
+      response = bbb.end_meeting(@room.handler, @room.moderator)
+    rescue BigBlueButton::BigBlueButtonException
+      # this can be thrown if all participants left (clicked 'x' before pressing the end button)
+    end
+    response
   end
 
   # Retrieves meeting info for the current Room.
@@ -82,6 +90,9 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
+    cached_rec = Rails.cache.fetch("#{@room.handler}/#{__method__}")
+    return cached_rec unless cached_rec.nil?
+
     res = bbb.get_recordings(meetingID: @room.handler)
 
     # Format playbacks in a more pleasant way.
@@ -99,7 +110,13 @@ module BbbHelper
       r.delete(:playback)
     end
 
-    res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+    recs = res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+
+    Rails.cache.fetch("#{@room.handler}/#{__method__}", expires_in: 30.minutes) do
+      recs
+    end
+
+    recs
   end
 
   # Deletes a recording.
@@ -127,7 +144,16 @@ module BbbHelper
   def wait_for_mod?
     return unless @room && @user
 
-    @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
+    cached_wait = Rails.cache.fetch("#{@room.handler}/#{__method__}")
+    return cached_wait unless cached_wait.nil?
+
+    wait = @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
+
+    Rails.cache.fetch("#{@room.handler}/#{__method__}", expires_in: 5.minutes) do
+      wait
+    end
+
+    wait
   end
 
   # Return the number of participants in a meeting for the current room.
