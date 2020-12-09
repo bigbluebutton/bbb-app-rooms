@@ -37,7 +37,7 @@ $(document).on('turbolinks:load', function(){
         var save = function(){
           let $text = $('<text/>').text($input.val()).attr('class', $input.attr('class'));
           $input.replaceWith($text);
-          submit_rename_request(recording_text)
+          submit_rename_request(recording_text);
         };
 
         $input.on('blur keyup', function(e) {
