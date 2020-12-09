@@ -19,6 +19,8 @@ class WaitChannel < ApplicationCable::Channel
   def subscribed
     @room = Room.find(params[:room_id])
     stream_for(@room)
+  rescue ActiveRecord::RecordNotFound
+    nil # To catch attempts to subscribe when wait for mod isn't required.
   end
 
   def unsubscribed
