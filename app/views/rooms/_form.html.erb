@@ -56,13 +56,13 @@
   <% end %>
 
   <div class="field form-group input-group flex justify-center">
-    <%= form.check_box :wait_moderator %>&nbsp;
+    <%= form.check_box :wait_moderator, id: 'wait_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.waitmoderator') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>"></i><br>
   </div>
 
   <div class="field form-group input-group flex justify-center">
-    <%= form.check_box :all_moderators %>&nbsp;
+    <%= form.check_box :all_moderators, id: 'all_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.allmoderators') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>"></i><br>
   </div>
