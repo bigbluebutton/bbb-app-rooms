@@ -121,21 +121,25 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
+    Rails.cache.clear
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
+    Rails.cache.clear
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
+    Rails.cache.clear
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
+    Rails.cache.clear
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end
