@@ -23,21 +23,18 @@
 
 </head>
 <body data-meeting = <%=@meeting%>>
-<div class="container-fluid">
-    <div class = "row">
-        <div class ="w3-container w3-white ">
-            <img style ="top:50%" alt="" src="https://raw.githubusercontent.com/bigbluebutton/greenlight/master/app/assets/images/logo_with_text.png">
+    <div class="container bg-white">
+        <div class = "row">
+            <div class ="flex items-start mt-20 mr-10 mb-10 ">
+                <img style ="top:50%" alt="" src="https://raw.githubusercontent.com/bigbluebutton/greenlight/master/app/assets/images/logo_with_text.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class = "bg-gray-200 grid justify-items-center grid-cols-1 gap-10 p-20 pt-40 pb-40" >
+                <p class="font-sans text-5xl font-light pb-5"> <%= t('default.waiting_room.hang_tight') %> </p>
+                <div class="loader pb-5"> </div>
+                <p class="font-sans text-4xl font-light pt-5"> <%= t('default.waiting_room.redirect_msg') %> </p>
+            </div>
         </div>
     </div>
-    <div class = "row w3-container w3-blue d-flex justify-content-center" style="width:100%; height: 30%" >
-        <div class = "col-xs-12 font-weight-400 message-2" >
-            <h1 class="row"> Hang tight... </h1> <br>
-        
-            <span> <div class="loader row" style ="margin:auto; padding: 10px"></div> </span> <br>   
-
-            <h1 class="row">You will be redirected once the meeting starts</h1>
-        </div>
-    </div>
-
-    <div class="row" style="background-color: blue; background: blue; "> </div>
 </body>

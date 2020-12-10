@@ -63,13 +63,13 @@ en:
       viewer:         "Viewer"
     room:
       created:        "Room was successfully created."
-      edit:           "Edit"
+      edit:           "Edit Room"
       editing:        "Editing Room"
       show:           "Show"
       showing:        "Showing Room"
       destroy:        "Destroy"
       destroyed:      "Room was successfully destroyed"
-      join:           "Join"
+      join:           "Join Session"
       name:           "Name"
       description:    "Description"
       welcome:        "Welcome"
@@ -83,10 +83,12 @@ en:
       updated:        "Updated"
       cancel:         "Cancel"
       endmeeting:     "End Session"
+      started:        "Started"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
+        edit:           "Click on the text to edit"
       waitmodmsg:     "Please wait for a moderator to enter the room. You will be redirected automatically."
     meeting:
       close:          "Close tab/window"
@@ -99,10 +101,10 @@ en:
         publish:      "Publish"
         unprotect:    "Unprotect"
         unpublish:    "Unpublish"
-      search_placeholder: "Search by Name or Description..."
+      search_placeholder: "Search"
       table:
         actions:      "Actions"
-        formats:      "Formats"
+        formats:      "Playback"
         name:         "Name"
         description:  "Description"
         date:         "Date"
@@ -116,6 +118,9 @@ en:
         video:        "Video"
         presentation: "Presentation"
         statistics:   "Statistics"
+    waiting_room:
+      hang_tight:   "Hang tight ..."
+      redirect_msg:  "You will be automatically redirected once the meeting starts"
 
   error:
     http:

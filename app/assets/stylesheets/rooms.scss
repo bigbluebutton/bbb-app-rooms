@@ -56,24 +56,10 @@ html,body,.container {
   z-index: 9
 }
 
-/* The ellipses button */
-.dropbtn {
-  background-color: white;
-  color: #0A5EAC;
-  font-size: 20px;
-  border: none;
-  cursor: pointer;
-  position: absolute;
-}
-
-.dropbtn:hover {
-  color: #0a5eacb2;
-}
-
 /* Change color of dropdown links on hover */
 .dropdown-content .btn:hover {
   color: white;
-  background-color: #0f70d7;
+  background-color: #263f88;
 }
 
 div #body {
@@ -86,13 +72,41 @@ input.recording-text {
 }
 
 .loader {
-  border: 12px solid whitesmoke;
+  border: 10px solid white;
   border-radius: 50%;
-  border-top: 12px solid #3498db;
-  width: 100px;
-  height: 100px;
+  border-top: 10px solid #263f88;
+  width: 140px;
+  height: 140px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.edit_hover_class a{
+  visibility:hidden;
+}
+.edit_hover_class:hover a {
+  visibility:visible;
+  background-color: white;
 }
 
 /* Safari */

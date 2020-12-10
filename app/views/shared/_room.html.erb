@@ -12,103 +12,125 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
-
-<div class="row">
-  <div class="col-12">
-    <% unless notice == nil %>
-    <div class="alert alert-info show fade in" role="alert">
-      <%= notice %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <% end %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-12">
-
-    <!-- top bar buttons -->
-    <div class="row">
-      <div class="col-6">
-        <%= link_to '', '#',:name => 'Refresh', :class => "btn btn-default glyphicon glyphicon-refresh pull-left", :onClick  => "location.reload();" %>
+  <div class="row mt-6">
+      <% unless notice == nil %>
+      <div class="alert alert-info show fade in" role="alert">
+        <%= notice %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <% end %>
+  </div>
 
-      <div class="col-6 ">
+  <% meeting_running = meeting_running? %>
+  <% visible = "display: none;" %>
+  <% if meeting_running %>
+    <% meeting_info_dict = meeting_info %>
+    <% elapsedTime = elapsed_time(meeting_info_dict[:startTime], DateTime.now) %>
+    <% pplPresent = meeting_info_dict[:participantCount] %>
+    <% if pplPresent == 1 %>
+      <% pplprson = "person" %>
+    <% else %>
+      <% pplprson = "people" %>
+    <% end %>
+    <% visible = "display: inline;" %>
+  <% end %>
+
+<!-- Row 1: Meeting info and edit link -->
+  <div class="row">
+    <div class="pt-16 font-sans flex justify-between flex-row-reverse">  
+      <!-- Link to edit -->
+      <div>
         <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-        <%= link_to '', edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "btn btn-default glyphicon glyphicon-edit pull-right" %>
+          <%= link_to t('default.room.edit'), edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "text-blue-600 font-semibold text-xl font-sans hover:text-white hover:bg-blue-400 " %>
         <% end %>
       </div>
+
+      <!-- Meeting info -->
+      <div class="flex items-start text-green-700" style = "<%= visible %>" id = "meeting-info-msg">
+        <div class="flex rounded-full bg-green-200 py-1 px-3">
+          <div class="mr-2 animate-pulse ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-live-photo" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <circle cx="12" cy="12" r="1" />
+              <circle cx="12" cy="12" r="5" />
+              <line x1="15.9" y1="20.11" x2="15.9" y2="20.12" />
+              <line x1="19.04" y1="17.61" x2="19.04" y2="17.62" />
+              <line x1="20.77" y1="14" x2="20.77" y2="14.01" />
+              <line x1="20.77" y1="10" x2="20.77" y2="10.01" />
+              <line x1="19.04" y1="6.39" x2="19.04" y2="6.4" />
+              <line x1="15.9" y1="3.89" x2="15.9" y2="3.9" />
+              <line x1="12" y1="3" x2="12" y2="3.01" />
+              <line x1="8.1" y1="3.89" x2="8.1" y2="3.9" />
+              <line x1="4.96" y1="6.39" x2="4.96" y2="6.4" />
+              <line x1="3.23" y1="10" x2="3.23" y2="10.01" />
+              <line x1="3.23" y1="14" x2="3.23" y2="14.01" />
+              <line x1="4.96" y1="17.61" x2="4.96" y2="17.62" />
+              <line x1="8.1" y1="20.11" x2="8.1" y2="20.12" />
+              <line x1="12" y1="21" x2="12" y2="21.01" />
+            </svg>
+          </div>
+          <p class="text-base font-semibold ">
+            <span id="elapsed-time-elem"> <%= elapsedTime %> </span>&nbsp;&nbsp;&middot;&nbsp;
+            <span id="num-ppl-in-meeting-elem"> <%= pplPresent %> </span> 
+            <span id="ppl-or-person-elem"> <%= pplprson %> </span> 
+          </p> 
+        </div>  
+      </div>     
     </div>
   </div>
 
-  <!-- room -->
+
+  <!-- Row 2: Room name and join, end buttons -->
   <div class="row">
-    <div class="col-12">
-      <h1><%= @room.name %></h1>
+    <div class="flex justify-between items-center pt-2 font-sans">
+        <div class="flex justify-start items-center">
+          <p class="text-6xl font-sans inline-block font-light"><%= @room.name %></p>  
+        </div>
 
-      <h3><%= @room.description %></h3>
-      <% visible = "display: none;" %>
-      <div class = "pull-left">
-      
-        <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
-            <%= button_tag t('default.room.join') ,:type => 'submit', style: "display:inline; margin-right: 5px", :class => "btn btn-primary", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-        <% end %>  
-      </div>
-
-      <div>    
-        <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-          <% if meeting_running? %>
-            <% meeting_info_dict = meeting_info %>
-            <% elapsedTime = elapsed_time(meeting_info_dict[:startTime], DateTime.now) %>
-            <% pplPresent = meeting_info_dict[:participantCount] %>
-            <% if pplPresent == 1 %>
-              <% pplprson = "person" %>
-            <% else %>
-              <% pplprson = "people" %>
-            <% end %>
-            <% visible = "display: inline;" %>
-          <% end %>  
-         <span> <%= button_tag t('default.room.endmeeting'), :type => 'button', :class => "pull-left btn btn-danger", id: 'end-meeting-btn', style: visible, data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %></span>
-        <% end %> 
-      </div>
-
-      <div class = "pull-left" style = "margin-left: 5px; margin-top: 5px"> 
-        <p id= "meeting-info-msg" style = "<%= visible %>" > 
-          <span id="num-ppl-in-meeting-elem"> <%= pplPresent %> </span>
-          <span id="ppl-or-person-elem"> <%= pplprson %> </span>
-          present. The session has been running for 
-          <span id="elapsed-time-elem"> <%= elapsedTime %> </span> 
-          seconds.
-        </p>
-      </div>
-   
-      <% if !@user.admin? && !@user.moderator?(bigbluebutton_moderator_roles) %>
-        <%= content_tag(:p, t('default.room.waitmodmsg'), :style => "display:none;", id: 'wait-for-mod-msg') %>
-      <% end %>
-
+        <div class="flex justify-end"> 
+          <div>
+            <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
+                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center px-6 py-3 w-50 mb-0 btn btn-primary bg-blue-600", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+            <% end %> 
+          </div>
+          <div>
+            <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+              <%= button_tag t('default.room.endmeeting'), 
+                  type: 'button', 
+                  class: "font-sans text-center w-50 px-6 py-3 mb-0 ml-3 btn border-red-600 text-red-600 hover:bg-red-600 hover:text-white", 
+                  id: 'end-meeting-btn', 
+                  style: visible,
+                  data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+            <% end %> 
+          </div>
+        </div>     
     </div>
+  </div> 
+
+  <!-- Row 3: Room description -->
+  <div class="row pt-3 pb-5">
+    <p class= "leading-loose text-xl w-1/2"><%= @room.description %></p>
   </div>
+
+  <hr>
 
   <!-- recordings -->
   <% if bigbluebutton_recording_enabled %>
-    <%= render "shared/components/search_bar", subtitle: t("default.room.recordings") %>
+    
+    <%= render "shared/components/search_bar", subtitle: t("default.room.recordings")%>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div>
-            <table class="table table-hover table-outline table-vcenter text-wrap card-table">
-              <thead>
+          <div class = "w-full inline-block rounded-lg border">
+            <table class="w-full rounded-lg text-left border-collapse" >
+              <thead class="text-left uppercase border-b rounded-lg bg-gray-100 py-6" >
                 <tr>
-                  <th><%= t("default.recording.table.formats") %></th>
-                  <th class="col-md-2"><%= t("default.recording.table.name") %></th>
-                  <th class="col-md-4"><%= t("default.recording.table.description") %></th>
-                  <th class="col-md-2"><%= t("default.recording.table.date") %></th>
-                  <th class="col-md-1"><%= t("default.recording.table.duration") %></th>
+                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.name") + "/" + t("default.recording.table.description") %></th>
+                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.date") %></th>
+                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.duration") %></th>
+                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.formats") %></th>
                   <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-                    <th class="text-center col-md-1"><%= t("default.recording.table.actions") %></th>
+                    <th class="px-2 py-6"></th>
                   <% end %>
                 </tr>
               </thead>
@@ -135,9 +157,10 @@
                 <% end %>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
-      </div>
     </div>
+  </div>
   <% end %>
-</div>
+
