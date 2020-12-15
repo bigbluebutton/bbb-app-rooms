@@ -1,0 +1,73 @@
+<div class="px-24 py-12 pt-16">
+   <div class="flex justify-between">
+        <div class="pb-8">
+            <p class="text-5xl font-sans font-light page-title"><%= t('default.admin.menu.settings') %></p>
+            <% if !notice.nil? %>
+                <p id="notice" class="font-md mt-4 p-10 bg-green-200"><%= notice %></p>
+            <% end %>
+        </div>
+    </div>
+    <hr>
+  
+    <div class="pt-10 text-xl">
+
+        <p class="text-gray-800 font-sans"> Wait for moderator </p>
+        <p class="text-gray-600 font-sans"> Make students wait until a moderator enters the meeting </p>
+        <div class="dropdown text-left">
+          <button class="btn config-btn dropdown-toggle px-6 mt-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Optional &nbsp;<i class="fas fa-caret-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-content text-left">
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "enabled"), class: "text-left dropdown-item btn-block btn  rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.enabled") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "optional"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.optional") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "disabled"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.disabled") %>
+            <% end %>
+          </div>
+    </div>
+
+    <div class="pt-10 text-xl">
+        <p class="text-gray-800 font-sans"> All Moderators </p>
+        <p class="text-gray-600 font-sans"> Make all meeting participants moderators </p>
+         <div class="dropdown text-left">
+          <button class="btn config-btn dropdown-toggle px-6 mt-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Optional &nbsp;<i class="fas fa-caret-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-content text-left">
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "enabled"), class: "text-left dropdown-item btn-block btn  rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.enabled") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "optional"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.optional") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "disabled"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.disabled") %>
+            <% end %>
+          </div>
+    </div>
+
+     <div class="pt-10 text-xl">
+        <p class="text-gray-800 font-sans"> Enable Recording </p>
+        <p class="text-gray-600 font-sans"> Allow moderators to enable meetings </p>
+         <div class="dropdown text-left">
+          <button class="btn config-btn dropdown-toggle px-6 mt-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Optional &nbsp;<i class="fas fa-caret-down"></i>
+          </button>
+          <div class="dropdown-menu dropdown-content text-left">
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "enabled"), class: "text-left dropdown-item btn-block btn  rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.enabled") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "optional"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.optional") %>
+            <% end %>
+            <%= button_to admin_update_room_configuration_path(setting: "Room Configuration Mute On Join", value: "disabled"), class: "text-left dropdown-item btn-block btn btn-default rounded-none", "data-disable": "" do %>
+              <%= t("administrator.room_configuration.options.disabled") %>
+            <% end %>
+          </div>
+    </div>
+
+</div>

@@ -1,0 +1,22 @@
+<body>
+
+<div class="container">
+    <%= render "admins/components/header" %>
+    <div class="px-44 py-12">
+        <div class="border-b-2 pb-4">
+            <p class="text-5xl font-sans pl-4 font-light p-10"> <%= t('default.admin.subtitle') %> </p>
+        </div>
+        <div class="mt-4">
+            <%= render "admins/components/menu_buttons" %>
+            <div class="col-lg-9 static">
+                <div class="border rounded-md">
+                    <div class="h-full">
+                        <%= render "admins/components/server_recordings" %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>

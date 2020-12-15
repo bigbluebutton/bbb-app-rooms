@@ -19,8 +19,8 @@
 $(document).on('turbolinks:load', function(){
   var controller = $("body").data('controller');
   var action = $("body").data('action');
-
-  if(controller == "rooms" && action == "show" || controller == "rooms" && action == "update"){
+  if(controller == "rooms" && action == "show" || controller == "rooms" && action == "update" ||
+      controller == "admins" && action == "server_recordings" || controller == "admins" && action == "update"){
 
     // Set a recording row rename event
     var configure_recording_row = function(recording_text, recording_text_id){
@@ -117,8 +117,13 @@ $(document).on('turbolinks:load', function(){
     // Helper for submitting ajax requests
     var submit_update_request = function(data){
       // Send ajax request for update
+      if (controller == "admins"){
+        req_url = window.location.pathname + '/' + data['record_id'] + '/update'
+      } else {
+        req_url = window.location.pathname + '/recording/' + data['record_id'] + '/update?launch_nonce=' + data['launch_nonce']
+      }
       $.ajax({
-        url: window.location.pathname + '/recording/' + data['record_id'] + '/update?launch_nonce=' + data['launch_nonce'],
+        url: req_url ,
         type: "POST",
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         data: data,

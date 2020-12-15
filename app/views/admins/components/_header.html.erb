@@ -1,0 +1,31 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+
+<div class="relative header">
+  <div class="container">
+    <div class="flex justify-between content-center place-content-center py-4">
+      <div class="pt-2"> 
+          <%= link_to root_path do%>
+              <%= image_tag("logo_with_text.png", class: "bbb-logo pb-2", alt: "Home") %>
+          <% end %>
+      </div>
+      <% if current_user%>
+        <div class= "place-self-end mt-4">
+            <%= link_to t('default.admin.signout'), logout_path, :class => "hover:no-underline uppercase font-sans border primary-bbb-blue text-white rounded-md px-6 py-4 m-2 transition duration-500 ease select-none focus:outline-none focus:shadow-outline" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

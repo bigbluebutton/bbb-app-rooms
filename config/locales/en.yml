@@ -47,10 +47,38 @@ en:
     app:
       error:          "Error"
     admin:
+      title:          "Rooms Admin Page"
+      signin:         "Sign in"
+      signout:        "Sign Out"
+      subtitle:       "Organization Settings"
       back:           "Back"
       handler:        "Handler"
       newroom:        "New Room"
       showall:        "Show all"
+      menu:        
+        users:        "Manage Users"
+        rooms:        "Server Rooms"
+        recordings:   "Server Recordings"
+        settings:     "Default Settings"
+      users:
+        name:         "Name"
+        username:     "Username"
+        role:         "Role"
+        options:      "Options"
+        delete:       "Delete"
+      rooms:
+        id:            "Id"
+        name:          "Name"
+        started:       "Started"
+      recordings:
+        name:          "Name"
+        length:        "Length"
+        users:         "Users"
+        visibility:    "Visibility"
+        formats:       "Formats"
+        options:       "Options"
+      confirmation:   "Confirmation"
+      confirmation_msg: "Are you sure you want to delete this user: "
       showroom:
         text:         "Show"
       editroom:

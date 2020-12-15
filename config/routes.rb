@@ -60,6 +60,42 @@ Rails.application.routes.draw do
 
       # Handles errors.
       get '/errors/:code', to: 'errors#index', as: :errors
+
+      # Admin resources
+
+      scope 'admins' do
+        get 'login', to: 'adminsessions#new', as: :login
+        get 'logout', to: 'adminsessions#destroy', as: :logout
+        resources :adminsessions, only: %i[new create destroy]
+
+        get '/', to: 'admins#home', as: :admins_home
+        get '/rooms', to: 'admins#server_rooms', as: :admins_rooms
+
+        get '/users', to: 'admins#users', as: :admins_users
+        post '/users/delete', to: 'admins#delete_user', as: :admins_delete_user
+        get '/room_configuration', to: 'admins#room_configuration', as: :admins_room_configuration
+        post '/update_room_configuration', to: 'admins#update_room_configuration', as: :admin_update_room_configuration
+
+        scope '/recordings' do
+          get '/', to: 'admins#server_recordings', as: :admins_recordings
+          scope '/:record_id' do
+            post '/publish', to: 'admins#recording_publish', as: :admins_recording_publish
+            post '/unpublish', to: 'admins#recording_unpublish', as: :admins_recording_unpublish
+            post '/protect', to: 'admins#recording_protect', as: :admins_recording_protect
+            post '/unprotect', to: 'admins#recording_unprotect', as: :admins_recording_unprotect
+            post '/update', to: 'admins#recording_update', as: :admins_recording_update
+            post '/delete', to: 'admins#recording_delete', as: :admins_recording_delete
+          end
+        end
+
+        scope '/room/:room_id' do
+          post '/delete', to: 'admins#room_delete', as: :admins_room_delete
+        end
+
+        get '/customization', to: 'admins#customization', as: :admins_customization
+      end
+
+      resources :admins
     end
 
     resources :rooms

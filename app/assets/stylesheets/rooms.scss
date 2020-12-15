@@ -23,6 +23,7 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+@import "utilities/variables";
 
 html,body,.container {
     height: 94%;
@@ -35,6 +36,10 @@ html,body,.container {
 .dropdown {
   position: relative;
   text-align: center;
+}
+
+.bbb-logo {
+  height: 40px;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -59,7 +64,7 @@ html,body,.container {
 /* Change color of dropdown links on hover */
 .dropdown-content .btn:hover {
   color: white;
-  background-color: #263f88;
+  background-color: $primary;
 }
 
 div #body {

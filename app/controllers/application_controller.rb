@@ -25,4 +25,16 @@ class ApplicationController < ActionController::Base
     logger.debug('>>>>>>>>> Params:')
     logger.debug(params.to_json)
   end
+
+  # Retrieves the current user.
+  helper_method :current_user
+  def current_user
+    if session[:user_id]
+      @current_user ||= AdminpgUser.find(session[:user_id])
+    else
+      @current_user = nil
+    end
+
+    @current_user
+  end
 end
