@@ -64,7 +64,6 @@ en:
     room:
       created:        "Room was successfully created."
       edit:           "Edit Room"
-      editing:        "Editing Room"
       show:           "Show"
       showing:        "Showing Room"
       destroy:        "Destroy"
