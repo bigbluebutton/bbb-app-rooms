@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.4.0 Elos - (to be released)
+## 0.4.0 Elos - 2020-12-16
 
 * [ELOSP-578] Include a link to the LTI meeting in the event created in Brigthspace's calendar.
   The link opens a new tab, launches the LTI and directs the user to the meeting's page (for now
