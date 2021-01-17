@@ -48,7 +48,7 @@ class AppLaunch < ApplicationRecord
     params['custom_params']&.[]('custom_' + name)
   end
 
-  def custom_param_true?(name)
+  def is_custom_param_true?(name)
     params['custom_params']&.[]('custom_' + name) == 'true'
   end
 
