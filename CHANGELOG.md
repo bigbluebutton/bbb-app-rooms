@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.2 Elos - 2021-01-17
+
+* Fix typo on `AppLaunch#custom_param_true?`, now called `AppLaunch#is_custom_param_true?`.
+
+
 ## 0.4.1 Elos - 2021-01-17
 
 * [LTI-4] When a user tries to edit an event that has no entry in Brightspace's calendar yet, it
