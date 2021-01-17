@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1 Elos - 2021-01-17
+
+* [LTI-4] When a user tries to edit an event that has no entry in Brightspace's calendar yet, it
+  will now create the event in the calendar instead of showing an error.
+
+
 ## 0.4.0 Elos - 2020-12-16
 
 * [ELOSP-578] Include a link to the LTI meeting in the event created in Brigthspace's calendar.
