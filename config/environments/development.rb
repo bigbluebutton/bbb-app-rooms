@@ -82,6 +82,7 @@ Rails.application.configure do
 
   config.hosts = nil
 
+  config.action_controller.relative_url_root = ''
   config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
 

@@ -24,6 +24,8 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_packs_with_chunks_tag 'application' %>
+
   </head>
 
   <body lang="<%= I18n.locale %>" 

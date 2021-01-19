@@ -6,7 +6,9 @@ module.exports = {
   "tailwindCSS.includeLanguages": {
     "plaintext": "html.erb"
   },
-  purge: [],
+  purge: [
+    './app/assets/stylesheets/*.scss'
+  ],
   theme: {
     screens: {
       sm: '640px',
