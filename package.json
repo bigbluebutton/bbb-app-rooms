@@ -2,6 +2,8 @@
   "name": "bbb-app-rooms",
   "private": true,
   "dependencies": {
+    "@fullhuman/postcss-purgecss": "^4.0.0",
+    "@rails/webpacker": "5.2.1",
     "autocomplete": "0.0.1",
     "autoprefixer": "^10.0.2",
     "jquery": "^3.5.0",
@@ -10,6 +12,7 @@
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
     "postcss": "^8.1.10",
-    "postcss-cli": "^8.2.0"
+    "postcss-cli": "^8.2.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }
