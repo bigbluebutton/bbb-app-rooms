@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.3 Elos - 2021-01-24
+
+* [LTI-32] Fix error 500 when editing or removing a scheduled meeting that had its event removed
+  from Brightspace's calendar. It would show a 500 error and log error messages. Now it recreates
+  the event in Brightspace's calendar (when editing the scheduled meeting) and logs messages as
+  warning instead of errors.
+
+
 ## 0.4.2 Elos - 2021-01-17
 
 * Fix typo on `AppLaunch#custom_param_true?`, now called `AppLaunch#is_custom_param_true?`.
