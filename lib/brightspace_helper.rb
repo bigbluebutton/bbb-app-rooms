@@ -5,10 +5,8 @@ module BrightspaceHelper
     case method
     when :create, :update
       scheduled_meeting = args[:scheduled_meeting]
-      brightspace_event = BrightspaceCalendarEvent
-                          .find_by(scheduled_meeting_id: scheduled_meeting)
 
-      if brightspace_event.present?
+      if scheduled_meeting.brightspace_calendar_event.present?
         # The API doesn't allow to delete the quicklink directly, the only way
         # is by destroying the link that generated the quicklink.
         # So, instead of updating the link, we destroy it, so it destroy the
@@ -23,17 +21,31 @@ module BrightspaceHelper
       lti_quicklink_data = send_create_quicklink(app,
                                                  scheduled_meeting,
                                                  lti_link_data)
+      # update if it exists
+      calendar_event_data =
+        if scheduled_meeting.brightspace_calendar_event.present?
+          send_update_calendar_entry(app, scheduled_meeting, lti_quicklink_data)
+        else
+          send_create_calendar_entry(app, scheduled_meeting, lti_quicklink_data)
+        end
 
-      calendar_event_data = if brightspace_event.present?
-                              send_update_calendar_entry(app,
+      # Create it the update fails.
+      # The update might fail if the calendar event was deleted on the
+      # brightspace side but not on our servers.
+      update_failed = calendar_event_data.nil?
+      if update_failed
+        scheduled_meeting.brightspace_calendar_event.destroy
+        # Reload scheduled meeting because it is in an inconsistent state
+        # since its BrightspaceCalendarEvent was deleted
+        scheduled_meeting.reload
+
+        Rails.logger.warn('Failed to send update calendar entry, ' \
+                          'sending create caledar entry instead.')
+
+        calendar_event_data = send_create_calendar_entry(app,
                                                          scheduled_meeting,
                                                          lti_quicklink_data)
-                            else
-                              send_create_calendar_entry(app,
-                                                         scheduled_meeting,
-                                                         lti_quicklink_data)
-                            end
-
+      end
       { event_id: calendar_event_data['CalendarEventId'],
         lti_link_id: lti_link_data['LtiLinkId'], }
     when :delete
@@ -137,7 +149,7 @@ module BrightspaceHelper
     when :create_calendar_entry, :update_calendar_entry
       scheduled_meeting = args[:scheduled_meeting]
       lti_quicklink_data = args[:lti_quicklink_data]
-      event_id = args[:scheduled_meeting].brightspace_calendar_event&.event_id || ''
+      event_id = scheduled_meeting.brightspace_calendar_event&.event_id || ''
 
       url = build_calendar_url(app, event_id)
       domain = app.brightspace_oauth.url
@@ -176,7 +188,8 @@ module BrightspaceHelper
     response = RestClient.send(action, *event)
     JSON.parse(response) if response.present?
   rescue RestClient::ExceptionWithResponse => e
-    Rails.logger.error("Failed to send #{method} event: #{e.message}")
+    Rails.logger.warn("Failed to send #{method} event: #{e.message}")
+    response = nil
   end
 
   def build_link_url(method, app, lti_link_id = '')
