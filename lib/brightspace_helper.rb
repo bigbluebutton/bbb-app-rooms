@@ -193,7 +193,7 @@ module BrightspaceHelper
     response = RestClient.send(action, *event)
     JSON.parse(response) if response.present?
   rescue RestClient::ExceptionWithResponse => e
-    Rails.logger.warn("Failed to send #{method} event: #{e.message}")
+    Rails.logger.warn("Failed to send #{method} event #{event}: #{e.message}")
     response = nil
   end
 
