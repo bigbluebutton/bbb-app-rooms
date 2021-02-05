@@ -34,10 +34,12 @@ module BrightspaceHelper
       # brightspace side but not on our servers.
       update_failed = calendar_event_data.nil?
       if update_failed
-        scheduled_meeting.brightspace_calendar_event.destroy
-        # Reload scheduled meeting because it is in an inconsistent state
-        # since its BrightspaceCalendarEvent was deleted
-        scheduled_meeting.reload
+        unless scheduled_meeting.brightspace_calendar_event.nil?
+          scheduled_meeting.brightspace_calendar_event&.destroy
+          # Reload scheduled meeting because it is in an inconsistent state
+          # since its BrightspaceCalendarEvent was deleted
+          scheduled_meeting.reload
+        end
 
         Rails.logger.warn('Failed to send update calendar entry, ' \
                           'sending create caledar entry instead.')
@@ -46,6 +48,9 @@ module BrightspaceHelper
                                                          scheduled_meeting,
                                                          lti_quicklink_data)
       end
+
+      return if calendar_event_data.nil?
+
       { event_id: calendar_event_data['CalendarEventId'],
         lti_link_id: lti_link_data['LtiLinkId'], }
     when :delete

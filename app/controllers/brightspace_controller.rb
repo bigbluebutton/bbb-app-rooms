@@ -21,11 +21,16 @@ class BrightspaceController < ApplicationController
                                      @app_launch,
                                      scheduled_meeting: @scheduled_meeting)
 
-    local_params = { event_id: event_data[:event_id],
-                     link_id: event_data[:lti_link_id],
-                     scheduled_meeting_id: @scheduled_meeting.id,
-                     room_id: @scheduled_meeting.room_id, }
-    BrightspaceCalendarEvent.find_or_create_by(local_params)
+    if event_data.nil?
+      Rails.logger.warn('Failed to receive send_create_calendar_event data, ' \
+                        'not creating BrightspaceCalendarEvent on DB.')
+    else
+      local_params = { event_id: event_data[:event_id],
+                      link_id: event_data[:lti_link_id],
+                      scheduled_meeting_id: @scheduled_meeting.id,
+                      room_id: @scheduled_meeting.room_id, }
+      BrightspaceCalendarEvent.find_or_create_by(local_params)
+    end
 
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
@@ -34,12 +39,17 @@ class BrightspaceController < ApplicationController
     event_data = send_calendar_event(:update,
                                      @app_launch,
                                      scheduled_meeting: @scheduled_meeting)
-    local_params = { event_id: event_data[:event_id],
-                     link_id: event_data[:lti_link_id],
-                     room_id: @scheduled_meeting.room_id, }
-    BrightspaceCalendarEvent
-      .find_or_create_by(scheduled_meeting_id: @scheduled_meeting.id)
-      &.update(local_params)
+    if event_data.nil?
+      Rails.logger.warn('Failed to receive send_update_calendar_event data, ' \
+                        'not updating BrightspaceCalendarEvent on DB.')
+    else
+      local_params = { event_id: event_data[:event_id],
+                       link_id: event_data[:lti_link_id],
+                       room_id: @scheduled_meeting.room_id, }
+      BrightspaceCalendarEvent
+        .find_or_create_by(scheduled_meeting_id: @scheduled_meeting.id)
+        &.update(local_params)
+    end
 
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
