@@ -43,7 +43,9 @@ module BbbHelper
 
     create_meeting
     role = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators ? 'moderator' : 'viewer'
-    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
+    join_options = {}
+    join_options[:createTime] = meeting_info[:createTime]
+    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role], join_options)
   end
 
   # Create meeting for the current @room.
