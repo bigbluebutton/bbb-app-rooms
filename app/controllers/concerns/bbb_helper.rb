@@ -79,15 +79,22 @@ module BbbHelper
     info = { returncode: 'FAILED' }
     begin
       info = bbb.get_meeting_info(@room.handler, @user)
-    rescue BigBlueButton::BigBlueButtonException
-      logger.info('We could not find a meeting with that meeting ID')
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info(e.to_s)
     end
     info
   end
 
   # Checks if the meeting for current @room is running.
   def meeting_running?
-    bbb.is_meeting_running?(@room.handler)
+    begin
+      res = bbb.is_meeting_running?(@room.handler)
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info(e.to_s)
+      res = false
+    end
+
+    res
   end
 
   # Fetches all recordings for a room.
@@ -119,6 +126,17 @@ module BbbHelper
     end
 
     recs
+  end
+
+  def server_running?
+    begin
+      bbb.get_meeting_info(@room.handler, @user)
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info('We could not find a meeting with that meeting ID')
+      return e.to_s
+    end
+
+    nil
   end
 
   # Deletes a recording.

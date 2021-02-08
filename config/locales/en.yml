@@ -112,6 +112,7 @@ en:
         public:       "Public"
         protected:    "Protected"
       no_matched_recordings: "No recordings matching search criteria"
+      server_down:    "An error occured. Any existing recordings were not retrieved because the server is down."
       no_recordings: "No recordings"
       formats:
         video:        "Video"

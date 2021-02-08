@@ -12,7 +12,15 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
-  <div class="row mt-6">
+  <div class="row mt-10 mb-0">
+      <% unless flash.alert.nil?%>
+        <div class="alert bg-red-100 mb-0 show fade in" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <%= flash.alert %>
+        </div>
+      <% end %> 
       <% unless notice == nil %>
       <div class="alert alert-info show fade in" role="alert">
         <%= notice %>
@@ -140,14 +148,14 @@
                     <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                   </td>
                 </tr>
-                <% if recordings.empty? %>
+                <% if @recordings.empty? %>
                   <tr>
                     <td colspan="7" class="text-center h4 p-6 font-weight-normal">
                       <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
                     </td>
                   </tr>
                 <% else %>
-                  <% recordings.each do |recording| %>
+                  <% @recordings.each do |recording| %>
                     <% if only_public %>
                       <%= render "shared/components/public_recording_row", recording: recording %>
                     <% else %>
