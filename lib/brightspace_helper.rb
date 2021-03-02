@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module BrightspaceHelper
+  class SendEventError < StandardError
+  end
+
+  class SendCalendarEventError < StandardError
+  end
+
   def send_calendar_event(method, app, args)
     case method
     when :create, :update
@@ -24,30 +30,28 @@ module BrightspaceHelper
       # update if it exists
       calendar_event_data =
         if scheduled_meeting.brightspace_calendar_event.present?
-          send_update_calendar_entry(app, scheduled_meeting, lti_quicklink_data)
+          begin
+            send_update_calendar_entry(app, scheduled_meeting, lti_quicklink_data)
+          rescue SendEventError => e
+            # Create it the update fails.
+            # The update might fail if the calendar event was deleted on the
+            # brightspace side but not on our servers.
+            unless scheduled_meeting.brightspace_calendar_event.nil?
+              scheduled_meeting.brightspace_calendar_event&.destroy
+              # Reload scheduled meeting because it is in an inconsistent state
+              # since its BrightspaceCalendarEvent was deleted
+              scheduled_meeting.reload
+            end
+
+            Rails.logger.warn('Failed to send update calendar entry, ' \
+                              'sending create caledar entry instead.')
+
+            send_create_calendar_entry(app,scheduled_meeting,
+                                       lti_quicklink_data)
+          end
         else
           send_create_calendar_entry(app, scheduled_meeting, lti_quicklink_data)
         end
-
-      # Create it the update fails.
-      # The update might fail if the calendar event was deleted on the
-      # brightspace side but not on our servers.
-      update_failed = calendar_event_data.nil?
-      if update_failed
-        unless scheduled_meeting.brightspace_calendar_event.nil?
-          scheduled_meeting.brightspace_calendar_event&.destroy
-          # Reload scheduled meeting because it is in an inconsistent state
-          # since its BrightspaceCalendarEvent was deleted
-          scheduled_meeting.reload
-        end
-
-        Rails.logger.warn('Failed to send update calendar entry, ' \
-                          'sending create caledar entry instead.')
-
-        calendar_event_data = send_create_calendar_entry(app,
-                                                         scheduled_meeting,
-                                                         lti_quicklink_data)
-      end
 
       return if calendar_event_data.nil?
 
@@ -63,6 +67,8 @@ module BrightspaceHelper
       # delete link (and quicklink)
       send_delete_link(app, scheduled_meeting_id)
     end
+  rescue SendEventError => e
+    raise SendCalendarEventError, e.message
   end
 
   private
@@ -191,10 +197,18 @@ module BrightspaceHelper
                :delete
              end
     response = RestClient.send(action, *event)
+
     JSON.parse(response) if response.present?
   rescue RestClient::ExceptionWithResponse => e
-    Rails.logger.warn("Failed to send #{method} event #{event}: #{e.message}")
-    response = nil
+    message = "Failed to send #{method} event #{event}. "\
+              "Message: #{e.message}, "\
+              "Code: #{e.http_code}, "\
+              "Body: #{e.http_body}"
+    raise SendEventError, message
+  rescue JSON::ParseError => e
+    message = "Failed to send #{method} event #{event}. "\
+              "Error parsing JSON: #{e}"
+    raise SendEventError, message
   end
 
   def build_link_url(method, app, lti_link_id = '')

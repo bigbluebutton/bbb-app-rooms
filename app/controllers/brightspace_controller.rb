@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'brightspace_helper'
 
 class BrightspaceController < ApplicationController
@@ -17,52 +19,60 @@ class BrightspaceController < ApplicationController
   before_action -> { authenticate_with_oauth! :brightspace, @custom_params }
 
   def send_create_calendar_event
-    event_data = send_calendar_event(:create,
-                                     @app_launch,
-                                     scheduled_meeting: @scheduled_meeting)
+    begin
+      event_data = send_calendar_event(:create,
+                                       @app_launch,
+                                       scheduled_meeting: @scheduled_meeting)
 
-    if event_data.nil?
-      Rails.logger.warn('Failed to receive send_create_calendar_event data, ' \
-                        'not creating BrightspaceCalendarEvent on DB.')
-    else
+
       local_params = { event_id: event_data[:event_id],
-                      link_id: event_data[:lti_link_id],
-                      scheduled_meeting_id: @scheduled_meeting.id,
-                      room_id: @scheduled_meeting.room_id, }
+                       link_id: event_data[:lti_link_id],
+                       scheduled_meeting_id: @scheduled_meeting.id,
+                       room_id: @scheduled_meeting.room_id, }
       BrightspaceCalendarEvent.find_or_create_by(local_params)
+    rescue BrightspaceHelper::SendCalendarEventError => e
+      Rails.logger.warn("Failed to receive send_create_calendar_event data, " \
+                        "not creating BrightspaceCalendarEvent on DB. " \
+                        "Error: #{e.message}")
     end
 
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_update_calendar_event
-    event_data = send_calendar_event(:update,
-                                     @app_launch,
-                                     scheduled_meeting: @scheduled_meeting)
-    if event_data.nil?
-      Rails.logger.warn('Failed to receive send_update_calendar_event data, ' \
-                        'not updating BrightspaceCalendarEvent on DB.')
-    else
+    begin
+      event_data = send_calendar_event(:update,
+                                       @app_launch,
+                                       scheduled_meeting: @scheduled_meeting)
+
       local_params = { event_id: event_data[:event_id],
                        link_id: event_data[:lti_link_id],
                        room_id: @scheduled_meeting.room_id, }
       BrightspaceCalendarEvent
         .find_or_create_by(scheduled_meeting_id: @scheduled_meeting.id)
         &.update(local_params)
+    rescue BrightspaceHelper::SendCalendarEventError => e
+      Rails.logger.warn("Failed to receive send_update_calendar_event data, " \
+                        "not updating BrightspaceCalendarEvent on DB." \
+                        "Error: #{e.message}")
     end
 
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
 
   def send_delete_calendar_event
-    send_calendar_event(:delete,
-                        @app_launch,
-                        scheduled_meeting_id: permitted_params[:id],
-                        room: @room)
-    BrightspaceCalendarEvent
-      .find_by(scheduled_meeting_id: permitted_params[:id],
-               room_id: @room.id)
-      &.delete
+    begin
+      send_calendar_event(:delete,
+                          @app_launch,
+                          scheduled_meeting_id: permitted_params[:id],
+                          room: @room)
+      BrightspaceCalendarEvent
+        .find_by(scheduled_meeting_id: permitted_params[:id], room_id: @room.id)
+        &.delete
+    rescue BrightspaceHelper::SendCalendarEventError => e
+      Rails.logger.warn("Failed to send delete calendar event. " \
+                        "Error: #{e.message}")
+    end
 
     redirect_to(*pop_redirect_from_session!('brightspace_return_to'))
   end
