@@ -205,7 +205,7 @@ module BrightspaceHelper
               "Code: #{e.http_code}, "\
               "Body: #{e.http_body}"
     raise SendEventError, message
-  rescue JSON::ParseError => e
+  rescue JSON::ParserError => e
     message = "Failed to send #{method} event #{event}. "\
               "Error parsing JSON: #{e}"
     raise SendEventError, message
