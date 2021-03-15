@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.4 Elos - 2021-03-15
+
+* [LTI-35] Fix errors that happen when a call to the Brightspace's API fails. It now captures the
+  exceptions and doesn't throw a 500 to the user.
+  Also changed the format of the logs to include the entire stack trace when an exception is
+  raised so we have more information about the error.
+
+
 ## 0.4.3 Elos - 2021-01-24
 
 * [LTI-32] Fix error 500 when editing or removing a scheduled meeting that had its event removed
