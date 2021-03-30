@@ -26,13 +26,15 @@ WORKDIR $APP_HOME
 
 COPY Gemfile* $APP_HOME/
 
+ENV BUNDLE_PATH /usr/src/bundle
 ENV BUNDLER_VERSION='2.1.4'
 RUN gem install bundler --no-document -v '2.1.4'
 RUN if [ "$RAILS_ENV" == "production" ]; \
   then bundle config set without 'development test doc'; \
   else bundle config set without 'test doc'; \
   fi
-RUN bundle install
+RUN bundle config set path ${BUNDLE_PATH}
+RUN bundle install --jobs 4
 
 RUN bundle update --bundler 2.1.4
 RUN gem update --system
