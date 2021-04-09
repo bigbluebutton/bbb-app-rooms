@@ -43,6 +43,11 @@ class ScheduledMeetingsController < ApplicationController
           scheduled_meeting_params(@room)
         )
       )
+
+      if @scheduled_meeting.duration.zero?
+        create_scheduled_with_custom_duration(params[:scheduled_meeting])
+      end
+
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
@@ -68,6 +73,11 @@ class ScheduledMeetingsController < ApplicationController
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
+
+      if params[:scheduled_meeting]['duration'].to_i.zero?
+        update_scheduled_with_custom_duration(params[:scheduled_meeting])
+      end
+
       if @scheduled_meeting.update(scheduled_meeting_params(@room))
         format.html do
           return_path = room_path(@room), { notice: t('default.scheduled_meeting.updated') }
@@ -236,5 +246,21 @@ class ScheduledMeetingsController < ApplicationController
       Rails.logger.info('Brightspace not found')
       false
     end
+  end
+
+  def update_scheduled_with_custom_duration(params)
+    duration_hours = params['custom_duration(4i)']
+    duration_minutes = params['custom_duration(5i)']
+    params['duration'] = ScheduledMeeting.convert_time_to_duration(
+      duration_hours, duration_minutes
+    )
+  end
+
+  def create_scheduled_with_custom_duration(params)
+    duration_hours = params['custom_duration(4i)']
+    duration_minutes = params['custom_duration(5i)']
+    @scheduled_meeting[:duration] = ScheduledMeeting.convert_time_to_duration(
+      duration_hours, duration_minutes
+    )
   end
 end

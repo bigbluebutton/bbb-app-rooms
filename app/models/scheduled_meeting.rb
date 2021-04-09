@@ -62,6 +62,7 @@ class ScheduledMeeting < ApplicationRecord
       '8h': 8 * 60 * 60,
       '12h': 12 * 60 * 60,
       '24h': 24 * 60 * 60,
+      'Custom Duration': 0
     }.map { |k, v|
       [I18n.t("default.scheduled_meeting.durations.#{k}", locale: locale), v]
     }
@@ -203,6 +204,16 @@ class ScheduledMeeting < ApplicationRecord
 
     self.start_at += ScheduledMeeting::REPEAT_OPTIONS[self.repeat] while !self.active?
     self.save
+  end
+
+  def self.get_values_durations_for_select
+    values_durations_select = durations_for_select(I18n.locale).map { | v | [ v ] }
+    values_durations_select.to_a
+  end
+
+  def self.convert_time_to_duration(hour, minutes)
+    duration = hour + ':' + minutes
+    return custom_duration = Time.parse(duration).seconds_since_midnight.to_i
   end
 
   private
