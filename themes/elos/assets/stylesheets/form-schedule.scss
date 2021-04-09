@@ -1,0 +1,17 @@
+.content-timers > select {
+  background: #fff;
+  border-color: lightgray;
+  border-right: 1px solid lightgray !important;
+  color: darkslategray;
+  height: 50px;
+  padding-left: 16px;
+  width: 50%;
+}
+
+.content-timers > select:nth-child(4) {
+  border-radius: .25rem 0 0 .25rem;
+}
+
+.content-timers > select:last-child {
+  border-radius: 0 .25rem .25rem 0;
+}
