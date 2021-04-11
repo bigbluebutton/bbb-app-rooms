@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.5 Elos - 2021-04-11
+
+* [LTI-42] Update a recurring meeting when a user access `/external` and the previous occurrence of
+  the meeting already ended (the same that is done in `rooms#show`, but only for the target meeting).
+* [LTI-37] Allow users that are signed in to access `/external` even when the meeting is configured
+  to not allow external users (this is necessary because we are using `/external` as we would use
+  a `meetings#show` action in Brigthspace's calendar link).
+
+
 ## 0.4.4 Elos - 2021-03-15
 
 * [LTI-35] Fix errors that happen when a call to the Brightspace's API fails. It now captures the
