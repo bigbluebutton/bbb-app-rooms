@@ -223,9 +223,9 @@ class ScheduledMeeting < ApplicationRecord
   def self.convert_duration_to_time(duration)
     hour = (duration / 3600).floor
     minutes = (duration % 3600 / 60).floor
-    hour < 10 ? (finally_hour = '0' + hour.to_s) : (finally_hour = hour)
-    minutes < 10 ? finally_minutes = '0' + minutes.to_s : finally_minutes = minutes
-    return hour, minutes
+    hour < 10 ? (duration_in_hours = '0' + hour.to_s) : (duration_in_hours = hour)
+    minutes < 10 ? duration_in_minutes = '0' + minutes.to_s : duration_in_minutes = minutes
+    return duration_in_hours, duration_in_minutes
   end
 
   def self.default_duration_for_helper
