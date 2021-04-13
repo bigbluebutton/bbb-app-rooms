@@ -40,7 +40,8 @@
           <div class="d-flex content-timers">
             <%=
               form.time_select :custom_duration,
-              default: {hour: 01, min: 00},
+              value: get_custom_duration(scheduled_meeting.duration),
+              default: { hour: @default_hour_duration, min: @default_min_duration },
               required: true,
               time_separator: "",
               ignore_date: true,
@@ -145,42 +146,3 @@
     <%= form.submit t('_all.schedule'), class: "btn btn-secondary" %>
   </div>
 <% end %>
-
-<script>
-var valueSelect = document.getElementsByName("scheduled_meeting[duration]")[0],
-    contentCustomDuration = document.getElementById("content_custom_duration")
-
-valueSelect.addEventListener('change', controlCustomDuration)
-getMethodUrl = window.location.href
-if (getMethodUrl.includes('/edit')) forEditSession()
-
-function controlCustomDuration(e) {
-  let valueSelectDuration = e.target.value;
-  valueSelectDuration == 0 ?
-    contentCustomDuration.classList.add('d-block') :
-    contentCustomDuration.classList.remove('d-block')
-}
-
-function forEditSession(){
-  let durationActual = '<%= @scheduled_meeting.duration.to_json %>',
-      durationsForSelect = '<%= ScheduledMeeting.get_values_durations_for_select %>',
-      fieldDuration = document.getElementsByName("scheduled_meeting[duration]")[0]
-
-  if(!durationsForSelect.includes(durationActual)){
-    fieldDuration.value = 0
-    contentCustomDuration.classList.add('d-block')
-    convertDurationToTime(durationActual)
-  }
-}
-
-function convertDurationToTime(duration){
-  let hourField = document.getElementsByName("scheduled_meeting[custom_duration(4i)]")[0],
-      minutesField = document.getElementsByName("scheduled_meeting[custom_duration(5i)]")[0]
-  const hour = Math.floor(duration / 3600),
-        minutes = Math.floor(duration % 3600 / 60)
-  hour < 10 ? (fullHour = '0' + hour) : fullHour = hour
-  minutes < 10 ? (fullMinutes = '0' + minutes) : fullMinutes = minutes
-  hourField.value = fullHour
-  minutesField.value = fullMinutes
-}
-</script>
