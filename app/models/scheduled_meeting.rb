@@ -207,13 +207,25 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def self.get_values_durations_for_select
-    values_durations_select = durations_for_select(I18n.locale).map { | v | [ v ] }
+    values_durations_select = durations_for_select(I18n.locale).map { | k, v | [ v ] }
     values_durations_select.to_a
   end
 
   def self.convert_time_to_duration(hour, minutes)
     duration = hour + ':' + minutes
     return custom_duration = Time.parse(duration).seconds_since_midnight.to_i
+  end
+
+  def self.convert_duration_to_time(duration)
+    hour = (duration / 3600).floor
+    minutes = (duration % 3600 / 60).floor
+    hour < 10 ? (finally_hour = '0' + hour.to_s) : (finally_hour = hour)
+    minutes < 10 ? finally_minutes = '0' + minutes.to_s : finally_minutes = minutes
+    return hour, minutes
+  end
+
+  def self.default_duration_for_helper
+    return 60 * 60 # 1h
   end
 
   private
