@@ -161,16 +161,20 @@ class ScheduledMeetingsController < ApplicationController
 
   def external
     # If the external link is disabled, users should get an error
-    # whether are they signed in or not
-    if @scheduled_meeting.disable_external_link
+    # if they are not signed in
+    if @scheduled_meeting.disable_external_link && @user.blank?
       redirect_to errors_path(404)
     end
+
     # allow signed in users to use this page, but autofill the inputs
     # and don't let users change them
     if @user.present?
       @first_name = @user.first_name
       @last_name = @user.last_name
     end
+
+    @scheduled_meeting.update_to_next_recurring_date
+
     @ended = !@scheduled_meeting.active? && !mod_in_room?(@scheduled_meeting)
 
     @disclaimer = ConsumerConfig

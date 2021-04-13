@@ -95,6 +95,10 @@ class ScheduledMeeting < ApplicationRecord
     start_at + duration.seconds >= DateTime.now.utc - tolerance
   end
 
+  def recurring?
+    repeat.present?
+  end
+
   def meeting_id
     "#{room.meeting_id}-#{self.id}"
   end
@@ -200,7 +204,7 @@ class ScheduledMeeting < ApplicationRecord
   # Update this scheduled meeting to the date it should be in its next iteration.
   # If this is not a recurring meeting or if this meeting is still active won't do anything.
   def update_to_next_recurring_date
-    return if self.repeat.blank? || self.active?
+    return if !self.recurring? || self.active?
 
     self.start_at += ScheduledMeeting::REPEAT_OPTIONS[self.repeat] while !self.active?
     self.save
