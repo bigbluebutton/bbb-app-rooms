@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.3'
+gem 'rails', '~> 6.0.3'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
 # Include postgres as another database option
