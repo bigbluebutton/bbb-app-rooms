@@ -57,4 +57,12 @@ module ElosHelper
   def current_formatted_time_zone
     ActiveSupport::TimeZone[Time.zone.name].to_s.gsub(/[^\s]*\//, '').gsub(/_/, ' ')
   end
+
+  def playback_url(room, record_id, playback)
+    if Rails.application.config.playback_url_authentication
+      recording_playback_url(room, record_id, playback[:type])
+    else
+      playback[:url]
+    end
+  end
 end

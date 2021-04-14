@@ -72,6 +72,9 @@ module BbbAppRooms
 
     config.log_level = ENV['LOG_LEVEL'] || :debug
 
+    # Enable playback URL authentication through getRecordingToken
+    config.playback_url_authentication = ENV['PLAYBACK_URL_AUTHENTICATION'] || false
+
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?
       config.paths['app/helpers']
