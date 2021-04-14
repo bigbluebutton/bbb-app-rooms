@@ -1,3 +1,6 @@
+<%# Params passed to render partial %>
+<% [user, room, recordings, only_public] %>
+
 <div id="recordings-list" class="row">
   <div class="col-12">
     <h2><%= t('recordings.title') %></h2>
@@ -20,6 +23,8 @@
         <%= t('recordings.table.footnote', zone: current_formatted_time_zone) %>
       </div>
     </div>
+  <% else %>
+    <p><%= t('recordings.empty_list') %></p>
   <% end %>
 </div>
 
