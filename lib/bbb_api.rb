@@ -51,8 +51,8 @@ module BbbApi
   end
 
   # Fetches all recordings for a room.
-  def get_recordings(room)
-    res = bbb(room).get_recordings(room.params_for_get_recordings)
+  def get_recordings(room, options = {})
+    res = bbb(room).get_recordings(options.merge(room.params_for_get_recordings))
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
@@ -70,6 +70,14 @@ module BbbApi
     end
 
     res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+  end
+
+  # Calls getRecodringToken and return the token
+  # More about this API call here: https://github.com/mconf/mconf-rec
+  def get_recording_token(room, auth_user, meeting_id)
+    req_options = { authUser: auth_user, meetingID: meeting_id }
+    response = bbb(room).send_api_request(:getRecordingToken, req_options)
+    response[:token]
   end
 
   # Helper for converting BigBlueButton dates into the desired format.
