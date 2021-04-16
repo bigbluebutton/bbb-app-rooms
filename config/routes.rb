@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
       # Handles recording management.
       scope ':id/recording/:record_id' do
+        get '/playback/:playback_type', to: 'rooms#recording_playback', as: :recording_playback
         post '/publish', to: 'rooms#recording_publish', as: :recording_publish
         post '/unpublish', to: 'rooms#recording_unpublish', as: :recording_unpublish
         post '/protect', to: 'rooms#recording_protect', as: :recording_protect

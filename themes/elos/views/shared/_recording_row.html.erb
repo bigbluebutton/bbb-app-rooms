@@ -1,3 +1,6 @@
+<%# Params passed to render partial %>
+<% [user, room, recording] %>
+
 <tr class="d-flex row tr-row recording-published-<%= recording[:published] %>">
   <td class="col-10 col-md-5 align-middle td-titles" data-search-field="1">
     <div class="item-title">
@@ -33,7 +36,8 @@
 
         <% if recording[:published] %>
           <% recording[:playbacks].each do |p| %>
-            <%= link_to t("recordings.playbacks.#{p[:type]}"), p[:url], class: "dropdown-item", target: "_blank" %>
+            <% url = playback_url(room, recording[:recordID], p) %>
+            <%= link_to t("recordings.playbacks.#{p[:type]}"), url, class: "dropdown-item", target: "_blank" %>
           <% end %>
 
           <% playback = recording[:playbacks].find { |p| p[:type] == 'presentation' } %>
@@ -42,7 +46,7 @@
             <%=
             link_to t('recordings.playback_link'), '#',
              data: {
-               'clipboard-text': playback[:url],
+               'clipboard-text': playback_url(room, recording[:recordID], playback),
                turbolinks: false,
                'toast-id': '#playback-link-copied-toast'
              },
