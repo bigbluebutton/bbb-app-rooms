@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  if Rails.env.development?
+    mount RailsAdmin::Engine => '/dash', as: 'rails_admin'
+  end
+
   if Rails.configuration.cable_enabled
     mount ActionCable.server => Rails.configuration.action_cable.mount_path
   end
