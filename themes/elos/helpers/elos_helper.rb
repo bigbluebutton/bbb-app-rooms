@@ -59,7 +59,7 @@ module ElosHelper
   end
 
   def get_custom_duration(duration)
-    converted_duration = ScheduledMeeting.convert_duration_to_time(duration)
-    return duration_in_time = converted_duration[0].to_s + ':' + converted_duration[1].to_s
+    duration_in_time = ScheduledMeeting.convert_duration_to_time(duration)
+    return time = duration_in_time[0].to_s + ':' + duration_in_time[1].to_s
   end
 end
