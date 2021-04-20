@@ -1,19 +1,24 @@
 $(document).on('turbolinks:load', function(){
   var valueSelect = document.getElementsByName("scheduled_meeting[duration]")[0],
-    contentCustomDuration = document.getElementById("content_custom_duration"),
-    fieldHour = document.getElementsByName("scheduled_meeting[custom_duration(4i)]")[0].value
-    fieldMinutes = document.getElementsByName("scheduled_meeting[custom_duration(5i)]")[0].value
+    contentCustomDuration = document.getElementById("content_custom_duration")
 
   valueSelect.addEventListener('change', controlCustomDuration)
+  function controlCustomDuration(e) {
+    let valueSelectDuration = e.target.value;
+    valueSelectDuration == 0 ? contentCustomDuration.classList.add('d-block') :
+      contentCustomDuration.classList.remove('d-block')
+  }
 
   if(window.location.href.includes('/edit')){
-    transformTimeToDuration(fieldHour, fieldMinutes)
-    function transformTimeToDuration(hour, minutes) {
-      duration = (hour * 60 * 60) + (minutes * 60)
-      valuesDefault = document.getElementsByName('scheduled_meeting[duration]')[0].options
+    var duration = document.getElementsByName("scheduled_meeting[custom_duration]")[0].value,
+        durationSeconds = (duration.split(':')[0] * 60 * 60 ) + ( duration.split(':')[1] * 60 ),
+        durationsDefault = []
+    valuesDefault = document.getElementsByName('scheduled_meeting[duration]')[0].options
+    transformTimeToDuration(durationSeconds)
+    function transformTimeToDuration(duration) {
       for(var i = 0; i < valuesDefault.length; i++) {
-        var arrayOptionsDefault = valuesDefault[i].value
-        if (arrayOptionsDefault.includes(duration)){
+        durationsDefault.push(valuesDefault[i].value)
+        if (durationsDefault.includes(duration.toString())){
           valueSelect.value = duration
           contentCustomDuration.classList.remove('d-block')
           break
@@ -23,12 +28,5 @@ $(document).on('turbolinks:load', function(){
         }
       }
     }
-  }
-
-  function controlCustomDuration(e) {
-    let valueSelectDuration = e.target.value;
-    valueSelectDuration == 0 ?
-      contentCustomDuration.classList.add('d-block') :
-      contentCustomDuration.classList.remove('d-block')
   }
 })

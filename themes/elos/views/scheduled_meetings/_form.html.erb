@@ -35,17 +35,19 @@
         <div class="d-flex flex-column">
           <%= form.label :custom_duration do %>
             <%= t('helpers.label.scheduled_meeting.custom_duration') %>
-            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.custom_duration') %>">help</i>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip"
+               title="<%= t('helpers.hint.custom_duration') %>"
+            >
+              help
+            </i>
           <% end %>
           <div class="d-flex content-timers">
-            <%=
-              form.time_select :custom_duration,
+            <%= form.text_field :custom_duration,
               value: get_custom_duration(scheduled_meeting.duration),
-              default: { hour: @default_hour_duration, min: @default_min_duration },
-              required: true,
-              time_separator: "",
-              ignore_date: true,
-              class: "form-control d-flex"
+              class: "form-control timepicker-duration",
+              data: {
+                format: t('default.formats.flatpickr.time_js'),
+              }
             %>
           </div>
         </div>

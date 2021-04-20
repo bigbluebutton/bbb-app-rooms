@@ -59,16 +59,7 @@ module ElosHelper
   end
 
   def get_custom_duration(duration)
-    values_select_duration = ScheduledMeeting.get_values_durations_for_select
-    default_duration = ScheduledMeeting.default_duration_for_helper
-    default_duration = ScheduledMeeting.convert_duration_to_time(duration)
-    @default_hour_duration = default_duration[0]
-    @default_min_duration = default_duration[1]
-
-    unless values_select_duration.include?([duration])
-      duration_converted = ScheduledMeeting.convert_duration_to_time(duration)
-      @default_hour_duration = duration_converted[0]
-      @default_min_duration = duration_converted[1]
-    end
+    converted_duration = ScheduledMeeting.convert_duration_to_time(duration)
+    return duration_in_time = converted_duration[0].to_s + ':' + converted_duration[1].to_s
   end
 end

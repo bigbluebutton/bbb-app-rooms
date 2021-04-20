@@ -210,14 +210,8 @@ class ScheduledMeeting < ApplicationRecord
     self.save
   end
 
-  def self.get_values_durations_for_select
-    values_durations_select = durations_for_select(I18n.locale).map { | k, v | [ v ] }
-    values_durations_select.to_a
-  end
-
-  def self.convert_time_to_duration(hour, minutes)
-    duration = hour + ':' + minutes
-    return custom_duration = Time.parse(duration).seconds_since_midnight.to_i
+  def self.convert_time_to_duration(time)
+    return duration = Time.parse(time).seconds_since_midnight.to_i
   end
 
   def self.convert_duration_to_time(duration)
