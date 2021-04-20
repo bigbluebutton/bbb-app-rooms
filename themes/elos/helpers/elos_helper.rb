@@ -62,4 +62,12 @@ module ElosHelper
     duration_in_time = ScheduledMeeting.convert_duration_to_time(duration)
     return time = duration_in_time[0].to_s + ':' + duration_in_time[1].to_s
   end
+
+  def playback_url(room, record_id, playback)
+    if Rails.application.config.playback_url_authentication
+      recording_playback_url(room, record_id, playback[:type])
+    else
+      playback[:url]
+    end
+  end
 end

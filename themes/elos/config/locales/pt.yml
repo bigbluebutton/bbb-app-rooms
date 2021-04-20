@@ -45,6 +45,7 @@ pt:
     destroy: "Remover"
     duration:
       less_than_a_minute: "Menos de 1 minuto"
+    empty_list: "Não há gravações para mostrar"
     index:
       return: "< voltar"
     playback_link: "Copiar link de reprodução"
@@ -78,6 +79,7 @@ pt:
     edit:
       action: "Editar"
       title: "Editar sessão"
+    empty_list: "Não há agendamentos para mostrar"
     external_link: "Copiar link externo"
     new:
       add: "+ Agendar sessão"

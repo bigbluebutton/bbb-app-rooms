@@ -64,6 +64,18 @@ class RoomsController < ApplicationController
     end
   end
 
+  # GET /rooms/:id/recording/:record_id/playback/:playback_type
+  def recording_playback
+    recording = get_recordings(@room, recordID: params[:record_id]).first
+    playback = recording[:playbacks].find { |p| p[:type] == params[:playback_type] }
+    playback_url = URI.parse(playback[:url])
+    if Rails.application.config.playback_url_authentication
+      token = get_recording_token(@room, @user.full_name, params[:record_id])
+      playback_url.query = URI.encode_www_form({ token: token })
+    end
+    redirect_to(playback_url.to_s)
+  end
+
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(@room, params[:record_id])

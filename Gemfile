@@ -7,7 +7,7 @@ git_source(:github) do |repo_name|
 end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.3'
+gem 'rails', '~> 6.0.3'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
 # Include postgres as another database option
@@ -59,6 +59,7 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'rails_admin', '~> 2.0'
 end
 
 group :test do

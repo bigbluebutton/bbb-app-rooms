@@ -12,7 +12,7 @@ Bundler.require(*Rails.groups)
 
 module BbbAppRooms
   class Application < Rails::Application
-    VERSION = "0.4.5-elos"
+    VERSION = "0.4.6-elos"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -71,6 +71,9 @@ module BbbAppRooms
       ENV["APP_LAUNCH_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
 
     config.log_level = ENV['LOG_LEVEL'] || :debug
+
+    # Enable playback URL authentication through getRecordingToken
+    config.playback_url_authentication = ENV['PLAYBACK_URL_AUTHENTICATION'] || false
 
     config.theme = ENV['APP_THEME']
     unless config.theme.blank?

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.6 Elos - 2021-04-13
+
+* [LTI-50] Update Rails to 6.0.3.6 (from 6.0.3.1) to fix an error when building the app:
+  mimemagic (0.3.5) doesn't exist anymore.
+
+
 ## 0.4.5 Elos - 2021-04-11
 
 * [LTI-42] Update a recurring meeting when a user access `/external` and the previous occurrence of

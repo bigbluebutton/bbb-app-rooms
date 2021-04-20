@@ -45,6 +45,7 @@ en:
     destroy: "Remove"
     duration:
       less_than_a_minute: "Less than 1 minute"
+    empty_list: "There are no recordings to show"
     index:
       return: "< go back"
     playback_link: "Copy playback link"
@@ -78,6 +79,7 @@ en:
     edit:
       action: "Edit"
       title: "Edit session"
+    empty_list: "There are no scheduled sessions to show"
     external_link: "Copy external link"
     new:
       add: "+ Schedule session"
