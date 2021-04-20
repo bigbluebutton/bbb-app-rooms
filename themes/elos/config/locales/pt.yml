@@ -12,7 +12,7 @@ pt:
       minute:
         one: "%{count} minuto"
         other: "%{count} minutos"
-      connector: ""
+      connector: "e"
     hint:
       disable_external_link: "O acesso à sala virtual será restrito aos alunos autenticados."
       disable_private_chat: "O aluno ainda poderá enviar mensagens privadas para o professor. Este recurso pode ser reativado dentro da sala através da opção \"Restringir participantes\"."

@@ -38,12 +38,6 @@ $(document).on('turbolinks:load', function(){
       time_24hr: true,
       minuteIncrement: 1,
       minTime: "00:10",
-      // parseDate: (datestr, format) => {
-      //   return(( datestr.split(':')[0] * 60 * 60 ) + (datestr.split(':')[1] * 60 ), format, true)
-      // },
-      // parseDate: (datestr, format) => {
-      //   return moment(datestr, format, true).toDate();
-      // },
     });
   });
 

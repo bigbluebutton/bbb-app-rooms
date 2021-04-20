@@ -12,7 +12,7 @@ en:
       minute:
         one: "%{count} minute"
         other: "%{count} minutes"
-      connector:  ""
+      connector:  "and"
     hint:
       disable_external_link: "The access to the virtual room will be restricted to authenticated students."
       disable_private_chat: "The student will still be able to send private messages to the teacher. This feature can be modified during the conference using the \"Manage users\" section."
