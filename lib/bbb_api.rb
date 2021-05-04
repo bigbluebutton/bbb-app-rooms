@@ -3,7 +3,9 @@
 module BbbApi
   def wait_for_mod?(scheduled_meeting, user)
     return unless scheduled_meeting and user
-    scheduled_meeting.wait_moderator && !user.moderator?(Abilities.moderator_roles)
+    scheduled_meeting.check_wait_moderator &&
+      !user.moderator?(Abilities.moderator_roles) &&
+      !scheduled_meeting.check_all_moderators
   end
 
   def mod_in_room?(scheduled_meeting)
@@ -15,15 +17,19 @@ module BbbApi
     return unless scheduled_meeting.present? && user.present?
 
     room = scheduled_meeting.room
-    bbb(room).create_meeting(
-      scheduled_meeting.name,
-      scheduled_meeting.meeting_id,
-      scheduled_meeting.create_options(user).merge(
-        { logoutURL: autoclose_url }
-      )
-    )
 
-    is_moderator = user.moderator?(Abilities.moderator_roles) || scheduled_meeting.all_moderators
+    unless bbb(room).is_meeting_running?(scheduled_meeting.meeting_id)
+      bbb(room).create_meeting(
+        scheduled_meeting.name,
+        scheduled_meeting.meeting_id,
+        scheduled_meeting.create_options(user).merge(
+          { logoutURL: autoclose_url }
+        )
+      )
+    end
+
+    is_moderator = user.moderator?(Abilities.moderator_roles) ||
+                   scheduled_meeting.check_all_moderators
     role = is_moderator ? 'moderator' : 'viewer'
     bbb(room, false).join_meeting_url(
       scheduled_meeting.meeting_id,
@@ -45,8 +51,8 @@ module BbbApi
   end
 
   # Fetches all recordings for a room.
-  def get_recordings(room)
-    res = bbb(room).get_recordings(room.params_for_get_recordings)
+  def get_recordings(room, options = {})
+    res = bbb(room).get_recordings(options.merge(room.params_for_get_recordings))
 
     # Format playbacks in a more pleasant way.
     res[:recordings].each do |r|
@@ -64,6 +70,14 @@ module BbbApi
     end
 
     res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+  end
+
+  # Calls getRecodringToken and return the token
+  # More about this API call here: https://github.com/mconf/mconf-rec
+  def get_recording_token(room, auth_user, meeting_id)
+    req_options = { authUser: auth_user, meetingID: meeting_id }
+    response = bbb(room).send_api_request(:getRecordingToken, req_options)
+    response[:token]
   end
 
   # Helper for converting BigBlueButton dates into the desired format.
@@ -112,8 +126,14 @@ module BbbApi
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb(room, internal = true)
-    consumer_key = room.last_launch.try(:oauth_consumer_key)
-    server = BigbluebuttonServer.find_by(key: consumer_key)
+    # TODO: consumer_key should never be blank, keeping this condition here just while
+    # all rooms migrate to the new format. Remove it after a while.
+    consumer_key = if room.consumer_key.blank?
+                     room.last_launch.try(:oauth_consumer_key)
+                   else
+                     room.consumer_key
+                   end
+    server = ConsumerConfig.find_by(key: consumer_key)&.server
 
     if server.present?
       Rails.logger.info "Found the server:#{server.domain} secret:#{server.secret[0..7]} "\

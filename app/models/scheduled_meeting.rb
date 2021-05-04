@@ -1,15 +1,40 @@
 class ScheduledMeeting < ApplicationRecord
+  paginates_per 10
+
+  REPEAT_OPTIONS = {
+    weekly: 1.week,
+    every_two_weeks: 2.weeks
+  }.stringify_keys.freeze
+
   belongs_to :room
+  has_one :brightspace_calendar_event
 
   validates :room, presence: true
   validates :name, presence: true
   validates :start_at, presence: true
   validates :duration, presence: true
+  validates :repeat, inclusion: { in: [nil] + ScheduledMeeting::REPEAT_OPTIONS.keys }
 
   after_initialize :init
 
-  scope :active, -> {
-    where("start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc)
+  scope :active, -> (reverse = false) {
+    # TODO: temporary, disable the timezone via cookie until it's 100%
+    tolerance = Rails.application.config.force_default_timezone ? 1.hour : 0.seconds
+
+    attrs = ["start_at + (interval '1 seconds' * duration) >= ?", DateTime.now.utc - tolerance]
+    if reverse
+      where.not(*attrs)
+    else
+      where(*attrs)
+    end
+  }
+
+  scope :inactive, -> {
+    active(true)
+  }
+
+  scope :recurring, -> {
+    where.not(repeat: nil)
   }
 
   def self.from_param(param)
@@ -42,6 +67,12 @@ class ScheduledMeeting < ApplicationRecord
     }
   end
 
+  def self.repeat_options_for_select(locale)
+    ([nil] + ScheduledMeeting::REPEAT_OPTIONS.keys).map do |k|
+      [I18n.t("default.scheduled_meeting.repeat_options.#{k || 'none'}", locale: locale), k]
+    end
+  end
+
   def self.parse_start_at(date, time, locale = I18n.locale, zone = Time.zone)
     format_date = I18n.t('default.formats.flatpickr.date_ruby', locale: locale)
     format_time = I18n.t('default.formats.flatpickr.time_ruby', locale: locale)
@@ -57,7 +88,14 @@ class ScheduledMeeting < ApplicationRecord
   end
 
   def active?
-    self.start_at + duration.seconds >= DateTime.now.utc
+    # TODO: temporary, disable the timezone via cookie until it's 100%
+    tolerance = Rails.application.config.force_default_timezone ? 1.hour : 0.seconds
+
+    start_at + duration.seconds >= DateTime.now.utc - tolerance
+  end
+
+  def recurring?
+    repeat.present?
   end
 
   def meeting_id
@@ -71,7 +109,13 @@ class ScheduledMeeting < ApplicationRecord
       attendeePW: self.room.viewer,
       welcome: self.welcome,
       record: self.recording,
+      lockSettingsDisablePrivateChat: self.disable_private_chat,
+      lockSettingsDisableNote: self.disable_note
     }
+
+    # set the duration + 1h if configured to do so in the consumer
+    config = ConsumerConfig.select(:set_duration).find_by(key: self.room.consumer_key)
+    opts[:duration] = duration_minutes + 60 if !config.blank? && config.set_duration
 
     # will be added as meta_bbb-*
     meta_bbb = {
@@ -130,6 +174,39 @@ class ScheduledMeeting < ApplicationRecord
   #   "date"=>"2020-06-12", "time"=>"17:15"
   def set_dates_from_params(params, locale = I18n.locale, zone = Time.zone)
     self.start_at = ScheduledMeeting.parse_start_at(params[:date], params[:time], locale, zone)
+  end
+
+  # If the users of this room are allowed to change `all_moderators`, returns the value
+  # set in this scheduled meeting. Otherwise returns the default value.
+  def check_all_moderators
+    if self.room.allow_all_moderators
+      self.all_moderators
+    else
+      ScheduledMeeting.new.all_moderators
+    end
+  end
+
+  # If the users of this room are allowed to change `wait_moderator`, returns the value
+  # set in this scheduled meeting. Otherwise returns the default value.
+  def check_wait_moderator
+    if self.room.allow_wait_moderator
+      self.wait_moderator
+    else
+      ScheduledMeeting.new.wait_moderator
+    end
+  end
+
+  def duration_minutes
+    self.duration / 60
+  end
+
+  # Update this scheduled meeting to the date it should be in its next iteration.
+  # If this is not a recurring meeting or if this meeting is still active won't do anything.
+  def update_to_next_recurring_date
+    return if !self.recurring? || self.active?
+
+    self.start_at += ScheduledMeeting::REPEAT_OPTIONS[self.repeat] while !self.active?
+    self.save
   end
 
   private

@@ -1,5 +1,5 @@
-class BigbluebuttonServer < ApplicationRecord
-  validates :key, uniqueness: true
+class ConsumerConfigServer < ApplicationRecord
+  belongs_to :consumer_config
 
   def domain
     begin

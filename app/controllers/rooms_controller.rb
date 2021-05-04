@@ -8,12 +8,14 @@ class RoomsController < ApplicationController
   include BbbApi
   include BbbAppRooms
 
-  before_action :authenticate_user!, only: :launch, raise: false #except: %i[close], raise: false
+  before_action -> {authenticate_with_oauth! :bbbltibroker},
+    only: :launch, raise: false
   before_action :set_launch_room, only: %i[launch]
 
-  before_action :find_room, except: %i[launch close index new create]
-  before_action :validate_room, except: %i[launch close index new create]
-  before_action :find_user, except: %i[close]
+  before_action :find_room, except: %i[launch close]
+  before_action :validate_room, except: %i[launch close]
+  before_action :find_user
+  before_action :find_app_launch, only: %i[launch]
 
   before_action only: %i[show launch close] do
     authorize_user!(:show, @room)
@@ -22,95 +24,36 @@ class RoomsController < ApplicationController
                          recording_update recording_delete] do
     authorize_user!(:edit, @room)
   end
-  before_action only: %i[index new create destroy] do
-    authorize_user!(:admin, @room)
-  end
-
-  before_action :check_for_cancel, only: %i[create update]
-
-  # GET /rooms
-  # GET /rooms.json
-  def index
-    @rooms = Room.all
-  end
 
   # GET /rooms/1
-  # GET /rooms/1.json
   def show
     respond_to do |format|
-      if @room
-        @scheduled_meetings = @room.scheduled_meetings.active.order(:start_at)
-        format.html { render :show }
-        format.json { render :show, status: :ok, location: @room }
-      else
-        format.html { render 'shared/error', status: @error[:status] }
-        format.json { render json: { error: @error[:message] }, status: @error[:status] }
-      end
+      # TODO: do this also in a worker in the future to speed up this request
+      @room.update_recurring_meetings
+
+      @scheduled_meetings = @room.scheduled_meetings.active
+                              .order(:start_at).page(params[:page])
+
+      format.html { render :show }
     end
   end
 
   def recordings
     respond_to do |format|
-      if @room
-        @recordings = get_recordings(@room)
-        format.html { render :recordings }
-      else
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-    end
-  end
-
-  # GET /rooms/new
-  def new
-    @room = Room.new
-  end
-
-  # GET /rooms/1/edit
-  def edit; end
-
-  # POST /rooms
-  # POST /rooms.json
-  def create
-    @room = Room.new(room_params)
-    respond_to do |format|
-      if @room.save
-        format.html { redirect_to @room, notice: t('default.room.created') }
-        format.json { render :show, status: :created, location: @room }
-      else
-        format.html { render :new }
-        format.json { render json: @error, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /rooms/1
-  # PATCH/PUT /rooms/1.json
-  def update
-    respond_to do |format|
-      if @room.update(room_params)
-        format.html { redirect_to @room, notice: t('default.room.updated') }
-        format.json { render :show, status: :ok, location: @room }
-      else
-        format.html { render :edit }
-        format.json { render json: @error, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /rooms/1
-  # DELETE /rooms/1.json
-  def destroy
-    @room.destroy
-    respond_to do |format|
-      format.html { redirect_to rooms_url, notice: t('default.room.destroyed') }
-      format.json { head :no_content }
+      @recordings = get_recordings(@room)
+      format.html { render :recordings }
     end
   end
 
   # GET /launch
-  # GET /launch.json?
   def launch
-    redirect_to(room_path(@room))
+    scheduled_meeting_id = @app_launch.custom_param('scheduled_meeting')
+    scheduled_meeting = ScheduledMeeting.find_by_id(scheduled_meeting_id)
+    if scheduled_meeting
+      redirect_to(external_room_scheduled_meeting_path(@room, scheduled_meeting))
+    else
+      redirect_to(room_path(@room))
+    end
   end
 
   # GET /rooms/close
@@ -119,6 +62,18 @@ class RoomsController < ApplicationController
     respond_to do |format|
       format.html { render :autoclose }
     end
+  end
+
+  # GET /rooms/:id/recording/:record_id/playback/:playback_type
+  def recording_playback
+    recording = get_recordings(@room, recordID: params[:record_id]).first
+    playback = recording[:playbacks].find { |p| p[:type] == params[:playback_type] }
+    playback_url = URI.parse(playback[:url])
+    if Rails.application.config.playback_url_authentication
+      token = get_recording_token(@room, @user.full_name, params[:record_id])
+      playback_url.query = URI.encode_www_form({ token: token })
+    end
+    redirect_to(playback_url.to_s)
   end
 
   # POST /rooms/:id/recording/:record_id/unpublish
@@ -149,6 +104,19 @@ class RoomsController < ApplicationController
     redirect_to(recordings_room_path(@room))
   end
 
+  def error
+    error_code = params[:code]
+    path = room_path(@room)
+    redirect_args = [path]
+
+    case error_code
+    when 'oauth_error'
+      notice = t('default.rooms.error.oauth')
+      redirect_args << { notice: notice }
+    end
+    redirect_to(*redirect_args)
+  end
+
   helper_method :recordings, :recording_date, :recording_length
 
   private
@@ -167,15 +135,17 @@ class RoomsController < ApplicationController
     )
 
     unless session_params['valid']
-      Rails.logger.info "The session is not valid, returning a 401"
+      Rails.logger.info "The session is not valid, returning a 403"
       set_error('room', 'forbidden', :forbidden)
+      respond_with_error(@error)
       return
     end
 
     launch_params = session_params['message']
-    unless launch_params['user_id'] == session['omniauth_auth']['uid']
-      Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 401"
+    if launch_params['user_id'] != session['omniauth_auth']['bbbltibroker']['uid']
+      Rails.logger.info "The user in the session doesn't match the user in the launch, returning a 403"
       set_error('room', 'forbidden', :forbidden)
+      respond_with_error(@error)
       return
     end
 
@@ -194,7 +164,7 @@ class RoomsController < ApplicationController
     app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
       launch.update(
         params: launch_params,
-        omniauth_auth: session['omniauth_auth'],
+        omniauth_auth: session['omniauth_auth']['bbbltibroker'],
         expires_at: expires_at
       )
     end
@@ -205,23 +175,14 @@ class RoomsController < ApplicationController
 
     # Create/update the room
     local_room_params = app_launch.room_params
-    @room = Room.find_or_create_by(handler: local_room_params[:handler]) do |room|
-      room.update(params.permit.merge(local_room_params))
-    end
+    @room = Room.create_with(local_room_params)
+              .find_or_create_by(handler: local_room_params[:handler])
+    @room.update(local_room_params) if @room.present?
 
     # Create the user session
     # Keep it as small as possible, most of the data is in the AppLaunch
     set_room_session(
       @room, { launch: launch_nonce }
     )
-  end
-
-  def room_params
-    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer,
-                                 :recording, :wait_moderator, :all_moderators)
-  end
-
-  def check_for_cancel
-    redirect_to(@room) if params[:cancel]
   end
 end

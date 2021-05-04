@@ -14,7 +14,7 @@ tmp
 /db/**/*.sqlite3-journal
 /db/production
 public/assets
-public/b
+public/rooms/assets
 coverage/
 .rvmrc
 vendor/bundle
@@ -25,3 +25,4 @@ Dockerfile
 .travis.yml
 spec
 test
+data

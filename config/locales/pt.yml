@@ -1,6 +1,8 @@
 pt:
   default:
     app:
+      bigbluebutton_error: "Erro de comunicação com o servidor de conferência. Por favor tente novamente ou entre em contato com o suporte. (%{status})"
+      spaces_error:   "Erro de comunicação com o servidor de armazenamento de relatórios. Por favor, tente novamente ou entre em contato com o suporte."
       error:          "Erro"
     admin:
       back:           "Voltar"
@@ -18,30 +20,35 @@ pt:
       moderator:      "Moderador"
       viewer:         "Participante"
     room:
+      cancel:         "Cancelar"
       created:        "A sala foi criada com sucesso"
-      edit:           "Editar"
-      editing:        "Editando sala"
-      show:           "Exibir"
-      showing:        "Exibindo sala"
+      description:    "Descrição"
       destroy:        "Remover"
       destroyed:      "A sala foi removida com sucesso"
+      edit:           "Editar"
+      editing:        "Editando sala"
+      error:
+        oauth:        "Ocorreu um erro durante a autorização via OAuth."
       join:           "Entrar"
-      name:           "Nome"
-      description:    "Descrição"
-      welcome:        "Boas-vindas"
       moderator:      "Chave de moderador"
-      viewer:         "Chave de participante"
+      name:           "Nome"
       recordings:     "Gravações"
+      scheduled_meetings: "Sessões agendadas"
+      show:           "Exibir"
+      showing:        "Exibindo sala"
       update:         "Atualizar"
       updated:        "Atualizado"
-      cancel:         "Cancelar"
-      waitmodmsg:        "Por favor espere até que um moderador entre na sala. Você será redirecionado automaticamente."
-      scheduled_meetings: "Sessões agendadas"
+      viewer:         "Chave de participante"
+      waitmodmsg:     "Por favor espere até que um moderador entre na sala. Você será redirecionado automaticamente."
+      welcome:        "Boas-vindas"
     meeting:
       close:           "Fechar janela"
       close_manually:  "Esta janela deve ser fechada manualmente"
     scheduled_meeting:
       allmoderators:  "Todos moderadores"
+      calendar:
+        description:
+          link:       "Clique aqui para acessar esta aula."
       created:        "A sessão foi agendada"
       destroy:
         confirmation: "Você tem certeza que deseja remover este agendamento?"
@@ -71,13 +78,18 @@ pt:
         join:         "Entrar"
         last_name:    "Sobrenome"
       recording:      "Gravação"
+      repeat_options:
+        none: "Não se repete"
+        weekly: "Semanal"
+        every_two_weeks: "Quinzenal"
       tooltip:
         recording:    "A sessão poderá ser gravada"
         waitmoderator: "Participantes não podem entrar até que um moderador entre"
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       wait:
-        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde que você será redirecionado(a) automaticamente assim que ela iniciar."
+        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde alguns instantes e tente novamente."
+        message_auto: "Olá <strong>%{name}</strong>, sua sessão está sendo criada, por favor aguarde alguns instantes."
       waitmoderator:  "Aguardar moderador"
     session:
       retry:
@@ -100,8 +112,13 @@ pt:
       _401:
         code:       "Unauthorized"
         message:    "Acesso não autorizado"
-        suggestion: "Tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
+        suggestion: "Você não possui acesso à esta página. Se você acredita que isso é um erro, tente iniciar a sala novamente no seu LMS ou tente atualizar esta página no seu navegador."
         status_code: "401"
+      _404:
+        code:       "NotFound"
+        message:    "Não encontrado"
+        suggestion: "A página que você tentou acessar não foi encontrada."
+        status_code: "404"
     bigbluebutton:
       invalid_request:
         code:       "BBBAPICallInvalid"
@@ -113,6 +130,11 @@ pt:
         code: "NotFound"
         message: "Não encontrado"
         suggestion: "A página que você tentou acessar não foi encontrada."
+      406:
+        code:       "NotAcceptable"
+        message:    "Formato não aceito"
+        suggestion: "A URL que você digitou provavelmente está incorreta."
+        status_code: "406"
       500:
         code: "ServerError"
         message: "Erro no servidor"
@@ -126,7 +148,7 @@ pt:
       not_found:
         code:       "NotFound"
         message:    "A sala não foi encontrada"
-        suggestion: "A sala pode ter sido removida por um administrador. Contate o suporte técnico."
+        suggestion: "A sala que você tentou acessar não foi encontrada."
         status_code: "404"
       invalid_secret:
         code:       "InvalidSecret"
@@ -139,3 +161,10 @@ pt:
         message:    "O agendamento não foi encontrado"
         suggestion: "Ele pode ter sido removido pelo criador da sessão."
         status_code: "404"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: "&hellip;"

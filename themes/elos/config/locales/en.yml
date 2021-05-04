@@ -2,21 +2,9 @@ en:
   _all:
     cancel: "Cancel"
     clipboard:
-      external_link: "Link copied to the clipboard!"
+      link_copied: "Link copied to the clipboard!"
     schedule: "Schedule"
   helpers:
-    label:
-      scheduled_meeting:
-        all_moderators: "Everyone joins as moderator"
-        description: "Description (optional)"
-        duration: "Duration"
-        name: "Session name"
-        recording: "Allow the session to be recorded"
-        start_time: "Start date and time"
-        start_time_date: "Date"
-        start_time_time: "Start time"
-        wait_moderator: "Wait for a moderator to join"
-        welcome: "Welcome message (optional)"
     distance_of_time_in_hours_and_minutes:
       hour:
         one: "%{count} hour"
@@ -24,6 +12,28 @@ en:
       minute:
         one: "%{count} minute"
         other: "%{count} minutes"
+    hint:
+      disable_external_link: "The access to the virtual room will be restricted to authenticated students."
+      disable_private_chat: "The student will still be able to send private messages to the teacher. This feature can be modified during the conference using the \"Manage users\" section."
+      disable_note: "The teacher will be able to use the shared notes as usual, but the students will only be able to read them, not edit. This feature can be modified during the conference using the \"Manage users\" section."
+      repeat: "The external link of a recurring meeting will always be the same. The schedule is updated in the list after the current meeting ends."
+      time: "You are using the time zone: %{zone}"
+    label:
+      scheduled_meeting:
+        all_moderators: "Everyone joins as moderator"
+        description: "Description (optional)"
+        disable_external_link: "Disable external link"
+        disable_private_chat: "Disable private chats"
+        disable_note: "Disable shared notes"
+        duration: "Duration"
+        name: "Session name"
+        recording: "Allow the session to be recorded"
+        repeat: "Recurrence"
+        start_time: "Start date and time"
+        start_time_date: "Date"
+        start_time_time: "Start time"
+        wait_moderator: "Wait for a moderator to join"
+        welcome: "Welcome message (optional)"
   recordings:
     confirm:
       destroy: "Are you sure you want to remove this recording?"
@@ -32,16 +42,31 @@ en:
     destroy: "Remove"
     duration:
       less_than_a_minute: "Less than 1 minute"
+    empty_list: "There are no recordings to show"
     index:
       return: "< go back"
-    search:
-      placeholder: "Search by title or description..."
+    playback_link: "Copy playback link"
     playbacks:
       presentation: "Playback"
       presentation_video: "Download"
     publish: "Publish"
+    search:
+      placeholder: "Search by title or description..."
+    table:
+      footnote: "Dates shown in the time zone: %{zone}"
     title: "Recordings"
     unpublish: "Unpublish"
+  reports:
+    download: "Download"
+    download_options:
+      csv: "Spreadsheet of meetings (CSV)"
+      xls: "Spreadsheet of meetings (Excel XLS)"
+    empty_list: "No reports found :("
+    index:
+      return: "< go back"
+    table_footnote: "The reports for the current month are updated daily."
+    title: "Reports"
+    view_reports: "View reports"
   rooms:
     close:
       message: "Thank you for participating and until the next time."
@@ -51,13 +76,18 @@ en:
     edit:
       action: "Edit"
       title: "Edit session"
+    empty_list: "There are no scheduled sessions to show"
     external_link: "Copy external link"
     new:
       add: "+ Schedule session"
       title: "Schedule session"
     show:
       view_recordings: "View recordings"
+    table:
+      footnote: "Dates shown in the time zone: %{zone}"
     title: "Scheduled sessions"
+    wait:
+      retry: "Join"
   time:
     am: am
     formats:

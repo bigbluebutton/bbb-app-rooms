@@ -1,0 +1,24 @@
+<tr class="d-flex row tr-row" id="report-<%= report %>">
+  <td class="col-6 col-sm-8 col-lg-9 align-middle td-titles">
+    <div class="item-title">
+      <% report_period = Time.strptime(report, '%Y-%m') %>
+      <%= format_date(report_period+1.day, '%b %Y').capitalize %>
+    </div>
+  </td>
+
+  <td class="col-6 col-sm-4 col-lg-3">
+    <a href="#" class="dropdown-toggle btn btn-secondary px-2 px-md-5 py-2 py-md-3" id="download-report-<%= report %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <%= t('reports.download') %>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="download-report-<%= report %>">
+      <% [:csv, :xls].each do |format| %>
+        <%=
+        link_to t("reports.download_options.#{format}"),
+        download_room_reports_path(room, period: report, file_format: format.to_s),
+        class: "dropdown-item",
+        target: '_blank'
+        %>
+      <% end %>
+    </div>
+  </td>
+</tr>

@@ -27,6 +27,14 @@
         <div class="form-actions">
           <%= submit_tag t('default.scheduled_meeting.external.join'), class: "btn btn-secondary" %>
         </div>
+
+        <% unless @disclaimer.blank? %>
+          <div class="form-row">
+            <div class="col-12 text-muted anonymous-disclaimer">
+              <%= @disclaimer %>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
   </div>

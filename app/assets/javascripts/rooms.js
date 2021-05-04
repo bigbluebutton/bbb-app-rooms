@@ -68,7 +68,15 @@ $(document).on('turbolinks:load', function(){
     var running = $('#wait-for-moderator').data('is-running');
     if (running === true) {
       console.log('Already running, joining soon');
-      setTimeout(function() { joinSession(); }, 3000);
+      setTimeout(function() { joinSession(); }, 200);
+      return;
+    }
+
+    var auto = $('#wait-for-moderator').data('auto');
+    if (auto === true) {
+      console.log('Auto joining in a few seconds');
+      var delay = 2000 + Math.floor(Math.random()*1000);
+      setTimeout(function() { joinSession(); }, delay);
       return;
     }
 

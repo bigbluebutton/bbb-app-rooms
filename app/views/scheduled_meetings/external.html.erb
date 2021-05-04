@@ -12,6 +12,14 @@
     </div>
   </div>
 
+  <% unless @disclaimer.blank? %>
+    <div class="row">
+      <div class="actions col-6 offset-3">
+        <%= @disclaimer %>
+      </div>
+    </div>
+  <% end %>
+
   <div class="row">
     <div class="actions col-6 offset-3">
       <%= submit_tag t('default.scheduled_meeting.external.join'), class: "btn btn-primary" %>

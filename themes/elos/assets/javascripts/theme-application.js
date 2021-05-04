@@ -7,9 +7,12 @@ $(document).on('turbolinks:load', function(){
     $(this).toast('show');
   });
 
+  $('[data-toggle="tooltip"]').tooltip();
+
   $(".datepicker").each(function() {
     var format = $(this).data('format');
     $(this).flatpickr({
+      disableMobile: true,
       enableTime: false,
       dateFormat: format,
       minDate: new Date(),
@@ -27,10 +30,11 @@ $(document).on('turbolinks:load', function(){
   });
 
   $(".copy-to-clipboard").each(function() {
+    $toast = $('.toast', $(this).data('toast-id'));
     clipboard = new ClipboardJS(this);
     clipboard.on('success', function(e) {
-      $('.toast', '#external-link-copied-toast').toast('dispose');
-      $('.toast', '#external-link-copied-toast').toast('show');
+      $toast.toast('dispose');
+      $toast.toast('show');
     });
   });
 

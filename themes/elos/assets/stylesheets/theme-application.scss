@@ -34,6 +34,7 @@ body.theme-elos {
   // GLOBAL STYLES
   //
 
+  margin: blocks(4);
   font-family: var(--font-family);
   font-weight: var(--font-weight);
   font-size: var(--font-size);
@@ -79,7 +80,8 @@ body.theme-elos {
     td {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      flex-direction: column;
+      justify-content: center;
 
       &.td-titles {
         flex-direction: column;
@@ -134,12 +136,19 @@ body.theme-elos {
     right: blocks(2);
     left: blocks(2);
     flex-direction: column;
+    z-index: var(--z-index-toast);
 
     .toast {
       margin-bottom: blocks(1);
+      max-width: 60%;
+
+      // so hidden toasts don't mess with visible toasts
+      height: 0;
+      &.show { height: auto; }
 
       .toast-header {
         border-bottom: none;
+        padding: 0.5rem 1.5rem;
       }
 
       /* &.toast-notice, &.toast-success { */
@@ -152,12 +161,35 @@ body.theme-elos {
     }
   }
 
+  form {
+    label {
+      .icon-label-hint {
+        font-size: var(--font-size-md);
+        cursor: pointer;
+        color: var(--color-main);
+      }
+    }
+  }
+
+  .table-footnote {
+    text-align: right;
+    font-size: var(--font-size-details);
+    color: var(--color-gray-05);
+  }
+
+  .table-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: blocks(6);
+  }
+
+
   //
   // PAGE-SPECIFIC STYLES
   //
 
   #elos-logo {
-    margin-top: blocks(3);
+    margin-top: blocks(6);
     height: 36px;
   }
 
@@ -168,11 +200,23 @@ body.theme-elos {
       tr {
         min-height: 97px; // the height when there's a name and description in the item
       }
+
+      .badge-recurring {
+        background-color: var(--color-action);
+        color: var(--color-white);
+        padding: blocks(1) blocks(1);
+        margin-top: blocks(1);
+        font-size: 95%;
+
+        .icon {
+          font-size: 85%;
+        }
+      }
     }
   }
 
   #action-buttons {
-    margin-bottom: blocks(4);
+    margin-bottom: blocks(6);
     text-align: center;
 
     .btn {
@@ -210,6 +254,18 @@ body.theme-elos {
   #scheduled-meetings-new, #scheduled-meetings-edit {
     form {
       margin-top: blocks(6);
+
+      .repeat-hint {
+        ul {
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
+          margin-top: -0.2rem;
+          padding-bottom: blocks(1);
+          color: var(--color-gray-05);
+          font-size: 80%;
+        }
+      }
     }
   }
 
@@ -217,13 +273,28 @@ body.theme-elos {
     .meeting-date {
       margin-bottom: blocks(6);
     }
+
+    .anonymous-disclaimer {
+      text-align: center;
+      font-size: var(--font-size-sm);
+      margin-top: blocks(8);
+      padding: blocks(2) 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
+
+  #wait-for-moderator {
+    .btn {
+      margin-top: blocks(4);
+    }
   }
 
   // This is a copy of the style of the guest wait page from BigBlueButton/Live
   // with a few adaptations, but to look as similar as possible
   &[data-controller="scheduled_meetings"][data-action="wait"],
   &[data-controller="rooms"][data-action="close"] {
-    background-color: #2B2D41;
+    background-color: var(--color-black);
     width: auto;
     margin: auto;
     text-align: center;

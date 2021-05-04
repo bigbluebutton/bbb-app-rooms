@@ -122,3 +122,23 @@ RAILS_SERVE_STATIC_FILES=true
 9. Click on 'View LTI Configuration XML'. It'll take to you a page with the following URL: https://lti.\<JOHN>.blindside-dev.com/lti/default/xml_config. Replace the 'default' with 'rooms' and refresh the page/press enter. 
 
 10. Copy the secure_launch_url. This is the url that you will use when adding the plugin in your lms. The consumer_key and shared_secret are the same as the ones set in the rooms env. variables (as OMNIAUTH_BBBLTIBROKER_KEY and OMNIAUTH_BBBLTIBROKER_SECRET)  
+
+
+#  Other
+
+## Custom parameters
+
+Custom parameters accepted in the launch:
+
+* `custom_recording`: Set to `true` to create the room with this flag checked. Don't set
+  it on the launch to use the default value.
+* `custom_all_moderators`:  Set to `true` to create the room with this flag checked. Don't set
+  it on the launch to use the default value.
+* `custom_wait_moderator`:  Set to `true` to create the room with this flag checked. Don't set
+  it on the launch to use the default value.
+* `custom_allow_all_moderators`: Set to `true` to allow meetings to have this flag turned on/off.
+  Set to any other value to hide this option from users. If this parameter is not set on launch
+  the option will be shown.
+* `custom_allow_wait_moderator`: Set to `true` to allow meetings to have this flag turned on/off.
+  Set to any other value to hide this option from users. If this parameter is not set on launch
+  the option will be shown.

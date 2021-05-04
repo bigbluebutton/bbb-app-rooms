@@ -15,10 +15,8 @@ class ScheduledMeetingsController < ApplicationController
   # validate the room/session only for routes that are not open
   before_action :find_room
   before_action :validate_room, except: open_actions
-
-  # some actions throw a 401 when the user is not found/valid
-  # others just search for a user but are open to unauthenticated access
   before_action :find_user
+  before_action :find_app_launch, only: %i[create update destroy]
 
   before_action :find_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
   before_action :validate_scheduled_meeting, only: (%i[edit update destroy] + open_actions)
@@ -30,22 +28,32 @@ class ScheduledMeetingsController < ApplicationController
     authorize_user!(:edit, @room)
   end
 
+  before_action :set_blank_repeat_as_nil, only: %i[create update]
+
   def new
-    @scheduled_meeting = ScheduledMeeting.new
+    @scheduled_meeting = ScheduledMeeting.new(@room.attributes_for_meeting)
   end
 
   def create
     respond_to do |format|
-      @scheduled_meeting = @room.scheduled_meetings.create(scheduled_meeting_params)
+      # use the attributes from the room as the default
+      # then override with the permitted params incoming from the view
+      @scheduled_meeting = @room.scheduled_meetings.new(
+        @room.attributes_for_meeting.merge(
+          scheduled_meeting_params(@room)
+        )
+      )
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
 
       room_session = get_room_session(@room)
       @scheduled_meeting.created_by_launch_nonce = room_session['launch'] if room_session.present?
-
       if @scheduled_meeting.save
-        format.html { redirect_to @room, notice: t('default.scheduled_meeting.created') }
+        format.html do
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.created') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
+        end
       else
         format.html { render :new }
       end
@@ -60,8 +68,11 @@ class ScheduledMeetingsController < ApplicationController
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
-      if @scheduled_meeting.update(scheduled_meeting_params)
-        format.html { redirect_to @room, notice: t('default.scheduled_meeting.updated') }
+      if @scheduled_meeting.update(scheduled_meeting_params(@room))
+        format.html do
+          return_path = room_path(@room), { notice: t('default.scheduled_meeting.updated') }
+          redirect_if_brightspace(return_path) || redirect_to(*return_path)
+        end
       else
         format.html { render :edit }
       end
@@ -77,8 +88,12 @@ class ScheduledMeetingsController < ApplicationController
       if wait_for_mod?(@scheduled_meeting, @user) && !mod_in_room?(@scheduled_meeting)
         redirect_to wait_room_scheduled_meeting_path(@room, @scheduled_meeting)
       else
-        # join as moderator (start the meeting) and notify users
-        NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
+        # notify users if cable is enabled
+        if Rails.application.config.cable_enabled
+          NotifyRoomWatcherJob.set(wait: 10.seconds).perform_later(@scheduled_meeting)
+        end
+
+        # join as moderator (creates the meeting if not created yet)
         redirect_to join_api_url(@scheduled_meeting, @user)
       end
 
@@ -111,6 +126,14 @@ class ScheduledMeetingsController < ApplicationController
       return
     end
 
+    # if this flag is set in the session, wait a short while and try to join again
+    # this happens when users try to create a meeting that's already being created
+    auto = get_from_room_session(@room, 'auto_join')
+    if auto.present?
+      remove_from_room_session(@room, 'auto_join')
+      @auto_join = true
+    end
+
     # users with a session and anonymous users can wait in this page
     # decide here where they will go to when the meeting starts
     if @user.present?
@@ -127,13 +150,27 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def external
+    # If the external link is disabled, users should get an error
+    # if they are not signed in
+    if @scheduled_meeting.disable_external_link && @user.blank?
+      redirect_to errors_path(404)
+    end
+
     # allow signed in users to use this page, but autofill the inputs
     # and don't let users change them
     if @user.present?
       @first_name = @user.first_name
       @last_name = @user.last_name
     end
+
+    @scheduled_meeting.update_to_next_recurring_date
+
     @ended = !@scheduled_meeting.active? && !mod_in_room?(@scheduled_meeting)
+
+    @disclaimer = ConsumerConfig
+                    .select(:external_disclaimer)
+                    .find_by(key: @room.consumer_key)
+                    &.external_disclaimer
   end
 
   def running
@@ -149,33 +186,40 @@ class ScheduledMeetingsController < ApplicationController
   end
 
   def destroy
-    @scheduled_meeting.destroy
-    respond_to do |format|
-      format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
-      format.json { head :no_content }
+    event_id = @scheduled_meeting.brightspace_calendar_event&.event_id
+    if event_id
+      Rails.logger.info('Found brightspace event, sending delete calendar event')
+
+      return_path = room_path(@room), { notice: t('default.scheduled_meeting.destroyed') }
+      redirect_if_brightspace(return_path) || redirect_to(*return_path)
+    else
+      Rails.logger.info('Brightspace event not found')
+      respond_to do |format|
+        format.html { redirect_to room_path(@room), notice: t('default.scheduled_meeting.destroyed') }
+        format.json { head :no_content }
+      end
     end
+    @scheduled_meeting.destroy
   end
 
   private
 
-  def scheduled_meeting_params
-    params.require(:scheduled_meeting).permit(
-      :name, :recording, :wait_moderator, :all_moderators, :duration, :description, :welcome
-    )
-  end
-
-  def find_scheduled_meeting
-    @scheduled_meeting = ScheduledMeeting.from_param(params[:id])
-  end
-
-  def validate_scheduled_meeting
-    if @scheduled_meeting.blank?
-      set_error('scheduled_meeting', 'not_found', :not_found)
-      respond_to do |format|
-        format.html { render 'shared/error', status: @error[:status] }
-      end
-      false
+  # Sets :repeat as nil if it's blank. We want it as nil in the database in order
+  # for a non-recurring meeting to work
+  def set_blank_repeat_as_nil
+    if params.dig(:scheduled_meeting, :repeat)&.blank?
+      params[:scheduled_meeting][:repeat] = nil
     end
+  end
+
+  def scheduled_meeting_params(room)
+    attrs = [
+      :name, :recording, :duration, :description, :welcome, :repeat,
+      :disable_external_link, :disable_private_chat, :disable_note
+    ]
+    attrs << [:wait_moderator] if room.allow_wait_moderator
+    attrs << [:all_moderators] if room.allow_all_moderators
+    params.require(:scheduled_meeting).permit(*attrs)
   end
 
   def validate_start_at(scheduled_meeting)
@@ -187,6 +231,25 @@ class ScheduledMeetingsController < ApplicationController
     rescue Date::Error
       scheduled_meeting.start_at = nil
       scheduled_meeting.errors.add(:start_at, t('default.scheduled_meeting.error.invalid_start_at'))
+      false
+    end
+  end
+
+  def redirect_if_brightspace(return_path)
+    if @app_launch.brightspace_oauth
+      Rails.logger.info('Found brightspace, sending calendar event')
+      push_redirect_to_session!('brightspace_return_to', *return_path)
+      case action_name
+      when 'create'
+        redirect_to(send_create_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'update'
+        redirect_to(send_update_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      when 'destroy'
+        redirect_to(send_delete_calendar_event_room_scheduled_meeting_path(@room, @scheduled_meeting))
+      end
+      true
+    else
+      Rails.logger.info('Brightspace not found')
       false
     end
   end

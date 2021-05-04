@@ -1,7 +1,7 @@
 <% if flash.any? %>
   <div aria-live="polite" aria-atomic="true" id="notification-toasts" class="d-flex justify-content-center align-items-center toast-area">
     <% flash.each do |type, msg| %>
-      <div class="toast toast-auto toast-<%= type %>" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+      <div class="toast toast-auto toast-<%= type %>" role="alert" aria-live="assertive" aria-atomic="true" data-delay="7000">
         <div class="toast-header">
           <%= msg %>
           <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">

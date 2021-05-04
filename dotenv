@@ -37,8 +37,11 @@ RAILS_LOG_TO_STDOUT=true
 # LOGRAGE_ENABLED=1
 # LOG_LEVEL=info
 
-## Use to serve assets through the app (Required for now)
+# Serve assets through the app
 RAILS_SERVE_STATIC_FILES=true
+
+# To serve assets from a CDN
+# ASSET_HOST=http://ks872jadt5c9a8.cloudfront.net
 
 ## Use to enable features only available for development (Optional)
 # RAILS_ENV=development
@@ -47,6 +50,8 @@ RAILS_SERVE_STATIC_FILES=true
 # Check all available options with:
 # ActiveSupport::TimeZone.all.map { |tz| tz.name }
 DEFAULT_TIMEZONE=UTC
+# If set, will ignore the timezone in the cookie (gem browser-timezone-rails)
+# FORCE_DEFAULT_TIMEZONE=true
 
 APP_NAME=BbbAppRooms
 
@@ -57,3 +62,16 @@ APP_LAUNCH_DURATION_MINS=30
 
 # CABLE_MOUNT_PATH=/rooms/cable
 # CABLE_ADAPTER=postgresql
+CABLE_ENABLED=true
+
+# By default the cookies will set SameSite=None and Secure
+# Set the flags below to alter this behavior
+# COOKIES_SECURE_OFF=1
+# COOKIES_SAME_SITE=None
+
+# To load report files from DO's Spaces
+# SPACES_KEY=key
+# SPACES_SECRET=secret
+# SPACES_ENDPOINT=https://nyc3.digitaloceanspaces.com
+# SPACES_BUCKET=bucket-name
+# SPACES_COMMON_PREFIX=lti/

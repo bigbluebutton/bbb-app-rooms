@@ -32,6 +32,8 @@
 en:
   default:
     app:
+      bigbluebutton_error: "Error contacting the conference server. Please try again later or contact support. (%{status})"
+      spaces_error:   "Error contacting the reports storage server. Please try again later or contact support."
       error:          "Error"
     admin:
       back:           "Back"
@@ -48,31 +50,36 @@ en:
     bigbluebutton:
       moderator:      "Moderator"
       viewer:         "Viewer"
-    room:
+    rooms:
+      cancel:         "Cancel"
       created:        "Room was successfully created"
-      edit:           "Edit"
-      editing:        "Editing Room"
-      show:           "Show"
-      showing:        "Showing Room"
+      description:    "Description"
       destroy:        "Destroy"
       destroyed:      "Room was successfully destroyed"
+      edit:           "Edit"
+      editing:        "Editing Room"
+      error:
+        oauth:        "An error occurred during OAuth authorization."
       join:           "Join"
-      name:           "Name"
-      description:    "Description"
-      welcome:        "Welcome"
       moderator:      "Moderator token"
-      viewer:         "Viewer token"
+      name:           "Name"
       recordings:     "Recordings"
+      scheduled_meetings: "Scheduled sessions"
+      show:           "Show"
+      showing:        "Showing Room"
       update:         "Update"
       updated:        "Updated"
-      cancel:         "Cancel"
-      waitmodmsg:        "Please wait for a moderator to enter the room. You will be redirected automatically."
-      scheduled_meetings: "Scheduled sessions"
+      viewer:         "Viewer token"
+      waitmodmsg:     "Please wait for a moderator to enter the room. You will be redirected automatically."
+      welcome:        "Welcome"
     meeting:
       close:           "Close tab/window"
       close_manually:  "This tab/window must be closed manually"
     scheduled_meeting:
       allmoderators:  "All moderators"
+      calendar:
+        description:
+          link:       "Click here to access this class."
       created:        "The session was scheduled"
       destroy:
         confirmation: "Are you sure you want to remove this scheduled session?"
@@ -102,13 +109,18 @@ en:
         join:         "Join"
         last_name:    "Last name"
       recording:      "Recording"
+      repeat_options:
+        none: "Doesn't repeat"
+        weekly: "Weekly"
+        every_two_weeks: "Biweekly"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"
         allmoderators: "All users will join as moderators"
       updated:        "The session schedule was updated"
       wait:
-        message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait and you will be automatically redirected once it starts."
+        message: "Hello <strong>%{name}</strong>, the session has not started yet. Please wait a few moments and try again."
+        message_auto: "Hello <strong>%{name}</strong>, your session is being created, please wait a few moments."
       waitmoderator:  "Wait for moderator"
     session:
       retry:
@@ -131,8 +143,13 @@ en:
       _401:
         code:       "Unauthorized"
         message:    "Unauthorized access"
-        suggestion: "Try launching the app again by using the link or refreshing the browser."
+        suggestion: "You don't have access to this page. If you believe this might be an error, try launching the app again by using the link or refreshing the browser."
         status_code: "401"
+      _404:
+        code:       "NotFound"
+        message:    "Not found"
+        suggestion: "The page you tried to access does not exist."
+        status_code: "404"
     bigbluebutton:
       invalid_request:
         code:       "BBBAPICallInvalid"
@@ -144,6 +161,11 @@ en:
         code: "NotFound"
         message: "Not found"
         suggestion: "The page you tried to access does not exist."
+      406:
+        code:       "NotAcceptable"
+        message:    "Format not acceptable"
+        suggestion: "The URL you entered is probably incorrect."
+        status_code: "406"
       500:
         code: "ServerError"
         message: "Server error"
@@ -157,7 +179,7 @@ en:
       not_found:
         code:       "NotFound"
         message:    "The room was not found"
-        suggestion: "The room may have been removed by an administrator. Contact technical support."
+        suggestion: "The room you tried to access doesn't exist."
         status_code: "404"
       invalid_secret:
         code:       "InvalidSecret"
@@ -170,3 +192,10 @@ en:
         message:    "The scheduled meeting was not found"
         suggestion: "It might have been removed by the session creator."
         status_code: "404"
+  views:
+    pagination:
+      first: "&laquo;"
+      last: "&raquo;"
+      previous: "&lsaquo;"
+      next: "&rsaquo;"
+      truncate: "&hellip;"

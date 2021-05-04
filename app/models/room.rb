@@ -32,8 +32,18 @@ class Room < ApplicationRecord
     "#{self.handler}-#{self.id}"
   end
 
-  def next_meetings
-    scheduled_meetings.active.order(:start_at).first(3)
+  def attributes_for_meeting
+    {
+      recording: self.recording,
+      all_moderators: self.all_moderators,
+      wait_moderator: self.wait_moderator
+    }
+  end
+
+  def update_recurring_meetings
+    self.scheduled_meetings.inactive.recurring.find_each do |meeting|
+      meeting.update_to_next_recurring_date
+    end
   end
 
   private
