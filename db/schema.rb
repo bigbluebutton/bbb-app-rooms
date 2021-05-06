@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_24_200408) do
+ActiveRecord::Schema.define(version: 2021_05_04_222633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,7 +102,9 @@ ActiveRecord::Schema.define(version: 2020_11_24_200408) do
     t.boolean "disable_external_link", default: false
     t.boolean "disable_private_chat", default: false
     t.boolean "disable_note", default: false
+    t.string "hash_id"
     t.index ["created_by_launch_nonce"], name: "index_scheduled_meetings_on_created_by_launch_nonce"
+    t.index ["hash_id"], name: "index_scheduled_meetings_on_hash_id", unique: true
     t.index ["repeat"], name: "index_scheduled_meetings_on_repeat"
     t.index ["room_id"], name: "index_scheduled_meetings_on_room_id"
   end

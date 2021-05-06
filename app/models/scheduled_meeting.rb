@@ -1,4 +1,6 @@
 class ScheduledMeeting < ApplicationRecord
+  include Friendlyable
+
   paginates_per 10
 
   REPEAT_OPTIONS = {
@@ -38,11 +40,7 @@ class ScheduledMeeting < ApplicationRecord
   }
 
   def self.from_param(param)
-    find_by(id: param)
-  end
-
-  def to_param
-    self.id.to_s
+    friendly.find_by(hash_id: param)
   end
 
   def self.durations_for_select(locale)
