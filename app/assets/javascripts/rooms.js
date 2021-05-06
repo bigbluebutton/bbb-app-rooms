@@ -13,28 +13,13 @@
 //
 // You should have received a copy of the GNU Lesser General Public License along
 // with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+//= require './polling'
 
 $(document).on('turbolinks:load', function(){
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
   var cable = $("body").data('use-cable');
-
-  var isInt = function(value) {
-    return !isNaN(value) &&
-      parseInt(Number(value)) == value &&
-      !isNaN(parseInt(value, 10));
-  };
-
-  var pollIn = function(interval) {
-    var secs = interval;
-    secs = (parseInt(secs) || 0) * 1000;
-    if (!isInt(secs) || secs <= 5000) { // to be extra sure we won't poll too much
-      secs = 30000;
-    }
-    console.log('Setting up polling for', secs);
-    setTimeout(function() { pollStatus(); }, secs);
-  };
 
   var pollStatus = function() {
     console.log('Checking if the meeting started');
@@ -48,8 +33,6 @@ $(document).on('turbolinks:load', function(){
         console.log("received", data);
         if (data['running'] === true) {
           joinSession();
-        } else {
-          pollIn(data['interval']);
         }
       }
     });
@@ -65,6 +48,8 @@ $(document).on('turbolinks:load', function(){
     var room = $('#wait-for-moderator').data('room-id');
     var meeting = $('#wait-for-moderator').data('meeting-id');
 
+    Polling.setPolling(pollStatus)
+    
     var running = $('#wait-for-moderator').data('is-running');
     if (running === true) {
       console.log('Already running, joining soon');
@@ -104,11 +89,6 @@ $(document).on('turbolinks:load', function(){
           }
         }
       });
-
-    // polling
-    } else {
-      var secs = $('#wait-for-moderator').data('wait-interval');
-      pollIn(secs);
     }
   }
 });
