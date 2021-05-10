@@ -11,9 +11,10 @@ module Friendlyable
     friendly_id :hash_id
   end
 
+  # Create a random unique hash_id consisting of 9 alphanum chars
   def set_hash_id
     hash_id = nil
-    id_length = 5
+    id_length = 9
     loop do
       hash_id = SecureRandom.urlsafe_base64(id_length)
       hash_id = replace_prohibited_chars(hash_id)
