@@ -40,7 +40,12 @@ class ScheduledMeeting < ApplicationRecord
   }
 
   def self.from_param(param)
-    friendly.find_by(hash_id: param)
+    # This will accept both id an hash_id
+    # If we want to accept only hash_id change it to:
+    #   friendly.find_by(hash_id: param)
+    friendly.find(param)
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def self.durations_for_select(locale)
