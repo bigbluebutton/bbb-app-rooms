@@ -91,6 +91,9 @@ module BbbAppRooms
     config.cable_polling_secs = ENV['CABLE_POLLING_SECS'] || 30
     config.cable_btn_timeout = ENV['CABLE_BTN_TIMEOUT'] || 60000
 
+    # polling delay
+    config.polling_delay = ENV['MCONF_POLLING_DELAY'] || ''
+
     # use a json formatter to match lograge's logs
     if ENV['LOGRAGE_ENABLED'] == '1'
       config.log_formatter = SimpleJsonFormatter.new
