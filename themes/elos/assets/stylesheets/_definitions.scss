@@ -152,6 +152,19 @@ $line-height-lg: map-get($vars, '--line-height') !default;
   }
 }
 
+.icon-input-select {
+  appearance: none;
+  background: transparent;
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - .75em);
+  background-position-y: center;
+  background-image: asset-data-url("icon_expand_more.svg")
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
 // make bootstrap's variables available for use in other places
 @import "bootstrap/mixins";
 @import "bootstrap/functions";

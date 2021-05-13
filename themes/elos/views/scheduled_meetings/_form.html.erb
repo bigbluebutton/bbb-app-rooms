@@ -29,7 +29,7 @@
     <div class="form-group col-12 col-md-4">
       <%= form.label :duration %>
       <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale),
-        { selected: scheduled_meeting.duration }, { class: "form-control" }
+        { selected: scheduled_meeting.duration }, { class: "form-control icon-input-select" }
       %>
       <div class="d-none mt-3" id="content_custom_duration">
         <div class="d-flex flex-column">
@@ -64,7 +64,7 @@
       <%= form.select :repeat,
           ScheduledMeeting.repeat_options_for_select(I18n.locale),
        { selected: scheduled_meeting.repeat },
-       { class: "form-control" } %>
+       { class: "form-control icon-input-select" } %>
     </div>
   </div>
 
@@ -142,7 +142,7 @@
       </div>
     </div>
   </div>
-
+  <%= image_tag "icon_expand_more.svg", title: "Elos", class: "mx-auto" %>
   <div class="form-actions">
     <%= link_to t('_all.cancel'), room_path(@room), class: "btn btn-light" %>
     <%= form.submit t('_all.schedule'), class: "btn btn-secondary" %>
