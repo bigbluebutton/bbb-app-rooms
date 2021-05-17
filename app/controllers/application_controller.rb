@@ -130,6 +130,15 @@ class ApplicationController < ActionController::Base
 
   def find_scheduled_meeting
     @scheduled_meeting = @room.scheduled_meetings.from_param(params[:id])
+    # Fail if scheduled meeting was not found
+    return if @scheduled_meeting.blank?
+
+    # Succeed if scheduled_meeting was found with friendly_id
+    return @scheduled_meeting if @scheduled_meeting.friendly_id == params[:id]
+
+    # Redirect if scheduled_meeting was found with regular id
+    redirect_to(url_for(id: @scheduled_meeting.friendly_id),
+                status: :moved_permanently)
   end
 
   def validate_scheduled_meeting

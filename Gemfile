@@ -109,5 +109,8 @@ gem 'browser-timezone-rails', git: 'https://github.com/mconf/browser-timezone-ra
 # Pagination
 gem 'kaminari'
 
+# Friendly URL
+gem 'friendly_id', '~> 5.4.0'
+
 # Other
 gem 'browser'

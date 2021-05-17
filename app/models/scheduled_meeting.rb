@@ -1,4 +1,6 @@
 class ScheduledMeeting < ApplicationRecord
+  include Friendlyable
+
   paginates_per 10
 
   REPEAT_OPTIONS = {
@@ -38,11 +40,12 @@ class ScheduledMeeting < ApplicationRecord
   }
 
   def self.from_param(param)
-    find_by(id: param)
-  end
-
-  def to_param
-    self.id.to_s
+    # This will accept both id an hash_id
+    # If we want to accept only hash_id change it to:
+    #   friendly.find_by(hash_id: param)
+    friendly.find(param)
+  rescue ActiveRecord::RecordNotFound
+    nil
   end
 
   def self.durations_for_select(locale)
