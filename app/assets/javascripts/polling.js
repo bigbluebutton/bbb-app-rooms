@@ -7,7 +7,7 @@
 class Polling {
   static setPolling(callback) {
     var delay, pause, remaining, resume, start, timerId;
-    delay = $('meta[name="polling-delay"]').attr("content") || 10000;
+    delay = $('meta[name="running-polling-delay"]').attr("content") || 10000;
     remaining = 0; // The first callback is instantaneous
 
     var pause = function() {
@@ -47,4 +47,3 @@ class Polling {
     });
   }
 }
-  

@@ -22,7 +22,6 @@ $(document).on('turbolinks:load', function(){
   var cable = $("body").data('use-cable');
 
   var pollStatus = function() {
-    console.log('Checking if the meeting started');
     var url = $('#wait-for-moderator').data('wait-url');
     $.ajax({
       url: url,
@@ -30,7 +29,6 @@ $(document).on('turbolinks:load', function(){
       contentType: "application/json",
       error: function() { console.log('Error checking'); },
       success: function(data) {
-        console.log("received", data);
         if (data['running'] === true) {
           joinSession();
         }
@@ -39,7 +37,6 @@ $(document).on('turbolinks:load', function(){
   };
 
   var joinSession = function() {
-    console.log("Joining session");
     $('#wait-for-moderator').find('form [type=submit]').addClass('disabled');
     $('#wait-for-moderator').find('form').submit();
   };
@@ -52,21 +49,18 @@ $(document).on('turbolinks:load', function(){
     
     var running = $('#wait-for-moderator').data('is-running');
     if (running === true) {
-      console.log('Already running, joining soon');
       setTimeout(function() { joinSession(); }, 200);
       return;
     }
 
     var auto = $('#wait-for-moderator').data('auto');
     if (auto === true) {
-      console.log('Auto joining in a few seconds');
       var delay = 2000 + Math.floor(Math.random()*1000);
       setTimeout(function() { joinSession(); }, delay);
       return;
     }
 
     if (cable === 'true') {
-      console.log('Setting up the websocket');
       App.cable.subscriptions.create({
         channel: "WaitChannel",
         room: room,

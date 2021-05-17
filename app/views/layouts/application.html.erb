@@ -6,7 +6,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= action_cable_meta_tag %>
-    <meta name="polling-delay" content="<%= Rails.application.config.polling_delay %>">
+    <meta name="running-polling-delay" content="<%= Rails.application.config.running_polling_delay %>">
 
     <% if theme_defined? %>
       <%= favicon_link_tag 'theme-favicon.ico' %>
