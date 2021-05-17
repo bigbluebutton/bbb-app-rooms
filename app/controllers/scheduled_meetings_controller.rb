@@ -10,7 +10,7 @@ class ScheduledMeetingsController < ApplicationController
   include BbbAppRooms
 
   # actions that can be accessed without a session, without the LTI launch
-  open_actions = %i[external wait join]
+  open_actions = %i[external wait join running]
 
   # validate the room/session only for routes that are not open
   before_action :find_room
@@ -171,6 +171,18 @@ class ScheduledMeetingsController < ApplicationController
                     .select(:external_disclaimer)
                     .find_by(key: @room.consumer_key)
                     &.external_disclaimer
+  end
+
+  def running
+    respond_to do |format|
+      format.json {
+        render json: {
+                 status: :ok,
+                 running: mod_in_room?(@scheduled_meeting),
+                 interval: Rails.configuration.cable_polling_secs.to_i
+               }
+      }
+    end
   end
 
   def destroy
