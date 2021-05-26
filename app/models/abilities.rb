@@ -8,12 +8,24 @@ class Abilities
     when :show
       true
     when :edit
-      user.present? && (user.admin? || user.moderator?(self.moderator_roles))
+      user.present? && self.full_permission?(user)
     when :admin
       user.present? && user.admin?
+    when :download_presentation_video
+      config = ConsumerConfig.select(:download_presentation_video)
+        .find_by(key: resource[:consumer_key])
+      if config[:download_presentation_video]
+        user.present?
+      else
+        user.present? && self.full_permission?(user)
+      end
     else
       false
     end
+  end
+
+  def self.full_permission?(user)
+    user.admin? || user.moderator?(self.moderator_roles)
   end
 
   def self.moderator_roles

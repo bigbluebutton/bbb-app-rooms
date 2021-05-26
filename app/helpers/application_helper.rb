@@ -34,6 +34,10 @@ module ApplicationHelper
     Abilities.can?(user, :edit, resource)
   end
 
+  def can_download_recording?(user, resource)
+    Abilities.can?(user, :download_presentation_video, resource)
+  end
+
   def theme_defined?
     !Rails.configuration.theme.blank?
   end
