@@ -36,12 +36,12 @@
 
         <% if recording[:published] %>
           <% url = playback_url(room, recording[:recordID],
-            recording[:playbacks].find { |p| p[:type] == 'presentation' })
+                                recording[:playbacks].find { |p| p[:type] == 'presentation' })
           %>
           <%= link_to t("recordings.playbacks.presentation"), url, class: "dropdown-item", target: "_blank" %>
           <% if can_download_recording?(user, room)%>
             <% url = playback_url(room, recording[:recordID],
-              recording[:playbacks].find { |p| p[:type] == 'presentation_video' })
+                                  recording[:playbacks].find { |p| p[:type] == 'presentation_video' })
             %>
             <%= link_to t("recordings.playbacks.presentation_video"), url, class: "dropdown-item", target: "_blank" %>
           <% end %>

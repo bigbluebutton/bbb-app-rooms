@@ -13,7 +13,7 @@ class Abilities
       user.present? && user.admin?
     when :download_presentation_video
       config = ConsumerConfig.select(:download_presentation_video)
-        .find_by(key: resource[:consumer_key])
+                                    .find_by(key: resource[:consumer_key])
       if config[:download_presentation_video]
         user.present?
       else
