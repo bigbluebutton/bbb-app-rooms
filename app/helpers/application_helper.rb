@@ -38,6 +38,10 @@ module ApplicationHelper
     Abilities.can?(user, :download_presentation_video, resource)
   end
 
+  def can_show_terms_use_message?(resource)
+    Abilities.can?(nil, :message_reference_terms_use, resource)
+  end
+
   def theme_defined?
     !Rails.configuration.theme.blank?
   end
