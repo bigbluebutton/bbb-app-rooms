@@ -98,3 +98,6 @@ en:
         about_x_hours:
           one: 'an hour'
           other: '%{count} hours'
+  terms:
+    message: "By clicking <em>%{enter_room}</em>, you agree to our <a href='https://elos.vc/site/en/terms' target='_blank'>terms and conditions</a>."
+    enter_room: "Join"
