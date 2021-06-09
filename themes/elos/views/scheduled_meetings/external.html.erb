@@ -25,11 +25,9 @@
         </div>
 
         <% if can_show_terms_use_message?(@room)%>
-          <div class="text-center">
-            <%= label_tag :terms, t('terms.message',
-                                    enter_room: t('default.scheduled_meeting.external.join')).html_safe
-            %>
-          </div>
+          <%= label_tag :terms, t('terms.message', enter_room: t('default.scheduled_meeting.external.join')).html_safe,
+                                class: "message-terms"
+          %>
         <% end %>
 
         <div class="form-actions">
