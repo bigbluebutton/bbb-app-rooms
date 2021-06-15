@@ -12,15 +12,18 @@ en:
       minute:
         one: "%{count} minute"
         other: "%{count} minutes"
+      connector:  "and"
     hint:
       disable_external_link: "The access to the virtual room will be restricted to authenticated students."
       disable_private_chat: "The student will still be able to send private messages to the teacher. This feature can be modified during the conference using the \"Manage users\" section."
       disable_note: "The teacher will be able to use the shared notes as usual, but the students will only be able to read them, not edit. This feature can be modified during the conference using the \"Manage users\" section."
       repeat: "The external link of a recurring meeting will always be the same. The schedule is updated in the list after the current meeting ends."
       time: "You are using the time zone: %{zone}"
+      custom_duration: "Choose the duration of the session: HH:MM"
     label:
       scheduled_meeting:
         all_moderators: "Everyone joins as moderator"
+        custom_duration: "Custom duration"
         description: "Description (optional)"
         disable_external_link: "Disable external link"
         disable_private_chat: "Disable private chats"

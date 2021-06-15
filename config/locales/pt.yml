@@ -69,6 +69,7 @@ pt:
         8h: "8 horas"
         12h: "12 horas"
         24h: "24 horas"
+        'Custom Duration': "Duração customizada"
       edit:           "Editar"
       error:
         invalid_start_at: "A data ou tempo de início é inválido"

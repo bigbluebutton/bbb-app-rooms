@@ -43,6 +43,12 @@ class ScheduledMeetingsController < ApplicationController
           scheduled_meeting_params(@room)
         )
       )
+
+      if @scheduled_meeting.duration.zero?
+        @scheduled_meeting[:duration] =
+          ScheduledMeeting.convert_time_to_duration(params[:scheduled_meeting][:custom_duration])
+      end
+
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
@@ -68,6 +74,12 @@ class ScheduledMeetingsController < ApplicationController
       if validate_start_at(@scheduled_meeting)
         @scheduled_meeting.set_dates_from_params(params[:scheduled_meeting])
       end
+
+      if params[:scheduled_meeting]['duration'].to_i.zero?
+        params[:scheduled_meeting]['duration'] =
+          ScheduledMeeting.convert_time_to_duration(params[:scheduled_meeting][:custom_duration])
+      end
+
       if @scheduled_meeting.update(scheduled_meeting_params(@room))
         format.html do
           return_path = room_path(@room), { notice: t('default.scheduled_meeting.updated') }

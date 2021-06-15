@@ -16,7 +16,7 @@
         <% if error %> </div> <% end %>
     </div>
 
-    <div class="form-group col-6 col-md-4">
+    <div class="form-group col-12 col-md-4">
       <% if error %> <div class="field_with_errors"> <% end %>
         <%= form.label :time do %>
           <%= t('helpers.label.scheduled_meeting.start_time_time') %>
@@ -26,11 +26,33 @@
         <% if error %> </div> <% end %>
     </div>
 
-    <div class="form-group col-6 col-md-4">
+    <div class="form-group col-12 col-md-4">
       <%= form.label :duration %>
-      <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale), { selected: scheduled_meeting.duration }, { class: "form-control" } %>
+      <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale),
+        { selected: scheduled_meeting.duration }, { class: "form-control icon-input-select" }
+      %>
+      <div class="d-none mt-3" id="content_custom_duration">
+        <div class="d-flex flex-column">
+          <%= form.label :custom_duration do %>
+            <%= t('helpers.label.scheduled_meeting.custom_duration') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip"
+               title="<%= t('helpers.hint.custom_duration') %>"
+            >
+              help
+            </i>
+          <% end %>
+          <div class="d-flex content-timers">
+            <%= form.text_field :custom_duration,
+              value: get_custom_duration(scheduled_meeting.duration),
+              class: "form-control timepicker-duration",
+              data: {
+                format: t('default.formats.flatpickr.time_js'),
+              }
+            %>
+          </div>
+        </div>
+      </div>
     </div>
-
   </div>
 
   <div class="form-row">
@@ -42,7 +64,7 @@
       <%= form.select :repeat,
           ScheduledMeeting.repeat_options_for_select(I18n.locale),
        { selected: scheduled_meeting.repeat },
-       { class: "form-control" } %>
+       { class: "form-control icon-input-select" } %>
     </div>
   </div>
 
@@ -120,7 +142,6 @@
       </div>
     </div>
   </div>
-
   <div class="form-actions">
     <%= link_to t('_all.cancel'), room_path(@room), class: "btn btn-light" %>
     <%= form.submit t('_all.schedule'), class: "btn btn-secondary" %>

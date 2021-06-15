@@ -100,6 +100,7 @@ en:
         8h: "8 hours"
         12h: "12 hours"
         24h: "24 hours"
+        'Custom Duration': "Custom duration"
       edit:           "Edit"
       error:
         invalid_start_at: "Invalid start date or time"

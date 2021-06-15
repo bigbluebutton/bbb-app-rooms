@@ -58,6 +58,11 @@ module ElosHelper
     ActiveSupport::TimeZone[Time.zone.name].to_s.gsub(/[^\s]*\//, '').gsub(/_/, ' ')
   end
 
+  def get_custom_duration(duration)
+    duration_in_time = ScheduledMeeting.convert_duration_to_time(duration)
+    return time = duration_in_time[0].to_s + ':' + duration_in_time[1].to_s
+  end
+
   def playback_url(room, record_id, playback)
     if Rails.application.config.playback_url_authentication
       recording_playback_url(room, record_id, playback[:type])
