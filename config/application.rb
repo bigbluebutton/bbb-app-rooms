@@ -103,5 +103,12 @@ module BbbAppRooms
     config.browser_time_zone_same_site_cookie =
       ENV['COOKIES_SAME_SITE'].blank? ? 'None' : "#{ENV['COOKIES_SAME_SITE']}"
     config.browser_time_zone_default_tz = config.default_timezone
+
+    config.ext_elos_links = {
+      terms: {
+        'en': 'https://elos.vc/site/en/terms',
+        'pt': 'https://elos.vc/site/pt/terms',
+      }
+    }
   end
 end
