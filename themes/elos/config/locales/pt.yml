@@ -98,5 +98,5 @@ pt:
         one: 'an hour'
         other: '%{count} hours'
   terms:
-    message: "Ao clicar em <i>%{enter_room}</i>, você concorda com os nossos <a href='https://elos.vc/site/pt/terms' target='_blank'>termos de uso</a>."
+    message: "Ao clicar em <i>%{enter_room}</i>, você concorda com os nossos <a href='%{link}' target='_blank'>termos de uso</a>."
     enter_room: "Entrar"
