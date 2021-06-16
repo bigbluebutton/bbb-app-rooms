@@ -19,7 +19,10 @@ theme = Rails.application.config.theme
 
 unless theme.blank?
   # the entrypoint for the styles of the theme
-  Rails.application.config.assets.precompile += %w( theme-application.css theme-application.js schedule.js )
+  Rails.application.config.assets.precompile += [ 
+    "theme-application-#{theme}.css",
+    "theme-application-#{theme}.js",
+  ]
   Rails.application.config.assets.precompile += [
     Proc.new { |path, fn| fn =~ /themes\/#{theme}/ && !%w(.js .css).include?(File.extname(path)) }
   ]

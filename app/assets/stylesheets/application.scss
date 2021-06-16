@@ -12,6 +12,8 @@
  *
  *= require deps
  *= require flatpickr/dist/flatpickr.css
- *= require_tree .
  *= require_self
+ *= require errors
+ *= require rooms
+ *= require scaffolds
  */
