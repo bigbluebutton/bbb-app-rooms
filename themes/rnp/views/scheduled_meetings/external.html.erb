@@ -1,0 +1,45 @@
+<div id="external-join" class="row">
+  <div class="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+    <h2><%= @scheduled_meeting.name %></h2>
+    <p class="text-muted meeting-date">
+      <%= format_date(@scheduled_meeting.start_at) %>
+      <% if @scheduled_meeting.duration > 0 %>
+        (<%= duration_in_hours_and_minutes(@scheduled_meeting.duration).capitalize %>)
+      <% end %>
+    </p>
+
+    <% if @ended %>
+      <p><%= t('default.scheduled_meeting.external.ended') %></p>
+    <% else %>
+      <%= form_with url: join_room_scheduled_meeting_path(@room, @scheduled_meeting) do |form| %>
+        <div class="form-row">
+          <div class="form-group col-12">
+            <%= label_tag :first_name, t('default.scheduled_meeting.external.first_name') %>
+            <%= text_field_tag :first_name, @first_name, required: true, class: "form-control", readonly: @first_name.present?, autofocus: !@first_name.present? %>
+          </div>
+
+          <div class="form-group col-12">
+            <%= label_tag :last_name, t('default.scheduled_meeting.external.last_name') %>
+            <%= text_field_tag :last_name, @last_name, required: true, class: "form-control", readonly: @last_name.present? %>
+          </div>
+        </div>
+
+        <% if can_show_terms_use_message?(@room)%>
+          <%= label_tag :terms, t("terms.message", enter_room: t("default.scheduled_meeting.external.join"), link: ext_elos_link(:terms)).html_safe, class: "message-terms" %>
+        <% end %>
+
+        <div class="form-actions">
+          <%= submit_tag t('default.scheduled_meeting.external.join'), class: "btn btn-secondary" %>
+        </div>
+
+        <% unless @disclaimer.blank? %>
+          <div class="form-row">
+            <div class="col-12 text-muted anonymous-disclaimer">
+              <%= @disclaimer %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

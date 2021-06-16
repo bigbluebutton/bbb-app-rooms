@@ -1,0 +1,40 @@
+<%# Params passed to render partial %>
+<% [user, room, recordings, only_public] %>
+
+<div id="recordings-list" class="row">
+  <div class="col-12">
+    <h2><%= t('recordings.title') %></h2>
+  </div>
+
+  <div id="search_bar" class="col-12">
+    <input type="text" data-search="recordings" data-search-table="#recording-table" class="form-control" placeholder="<%= t('recordings.search.placeholder') %>">
+  </div>
+
+  <% if recordings.count > 0 %>
+    <div class="col-12">
+      <table id="recording-table" class="table" data-search-target="1">
+        <tbody>
+          <% recordings.each do |recording| %>
+            <%= render "shared/recording_row", user: user, room: room, recording: recording %>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="table-footnote">
+        <%= t('recordings.table.footnote', zone: current_formatted_time_zone) %>
+      </div>
+    </div>
+  <% else %>
+    <p><%= t('recordings.empty_list') %></p>
+  <% end %>
+</div>
+
+<div id="playback-link-copied-toast" aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center toast-area">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">
+    <div class="toast-header">
+      <%= t('_all.clipboard.link_copied') %>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>

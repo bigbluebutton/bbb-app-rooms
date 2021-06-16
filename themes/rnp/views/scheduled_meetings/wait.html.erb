@@ -1,0 +1,25 @@
+<div id="wait-for-moderator"
+     data-room-id="<%= @room.to_param %>"
+     data-meeting-id="<%= @scheduled_meeting.to_param %>"
+     data-join-url="<%= join_room_scheduled_meeting_path(@room, @scheduled_meeting) %>"
+     data-wait-url="<%= running_room_scheduled_meeting_path(@room, @scheduled_meeting) %>"
+     data-wait-interval="<%= Rails.configuration.cable_polling_secs %>"
+     data-btn-timeout="<%= Rails.configuration.cable_btn_timeout %>"
+     data-is-running="<%= @is_running %>"
+     data-auto="<%= @auto_join %>"
+     data-join-method="post">
+
+  <%= image_tag 'guest-wait.svg' %>
+  <p>
+    <% if @auto_join %>
+      <%= t('default.scheduled_meeting.wait.message_auto', name: @full_name).html_safe %>
+    <% else %>
+      <%= t('default.scheduled_meeting.wait.message', name: @full_name).html_safe %>
+    <% end %>
+  </p>
+
+  <div id="wait-for-moderator-back" style="display: none;">
+    <%= button_to t('scheduled_meetings.wait.retry'), @post_to,
+     method: :post, class: "btn btn-secondary btn-sm disabled", disabled: true %>
+  </div>
+</div>

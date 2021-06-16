@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans');
+//@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
+$vars: (
+  --color-main: #2DCCD3,
+  --color-main-hover: #83E0E4,
+  --color-sec: #0F8489,
+  --color-sec-hover: #83E0E4,
+  --color-action: #DD582D,
+  --color-action-hover: #E59123,
+  --color-support: #4F4289,
+  --color-support-hover: #847BAD,
+  --color-ok: #9BC111,
+  --color-ok-hover: #B9D459,
+  --color-error: #CA4B57,
+  --color-error-hover: #DA818A,
+  --color-white: #FFFFFF,
+  --color-black: #202020,
+  --color-gray-01: #EDEDED,
+  --color-gray-02: #DADADA,
+  --color-gray-03: #C6C6C6,
+  --color-gray-04: #B2B2B2,
+  --color-gray-05: #9D9D9C,
+  --color-gray-06: #878787,
+  --color-gray-07: #706F6F,
+  --color-gray-08: #575756,
+  --color-gray-09: #3C3C3B,
+  --font-color: #202020,
+  --font-family: "'IBM Plex Sans', sans-serif",
+  --font-family-title: "'Comfortaa', sans-serif",
+  --font-weight: Regular,
+  --font-size: 16.5px,
+  --font-size-rem: 1.1rem, // Assumes the browser default, typically `16px`
+  --font-size-details: 14.3px,
+  --font-size-sm: 14px,
+  --font-size-h1: 32px,
+  --font-size-h2: 28px,
+  --line-height: 1.5,
+  --border-color: #DEE2E6,
+  --z-index-toast: 999,
+);
+// variables in this map can be used as in:
+// map-get($vars, '--color-main')
+
+// Transfer the variables from the map to the :root element
+// Logic from https://css-tricks.com/difference-between-types-of-css-variables/
+:root {
+  @each $variable, $value in $vars {
+    @if type-of($value) == string {
+      #{$variable}: unquote($value);
+    } @else {
+      #{$variable}: $value;
+    }
+  }
+}
+
+// global spacing blocks
+$block: 8px;
+$block-rem: 0.5rem;
+@function blocks($num) {
+  @return ($num * $block);
+}
+@function blocks-rem($num) {
+  @return ($num * $block-rem);
+}
+
+// Customize bootstrap variables
+// Full list: https://github.com/twbs/bootstrap-rubygem/blob/master/assets/stylesheets/bootstrap/_variables.scss
+$primary:       map-get($vars, '--color-main') !default;
+$secondary:     map-get($vars, '--color-sec') !default;
+$success:       map-get($vars, '--color-ok') !default;
+// $info:          $cyan !default;
+// $warning:       $yellow !default;
+$danger:        map-get($vars, '--color-error') !default;
+$light:         map-get($vars, '--color-gray-01') !default;
+$dark:          map-get($vars, '--color-black') !default;
+$body-color:    map-get($vars, '--font-color') !default;
+$font-family-base: map-get($vars, '--font-family') !default;
+$table-cell-padding:          1.5rem 0 !default;
+// $table-cell-padding-sm:       .3rem !default;
+$font-size-base: map-get($vars, '--font-size-rem') !default;
+$link-color: map-get($vars, '--color-sec') !default;
+$link-hover-color: map-get($vars, '--color-sec-hover') !default;
+$dropdown-link-hover-color: map-get($vars, '--color-white') !default;
+$dropdown-link-hover-bg: map-get($vars, '--color-main-hover') !default;
+$dropdown-link-active-color: map-get($vars, '--color-white') !default;
+$dropdown-link-active-bg: map-get($vars, '--color-main') !default;
+$dropdown-padding-y: $block !default;
+$dropdown-spacer: $block !default;
+$dropdown-item-padding-y: $block !default;
+$dropdown-item-padding-x: (2 * $block) !default;
+$input-btn-padding-y: blocks-rem(1.5) !default;
+$input-btn-padding-x: blocks-rem(2) !default;
+$btn-padding-y: blocks-rem(2) !default;
+$btn-padding-x: blocks-rem(6) !default;
+$line-height-lg: map-get($vars, '--line-height') !default;
+// $line-height-sm:              1.5 !default;
+
+.btn-primary {
+  color: var(--color-white);
+
+  &.disabled, &[disabled] {
+    color: var(--color-gray-02);
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
+  }
+}
+
+.btn-secondary {
+  &.disabled, &[disabled] {
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
+  }
+}
+
+.btn-success {
+  color: var(--color-white);
+
+  &.disabled, &[disabled] {
+    color: var(--color-gray-02);
+    background-color: var(--color-gray-06);
+    border-color: var(--color-gray-08);
+  }
+}
+
+.btn-light {
+  background: var(--color-white);
+  border-color: var(--color-sec);
+  color: var(--color-sec);
+
+  &:hover, &:focus, &:active {
+    border-color: var(--color-sec);
+    color: var(--color-sec);
+  }
+}
+
+// customize flatpickr
+.flatpickr-input.form-control {
+  &:disabled, &[readonly] {
+    background: var(--color-white);
+  }
+}
+
+@keyframes shadow-pulse
+{
+  0% {
+    box-shadow: 0 0 0 0 rgba(43, 179, 186, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 $block rgba(0, 0, 0, 0);
+  }
+}
+
+.icon-input-select {
+  appearance: none;
+  background: transparent;
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - .75em);
+  background-position-y: center;
+  background-image: asset-data-url("icon_expand_more.svg")
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+// make bootstrap's variables available for use in other places
+@import "bootstrap/mixins";
+@import "bootstrap/functions";
+@import "bootstrap/variables";

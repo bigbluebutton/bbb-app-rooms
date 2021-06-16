@@ -1,0 +1,74 @@
+<div id="action-buttons" class="row">
+  <% if can_edit?(user, room) %>
+    <div id="schedule-meeting" class="col-12 col-sm-12 col-md-4 col-lg-4">
+      <%=
+      link_to t('scheduled_meetings.new.add'),
+       new_room_scheduled_meeting_path(room),
+       class: "btn btn-secondary"
+      %>
+    </div>
+  <% end %>
+  <%= "TEMA DA RNP SENDO CARREGADO" %>
+
+  <% if can_edit?(user, room) %>
+    <div id="view-recordings" class="col-12 col-sm-12 col-md-4 col-lg-4">
+  <% else %>
+    <div id="view-recordings" class="col-12 col-sm-6 col-md-6 col-lg-4 offset-lg-4">
+  <% end %>
+    <%=
+    link_to t('scheduled_meetings.show.view_recordings'),
+     recordings_room_path(room),
+     class: "btn btn-light"
+    %>
+  </div>
+
+  <% if can_edit?(user, room) && spaces_configured? %>
+    <div id="view-reports" class="col-12 col-sm-12 col-md-4 col-lg-4">
+      <%=
+      link_to t('reports.view_reports'),
+      room_reports_path(room),
+      class: "btn btn-light"
+      %>
+    </div>
+  <% end %>
+</div>
+
+<div id="scheduled-meetings-list" class="row">
+  <div class="col-12">
+    <h2><%= t('scheduled_meetings.title') %></h2>
+
+    <% if scheduled_meetings.count > 0 %>
+      <table class="table">
+        <tbody>
+          <% scheduled_meetings.each do |meeting| %>
+            <%= render "shared/scheduled_meeting_row", user: user, room: room, meeting: meeting %>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="table-footnote">
+        <%= t('scheduled_meetings.table.footnote', zone: current_formatted_time_zone) %>
+      </div>
+      <div class="table-pagination">
+        <%= paginate scheduled_meetings %>
+      </div>
+    <% else %>
+      <p><%= t('scheduled_meetings.empty_list') %></p>
+    <% end %>
+
+  </div>
+</div>
+
+<div id="elos-logo" class="row">
+  <%= image_tag "elos-logo.svg", title: "Elos", class: "mx-auto" %>
+</div>
+
+<div id="external-link-copied-toast" aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center toast-area">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="4000">
+    <div class="toast-header">
+      <%= t('_all.clipboard.link_copied') %>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>

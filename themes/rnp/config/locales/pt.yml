@@ -1,0 +1,105 @@
+pt:
+  _all:
+    cancel: "Cancelar"
+    clipboard:
+      link_copied: "Link copiado para o clipboard!"
+    schedule: "Agendar"
+  helpers:
+    distance_of_time_in_hours_and_minutes:
+      hour:
+        one: "%{count} hora"
+        other: "%{count} horas"
+      minute:
+        one: "%{count} minuto"
+        other: "%{count} minutos"
+      connector: "e"
+    hint:
+      disable_external_link: "O acesso à sala virtual será restrito aos alunos autenticados."
+      disable_private_chat: "O aluno ainda poderá enviar mensagens privadas para o professor. Este recurso pode ser reativado dentro da sala através da opção \"Restringir participantes\"."
+      disable_note: "O professor ainda poderá utilizar as notas compartilhadas, mas os alunos poderão apenas visualizar o conteúdo, não editar. Este recurso pode ser reativado dentro da sala através da opção \"Restringir participantes\"."
+      repeat: "O link externo de um agendamento recorrente será sempre o mesmo. O novo agendamento aparecerá na lista após o atual ser finalizado."
+      time: "Você está usando o fuso horário: %{zone}"
+      custom_duration: "Selecione o tempo de duração da sessão: HH:MM"
+    label:
+      scheduled_meeting:
+        all_moderators: "Todos entram como moderadores"
+        custom_duration: "Duração customizada"
+        description: "Descrição (opcional)"
+        disable_external_link: "Desabilitar link externo"
+        disable_private_chat: "Desabilitar chats privados"
+        disable_note: "Desabilitar notas compartilhadas"
+        duration: "Duração"
+        name: "Nome da sessão"
+        recording: "Permitir que a sessão seja gravada"
+        repeat: "Recorrência"
+        start_time: "Data e hora de início"
+        start_time_date: "Data"
+        start_time_time: "Hora de início"
+        wait_moderator: "Aguardar moderador para entrar"
+        welcome: "Mensagem de boas vindas (opcional)"
+  recordings:
+    confirm:
+      destroy: "Você tem certeza que deseja remover esta gravação?"
+      publish: "Você tem certeza que deseja publicar esta gravação?"
+      unpublish: "Você tem certeza que deseja despublicar esta gravação?"
+    destroy: "Remover"
+    duration:
+      less_than_a_minute: "Menos de 1 minuto"
+    empty_list: "Não há gravações para mostrar"
+    index:
+      return: "< voltar"
+    playback_link: "Copiar link de reprodução"
+    playbacks:
+      presentation: "Reproduzir"
+      presentation_video: "Baixar"
+    publish: "Publicar"
+    search:
+      placeholder: "Buscar em título ou descrição..."
+    table:
+      footnote: "Datas exibidas no fuso horário: %{zone}"
+    title: "Gravações"
+    unpublish: "Despublicar"
+  reports:
+    download: "Baixar"
+    download_options:
+      csv: "Planilha de reuniões (CSV)"
+      xls: "Planilha de reuniões (Excel XLS)"
+    empty_list: "Nenhum relatório encontrado :("
+    index:
+      return: "< voltar"
+    table_footnote: "Os relatórios do mês atual são atualizados diariamente."
+    title: "Relatórios"
+    view_reports: "Ver relatórios"
+  rooms:
+    close:
+      message: "Obrigado pela sua participação e até a próxima."
+      title: "Sua sessão acabou"
+  scheduled_meetings:
+    destroy: "Remover"
+    edit:
+      action: "Editar"
+      title: "Editar sessão"
+    empty_list: "Não há agendamentos para mostrar"
+    external_link: "Copiar link externo"
+    new:
+      add: "+ Agendar sessão"
+      title: "Agendar sessão"
+    show:
+      view_recordings: "Ver gravações"
+    table:
+      footnote: "Datas exibidas no fuso horário: %{zone}"
+    title: "Sessões agendadas"
+    wait:
+      retry: "Entrar"
+  time:
+    am: am
+    formats:
+      short_custom: "%d/%m/%Y %H:%M"
+  datetime:
+    distance_in_words:
+      x_hours:
+        one: 'an hour'
+        other: '%{count} hours'
+  terms:
+    message: "Ao clicar em <i>%{enter_room}</i>, você concorda com os nossos <a href='%{link}' target='_blank'>termos de uso</a>."
+    enter_room: "Entrar"
