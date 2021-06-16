@@ -1,7 +1,12 @@
-@import "../../../themes/**/*";
-// @import "../../../themes/rnp/assets/stylesheets/definitions-rnp";
-// @import "../../../themes/rnp/assets/stylesheets/theme-application-rnp-mobile.scss";
-// @import "../../../themes/rnp/assets/stylesheets/theme-application-rnp.scss";
+// @import "../../../themes/**/*";
+
+// @import "../../../themes/elos/assets/stylesheets/definitions";
+// @import "../../../themes/elos/assets/stylesheets/theme-application-elos-mobile.scss";
+// @import "../../../themes/elos/assets/stylesheets/theme-application-elos.scss";
+
+@import "../../../themes/rnp/assets/stylesheets/definitions-rnp";
+@import "../../../themes/rnp/assets/stylesheets/theme-application-rnp-mobile.scss";
+@import "../../../themes/rnp/assets/stylesheets/theme-application-rnp.scss";
 
 
 @import "bootstrap";

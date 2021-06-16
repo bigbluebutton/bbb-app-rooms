@@ -1,7 +1,12 @@
+<%= stylesheet_link_tag "application", media: 'all', 'data-turbolinks-track': 'reload' %>
+
 <% if theme_defined %>
-  <%= favicon_link_tag 'theme-favicon.ico' %>
+  <%= favicon_link_tag "favicon-#{Rails.configuration.theme}.ico" %>
+
   <%= stylesheet_link_tag "theme-application-#{Rails.configuration.theme}", media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   <%= javascript_include_tag "theme-application-#{Rails.configuration.theme}", 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag "schedule-#{Rails.configuration.theme}", 'data-turbolinks-track': 'reload' %>
 <% else %>
   <%= favicon_link_tag 'favicon.ico' %>
 <% end %>

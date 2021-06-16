@@ -4,7 +4,7 @@
 
 $vars: (
   --color-main: #243d8f,
-  --color-main-hover: #83E0E4,
+  --color-main-hover: #0F8DDE,
   --color-sec: #666666,
   --color-sec-hover: #83E0E4,
   --color-action: #DD582D,
@@ -206,7 +206,7 @@ $link-color-active: darken($link-color-hover, 15);
 }
 
 .btn-light {
-  background: var(--color-white);
+  background-color: var(--color-white);
   border-color: var(--color-sec);
   color: var(--color-sec);
 
