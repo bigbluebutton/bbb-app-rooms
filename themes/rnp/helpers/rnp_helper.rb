@@ -1,4 +1,4 @@
-module ElosHelper
+module RnpHelper
 
   def format_date(date, format=:short_custom, include_time=true)
     if date.present?
