@@ -7,22 +7,14 @@
     <%= csp_meta_tag %>
     <%= action_cable_meta_tag %>
     <meta name="running-polling-delay" content="<%= Rails.application.config.running_polling_delay %>">
-
-    <% if theme_defined? %>
-      <%= favicon_link_tag 'theme-favicon.ico' %>
-    <% else %>
-      <%= favicon_link_tag 'favicon.ico' %>
-    <% end %>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <%= stylesheet_link_tag "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet", media: "all" %>
 
+
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <% if theme_defined? %>
-      <%= stylesheet_link_tag 'theme-application', media: 'all', 'data-turbolinks-track': 'reload' %>
-      <%= javascript_include_tag 'theme-application', 'data-turbolinks-track': 'reload' %>
-      <%= javascript_include_tag 'schedule', 'data-turbolinks-track': 'reload' %>
-    <% end %>
+
+    <%= render 'layouts/theme', theme: theme_defined %>
   </head>
 
   <body lang="<%= I18n.locale %>"

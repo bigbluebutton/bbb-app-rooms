@@ -47,8 +47,8 @@ module ApplicationHelper
     link.nil? ? Rails.application.config.ext_elos_links[page][:en] : link
   end
 
-  def theme_defined?
-    !Rails.configuration.theme.blank?
+  def theme_defined
+    Rails.configuration.theme
   end
 
   def spaces_configured?
@@ -57,6 +57,6 @@ module ApplicationHelper
   end
 
   def theme_class
-    "theme-#{Rails.configuration.theme}" if theme_defined?
+    "theme-#{Rails.configuration.theme}" if theme_defined.present?
   end
 end
