@@ -3,8 +3,8 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
 
 $vars: (
-  --color-main: #243d8f,
-  --color-main-hover: #0F8DDE,
+  --color-main: #0f8dde,
+  --color-main-hover: #0f73b2,
   --color-sec: #666666,
   --color-sec-hover: #83E0E4,
   --color-action: #DD582D,
@@ -206,13 +206,14 @@ $link-color-active: darken($link-color-hover, 15);
 }
 
 .btn-light {
-  background-color: var(--color-white);
-  border-color: var(--color-sec);
-  color: var(--color-sec);
+  background-color: #F6F6F6;
+  border: 1px solid #cccccc;
+  color: #333333;
 
   &:hover, &:focus, &:active {
-    border-color: var(--color-sec);
-    color: var(--color-sec);
+    border: 1px solid #cccccc;
+    color: #333333;
+    background-color: var(--color-white);
   }
 }
 
