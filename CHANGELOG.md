@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.5.0 Elos - 2021-06-15
+## 0.5.0 Elos - 2021-06-20
 
 * [LTI-40] Added the logic to authenticate the access to recordings using `getRecordingToken`. Disabled
   by default, can be enabled setting `PLAYBACK_URL_AUTHENTICATION=true`.
