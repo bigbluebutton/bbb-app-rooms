@@ -5,6 +5,7 @@
 $vars: (
   --color-main: #0f8dde,
   --color-main-hover: #0f73b2,
+  --color-main-secondary: #4078c0,
   --color-sec: #666666,
   --color-sec-hover: #83E0E4,
   --color-action: #DD582D,
@@ -80,7 +81,7 @@ $font-family-base: map-get($vars, '--font-family') !default;
 $table-cell-padding:          1.5rem 0 !default;
 // $table-cell-padding-sm:       .3rem !default;
 $font-size-base: map-get($vars, '--font-size-rem') !default;
-$link-color: #4078c0 !default;
+$link-color: map-get($vars, '--color-main-secondary') !default;
 $link-hover-color: lighten($link-color, 10) !default;
 $dropdown-link-hover-color: map-get($vars, '--color-white') !default;
 $dropdown-link-hover-bg: map-get($vars, '--color-main-hover') !default;
@@ -96,87 +97,6 @@ $btn-padding-y: blocks-rem(2) !default;
 $btn-padding-x: blocks-rem(6) !default;
 $line-height-lg: map-get($vars, '--line-height') !default;
 // $line-height-sm:              1.5 !default;
-
-// RNP
-$rnp-blue: #243d8f; //#0c488e;
-$rnp-primary: $rnp-blue;
-$rnp-secondary: #666666;
-$rnp-grey: #8c8c8c;
-$rnp-light-grey: #fcfcfc;
-$rnp-bg-color: #ffffff;
-$rnp-danger-color: #9e0b0f;
-$rnp-danger-hover-color: #b60d11;
-$rnp-info-color: #049cdb;
-$rnp-warning-color: #f89406;
-$rnp-success-color: #2ecc71;
-
-$rnp-blue-1: #0F8DDE;
-$rnp-blue-2: #0F73B2;
-$rnp-blue-3: #2095f2;
-$rnp-green-1: #00bea4;
-$rnp-gray-1: #ededed;
-$rnp-gray-2: #d9d9d9;
-$rnp-gray-3: #5d5d5d;
-
-$font-family: Roboto, Arial, sans-serif;
-$link-color: #4078c0; //$rnp-blue; //lighten($rnp-blue, 15); //lighten($main-color, 15);
-$link-color-hover: lighten($link-color, 10); //$second-color;
-$link-color-active: $link-color;
-$navbar-bg-color-dark: $rnp-blue;
-$navbar-bg-color-light: $rnp-blue;
-$navbar-height: 60px;
-$navbar-font-color: white;
-$navbar-font-color-hover: white;
-$navbar-menu-open-link: $link-color;
-$navbar-menu-open-link-hover: $link-color-hover;
-$footer-height: 180px;
-$navbar-rnp-height: 50px;
-$navbar-rnp-max-width: 980px;
-$navbar-rnp-min-width: 680px;
-
-// fonts
-$font-mini: 10px;
-$font-small: 11px;
-$font-normal: 13px;
-$font-medium: 14px;
-$font-big: 16px;
-$font-big-medium: 18px;
-$font-meeting-icon: 19px;
-$font-bigger: 21px;
-$font-biggest: 25px;
-$font-gigantic: 28px;
-$font-section-title: 28px;
-$font-color: #333;
-$font-color-gray: #888;
-$font-family: Arial, sans-serif;
-$base-line-height: 1.5;
-
-// standard colors
-$green: #509F00;
-$blue: #005fca;
-$red: #C23321;
-$orange: #C47322;
-$yellow: #BB9403;
-$gold: #f1be04;
-$green-logo: #27535C;
-$gray: #ccc;
-$m-dark-red: #961010;
-$m-dark-blue: #0a1d87;
-$dark-gray: #666;
-$light-gray: #f6f6f6;
-$very-light-gray: #fcfcfc;
-$bright-blue: #49afcd;
-$transparent: rgba(255,255,255,0);
-// site colors
-$site-bg-color: #fff;
-$main-color: $green-logo;
-$second-color: $bright-blue;
-$focus-border-color: $second-color;
-$font-h-color: $green-logo;
-// link colors
-$link-color: lighten($main-color, 15);
-$link-color-hover: $second-color;
-$link-color-active: darken($link-color-hover, 15);
 
 .btn-primary {
   color: var(--color-white);
