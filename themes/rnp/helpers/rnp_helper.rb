@@ -70,4 +70,20 @@ module RnpHelper
       playback[:url]
     end
   end
+
+  def ext_rnp_link(page)
+    link = links_external(page, I18n.locale)
+    link.nil? ? links_external(page, :en) : link
+  end
+
+  def links_external(page, locale)
+    links = {
+      # TODO ADD LINKS
+      terms: {
+        'en': 'https://rnp/site/en/terms',
+        'pt': 'https://rnp/site/pt/terms',
+      }
+    }
+    return links[page][locale]
+  end
 end
