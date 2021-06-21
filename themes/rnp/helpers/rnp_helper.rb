@@ -80,8 +80,8 @@ module RnpHelper
     links = {
       # TODO ADD LINKS
       terms: {
-        'en': 'https://rnp/site/en/terms',
-        'pt': 'https://rnp/site/pt/terms',
+        'en': 'https://ajuda.rnp.br/conferenciaweb/termo-de-uso',
+        'pt': 'https://ajuda.rnp.br/conferenciaweb/termo-de-uso',
       }
     }
     return links[page][locale]
