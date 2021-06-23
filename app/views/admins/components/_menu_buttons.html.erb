@@ -1,0 +1,42 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+
+<div class="col-lg-3 mt-4 text-2xl font-sans rounded text-gray-700">
+    <% page = active_page %>
+    <div class="menu-item">
+        <%= link_to admins_users_path, :class => "menu-item py-4 pl-6 rounded w-full block #{"active" if page == "users"}" do %>
+            <span class="mr-3"><i class="fas fa-users"></i></span><%= t("default.admin.menu.users") %>
+        <% end %>
+    </div>
+    <div class="menu-item">
+        <%= link_to admins_rooms_path, :class => "menu-item p-4 pl-6 w-full block rounded #{"active" if page == "server_rooms"}" do %>
+            <span class="mr-3"><i class="fas fa-binoculars"></i></span><%= t("default.admin.menu.rooms") %>
+        <% end %>
+    </div>
+    <div class="menu-item">
+        <%= link_to admins_recordings_path, :class => "menu-item p-4 pl-6 w-full block rounded #{"active" if page == "server_recordings"}" do %>
+            <span class="mr-3"><i class="fas fa-video"></i></span><%= t("default.admin.menu.recordings") %>
+        <% end %>
+    </div>
+    <%
+=begin%>
+ <div class="menu-item">
+        <%= link_to admins_room_configuration_path, :class => "menu-item p-4 pl-6 w-full block rounded #{"active" if page == "settings"}" do %>
+            <span class="mr-3"><i class="fas fa-sliders-h"></i></span><%= t("default.admin.menu.settings") %>
+        <% end %>
+    </div> 
+<%
+=end%>
+</div> 

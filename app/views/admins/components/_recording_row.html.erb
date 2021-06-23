@@ -1,0 +1,119 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+<tr class="border-b text-left hover:bg-gray-100">
+  <td class="p-0">
+    <div class="text-left font-sans px-8 py-4 ml-0 pl-0 ">
+      
+        <% hover = 'bg-gray-100' %>
+        <% focus = 'bg-white' %>
+    
+      <div id="recording-title" class="form-inline font-bold edit_hover_class" 
+           data-recordid="<%= recording[:recordID] %>" 
+           data-can-edit="true">
+          <% if recording[:metadata][:name] %>
+              <text id='recording-title-text' class="text-wrap input recording-text"><%= recording[:metadata][:name] %></text>
+          <% else %>
+            <text id='recording-title-text' class="text-wrap input recording-text"><%= recording[:name] %></text>
+          <% end %>
+           <a><i id="edit-record-description" class="fa fa-edit align-top ml-2 hover: hover:text-blue-700" data-edit-recordid="<%= recording[:recordID] %>"></i></a>  
+
+      </div>
+      <div id="recording-description" class="form-inline edit_hover_class" 
+           data-recordid="<%= recording[:recordID] %>" 
+           data-can-edit="true">
+        <text id='recording-description-text' class="text-wrap recording-text"><%= recording[:metadata][:description] %></text>
+       
+          <a><i id="edit-record-description" class="fa fa-edit align-top ml-2 bg-white hover:text-blue-700 hover:bg-white text-gray-700" data-edit-recordid="<%= recording[:recordID] %>"></i></a>  
+     
+      </div>
+    </div>
+  </td>
+
+  <td class="pl-0 text-left font-sans px-8 py-4">
+    <%= recording_date(recording[:startTime]) %>
+  </td>
+
+  <td class="pl-0 text-left font-sans px-8 py-4">
+    <%= recording_length(recording[:playbacks]) %>
+  </td>
+
+  <td class="pl-0 text-left px-8 py-4" style='white-space: nowrap'>
+    <div class="flex items-end ">
+      <% if recording[:published] %>
+        <% sorted_playbacks = recording[:playbacks].sort_by { |hsh| hsh[:type] }%>
+        <% sorted_playbacks.each do |p| %>
+          <% # Don't show playback if user isn't moderator and the type isn't set as public %>
+            <% if p[:type] == 'presentation' %>
+              <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type], target: "_blank", class: "mr-4 hover:bg-white hover:text-blue-700" do %>
+                <div class="bg-gray-200 p-4 rounded hover:bg-gray-300">
+                  <div class= "bg-blue-600 rounded-full" >   
+                     <span class="material-icons bg-blue-600 text-white m-2 ml-2.5 md-18"> insert_photo </span>  
+                  </div>
+                </div>  
+              <% end %>
+            <% elsif p[:type] == 'statistics' %>
+              <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type], target: "_blank" , class: "mr-4 hover:bg-white hover:text-blue-700 " do %>
+              <div class="bg-gray-200 p-4 rounded hover:bg-gray-300">
+                <div class= "bg-blue-600 rounded-full">
+              <span class="material-icons arrow bg-blue-600 text-white m-2 md-18"> trending_up </span> </div> </div>
+              <% end %>
+            <% elsif p[:type] == 'video' %>
+              <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "hover:bg-white hover:text-blue-700" do %>
+                 <div class="bg-gray-200 p-4 rounded hover:bg-gray-300">
+                <div class= "bg-blue-600 rounded-full">
+                <span class="material-icons bg-blue-600 text-white m-2 md-18"> play_arrow </span> </div> </div>
+              <% end %> 
+            <% end %>
+          
+        <% end %>
+      <% end %>
+    </div>
+  </td>
+    
+  
+    <td class="p-0 text-left mx-6 mr-2 px-2 my-4">
+      <div class="item-action dropdown">
+        <a href="javascript:void(0)" data-toggle="dropdown" class="bg-transparent no-underline text-gray-700 hover:text-blue-700 hover:bg-transparent">
+          <i class="material-icons bg-transparent hover:text-blue-700">more_vert</i>
+        </a>
+        <div class="dropdown-content dropdown-menu dropdown-menu-right bg-white">
+          <% if recording[:published] %>
+            <%= button_to admins_recording_unpublish_path(record_id: recording[:recordID]), method: :post, class: "rounded-none dropdown-item btn-block btn btn-default my-0" do %>
+              <i class="dropdown-icon fas fa-book"></i> <%= t("default.recording.action.unpublish") %>
+            <% end %>
+          <% else %>
+            <%= button_to admins_recording_publish_path(record_id: recording[:recordID]), method: :post, class: "rounded-none dropdown-item btn-block btn btn-default my-0" do %>
+              <i class="dropdown-icon fas fa-book-open"></i> <%= t("default.recording.action.publish") %>
+            <% end %>
+          <% end %>
+          <%= button_to admins_recording_delete_path(record_id: recording[:recordID]), method: :post, class: "rounded-none dropdown-item btn-block btn btn-default" do %>
+            <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("default.recording.action.delete") %>
+          <% end %>
+          <% if recording[:protected] != nil # check if protected field exists %>
+            <% if recording[:protected] == "true" %>
+                <%= button_to admins_recording_unprotect_path(record_id: recording[:recordID]), method: :post, class: "rounded-none dropdown-item btn-block btn btn-default" do %>
+                  <i class="dropdown-icon fas fa-unlock-alt"></i> <%= t("default.recording.action.unprotect") %>
+                <% end %>
+            <% else %>
+                <%= button_to admins_recording_protect_path(record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
+                  <i class="dropdown-icon fas fa-lock"></i> <%= t("default.recording.action.protect") %>
+                <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </td>
+  
+</tr>

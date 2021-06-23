@@ -1,0 +1,66 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+<tr class="border-b text-left hover:bg-gray-100">
+  <td class="p-0">
+    <div class="text-left font-sans px-8 py-4 ml-0 pl-0 ">
+      
+        <% hover = 'bg-gray-100' %>
+        <% focus = 'bg-white' %>
+    
+      <div id="room-title" class="form-inline font-bold edit_hover_class" 
+           data-roomid="<%= room[:id] %>" 
+            <text id='room-title-text' class="text-wrap input room-text"><%= room[:name] %></text>
+           <a><i id="edit-room-description" class="fa fa-edit align-top ml-2 hover: hover:text-blue-700" data-edit-roomid="<%= room[:id] %>"></i></a>  
+
+      </div>
+      <div id="room-description" class="form-inline edit_hover_class" 
+           data-roomid="<%= room[:id] %>" 
+        <text id='room-description-text' class="text-wrap room-text"><%= room[:description] %></text>
+       
+          <a><i id="edit-room-description" class="fa fa-edit align-top ml-2 bg-white hover:text-blue-700 hover:bg-white text-gray-700" data-edit-roomid="<%= room[:id] %>"></i></a>  
+     
+      </div>
+    </div>
+  </td>
+
+  <td class="pl-0 text-left font-sans px-8 py-4">
+    <%= room[:id] %>
+  </td>
+
+ <td class="pl-0 text-left font-sans px-8 py-4">
+    <%= "-- " + room[:handler].last(8) %>
+  </td>
+
+  <td class="pl-0 text-left font-sans px-8 py-4">
+    <%= room[:created_at] %>
+  </td>
+    
+<td class="p-0 mr-2 px-2  ml-auto">
+    <div class="item-action dropdown">
+    <a href="javascript:void(0)" data-toggle="dropdown" class="bg-transparent no-underline text-gray-700 hover:text-blue-700 hover:bg-gray-100">
+        <i class="material-icons bg-transparent hover:bg-gray-100 hover:text-blue-700">more_vert</i>
+    </a>
+    <div class="dropdown-content dropdown-menu dropdown-menu-right">
+        <%= link_to admins_room_delete_path(room_id: room[:id]), method: :post, class: "dropdown-item btn btn-default rounded-none",  data: {confirm: "Are you sure you want to delete this room?"} do %>
+          <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("default.admin.rooms.delete") %>
+        <% end %>
+        <%= link_to admins_recordings_path(room_handler: room[:handler]), method: :get, class: "my-0 dropdown-item btn btn-default rounded-none" do %>
+          <i class="dropdown-icon fas fa-video"></i> <%= t("default.admin.rooms.recordings") %>
+        <% end %>
+    </div>
+    </div>
+</td>
+  
+</tr>

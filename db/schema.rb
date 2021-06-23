@@ -10,10 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_140520) do
+ActiveRecord::Schema.define(version: 2021_01_28_213012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "adminpg_users", force: :cascade do |t|
+    t.string "context"
+    t.string "uid"
+    t.string "full_name"
+    t.string "first_name"
+    t.string "last_name"
+    t.datetime "last_accessed_at"
+    t.string "username"
+    t.string "password_digest"
+    t.boolean "admin"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["context", "uid"], name: "index_adminpg_users_on_context_and_uid"
+    t.index ["id"], name: "index_adminpg_users_on_id"
+    t.index ["username"], name: "index_adminpg_users_on_username", unique: true
+  end
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"

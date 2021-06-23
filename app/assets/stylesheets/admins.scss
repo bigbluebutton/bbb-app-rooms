@@ -33,27 +33,43 @@
  *= require material_icons
  *= require font-awesome
  */
-
  @import "utilities/variables";
 
- .header {
-    height: $header-height;
-    border-bottom: 1px solid $primary-transparency;
-    margin: auto;
-    position: relative;
+
+.menu-item .active {
+   color: $primary;
+   background-color: $primary-transparency;
+   font-weight: bold;
 }
 
-.primary-bbb-blue{
-    background-color: $primary;
-    border-color: $primary;
+.menu-item:hover{
+    color: $primary;
+    background-color: $primary-transparency;
+    text-decoration: none;
 }
 
-.primary-bbb-blue:hover{
-    background-color: $primary-color-darken;
-    border-color: $primary-color-darken;
+.page-title {
+   font-size: x-large;
+   color: $primary;
 }
 
-.bn-background {
-    background-color: $background-color;
+.delete-btn {
+   background-color: $button-color-blue;
+   color: white;
+   
+   &:hover {
+      color: white;
+      background-color: $primary-color-darken;
+   }
+}
+
+.config-btn {
+   background-color: $button-color-blue;
+   color: white;
+   
+   &:hover {
+      color: white;
+      background-color: $primary-color-darken;
+   }
 }
 

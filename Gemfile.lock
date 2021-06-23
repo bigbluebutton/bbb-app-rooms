@@ -75,6 +75,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.2.5.1)
       execjs (> 0)
+    bcrypt (3.1.16)
     bigbluebutton-api-ruby (1.7.0)
       xml-simple (~> 1.1)
     bindex (0.8.1)
@@ -404,6 +405,7 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing
   activerecord-session_store
+  bcrypt (~> 3.1.7)
   bigbluebutton-api-ruby
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4.1)
