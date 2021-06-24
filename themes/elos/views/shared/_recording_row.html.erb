@@ -35,15 +35,17 @@
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-opts-<%= recording[:recordID] %>">
 
         <% if recording[:published] %>
-          <% url = playback_url(room, recording[:recordID],
-                                recording[:playbacks].find { |p| p[:type] == 'presentation' })
-          %>
-          <%= link_to t("recordings.playbacks.presentation"), url, class: "dropdown-item", target: "_blank" %>
+          
           <% if can_download_recording?(user, room)%>
+            <% recording[:playbacks].each do |p| %>
+              <% url = playback_url(room, recording[:recordID], p) %>
+              <%= link_to t("recordings.playbacks.#{p[:type]}"), url, class: "dropdown-item", target: "_blank" %>
+            <% end %>
+          <% else %>
             <% url = playback_url(room, recording[:recordID],
-                                  recording[:playbacks].find { |p| p[:type] == 'presentation_video' })
+                                  recording[:playbacks].find { |p| p[:type] == 'presentation' })
             %>
-            <%= link_to t("recordings.playbacks.presentation_video"), url, class: "dropdown-item", target: "_blank" %>
+            <%= link_to t("recordings.playbacks.presentation"), url, class: "dropdown-item", target: "_blank" %>
           <% end %>
 
           <div class="dropdown-divider"></div>
