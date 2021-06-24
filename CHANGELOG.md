@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.1 Elos - 2021-06-24
+
+* [LTI-69] Fix the page of recordings that was breaking with "undefined method '[]' for nil:NilClass".
+* [LTI-69] Improve the text in the `/wait` page now that the polling with redirect the user automatically
+  to the conference when it starts.
+
+
 ## 0.5.0 Elos - 2021-06-20
 
 * [LTI-40] Added the logic to authenticate the access to recordings using `getRecordingToken`. Disabled
