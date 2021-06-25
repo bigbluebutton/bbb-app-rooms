@@ -25,6 +25,7 @@ unless theme.blank?
     "schedule-#{theme}.js",
     "application-#{theme}.css"
   ]
+  Rails.application.config.assets.precompile << /\.(?:svg)\z/
   Rails.application.config.assets.precompile += [
     Proc.new { |path, fn| fn =~ /themes\/#{theme}/ && !%w(.js .css).include?(File.extname(path)) }
   ]

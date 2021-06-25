@@ -1,5 +1,37 @@
 # Change Log
 
+## 0.5.1 Elos - 2021-06-24
+
+* [LTI-69] Fix the page of recordings that was breaking with "undefined method '[]' for nil:NilClass".
+* [LTI-69] Improve the text in the `/wait` page now that the polling with redirect the user automatically
+  to the conference when it starts.
+
+
+## 0.5.0 Elos - 2021-06-20
+
+* [LTI-40] Added the logic to authenticate the access to recordings using `getRecordingToken`. Disabled
+  by default, can be enabled setting `PLAYBACK_URL_AUTHENTICATION=true`.
+* [LTI-48] Allow users to use a custom duration for events other than selecting one of the pre-defined options.
+* [LTI-6] Re-enabled the polling in the join conference page to auto join the user when the conference starts.
+  Adds a new environment variable `RUNNING_POLLING_DELAY` that defaults to `10000` milliseconds.
+* [LTI-53] Changed the URLs of meetings to use random hashes instead of IDs. The old URLs will still work,
+  redirecting to the new ones.
+* [LTI-52] Added a new attribute to `ConsumerConfig` called `download_presentation_video` so that we can hide
+  the links to download recordings to everyone that is not considered a moderator (see
+  `BIGBLUEBUTTON_MODERATOR_ROLES`). By default it will still show the links to everyone, must be disabled
+  for clients that want the links to be hidden.
+
+Migration notes:
+
+* New environment variable to enable the authentication of recordings `PLAYBACK_URL_AUTHENTICATION`. It
+  is disabled by default and can be enabled by setting `PLAYBACK_URL_AUTHENTICATION=true`.
+* New environment variable to set the interval for the polling in the join conference page
+  `RUNNING_POLLING_DELAY`. Defaults to `10000` (milliseconds).
+* New attribute `download_presentation_video` on `ConsumerConfig` to turn on/off the download recording
+  link for non moderators. It is set to `true` by default in the migration, must be set to false for the
+  clients that wish to hide the links.
+
+
 ## 0.4.6 Elos - 2021-04-13
 
 * [LTI-50] Update Rails to 6.0.3.6 (from 6.0.3.1) to fix an error when building the app:

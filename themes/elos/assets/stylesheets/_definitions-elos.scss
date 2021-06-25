@@ -158,7 +158,7 @@ $line-height-lg: map-get($vars, '--line-height') !default;
   background-repeat: no-repeat;
   background-position-x: calc(100% - .75em);
   background-position-y: center;
-  background-image: asset-data-url("icon_expand_more.svg")
+  background-image: url(image-path('icon_expand_more.svg'))
 }
 
 select.form-control {

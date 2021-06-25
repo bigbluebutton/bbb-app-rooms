@@ -89,7 +89,7 @@ pt:
         allmoderators: "Todos usuários serão moderadores"
       updated:        "O agendamento foi atualizado"
       wait:
-        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. Por favor aguarde alguns instantes e tente novamente."
+        message: "Olá <strong>%{name}</strong>, a sessão ainda não começou. </br> Por favor aguarde alguns instantes."
         message_auto: "Olá <strong>%{name}</strong>, sua sessão está sendo criada, por favor aguarde alguns instantes."
       waitmoderator:  "Aguardar moderador"
     session:
