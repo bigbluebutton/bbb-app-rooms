@@ -12,12 +12,14 @@ class Abilities
     when :admin
       user.present? && user.admin?
     when :download_presentation_video
-      config = ConsumerConfig.select(:download_presentation_video)
-                                    .find_by(key: resource[:consumer_key])
-      if config[:download_presentation_video]
-        user.present?
-      else
+      # `resource` is a `Room`
+      # by default every signed in user can download, unless explicitly set not to
+      config = ConsumerConfig.select(:download_presentation_video).
+                 find_by(key: resource&.consumer_key)
+      if resource.present? && config.present? && !config.download_presentation_video?
         user.present? && self.full_permission?(user)
+      else
+        user.present?
       end
     else
       false
