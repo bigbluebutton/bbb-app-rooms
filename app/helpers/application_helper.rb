@@ -42,12 +42,11 @@ module ApplicationHelper
     Abilities.can?(nil, :message_reference_terms_use, resource)
   end
 
-  def ext_elos_link(page)
-    link = Rails.application.config.ext_elos_links[page][I18n.locale]
-    link.nil? ? Rails.application.config.ext_elos_links[page][:en] : link
+  def theme_defined?
+    !Rails.configuration.theme.blank?
   end
 
-  def theme_defined
+  def app_theme
     Rails.configuration.theme
   end
 
@@ -57,6 +56,6 @@ module ApplicationHelper
   end
 
   def theme_class
-    "theme-#{Rails.configuration.theme}" if theme_defined.present?
+    "theme-#{Rails.configuration.theme}" if theme_defined?
   end
 end
