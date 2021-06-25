@@ -70,4 +70,19 @@ module ElosHelper
       playback[:url]
     end
   end
+
+  def ext_elos_link(page)
+    link = links_external(page, I18n.locale)
+    link.nil? ? links_external(page, :en) : link
+  end
+
+  def links_external(page, locale)
+    links = {
+      terms: {
+        'en': 'https://elos.vc/site/en/terms',
+        'pt': 'https://elos.vc/site/pt/terms',
+      }
+    }
+    return links[page][locale]
+  end
 end
