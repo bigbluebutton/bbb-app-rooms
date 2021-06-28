@@ -1,4 +1,4 @@
-@import "definitions";
+@import "definitions-elos";
 
 // small and medium devices (tablets not included)
 @media (max-width: map-get($grid-breakpoints, 'md')) {

@@ -1,4 +1,4 @@
-@import "definitions";
+@import "definitions-elos";
 
 // keep it here so it won't take precedence and override links
 // inside dropdowns and buttons, for example
@@ -93,7 +93,7 @@ body.theme-elos {
     }
 
     .dropdown-opts {
-      top: 36px;
+      top: 0;
       right: $block;
 
       > a {

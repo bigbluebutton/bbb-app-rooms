@@ -1,0 +1,24 @@
+<div id="reports-list" class="row mt-3">
+  <div class="col-12">
+    <h2><%= t('reports.title') %></h2>
+  </div>
+
+  <% if reports.count > 0 %>
+    <div class="col-12">
+      <table id="report-table" class="table">
+        <tbody>
+          <% reports.each do |report| %>
+            <%= render "shared/report_row", room: room, report: report %>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="table-footnote text-left">
+        <%= t('reports.table_footnote') %>
+      </div>
+    </div>
+  <% else %>
+    <div class="col-12 empty-list text-center">
+      <p><%= t('reports.empty_list') %></p>
+    </div>
+  <% end %>
+</div>

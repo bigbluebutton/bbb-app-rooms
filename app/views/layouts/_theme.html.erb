@@ -1,0 +1,13 @@
+<% if theme_defined? %>
+  <%= favicon_link_tag "favicon-#{app_theme}.ico" %>
+  <%= stylesheet_link_tag "application-#{app_theme}", media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag "theme-application-#{app_theme}", media: 'all', 'data-turbolinks-track': 'reload' %>
+
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag "theme-application-#{app_theme}", 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag "schedule-#{app_theme}", 'data-turbolinks-track': 'reload' %>
+<% else %>
+  <%= favicon_link_tag 'favicon.ico' %>
+  <%= stylesheet_link_tag "application-default", media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+<% end %>

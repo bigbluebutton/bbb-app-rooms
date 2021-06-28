@@ -12,18 +12,14 @@ class Abilities
     when :admin
       user.present? && user.admin?
     when :download_presentation_video
-      config = self.find_consumer_config(resource[:consumer_key],
-                                          :download_presentation_video)
-      if config[:download_presentation_video]
-        user.present?
-      else
+      # `resource` is a `Room`
+      # by default every signed in user can download, unless explicitly set not to
+      config = ConsumerConfig.select(:download_presentation_video).
+                 find_by(key: resource&.consumer_key)
+      if resource.present? && config.present? && !config.download_presentation_video?
         user.present? && self.full_permission?(user)
-      end
-    when :message_reference_terms_use
-      config = self.find_consumer_config(resource[:consumer_key],
-                                          :message_reference_terms_use)
-      if config[:message_reference_terms_use]
-        return true
+      else
+        user.present?
       end
     else
       false
@@ -36,9 +32,5 @@ class Abilities
 
   def self.moderator_roles
     Rails.configuration.bigbluebutton_moderator_roles.split(',')
-  end
-
-  def self.find_consumer_config(key, kind)
-    config = ConsumerConfig.select(kind).find_by(key: key)
   end
 end

@@ -1,0 +1,84 @@
+@import "definitions-rnp";
+
+// small and medium devices (tablets not included)
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+  .hide-on-mobile { display: none !important; }
+
+  body.theme-rnp {
+
+    //
+    // GLOBAL STYLES
+    //
+
+    margin: blocks(2);
+
+    .table {
+      td {
+        justify-content: center;
+        border: none;
+        padding: blocks(1) 0;
+      }
+
+      tr {
+        border-top: 1px solid var(--border-color);
+        margin-left: 0;
+        margin-right: 0;
+        padding: blocks(1) 0;
+      }
+
+      .td-titles { order: -2; }
+      .td-dropdown-opts {
+        order: -1;
+
+        .dropdown {
+          top: blocks(1.5);
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      .btn {
+        width: 49%;
+        padding: blocks-rem(2) 0;
+        margin-left: 0 !important;
+      }
+    }
+
+    .toast-area {
+      .toast {
+        max-width: 90% !important;
+      }
+    }
+
+    //
+    // PAGE-SPECIFIC STYLES
+    //
+
+    // External join
+    #external-join {
+      .form-actions {
+        .btn { width: 100%; }
+      }
+
+      .message-terms {
+        font-size: var(--font-size-sm);
+      }
+    }
+
+    #action-buttons {
+      .btn {
+        margin-right: 0;
+        margin-bottom: blocks(1);
+      }
+    }
+  }
+}
+
+// to hide any mobile element
+@media (min-width: 768px) {
+  .mobile { display: none !important; }
+}

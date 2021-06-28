@@ -42,13 +42,12 @@ module ApplicationHelper
     Abilities.can?(nil, :message_reference_terms_use, resource)
   end
 
-  def ext_elos_link(page)
-    link = Rails.application.config.ext_elos_links[page][I18n.locale]
-    link.nil? ? Rails.application.config.ext_elos_links[page][:en] : link
-  end
-
   def theme_defined?
     !Rails.configuration.theme.blank?
+  end
+
+  def app_theme
+    Rails.configuration.theme
   end
 
   def spaces_configured?

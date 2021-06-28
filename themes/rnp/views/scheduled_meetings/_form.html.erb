@@ -1,0 +1,149 @@
+<%= form_with model: [@room, scheduled_meeting] do |form| %>
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true, class: "form-control", autofocus: true %>
+    </div>
+  </div>
+
+  <% error = !@scheduled_meeting.errors[:start_at].blank? %>
+  <div class="form-row">
+
+    <div class="form-group col-md-4">
+      <% if error %> <div class="field_with_errors"> <% end %>
+        <%= form.label :date, t('helpers.label.scheduled_meeting.start_time_date') %>
+        <%= form.text_field :date, value: scheduled_meeting.start_at_date(I18n.locale), required: true, class: "form-control datepicker", data: { format: t('default.formats.flatpickr.date_js') } %>
+        <% if error %> </div> <% end %>
+    </div>
+
+    <div class="form-group col-12 col-md-4">
+      <% if error %> <div class="field_with_errors"> <% end %>
+        <%= form.label :time do %>
+          <%= t('helpers.label.scheduled_meeting.start_time_time') %>
+          <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.time', zone: current_formatted_time_zone) %>">help</i>
+        <% end %>
+        <%= form.text_field :time, value: scheduled_meeting.start_at_time(I18n.locale), required: true, class: "form-control timepicker", data: { format: t('default.formats.flatpickr.time_js') } %>
+        <% if error %> </div> <% end %>
+    </div>
+
+    <div class="form-group col-12 col-md-4">
+      <%= form.label :duration %>
+      <%= form.select :duration, ScheduledMeeting.durations_for_select(I18n.locale),
+        { selected: scheduled_meeting.duration }, { class: "form-control icon-input-select" }
+      %>
+      <div class="d-none mt-3" id="content_custom_duration">
+        <div class="d-flex flex-column">
+          <%= form.label :custom_duration do %>
+            <%= t('helpers.label.scheduled_meeting.custom_duration') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip"
+               title="<%= t('helpers.hint.custom_duration') %>"
+            >
+              help
+            </i>
+          <% end %>
+          <div class="d-flex content-timers">
+            <%= form.text_field :custom_duration,
+              value: get_custom_duration(scheduled_meeting.duration),
+              class: "form-control timepicker-duration",
+              data: {
+                format: t('default.formats.flatpickr.time_js'),
+              }
+            %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :repeat do %>
+        <%= t('helpers.label.scheduled_meeting.repeat') %>
+        <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.repeat') %>">help</i>
+      <% end %>
+      <%= form.select :repeat,
+          ScheduledMeeting.repeat_options_for_select(I18n.locale),
+       { selected: scheduled_meeting.repeat },
+       { class: "form-control icon-input-select" } %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :description %>
+      <%= form.text_area :description, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12">
+      <%= form.label :welcome %>
+      <%= form.text_area :welcome, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-12 col-md-6">
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :recording, class: "form-check-input" %>
+          <%= form.label :recording, class: "form-check-label" %>
+        </div>
+      </div>
+
+      <% if @room.allow_wait_moderator %>
+        <div class="form-group">
+          <div class="form-check">
+            <%= form.check_box :wait_moderator, class: "form-check-input" %>
+            <%= form.label :wait_moderator, class: "form-check-label" %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @room.allow_all_moderators %>
+        <div class="form-group">
+          <div class="form-check">
+            <%= form.check_box :all_moderators, class: "form-check-input" %>
+            <%= form.label :all_moderators, class: "form-check-label" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-group col-12 col-md-6">
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_external_link, class: "form-check-input" %>
+          <%= form.label :disable_external_link, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_external_link') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_external_link') %>">help</i>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_private_chat, class: "form-check-input" %>
+          <%= form.label :disable_private_chat, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_private_chat') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_private_chat') %>">help</i>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <%= form.check_box :disable_note, class: "form-check-input" %>
+          <%= form.label :disable_note, class: "form-check-label" do %>
+            <%= t('helpers.label.scheduled_meeting.disable_note') %>
+            <i class="icon material-icons icon-label-hint" data-toggle="tooltip" title="<%= t('helpers.hint.disable_note') %>">help</i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= link_to t('_all.cancel'), room_path(@room), class: "btn btn-light" %>
+    <%= form.submit t('_all.schedule'), class: "btn btn-primary" %>
+  </div>
+<% end %>

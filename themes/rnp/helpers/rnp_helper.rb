@@ -1,4 +1,4 @@
-module ElosHelper
+module RnpHelper
 
   def format_date(date, format=:short_custom, include_time=true)
     if date.present?
@@ -71,16 +71,17 @@ module ElosHelper
     end
   end
 
-  def ext_elos_link(page)
+  def ext_rnp_link(page)
     link = links_external(page, I18n.locale)
     link.nil? ? links_external(page, :en) : link
   end
 
   def links_external(page, locale)
     links = {
+      # TODO ADD LINKS
       terms: {
-        'en': 'https://elos.vc/site/en/terms',
-        'pt': 'https://elos.vc/site/pt/terms',
+        'en': 'https://ajuda.rnp.br/conferenciaweb/termo-de-uso',
+        'pt': 'https://ajuda.rnp.br/conferenciaweb/termo-de-uso',
       }
     }
     return links[page][locale]
