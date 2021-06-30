@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.5.1 Elos - 2021-06-24
+## 0.5.1 Elos - 2021-06-25
 
 * [LTI-69] Fix the page of recordings that was breaking with "undefined method '[]' for nil:NilClass".
 * [LTI-69] Improve the text in the `/wait` page now that the polling with redirect the user automatically
