@@ -27,7 +27,7 @@ class BrightspaceController < ApplicationController
 
       local_params = { event_id: event_data[:event_id],
                        link_id: event_data[:lti_link_id],
-                       scheduled_meeting_id: @scheduled_meeting.id,
+                       scheduled_meeting_hash_id: @scheduled_meeting.hash_id,
                        room_id: @scheduled_meeting.room_id, }
       BrightspaceCalendarEvent.find_or_create_by(local_params)
     rescue BrightspaceHelper::SendCalendarEventError => e
@@ -49,7 +49,7 @@ class BrightspaceController < ApplicationController
                        link_id: event_data[:lti_link_id],
                        room_id: @scheduled_meeting.room_id, }
       BrightspaceCalendarEvent
-        .find_or_create_by(scheduled_meeting_id: @scheduled_meeting.id)
+        .find_or_create_by(scheduled_meeting_hash_id: @scheduled_meeting.hash_id)
         &.update(local_params)
     rescue BrightspaceHelper::SendCalendarEventError => e
       Rails.logger.warn("Failed to receive send_update_calendar_event data, " \
@@ -64,10 +64,10 @@ class BrightspaceController < ApplicationController
     begin
       send_calendar_event(:delete,
                           @app_launch,
-                          scheduled_meeting_id: permitted_params[:id],
+                          scheduled_meeting_hash_id: permitted_params[:id],
                           room: @room)
       BrightspaceCalendarEvent
-        .find_by(scheduled_meeting_id: permitted_params[:id], room_id: @room.id)
+        .find_by(scheduled_meeting_hash_id: permitted_params[:id], room_id: @room.id)
         &.delete
     rescue BrightspaceHelper::SendCalendarEventError => e
       Rails.logger.warn("Failed to send delete calendar event. " \
