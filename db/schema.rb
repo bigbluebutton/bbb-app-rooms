@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_01_210533) do
+ActiveRecord::Schema.define(version: 2021_07_06_140832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 2021_06_01_210533) do
 
   create_table "brightspace_calendar_events", force: :cascade do |t|
     t.integer "event_id"
-    t.bigint "scheduled_meeting_id"
+    t.string "scheduled_meeting_hash_id"
     t.bigint "room_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2021_06_01_210533) do
     t.index ["event_id", "room_id"], name: "index_brightspace_calendar_events_on_event_id_and_room_id", unique: true
     t.index ["link_id", "room_id"], name: "index_brightspace_calendar_events_on_link_id_and_room_id", unique: true
     t.index ["room_id"], name: "index_brightspace_calendar_events_on_room_id"
-    t.index ["scheduled_meeting_id"], name: "index_brightspace_calendar_events_on_scheduled_meeting_id"
+    t.index ["scheduled_meeting_hash_id"], name: "index_brightspace_calendar_events_on_scheduled_meeting_hash_id"
   end
 
   create_table "consumer_config_brightspace_oauths", force: :cascade do |t|

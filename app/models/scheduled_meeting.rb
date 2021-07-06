@@ -9,7 +9,10 @@ class ScheduledMeeting < ApplicationRecord
   }.stringify_keys.freeze
 
   belongs_to :room
-  has_one :brightspace_calendar_event
+  has_one :brightspace_calendar_event,
+          primary_key: :hash_id,
+          foreign_key: :scheduled_meeting_hash_id,
+          inverse_of: :scheduled_meeting
 
   validates :room, presence: true
   validates :name, presence: true
