@@ -70,6 +70,8 @@ module BbbAppRooms
     config.launch_duration_mins =
       ENV["APP_LAUNCH_DURATION_MINS"].try(:to_i).try(:minutes) || 30.minutes
 
+    config.launch_days_to_delete = (ENV['LAUNCH_DAYS_TO_DELETE'] || 15).to_i
+
     config.log_level = ENV['LOG_LEVEL'] || :debug
 
     # Enable playback URL authentication through getRecordingToken
