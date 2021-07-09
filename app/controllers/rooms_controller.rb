@@ -160,7 +160,7 @@ class RoomsController < ApplicationController
 
     expires_at = Rails.configuration.launch_duration_mins.from_now
 
-    remove_old_app_launch
+    AppLaunch::remove_old_app_launches
 
     # Store the data from this launch for easier access
     app_launch = AppLaunch.find_or_create_by(nonce: launch_nonce) do |launch|
@@ -186,23 +186,5 @@ class RoomsController < ApplicationController
     set_room_session(
       @room, { launch: launch_nonce }
     )
-  end
-
-  # FIX ME
-  # Move to a worker in the future
-  def remove_old_app_launch
-    deleted_launches = 0
-    date_limit = Rails.configuration.launch_days_to_delete.days.ago
-    query_started = Time.now.utc
-    AppLaunch.where('expires_at < ?', date_limit).each do | expired_launch |
-      nonce = expired_launch.nonce
-      meeting = ScheduledMeeting.where(created_by_launch_nonce: nonce)
-      if meeting.empty?
-        deleted_launch = AppLaunch.find_by(nonce: nonce).delete
-        deleted_launches+= 1
-      end
-    end
-    query_duration = Time.now.utc - query_started
-    Rails.logger.info "Removing the old AppLaunches from before #{date_limit}, #{deleted_launches} AppLaunches deleted, in: #{query_duration} seconds"
   end
 end
