@@ -8,7 +8,10 @@ services:
         RAILS_ENV: development
     ports:
       - '3001:3000'
-    env_file: .env
+    env_file:
+      - ./.env
+      - ./.env.development
+      - ./.env.development.local
     stdin_open: true
     tty: true
     environment:
