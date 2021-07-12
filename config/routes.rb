@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  if ENV['SERVE_RAILS_ADMIN'] == true.to_s
+  if (ENV['SERVE_RAILS_ADMIN'] || false)
     mount RailsAdmin::Engine => '/dash', as: 'rails_admin'
   end
 
@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     mount ActionCable.server => Rails.configuration.action_cable.mount_path
   end
 
-  if ENV['SERVE_APPLICATION'] == true.to_s
+  if (ENV['SERVE_APPLICATION'] || true)
     scope ENV['RELATIVE_URL_ROOT'] || '' do
       scope 'rooms' do
         get '/health_check', to: 'health_check#all', default: { format: nil }
