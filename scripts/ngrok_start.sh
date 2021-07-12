@@ -72,7 +72,7 @@ start_ngrok() {
 
 update_ngrok_addresses() {
   file0="$lti_broker_path/.env"
-  file1="$app_rooms_path/.env"
+  file1="$app_rooms_path/.env.development"
 
   echo
   replace_key_value $file0 "URL_HOST" $address0 ${greenb}
