@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_06_140832) do
+
+ActiveRecord::Schema.define(version: 2021_07_14_174949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +24,7 @@ ActiveRecord::Schema.define(version: 2021_07_06_140832) do
     t.datetime "updated_at", precision: 6, null: false
     t.jsonb "omniauth_auth"
     t.string "room_handler"
+    t.index ["expires_at"], name: "index_app_launches_on_expires_at"
     t.index ["nonce"], name: "index_app_launches_on_nonce"
     t.index ["room_handler"], name: "index_app_launches_on_room_handler"
   end
@@ -64,8 +66,8 @@ ActiveRecord::Schema.define(version: 2021_07_06_140832) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "set_duration", default: false
-    t.boolean "download_presentation_video", default: true
     t.boolean "message_reference_terms_use", default: true
+    t.boolean "download_presentation_video", default: true
     t.index ["key"], name: "index_consumer_configs_on_key", unique: true
   end
 
