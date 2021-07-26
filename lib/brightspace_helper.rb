@@ -17,7 +17,7 @@ module BrightspaceHelper
         # is by destroying the link that generated the quicklink.
         # So, instead of updating the link, we destroy it, so it destroy the
         # quicklink as well, and then we create it again.
-        send_delete_link(app, scheduled_meeting)
+        send_delete_link(app, scheduled_meeting.hash_id)
       end
 
       # (re)create link
@@ -58,14 +58,14 @@ module BrightspaceHelper
       { event_id: calendar_event_data['CalendarEventId'],
         lti_link_id: lti_link_data['LtiLinkId'], }
     when :delete
-      scheduled_meeting_id = args[:scheduled_meeting_id]
+      scheduled_meeting_hash_id = args[:scheduled_meeting_hash_id]
       room = args[:room]
 
       # delete calendar entry
-      send_delete_calendar_entry(app, scheduled_meeting_id, room)
+      send_delete_calendar_entry(app, scheduled_meeting_hash_id, room)
 
       # delete link (and quicklink)
-      send_delete_link(app, scheduled_meeting_id)
+      send_delete_link(app, scheduled_meeting_hash_id)
     end
   rescue SendEventError => e
     raise SendCalendarEventError, e.message
@@ -80,10 +80,10 @@ module BrightspaceHelper
     send_event(:create, create_link_event)
   end
 
-  def send_delete_link(app, scheduled_meeting_id)
+  def send_delete_link(app, scheduled_meeting_hash_id)
     delete_link_event = build_event(:delete_link,
                                     app,
-                                    scheduled_meeting: scheduled_meeting_id)
+                                    scheduled_meeting_hash_id: scheduled_meeting_hash_id)
 
     send_event(:delete, delete_link_event)
   end
@@ -112,10 +112,10 @@ module BrightspaceHelper
     send_event(:update, create_calendar_event)
   end
 
-  def send_delete_calendar_entry(app, scheduled_meeting_id, room)
+  def send_delete_calendar_entry(app, scheduled_meeting_hash_id, room)
     delete_calendar_event = build_event(:delete_calendar_entry,
                                         app,
-                                        scheduled_meeting_id: scheduled_meeting_id,
+                                        scheduled_meeting_hash_id: scheduled_meeting_hash_id,
                                         room: room)
     send_event(:delete, delete_calendar_event)
   end
@@ -137,16 +137,16 @@ module BrightspaceHelper
     when :update_link
       scheduled_meeting = args[:scheduled_meeting]
 
-      event = BrightspaceCalendarEvent.find_by(scheduled_meeting_id: scheduled_meeting)
+      event = BrightspaceCalendarEvent.find_by(scheduled_meeting_hash_id: scheduled_meeting.hash_id)
       lti_link_id = event&.link_id
 
       url = build_link_url(:update, app, lti_link_id)
       payload = build_link_payload(scheduled_meeting)
       event = [url, payload.to_json, headers]
     when :delete_link
-      scheduled_meeting = args[:scheduled_meeting]
+      scheduled_meeting_hash_id = args[:scheduled_meeting_hash_id]
 
-      event = BrightspaceCalendarEvent.find_by(scheduled_meeting_id: scheduled_meeting)
+      event = BrightspaceCalendarEvent.find_by(scheduled_meeting_hash_id: scheduled_meeting_hash_id)
       lti_link_id = event&.link_id
 
       url = build_link_url(:delete, app, lti_link_id)
@@ -170,14 +170,14 @@ module BrightspaceHelper
       payload = build_calendar_payload(scheduled_meeting, quicklink_url)
       event = [url, payload.to_json, headers]
     when :delete_calendar_entry
-      scheduled_meeting_id = args[:scheduled_meeting_id]
+      scheduled_meeting_hash_id = args[:scheduled_meeting_hash_id]
       room = args[:room]
 
-      # Even though scheduled_meeting_id is unique, it's important to filter
+      # Even though scheduled_meeting_hash_id is unique, it's important to filter
       # by room_id, so an authorized person can't delete an event from another
       # room
       event = BrightspaceCalendarEvent.find_by(room_id: room,
-                                               scheduled_meeting_id: scheduled_meeting_id)
+                                               scheduled_meeting_hash_id: scheduled_meeting_hash_id)
       event_id = event&.event_id
       return nil unless event_id
 
