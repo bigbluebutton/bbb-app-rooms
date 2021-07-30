@@ -1,5 +1,30 @@
 # Change Log
 
+## 0.6.0 Elos - 2021-07-28
+
+* [LTI-10] Added theme Conferência Web.
+* [LTI-29] Added Rails Admin and environments for configure to application and/or rails admin.
+* [LTI-45] Automatically remove old `AppLaunches`. Removes all launches older than `LAUNCH_DAYS_TO_DELETE`
+  days. Defaults to 15.
+* [LTI-54] Added a new attribute to `ConsumerConfig` called `message_reference_terms_use` so that we can
+  display the terms of use reference message for unlogged in  users.
+* [LTI-71] Fixed the field `scheduled_meeting_id` in the `BrightspaceCalendar` for `scheduled_meeting_hash_id`
+  for delete `ScheduledMeetings`.
+
+Migration notes:
+
+* For use theme RNP, is necessary set `APP_THEME=rnp` in `.env`.
+* New environments variables `SERVE_APPLICATION`, `SERVE_RAILS_ADMIN`, `AUTHENTICATION_RAILS_ADMIN`,
+  `ADMIN_KEY` and `ADMIN_PASSWORD`, it is necessary to configure as needed for use application and/or rails admin.
+* New environments variables `LAUNCH_DAYS_TO_DELETE` and `LAUNCH_LIMIT_FOR_DELETE` to decide how old launches
+  have to be to be automatically removed and limit for delete in action. Defaults to `15` and `1000` (will
+  remove all launches from 15 or more days ago and not meeting associated).
+* New attribute `message_reference_terms_use` on `ConsumerConfig` to turn show/hide the reference message
+  for users non logged. It is set to `true` by default in the migration, must be set to false for the
+  clients that wish to hide the message.
+* New migrate for rename field `scheduled_meeting_id` in the `BrightspaceCalendar` for `scheduled_meeting_hash_id`.
+
+
 ## 0.5.1 Elos - 2021-06-25
 
 * [LTI-69] Fix the page of recordings that was breaking with "undefined method '[]' for nil:NilClass".
