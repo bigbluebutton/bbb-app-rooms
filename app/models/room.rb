@@ -25,7 +25,7 @@ class Room < ApplicationRecord
   end
 
   def params_for_get_recordings
-    { 'meta_bbb-room-handler': self.handler }
+    { meetingID: self.meeting_id, meetingIDWildcard: true }
   end
 
   def meeting_id
