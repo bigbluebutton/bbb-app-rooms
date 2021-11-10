@@ -109,6 +109,6 @@ gem 'omniauth-oauth2', '>= 1.6.0'
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
-gem 'activerecord-session_store'
+gem 'activerecord-session_store', '>= 2.0.0'
 
 gem 'coveralls', require: false
