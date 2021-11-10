@@ -60,7 +60,7 @@ jobs:
           push: true
           tags: |
             "${{ steps.ci_docker_repository.outputs.repository }}:${{ steps.ci_tag_release.outputs.tag }}"
-          build-args: "BUILD_NUMBER=${{ steps.ci_branch_name.outputs.branch }} (${{ steps.ci_commit_short_sha.outputs.short_sha }})"
+          build-args: "BUILD_NUMBER=${{ steps.ci_tag_release.outputs.tag }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 

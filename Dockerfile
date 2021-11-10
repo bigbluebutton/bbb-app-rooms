@@ -23,9 +23,10 @@ ENV BUNDLER_VERSION='2.1.4'
 RUN gem install bundler --no-document -v '2.1.4'
 RUN bundle config set without 'development test doc'
 RUN bundle install
+RUN yarn install
 
-RUN bundle update --bundler 2.1.4
 RUN gem update --system
+RUN SECRET_KEY_BASE=secret bundle exec rake assets:precompile
 
 EXPOSE 3000
 

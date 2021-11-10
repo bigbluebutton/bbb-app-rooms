@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.4'
+gem 'rails', '~> 6.0.4'
 # Include sqlite as the default database
 gem 'sqlite3', '~> 1.3'
 # Include postgres as the database for production
@@ -14,7 +14,7 @@ group :production do
   gem 'pg', '~> 1.0'
 end
 # Use Puma as the app server
-gem 'puma', '~> 3.12'
+gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -109,6 +109,6 @@ gem 'omniauth-oauth2', '>= 1.6.0'
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
 
-gem 'activerecord-session_store'
+gem 'activerecord-session_store', '>= 2.0.0'
 
 gem 'coveralls', require: false
