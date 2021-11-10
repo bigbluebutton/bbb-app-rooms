@@ -5,7 +5,7 @@
     "autocomplete": "0.0.1",
     "autoprefixer": "^10.0.2",
     "jquery": "^3.5.0",
-    "tailwindcss": "^2.0.1"
+    "tailwindcss": "^2.2.19"
   },
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
