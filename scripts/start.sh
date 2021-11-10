@@ -12,7 +12,7 @@ else
   bundle exec rake db:seed
 fi
 
-if [ "$RELATIVE_URL_ROOT" != "apps" ]; then
+if [ "$RELATIVE_URL_ROOT" != "apps" || "$ASSETS_PRECOMPILE" == "true" ]; then
   # Assets are precompiled on start because the root can change based on ENV["RELATIVE_URL_ROOT"]
   echo ">>> Precompile assets..."
   bundle exec rake assets:precompile --trace
