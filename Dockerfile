@@ -26,7 +26,6 @@ RUN bundle install
 RUN yarn install
 
 RUN gem update --system
-RUN SECRET_KEY_BASE=secret bundle exec rake assets:precompile
 
 EXPOSE 3000
 
