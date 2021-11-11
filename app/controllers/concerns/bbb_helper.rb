@@ -43,7 +43,9 @@ module BbbHelper
 
     create_meeting
     role = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators ? 'moderator' : 'viewer'
-    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role])
+    join_options = {}
+    join_options[:createTime] = meeting_info[:createTime]
+    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role], join_options)
   end
 
   # Create meeting for the current @room.
@@ -77,15 +79,22 @@ module BbbHelper
     info = { returncode: 'FAILED' }
     begin
       info = bbb.get_meeting_info(@room.handler, @user)
-    rescue BigBlueButton::BigBlueButtonException
-      logger.info('We could not find a meeting with that meeting ID')
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info(e.to_s)
     end
     info
   end
 
   # Checks if the meeting for current @room is running.
   def meeting_running?
-    bbb.is_meeting_running?(@room.handler)
+    begin
+      res = bbb.is_meeting_running?(@room.handler)
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info(e.to_s)
+      res = false
+    end
+
+    res
   end
 
   # Fetches all recordings for a room.
@@ -119,23 +128,38 @@ module BbbHelper
     recs
   end
 
+  def server_running?
+    begin
+      bbb.get_meeting_info(@room.handler, @user)
+    rescue BigBlueButton::BigBlueButtonException => e
+      logger.info('We could not find a meeting with that meeting ID')
+      return e.to_s
+    end
+
+    nil
+  end
+
   # Deletes a recording.
   def delete_recording(record_id)
+    Rails.cache.clear
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
+    Rails.cache.clear
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
+    Rails.cache.clear
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
+    Rails.cache.clear
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end

@@ -36,7 +36,7 @@
 
   <div class="field form-group input-group w-full pt-4">
     <%= form.label t('default.room.description') %>
-    <%= form.text_area :description, size: "45x4", class: 'form-control input' %>
+    <%= form.text_area :description, size: "45x8", class: 'form-control input' %>
   </div>
 
   <div class="field form-group input-group w-full">
@@ -48,26 +48,26 @@
   <%= form.hidden_field :viewer, value: @room.viewer %>
 
   <% if bigbluebutton_recording_enabled %>
-    <div class="field form-group input-group flex justify-center pt-4">
+    <div class="field form-group input-group pt-4">
       <%= form.check_box :recording %>&nbsp;
       <b><%= t('default.room.recording') %></b>&nbsp;
       <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
     </div>
   <% end %>
 
-  <div class="field form-group input-group flex justify-center">
+  <div class="field form-group input-group">
     <%= form.check_box :wait_moderator, id: 'wait_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.waitmoderator') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>"></i><br>
   </div>
 
-  <div class="field form-group input-group flex justify-center">
+  <div class="field form-group input-group">
     <%= form.check_box :all_moderators, id: 'all_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.allmoderators') %></b>&nbsp;
     <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>"></i><br>
   </div>
 
-  <div class="actions flex justify-center pt-6">
+  <div class="actions pt-6">
     <div>
     <%= form.submit t('default.room.update'), class: "btn btn-primary " %>
     <%= form.button t('default.room.cancel'), class: "btn btn-default", name: "cancel" %>

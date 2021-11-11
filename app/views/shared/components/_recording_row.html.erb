@@ -88,31 +88,31 @@
     
   <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
     <td class="p-0 text-left mx-6 mr-2 px-2 my-4">
-      <div class="item-action dropdown">
+      <div class="item-action dropdown place-items-center items-center">
         <a href="javascript:void(0)" data-toggle="dropdown" class="bg-white no-underline text-gray-700 hover:text-blue-700 hover:bg-white">
-          <i class="material-icons bg-white hover:text-blue-700">more_vert</i>
+          <i class="material-icons bg-white m-2 hover:text-blue-700">more_vert</i>
         </a>
         <div class="dropdown-content dropdown-menu dropdown-menu-right">
           <% if recording[:published] %>
-            <%= button_to recording_unpublish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
-              <i class="dropdown-icon fas fa-book"></i> <%= t("default.recording.action.unpublish") %>
+            <%= link_to recording_unpublish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "block px-4 pl-5 py-3  hover:bg-blue-700 hover:text-white font-sans text-xl hover:no-underline" do %>
+              <i class="dropdown-icon fas fa-book"></i>&nbsp; <%= t("default.recording.action.unpublish") %>
             <% end %>
           <% else %>
-            <%= button_to recording_publish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
-              <i class="dropdown-icon fas fa-book-open"></i> <%= t("default.recording.action.publish") %>
+            <%= link_to recording_publish_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "block px-4 pl-5 py-3  hover:bg-blue-700 hover:text-white font-sans text-xl hover:no-underline" do %>
+              <i class="dropdown-icon fas fa-book-open"></i>&nbsp; <%= t("default.recording.action.publish") %>
             <% end %>
           <% end %>
-          <%= button_to recording_delete_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
-            <i class="dropdown-icon fas fa-trash-alt"></i> <%= t("default.recording.action.delete") %>
+          <%= link_to recording_delete_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "block px-4 pl-5 py-3 hover:bg-blue-700 hover:text-white font-sans text-xl hover:no-underline" do %>
+            <i class="dropdown-icon fas fa-trash-alt"></i>&nbsp; <%= t("default.recording.action.delete") %>
           <% end %>
           <% if recording[:protected] != nil # check if protected field exists %>
             <% if recording[:protected] == "true" %>
-                <%= button_to recording_unprotect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
-                  <i class="dropdown-icon fas fa-unlock-alt"></i> <%= t("default.recording.action.unprotect") %>
+                <%= link_to recording_unprotect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "block px-4 pl-5 py-3 hover:bg-blue-700 hover:text-white font-sans text-xl hover:no-underline" do %>
+                  <i class="dropdown-icon fas fa-unlock-alt"></i>&nbsp; <%= t("default.recording.action.unprotect") %>
                 <% end %>
             <% else %>
-                <%= button_to recording_protect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "dropdown-item btn-block btn btn-default" do %>
-                  <i class="dropdown-icon fas fa-lock"></i> <%= t("default.recording.action.protect") %>
+                <%= link_to recording_protect_path(@room, :launch_nonce => @launch_nonce, record_id: recording[:recordID]), method: :post, class: "block px-4 pl-5 py-3 hover:bg-blue-700 hover:text-white font-sans text-xl hover:no-underline" do %>
+                  <i class="dropdown-icon fas fa-lock"></i>&nbsp; <%= t("default.recording.action.protect") %>
                 <% end %>
             <% end %>
           <% end %>

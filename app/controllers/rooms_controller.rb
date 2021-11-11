@@ -38,6 +38,14 @@ class RoomsController < ApplicationController
   def show
     respond_to do |format|
       if @room
+        begin
+          @recordings = recordings
+        rescue BigBlueButton::BigBlueButtonException => e
+          logger.error(e.to_s)
+          flash.now[:alert] = t('default.recording.server_down')
+          @recordings = []
+        end
+
         format.html { render(:show) }
         format.json { render(:show, status: :ok, location: @room) }
       else
@@ -75,6 +83,7 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
+        Rails.cache.clear # Clear cache to reflect updated room
         format.html { redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated')) }
         format.json { render(:show, status: :ok, location: @room) }
       else
@@ -180,8 +189,8 @@ class RoomsController < ApplicationController
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
   end
 
-  helper_method :recordings, :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,
-                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled
+  helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,
+                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?
 
   private
 
