@@ -18,6 +18,7 @@ pt:
       moderator:      "Moderador"
       viewer:         "Participante"
     room:
+      room:           "Sala"
       created:        "A sala foi criada com sucesso"
       edit:           "Editar"
       editing:        "Editando sala"
@@ -71,7 +72,7 @@ pt:
           video:        "Video"
           presentation: "Presentation"
           statistics:   "Statistics"
- 
+
   error:
     http:
       _401:

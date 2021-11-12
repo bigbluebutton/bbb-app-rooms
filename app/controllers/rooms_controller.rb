@@ -266,8 +266,8 @@ class RoomsController < ApplicationController
   end
 
   def launch_params_to_new_room_params(launch_params)
-    name = launch_params['resource_link_title']
-    description = launch_params['resource_link_description']
+    name = launch_params['resource_link_title'] || t('default.room.name')
+    description = launch_params['resource_link_description'] || ''
     record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
     wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
