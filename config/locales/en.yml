@@ -62,7 +62,7 @@ en:
       moderator:      "Moderator"
       viewer:         "Viewer"
     room:
-      name:           "Room"
+      room:           "Room"
       created:        "Room was successfully created."
       edit:           "Edit Room"
       show:           "Show"
