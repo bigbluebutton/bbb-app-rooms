@@ -408,7 +408,7 @@ DEPENDENCIES
   pagy
   pg (~> 1.0)
   puma (~> 4.3)
-  rails (>= 6.0.4.7)
+  rails (~> 6.0)
   rails-controller-testing
   redis (~> 4.2)
   remote_syslog_logger
