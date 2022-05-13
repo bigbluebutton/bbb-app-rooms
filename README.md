@@ -1,4 +1,4 @@
-<h1>  HOW TO LOCALLY DEPLOY THE ROOMS TOOL WITH THE LTI-BROKER </h1>
+<h1>How to deploy the Rooms Tool with the LTI Broker localy</h1>
 This is a tutorial for a local deployment of the rooms and broker apps as well as setting it up with moodle (or any other LMS). 
 
 ### Prerequisites:
