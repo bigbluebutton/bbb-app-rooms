@@ -103,8 +103,8 @@ gem 'material_icons'
 
 gem 'rest-client'
 
-gem 'omniauth', '>= 1.9.1'
-gem 'omniauth-oauth2', '>= 1.6.0'
+gem 'omniauth', '>= 2.0.0'
+gem 'omniauth-oauth2', '>= 1.7.1'
 
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
