@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "autocomplete": "0.0.1",
-    "autoprefixer": "^10.0.2",
+    "autoprefixer": "^10.4.5",
     "jquery": "^3.5.0",
     "tailwindcss": "^2.2.19"
   },
