@@ -31,7 +31,7 @@ RELATIVE_URL_ROOT=apps
 URL_HOST=lti.jesus.blindside-dev.com
 
 ## Use only with postgres instance outside the one pre-packaged with docker-compose (Optional)
-# DATABASE_URL=postgres://postgres:password@localhost
+# DATABASE_URL=postgres://myuser:mypass@localhost:5432/database_name
 
 ## Enable redis for actioncable (Optional)
 # REDIS_URL=redis://myuser:mypass@localhost
