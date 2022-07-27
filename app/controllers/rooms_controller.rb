@@ -228,10 +228,7 @@ class RoomsController < ApplicationController
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
-    if Rails.configuration.developer_mode_enabled
-      logger.debug('>>>>>>>>> Session Params:')
-      logger.debug(session_params.to_json)
-    end
+    logger.debug(session_params.to_json) if Rails.configuration.developer_mode_enabled
 
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
