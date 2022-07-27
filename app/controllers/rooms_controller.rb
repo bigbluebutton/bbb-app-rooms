@@ -106,7 +106,8 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce']))
+    redirector = room_path(@room.id, launch_nonce: params['launch_nonce'])
+    redirect_to(redirector)
   end
 
   # POST /rooms/:id/meeting/join
@@ -205,7 +206,8 @@ class RoomsController < ApplicationController
     # Assume user authenticated if session [params[launch_nonce]] is set
     return if session[@launch_nonce]
 
-    redirect_to(omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])) && return if params['action'] == 'launch'
+    redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    redirect_post(redirector, options: { authenticity_token: :auto }) && return if params['action'] == 'launch'
 
     redirect_to(errors_path(401))
   end
@@ -227,10 +229,7 @@ class RoomsController < ApplicationController
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
-    if Rails.configuration.developer_mode_enabled
-      logger.debug('>>>>>>>>> Session Params:')
-      logger.debug(session_params.to_json)
-    end
+    logger.debug(session_params.to_json) if Rails.configuration.developer_mode_enabled
 
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']

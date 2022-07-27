@@ -56,14 +56,14 @@ describe RoomsController, type: :controller do
   describe '#edit' do
     it 'gets the edit room' do
       get :edit, params: { id: @room.id }
-      expect(response). to(have_http_status(:success))
+      expect(response).to(have_http_status(:success))
     end
   end
 
   describe '#new' do
     it 'creates a new room' do
       get :new
-      expect(response). to(have_http_status(:success))
+      expect(response).to(have_http_status(:success))
     end
   end
 
@@ -88,7 +88,7 @@ describe RoomsController, type: :controller do
   describe '#meeting_end' do
     it 'should end the meeting' do
       post :meeting_end, params: { id: @room.id }
-      expect(response). to(have_http_status(:found))
+      expect(response).to(have_http_status(:found))
     end
   end
 end
