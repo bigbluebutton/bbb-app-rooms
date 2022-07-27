@@ -106,7 +106,8 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce']))
+    redirector = room_path(@room.id, launch_nonce: params['launch_nonce'])
+    redirect_to(redirector)
   end
 
   # POST /rooms/:id/meeting/join
@@ -204,8 +205,8 @@ class RoomsController < ApplicationController
     return unless omniauth_provider?(:bbbltibroker)
     # Assume user authenticated if session [params[launch_nonce]] is set
     return if session[@launch_nonce]
-
-    redirect_to(omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])) && return if params['action'] == 'launch'
+    redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    redirect_post(redirector, options: {authenticity_token: :auto}) && return if params['action'] == 'launch'
 
     redirect_to(errors_path(401))
   end

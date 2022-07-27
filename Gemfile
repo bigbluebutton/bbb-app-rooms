@@ -103,9 +103,9 @@ gem 'material_icons'
 
 gem 'rest-client'
 
-gem 'omniauth', '>= 1.9.1'
-gem 'omniauth-oauth2', '>= 1.6.0'
-gem 'omniauth-rails_csrf_protection', '~> 0.1.2'
+gem 'omniauth', '>= 2.1.0'
+gem 'omniauth-oauth2', '>= 1.7.2'
+gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'repost', '~> 0.3.8'
 
 gem 'minitest'
