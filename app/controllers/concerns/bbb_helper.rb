@@ -17,8 +17,7 @@ require 'bbb/credentials'
 
 module BbbHelper
   extend ActiveSupport::Concern
-  attr_writer :cache          # Rails.cache store is assumed.
-  attr_writer :cache_enabled  # Enabled by default.
+  attr_writer :cache, :cache_enabled # Rails.cache store is assumed.  # Enabled by default.
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
@@ -206,7 +205,7 @@ module BbbHelper
 
   # Helper for converting BigBlueButton dates into the desired format.
   def recording_date(date)
-    # note: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
+    # NOTE: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
     # .ordinalize does not work with other locales
     return date.strftime("%B #{date.day}, %Y.") unless I18n.locale.eql?(:en)
 
