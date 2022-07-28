@@ -62,5 +62,9 @@ module BbbAppRooms
     config.developer_mode_enabled = (ENV['DEVELOPER_MODE_ENABLED'] == 'true')
 
     config.generators.javascript_engine = :js
+
+    config.action_dispatch.default_headers = {
+      'X-Frame-Options' => 'ALLOWALL',
+    }
   end
 end
