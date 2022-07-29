@@ -47,15 +47,15 @@ Rails.application.routes.draw do
       end
 
       # Handles launches.
-      get 'launch', to: 'rooms#launch', as: :room_launch
+      post 'launch', to: 'rooms#launch', as: :room_launch
 
       # Handles sessions.
       get '/sessions/create'
       get '/sessions/failure'
 
       # Handles Omniauth authentication.
-      get '/auth/:provider', to: 'sessions#new', as: :omniauth_authorize
-      get '/auth/:provider/callback', to: 'sessions#create', as: :omniauth_callback
+      match '/auth/:provider', to: 'sessions#new', via: [:get, :post], as: :omniauth_authorize
+      match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post], as: :omniauth_callback
       get '/auth/failure', to: 'sessions#failure', as: :omniauth_failure
 
       # Handles errors.

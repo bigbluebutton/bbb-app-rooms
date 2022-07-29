@@ -21,9 +21,7 @@ require 'xmlsimple'
 
 module Bbb
   class Credentials
-    attr_writer :cache          # Rails.cache store is assumed.
-    attr_writer :cache_enabled  # Enabled by default.
-    attr_writer :multitenant_api_endpoint, :multitenant_api_secret
+    attr_writer :cache, :cache_enabled, :multitenant_api_endpoint, :multitenant_api_secret # Rails.cache store is assumed.  # Enabled by default.
 
     def initialize(endpoint, secret)
       # Set default credentials.
