@@ -1,4 +1,4 @@
-FROM ruby:2.7.5-alpine
+FROM ruby:3.1.2-slim-bullseye
 
 USER root
 
