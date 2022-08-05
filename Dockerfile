@@ -1,31 +1,59 @@
-FROM ruby:2.7.5-alpine
+FROM alpine:3.16 AS alpine
 
+FROM alpine AS base
+RUN apk add --no-cache \
+    libpq \
+    libxml2 \
+    libxslt \
+    libstdc++ \
+    ruby \
+    ruby-irb \
+    ruby-bigdecimal \
+    ruby-bundler \
+    ruby-json \
+    nodejs \
+    npm \
+    tini \
+    tzdata \
+    shared-mime-info
+WORKDIR /usr/src/app
+RUN ruby --version
+
+FROM base as builder
+RUN apk add --update --no-cache \
+    build-base \
+    libxml2-dev \
+    libxslt-dev \
+    pkgconf \
+    postgresql-dev \
+    sqlite-libs sqlite-dev \
+    ruby-dev \
+    yaml-dev \
+    zlib-dev \
+    curl-dev git \
+    nodejs yarn \
+    && ( echo 'install: --no-document' ; echo 'update: --no-document' ) >>/etc/gemrc
 USER root
+COPY Gemfile* ./
+RUN bundle config build.nokogiri --use-system-libraries \
+    && bundle install --deployment --without development:test -j4 \
+    && rm -rf vendor/bundle/ruby/*/cache \
+    && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
+RUN yarn install
+COPY . ./
 
-RUN apk update \
-&& apk upgrade \
-&& apk add --update --no-cache \
-build-base curl-dev git postgresql-dev sqlite-libs sqlite-dev \
-yaml-dev zlib-dev nodejs yarn shared-mime-info
+FROM base AS application
+USER root
+ARG RAILS_ENV
+ENV RAILS_ENV=${RAILS_ENV:-production}
+ARG RAILS_LOG_TO_STDOUT
+ENV RAILS_LOG_TO_STDOUT=${RAILS_LOG_TO_STDOUT:-true}
+COPY --from=builder /usr/src/app ./
 
 ARG BUILD_NUMBER
 ENV BUILD_NUMBER=${BUILD_NUMBER}
 
-ARG RAILS_ENV
-ENV RAILS_ENV=${RAILS_ENV:-production}
-
-ENV APP_HOME /usr/src/app
-RUN mkdir -p $APP_HOME
-COPY . $APP_HOME
-WORKDIR $APP_HOME
-
-ENV BUNDLER_VERSION='2.1.4'
-RUN gem install bundler --no-document -v '2.1.4'
-RUN bundle config set without 'development test doc'
-RUN bundle install
-RUN yarn install
-
-RUN gem update --system
+FROM application
 
 EXPOSE 3000
 
