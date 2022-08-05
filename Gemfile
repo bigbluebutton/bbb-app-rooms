@@ -7,12 +7,10 @@ git_source(:github) do |repo_name|
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1', '>= 6.1.6.1'
-# Include sqlite as the default database
-gem 'sqlite3', '~> 1.3'
-# Include postgres as the database for production
-group :production do
-  gem 'pg', '~> 1.0'
-end
+# Use sqlite3 as the database for Active Record
+# gem 'sqlite3', '~> 1.3'
+# Use postgres as the database for Active Record
+gem 'pg', '~> 1.0'
 # Use Puma as the app server
 gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets

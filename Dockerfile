@@ -1,4 +1,4 @@
-FROM alpine:3.16 AS alpine
+FROM alpine:3.15 AS alpine
 
 FROM alpine AS base
 RUN apk add --no-cache \
@@ -25,18 +25,23 @@ RUN apk add --update --no-cache \
     libxslt-dev \
     pkgconf \
     postgresql-dev \
-    sqlite-libs sqlite-dev \
     ruby-dev \
     yaml-dev \
     zlib-dev \
     curl-dev git \
-    nodejs yarn \
     && ( echo 'install: --no-document' ; echo 'update: --no-document' ) >>/etc/gemrc
+RUN apk add --update --no-cache \
+    nodejs yarn
+
 USER root
 COPY Gemfile* ./
 RUN bundle config build.nokogiri --use-system-libraries \
-    && bundle install -j4 \
-    && yarn install
+    && bundle config set --local deployment 'true' \
+    && bundle config set --local without 'development:test' \
+    && bundle install --without development:test -j4 \
+    && rm -rf vendor/bundle/ruby/*/cache \
+    && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
+RUN yarn install
 COPY . ./
 
 FROM base AS application
