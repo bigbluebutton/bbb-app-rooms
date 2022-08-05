@@ -17,7 +17,6 @@ RUN apk add --no-cache \
     tzdata \
     shared-mime-info
 WORKDIR /usr/src/app
-RUN ruby --version
 
 FROM base as builder
 RUN apk add --update --no-cache \
@@ -36,10 +35,8 @@ RUN apk add --update --no-cache \
 USER root
 COPY Gemfile* ./
 RUN bundle config build.nokogiri --use-system-libraries \
-    && bundle install --deployment --without development:test -j4 \
-    && rm -rf vendor/bundle/ruby/*/cache \
-    && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
-RUN yarn install
+    && bundle install -j4 \
+    && yarn install
 COPY . ./
 
 FROM base AS application
