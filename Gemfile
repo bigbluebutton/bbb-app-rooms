@@ -90,7 +90,7 @@ gem 'tzinfo-data'
 
 gem 'json'
 
-gem 'bigbluebutton-api-ruby', '~> 1.9.0'
+gem 'bigbluebutton-api-ruby', '~> 1.7.0'
 
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'font-awesome-rails'
