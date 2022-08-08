@@ -1,4 +1,4 @@
-FROM alpine:3.15 AS alpine
+FROM alpine:3.15.5 AS alpine
 
 FROM alpine AS base
 RUN apk add --no-cache \
@@ -11,8 +11,7 @@ RUN apk add --no-cache \
     ruby-bigdecimal \
     ruby-bundler \
     ruby-json \
-    nodejs \
-    npm \
+    nodejs npm yarn \
     tini \
     tzdata \
     shared-mime-info
@@ -30,19 +29,16 @@ RUN apk add --update --no-cache \
     zlib-dev \
     curl-dev git \
     && ( echo 'install: --no-document' ; echo 'update: --no-document' ) >>/etc/gemrc
-RUN apk add --update --no-cache \
-    nodejs yarn
 
 USER root
-COPY Gemfile* ./
+COPY . ./
 RUN bundle config build.nokogiri --use-system-libraries \
     && bundle config set --local deployment 'true' \
     && bundle config set --local without 'development:test' \
-    && bundle install --without development:test -j4 \
+    && bundle install -j4 \
     && rm -rf vendor/bundle/ruby/*/cache \
     && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
-RUN yarn install
-COPY . ./
+RUN yarn install --check-files
 
 FROM base AS application
 USER root
@@ -64,3 +60,4 @@ EXPOSE 3000
 
 # Run startup command
 CMD ["scripts/start.sh"]
+RUN SECRET_KEY_BASE=1 RAILS_ENV=production bundle exec rake assets:precompile

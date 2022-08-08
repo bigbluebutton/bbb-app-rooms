@@ -35,3 +35,4 @@
 .env
 public
 /coverage
+/config/credentials/production.key

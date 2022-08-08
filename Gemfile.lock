@@ -88,8 +88,6 @@ GEM
       rubyzip (>= 1.3.0)
       xml-simple (~> 1.1)
     bindex (0.8.1)
-    bootsnap (1.13.0)
-      msgpack (~> 1.2)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
@@ -127,6 +125,7 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     diff-lcs (1.5.0)
+    digest (3.1.0)
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -194,9 +193,14 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     minitest (5.16.2)
-    msgpack (1.5.4)
     multi_json (1.15.0)
     multi_xml (0.6.0)
+    net-protocol (0.1.3)
+      timeout
+    net-smtp (0.3.1)
+      digest
+      net-protocol
+      timeout
     netrc (0.11.0)
     nio4r (2.5.8)
     nokogiri (1.13.8-x86_64-linux)
@@ -361,6 +365,7 @@ GEM
       tins (~> 1.0)
     thor (1.2.1)
     tilt (2.0.11)
+    timeout (0.3.0)
     tins (1.31.1)
       sync
     turbolinks (5.2.1)
@@ -407,7 +412,6 @@ DEPENDENCIES
   action-cable-testing
   activerecord-session_store (>= 2.0.0)
   bigbluebutton-api-ruby (~> 1.9.0)
-  bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.4.1)
   byebug
   capybara
@@ -427,6 +431,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   material_icons
   minitest
+  net-smtp
   omniauth (>= 2.1.0)
   omniauth-bbbltibroker!
   omniauth-oauth2 (>= 1.7.2)
