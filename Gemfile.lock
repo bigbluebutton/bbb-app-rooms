@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/bigbluebutton/omniauth-bbbltibroker.git
-  revision: bd7d914cc0b05d3c68b0656e7e71b414c2b63913
+  revision: 89919e6f47bf8e7546f41ae7a1ce102370147dc0
+  tag: 0.1.3
   specs:
-    omniauth-bbbltibroker (0.1.2)
+    omniauth-bbbltibroker (0.1.3)
 
 GEM
   remote: http://rubygems.org/
