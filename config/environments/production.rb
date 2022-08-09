@@ -135,6 +135,11 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Allow this to work in an iframe on another domain
+  config.action_dispatch.default_headers = {
+    'X-Frame-Options' => 'ALLOWALL',
+  }
+
   config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : 'apps'}/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : 'apps'}/rooms/assets"
 end
