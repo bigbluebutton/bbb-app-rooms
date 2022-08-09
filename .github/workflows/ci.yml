@@ -1,5 +1,5 @@
 env:
-  RUBY_VERSION: 2.7.x
+  RUBY_VERSION: 3.0.x
   DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
 name: CI
@@ -32,7 +32,8 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Install Ruby ${{ env.RUBY_VERSION }}
         uses: actions/setup-ruby@v1
