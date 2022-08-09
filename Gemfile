@@ -82,6 +82,7 @@ group :test do
 end
 
 group :production do
+  gem 'lograge', '~> 0.11.2'
   gem 'remote_syslog_logger'
 end
 

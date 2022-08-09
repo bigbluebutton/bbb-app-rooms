@@ -66,7 +66,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = ENV['LOG_LEVEL'] || 'debug'
+  config.log_level = ENV['LOG_LEVEL'] || 'warn'
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
@@ -142,4 +142,7 @@ Rails.application.configure do
 
   config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms"
   config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/assets"
+
+  config.lograge.enabled = true
+  config.lograge.ignore_actions = ['HealthCheckController#all']
 end
