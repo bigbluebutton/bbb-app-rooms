@@ -100,8 +100,8 @@ Rails.application.configure do
 
   if ENV['RAILS_LOG_TO_STDOUT'] == 'true'
     # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
-    STDOUT.sync = true
-    logger = ActiveSupport::Logger.new(STDOUT)
+    $stdout.sync = true
+    logger = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   elsif ENV['RAILS_LOG_REMOTE_NAME'] && ENV['RAILS_LOG_REMOTE_PORT']
@@ -135,6 +135,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms"
-  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : ''}/rooms/assets"
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : ''}/rooms"
+  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : ''}/rooms/assets"
 end

@@ -177,9 +177,10 @@ class RoomsController < ApplicationController
 
   # POST /rooms/:id/recording/:record_id/update
   def recording_update
-    if params[:setting] == 'rename_recording'
+    case params[:setting]
+    when 'rename_recording'
       update_recording(params[:record_id], 'meta_name' => params[:record_name])
-    elsif params[:setting] == 'describe_recording'
+    when 'describe_recording'
       update_recording(params[:record_id], 'meta_description' => params[:record_description])
     end
   end
@@ -241,7 +242,7 @@ class RoomsController < ApplicationController
 
     # Continue through happy path.
     @tenant = session_params['tenant']
-    resource_handler = Digest::SHA1.hexdigest('rooms' + @tenant + launch_params['resource_link_id'])
+    resource_handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
     @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
       room.update(launch_params_to_new_room_params(launch_params))
     end
@@ -253,7 +254,7 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
   end
 
-  def new_room_params(name, description, recording = true, wait_moderator = false, all_moderators = false)
+  def new_room_params(name, description, recording: true, wait_moderator: false, all_moderators: false)
     params.permit.merge(
       name: name,
       description: description,
@@ -267,7 +268,7 @@ class RoomsController < ApplicationController
   def launch_params_to_new_room_params(launch_params)
     name = launch_params['resource_link_title'] || t('default.room.room')
     description = launch_params['resource_link_description'] || ''
-    record = launch_params['custom_params'].key?('custom_' + 'record') ? launch_params['custom_params']['custom_' + 'record'] : true
+    record = launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true
     wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
     new_room_params(name, description, record, wait_moderator, all_moderators)
@@ -286,7 +287,7 @@ class RoomsController < ApplicationController
   end
 
   def message_has_custom?(message, type)
-    message.key?('custom_params') && message['custom_params'].key?('custom_' + type) && message['custom_params']['custom_' + type] == 'true'
+    message.key?('custom_params') && message['custom_params'].key?("custom_#{type}") && message['custom_params']["custom_#{type}"] == 'true'
   end
 
   def check_for_cancel

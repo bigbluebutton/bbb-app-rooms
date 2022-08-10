@@ -72,7 +72,7 @@ module Bbb
 
       # Build the URI.
       uri = encoded_url(
-        @multitenant_api_endpoint + 'api/getUser',
+        "#{@multitenant_api_endpoint}api/getUser",
         @multitenant_api_secret,
         { name: tenant }
       )
@@ -112,7 +112,7 @@ module Bbb
 
     def encoded_url(endpoint, secret, params)
       encoded_params = params.to_param
-      string = 'getUser' + encoded_params + secret
+      string = "getUser#{encoded_params}#{secret}"
       checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
       URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
     end
