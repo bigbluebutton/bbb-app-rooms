@@ -5,7 +5,8 @@ env:
 name: Build Release
 on:
   release:
-    types: [released]
+    types:
+      - released
 
 jobs:
   main:
