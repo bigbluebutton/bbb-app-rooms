@@ -1,7 +1,8 @@
 name: Build Pre-Release
 on:
   release:
-    types: [prereleased]
+    types:
+      -prereleased
 
 jobs:
   main:
