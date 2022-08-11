@@ -215,7 +215,7 @@ GEM
     pagy (5.10.1)
       activesupport
     parallel (1.22.1)
-    parser (3.1.2.0)
+    parser (3.1.2.1)
       ast (~> 2.4.1)
     pg (1.4.2)
     public_suffix (4.0.7)
@@ -298,17 +298,17 @@ GEM
     rspec-support (3.11.0)
     rspec_junit_formatter (0.5.1)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (0.90.0)
+    rubocop (1.10.0)
       parallel (~> 1.10)
-      parser (>= 2.7.1.1)
+      parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 1.7)
+      regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 0.3.0, < 1.0)
+      rubocop-ast (>= 1.2.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.8.0)
-      parser (>= 2.7.1.5)
+      unicode-display_width (>= 1.4.0, < 3.0)
+    rubocop-ast (1.21.0)
+      parser (>= 3.1.1.0)
     rubocop-rails (2.4.2)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
@@ -371,7 +371,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (1.8.0)
+    unicode-display_width (2.2.0)
     version_gem (1.1.0)
     web-console (4.2.0)
       actionview (>= 6.0.0)
@@ -440,7 +440,7 @@ DEPENDENCIES
   rspec
   rspec-rails (~> 4.0.1)
   rspec_junit_formatter
-  rubocop (~> 0.90.0)
+  rubocop (~> 1.10.0)
   rubocop-rails (~> 2.4.0)
   sass-rails (~> 5.1, >= 5.1.0)
   selenium-webdriver
@@ -456,4 +456,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.19
+   2.3.20
