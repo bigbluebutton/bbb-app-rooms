@@ -1,9 +1,7 @@
 name: Build Push
 on:
   push:
-    branches-ignore:
-      - master
-      - snyk*
+    branches-ignore: [snyk*]
 
 jobs:
   main:
