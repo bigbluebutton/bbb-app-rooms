@@ -19,6 +19,8 @@ module BbbHelper
   extend ActiveSupport::Concern
   attr_writer :cache, :cache_enabled # Rails.cache store is assumed.  # Enabled by default.
 
+  RECORDINGS_KEY = :recordings
+
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
@@ -99,33 +101,26 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
-    cached_rec = Rails.cache.fetch("#{@room.handler}/#{__method__}")
-    return cached_rec unless cached_rec.nil?
+    Rails.cache.fetch("#{@room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) do
+      res = bbb.get_recordings(meetingID: @room.handler)
 
-    res = bbb.get_recordings(meetingID: @room.handler)
+      # Format playbacks in a more pleasant way.
+      res[:recordings].each do |r|
+        next if r.key?(:error)
 
-    # Format playbacks in a more pleasant way.
-    res[:recordings].each do |r|
-      next if r.key?(:error)
+        r[:playbacks] = if !r[:playback] || !r[:playback][:format]
+                          []
+                        elsif r[:playback][:format].is_a?(Array)
+                          r[:playback][:format]
+                        else
+                          [r[:playback][:format]]
+                        end
 
-      r[:playbacks] = if !r[:playback] || !r[:playback][:format]
-                        []
-                      elsif r[:playback][:format].is_a?(Array)
-                        r[:playback][:format]
-                      else
-                        [r[:playback][:format]]
-                      end
+        r.delete(:playback)
+      end
 
-      r.delete(:playback)
+      res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
     end
-
-    recs = res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
-
-    Rails.cache.fetch("#{@room.handler}/#{__method__}", expires_in: 30.minutes) do
-      recs
-    end
-
-    recs
   end
 
   def server_running?
@@ -141,25 +136,25 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
-    Rails.cache.clear
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
-    Rails.cache.clear
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
-    Rails.cache.clear
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
-    Rails.cache.clear
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end
@@ -168,16 +163,9 @@ module BbbHelper
   def wait_for_mod?
     return unless @room && @user
 
-    cached_wait = Rails.cache.fetch("#{@room.handler}/#{__method__}")
-    return cached_wait unless cached_wait.nil?
-
-    wait = @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
-
-    Rails.cache.fetch("#{@room.handler}/#{__method__}", expires_in: 5.minutes) do
-      wait
+    Rails.cache.fetch("#{@room.handler}/#{__method__}") do
+      @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
     end
-
-    wait
   end
 
   # Return the number of participants in a meeting for the current room.
