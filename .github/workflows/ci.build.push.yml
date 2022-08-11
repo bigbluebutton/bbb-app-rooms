@@ -1,12 +1,7 @@
-env:
-  RUBY_VERSION: 3.0.x
-
-
 name: Build Push
 on:
   push:
-    branches-ignore:
-      - master
+    branches-ignore: master
 
 jobs:
   main:
@@ -20,7 +15,7 @@ jobs:
     steps:
       - name: Checkout
         if: contains(env.DOCKER_BUILD_ENABLED, 'true')
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
         if: contains(env.DOCKER_BUILD_ENABLED, 'true')
