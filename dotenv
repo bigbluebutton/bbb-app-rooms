@@ -7,7 +7,7 @@
 #
 SECRET_KEY_BASE=secret
 
-RELATIVE_URL_ROOT=apps
+# RELATIVE_URL_ROOT=apps
 
 ## BigBlueButton configuration (Required)
 # BIGBLUEBUTTON_ENDPOINT=http://test-install.blindsidenetworks.com/bigbluebutton/
@@ -22,8 +22,8 @@ RELATIVE_URL_ROOT=apps
 # For assing new applications in the broker run:
 # rake db:apps:add[name,redirect_uri,uid,secret,root] as in
 # rake db:apps:add[rooms,https://lti.jesus.blindside-dev.com/apps/rooms/auth/bbbltibroker/callback,b21211c29d27,3590e00d7ebd]
-# OMNIAUTH_BBBLTIBROKER_SITE=http://localhost
 # OMNIAUTH_BBBLTIBROKER_ROOT=lti
+# OMNIAUTH_BBBLTIBROKER_SITE=http://localhost
 # OMNIAUTH_BBBLTIBROKER_KEY=b21211c29d27
 # OMNIAUTH_BBBLTIBROKER_SECRET=3590e00d7ebd
 
