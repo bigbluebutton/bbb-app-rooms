@@ -36,14 +36,10 @@ URL_HOST=lti.jesus.blindside-dev.com
 ## Enable redis for actioncable (Optional)
 # REDIS_URL=redis://myuser:mypass@localhost
 
-## Use to send logs to Standard Output (Optional)
-RAILS_LOG_TO_STDOUT=true
-
 ## Use to send logs to external repository (Optional)
 # RAILS_LOG_REMOTE_NAME=xxx.papertrailapp.com
 # RAILS_LOG_REMOTE_PORT=99999
 # RAILS_LOG_REMOTE_TAG=bbb-lti-broker
-# RAILS_LOG_TO_STDOUT=false
 
 # DEVELOPER_MODE_ENABLED=true
 
