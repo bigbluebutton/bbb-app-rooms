@@ -15,7 +15,7 @@
 
 # Pre-set omniauth variables based on ENV
 Rails.configuration.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || ''
-Rails.configuration.omniauth_root = (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s || ''
+Rails.configuration.omniauth_root = "/#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] || 'lti'}"
 Rails.configuration.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
 Rails.configuration.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
 

@@ -37,7 +37,7 @@ module RoomsHelper
   end
 
   def add_zero_maybe(num)
-    num = '0' + num.to_s if num < 10
+    num = "0#{num}" if num < 10
 
     num
   end
