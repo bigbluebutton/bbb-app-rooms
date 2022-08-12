@@ -470,6 +470,3 @@ DEPENDENCIES
   web-console (>= 4.0.4)
   webdrivers
   webmock
-
-BUNDLED WITH
-   2.3.20
