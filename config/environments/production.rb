@@ -66,7 +66,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = ENV['LOG_LEVEL'] || 'debug'
+  config.log_level = ENV['LOG_LEVEL'] || 'warn'
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
@@ -98,20 +98,18 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV['RAILS_LOG_TO_STDOUT'] == 'true'
-    # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
-    $stdout.sync = true
-    logger = ActiveSupport::Logger.new($stdout)
-    logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
-  elsif ENV['RAILS_LOG_REMOTE_NAME'] && ENV['RAILS_LOG_REMOTE_PORT']
+  # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
+  STDOUT.sync = true
+  logger = ActiveSupport::Logger.new(STDOUT)
+
+  if ENV['RAILS_LOG_REMOTE_NAME'] && ENV['RAILS_LOG_REMOTE_PORT']
     require 'remote_syslog_logger'
     logger_program = ENV['RAILS_LOG_REMOTE_TAG'] || "bbb-lti-broker-#{ENV['RAILS_ENV']}"
     logger = RemoteSyslogLogger.new(ENV['RAILS_LOG_REMOTE_NAME'],
                                     ENV['RAILS_LOG_REMOTE_PORT'], program: logger_program)
-    logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # configure redis for ActionCable
   config.cache_store = if ENV['REDIS_URL'].present?
@@ -135,6 +133,14 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : ''}/rooms"
-  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : ''}/rooms/assets"
+  # Allow this to work in an iframe on another domain
+  config.action_dispatch.default_headers = {
+    'X-Frame-Options' => 'ALLOWALL',
+  }
+
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms"
+  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/assets"
+
+  config.lograge.enabled = true
+  config.lograge.ignore_actions = ['HealthCheckController#all']
 end

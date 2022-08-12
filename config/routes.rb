@@ -21,9 +21,9 @@ Rails.application.routes.draw do
   get '/healthz', to: 'health_check#all'
   root to: 'health_check#all'
 
-  mount ActionCable.server => "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : ''}/rooms/cable"
+  mount ActionCable.server => "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/cable"
 
-  scope ENV['RELATIVE_URL_ROOT'] || '' do
+  scope ENV['RELATIVE_URL_ROOT'] || 'apps' do
     scope 'rooms' do
       get '/health_check', to: 'health_check#all'
       get '/healthz', to: 'health_check#all'

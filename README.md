@@ -1,8 +1,8 @@
 <h1>How to deploy the Rooms Tool with the LTI Broker localy</h1>
-This is a tutorial for a local deployment of the rooms and broker apps as well as setting it up with moodle (or any other LMS). 
+This is a tutorial for a local deployment of the rooms and broker apps as well as setting it up with moodle (or any other LMS).
 
 ### Prerequisites:
-- Install [nginx](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/#prebuilt_ubuntu) and [postgresql](https://computingforgeeks.com/install-postgresql-11-on-ubuntu-linux/) on your machine 
+- Install [nginx](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/#prebuilt_ubuntu) and [postgresql](https://computingforgeeks.com/install-postgresql-11-on-ubuntu-linux/) on your machine
 - Install [ruby on rails](https://gorails.com/setup/ubuntu/16.04)
 - [Set up a domain](https://github.com/jfederico/bbb-lti-run#preliminary-steps)
 - [Install moodle](https://docs.moodle.org/39/en/Step-by-step_Installation_Guide_for_Ubuntu) (I did this in a separate lxc container) or any other LMS
@@ -46,9 +46,6 @@ OMNIAUTH_BBBLTIBROKER_SECRET=<choose a secret>
 ## Set the hostname using your own domain (Required)
 URL_HOST=lti.<JOHN>.blindside-dev.com
 
-## Use to send logs to Standard Output (Optional)
-RAILS_LOG_TO_STDOUT=true
-
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true
 
@@ -88,9 +85,6 @@ URL_HOST=lti.<JOHN>.blindside-dev.com
 ## Use only with postgres instance outside the one pre-packaged with docker-compose (Optional)
 # DATABASE_URL=postgres://postgres:password@localhost
 
-## Use to send logs to Standard Output (Optional)
-RAILS_LOG_TO_STDOUT=true
-
 ## Use to serve assets through the app (Required for now)
 RAILS_SERVE_STATIC_FILES=true
 
@@ -105,7 +99,7 @@ RAILS_SERVE_STATIC_FILES=true
     `$ rake db:keys:add[<key>:<secret>]`
 
 ### NGINX Configuration
-6. Configure nginx. 
+6. Configure nginx.
     - Edit the conf file for nginx: <br>
     `$ sudo vim /etc/nginx/conf.d/default.conf`
     - Replace the contents using [this template](https://github.com/jfederico/bbb-lti-run/blob/master/nginx/.sites.template.local) <br>
@@ -113,12 +107,12 @@ RAILS_SERVE_STATIC_FILES=true
 
 ### Adding the tool to an LMS
 
-7. Run both applications: 
+7. Run both applications:
     - From the bbb-app-rooms directory, run `$ rails s -b 0.0.0.0 -p 3012` <br>
     - From the bbb-lti-broker directory, run `$ rails s -b 0.0.0.0 -p 3011` <br>
 
-8. In your browser, go to lti.\<JOHN>.blindside-dev.com\lti 
+8. In your browser, go to lti.\<JOHN>.blindside-dev.com\lti
 
-9. Click on 'View LTI Configuration XML'. It'll take to you a page with the following URL: https://lti.\<JOHN>.blindside-dev.com/lti/default/xml_config. Replace the 'default' with 'rooms' and refresh the page/press enter. 
+9. Click on 'View LTI Configuration XML'. It'll take to you a page with the following URL: https://lti.\<JOHN>.blindside-dev.com/lti/default/xml_config. Replace the 'default' with 'rooms' and refresh the page/press enter.
 
 10. Copy the secure_launch_url. This is the url that you will use when adding the plugin in your lms. The consumer_key and shared_secret are the same as the ones set in the rooms env. variables (as OMNIAUTH_BBBLTIBROKER_KEY and OMNIAUTH_BBBLTIBROKER_SECRET)  

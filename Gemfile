@@ -6,13 +6,11 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.5'
-# Include sqlite as the default database
-gem 'sqlite3', '~> 1.3'
-# Include postgres as the database for production
-group :production do
-  gem 'pg', '~> 1.0'
-end
+gem 'rails', '~> 6.1', '>= 6.1.6.1'
+# Use sqlite3 as the database for Active Record
+# gem 'sqlite3', '~> 1.3'
+# Use postgres as the database for Active Record
+gem 'pg', '~> 1.0'
 # Use Puma as the app server
 gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
@@ -27,7 +25,7 @@ gem 'coffee-rails', '~> 5.0', '>= 5.0.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.10', '>= 2.10.1'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.2'
 # Use ActiveModel has_secure_password
@@ -40,7 +38,7 @@ gem 'redis', '~> 4.2'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+# gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'sprockets', '< 4.0.0'
 
@@ -56,7 +54,11 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 4.0.1'
+<<<<<<< HEAD
   gem 'rubocop', '~> 1.10.0', require: false
+=======
+  gem 'rubocop', '~> 0.90.0', require: false
+>>>>>>> 3c43318b4185b4386781152c6eeb21211c37ac02
   gem 'rubocop-rails', '~> 2.4.0', require: false
 end
 
@@ -84,6 +86,7 @@ group :test do
 end
 
 group :production do
+  gem 'lograge', '~> 0.11.2'
   gem 'remote_syslog_logger'
 end
 
@@ -92,7 +95,7 @@ gem 'tzinfo-data'
 
 gem 'json'
 
-gem 'bigbluebutton-api-ruby', '~> 1.7.0'
+gem 'bigbluebutton-api-ruby', '~> 1.9.0'
 
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'font-awesome-rails'
@@ -109,8 +112,9 @@ gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'repost', '~> 0.3.8'
 
 gem 'minitest'
-gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.3'
 
 gem 'activerecord-session_store', '>= 2.0.0'
 
 gem 'coveralls', require: false
+gem 'net-smtp'
