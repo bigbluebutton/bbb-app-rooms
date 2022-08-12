@@ -83,7 +83,6 @@ class RoomsController < ApplicationController
   def update
     respond_to do |format|
       if @room.update(room_params)
-        Rails.cache.clear # Clear cache to reflect updated room
         format.html { redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated')) }
         format.json { render(:show, status: :ok, location: @room) }
       else
