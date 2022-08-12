@@ -43,16 +43,19 @@ module BbbAppRooms
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
     config.bigbluebutton_recording_public_formats = ENV['BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS'] || 'presentation'
 
-    config.omniauth_path_prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/auth"
-    config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE'] || 'http://localhost:3000'
-    config.omniauth_root = (ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] ? '/' + ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] : '').to_s
-    config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
-    config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
+    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT'] || 'apps'}/rooms"
+    config.assets.prefix = "#{config.relative_url_root}/assets"
+
+    config.omniauth_path_prefix = "#{config.relative_url_root}/auth"
+    config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE']
+    config.omniauth_root = "/#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] || 'lti'}"
+    config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
+    config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET']
 
     config.bigbluebutton_recording_enabled = ENV['BIGBLUEBUTTON_RECORDING_ENABLED'] || true
 
     # Mount Action Cable outside main process or domain
-    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/cable"
+    config.action_cable.url = "wss://#{config.relative_url_root}/cable"
 
     # Settings for external services.
     config.cache_enabled = ENV['CACHE_ENABLED'] || true
@@ -63,6 +66,7 @@ module BbbAppRooms
 
     config.generators.javascript_engine = :js
 
+    # Allow this to work in an iframe on another domain
     config.action_dispatch.default_headers = {
       'X-Frame-Options' => 'ALLOWALL',
     }
