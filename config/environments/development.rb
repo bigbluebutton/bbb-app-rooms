@@ -87,8 +87,8 @@ Rails.application.configure do
     'X-Frame-Options' => 'ALLOWALL',
   }
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms"
-  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/assets"
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : '/apps'}/rooms"
+  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : '/apps'}/rooms/assets"
 
   config.web_console.whiny_requests = false
 end

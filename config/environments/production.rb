@@ -99,8 +99,8 @@ Rails.application.configure do
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
-  STDOUT.sync = true
-  logger = ActiveSupport::Logger.new(STDOUT)
+  $stdout.sync = true
+  logger = ActiveSupport::Logger.new($stdout)
 
   if ENV['RAILS_LOG_REMOTE_NAME'] && ENV['RAILS_LOG_REMOTE_PORT']
     require 'remote_syslog_logger'
@@ -138,8 +138,8 @@ Rails.application.configure do
     'X-Frame-Options' => 'ALLOWALL',
   }
 
-  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms"
-  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? '/' + ENV['RELATIVE_URL_ROOT'] : '/apps'}/rooms/assets"
+  config.relative_url_root = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : '/apps'}/rooms"
+  config.assets.prefix = "#{ENV['RELATIVE_URL_ROOT'] ? "/#{ENV['RELATIVE_URL_ROOT']}" : '/apps'}/rooms/assets"
 
   config.lograge.enabled = true
   config.lograge.ignore_actions = ['HealthCheckController#all']
