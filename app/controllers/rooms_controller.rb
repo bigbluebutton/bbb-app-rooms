@@ -253,14 +253,14 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators)
   end
 
-  def new_room_params(name, description, recording: true, wait_moderator: false, all_moderators: false)
+  def new_room_params(name, description, recording, wait_moderator, all_moderators)
     params.permit.merge(
       name: name,
       description: description,
       welcome: '',
-      recording: recording,
-      wait_moderator: wait_moderator,
-      all_moderators: all_moderators
+      recording: recording || true,
+      wait_moderator: wait_moderator || false,
+      all_moderators: all_moderators || false
     )
   end
 
