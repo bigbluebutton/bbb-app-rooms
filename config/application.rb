@@ -52,17 +52,17 @@ module BbbAppRooms
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
     config.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET']
 
-    config.bigbluebutton_recording_enabled = ENV['BIGBLUEBUTTON_RECORDING_ENABLED'] || true
+    config.bigbluebutton_recording_enabled = ENV.fetch('BIGBLUEBUTTON_RECORDING_ENABLED', 'true').casecmp?('true')
 
     # Mount Action Cable outside main process or domain
     config.action_cable.url = "wss://#{config.relative_url_root}/cable"
 
     # Settings for external services.
-    config.cache_enabled = ENV['CACHE_ENABLED'] || true
+    config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')
     config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
     config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
 
-    config.developer_mode_enabled = (ENV['DEVELOPER_MODE_ENABLED'] == 'true')
+    config.developer_mode_enabled = ENV.fetch('DEVELOPER_MODE_ENABLED', 'false').casecmp?('true')
 
     config.generators.javascript_engine = :js
 
