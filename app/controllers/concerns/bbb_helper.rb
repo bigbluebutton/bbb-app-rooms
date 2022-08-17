@@ -102,26 +102,9 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
-    Rails.cache.fetch("#{@room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) do
-      res = bbb.get_recordings(meetingID: @room.handler)
-
-      # Format playbacks in a more pleasant way.
-      res[:recordings].each do |r|
-        next if r.key?(:error)
-
-        r[:playbacks] = if !r[:playback] || !r[:playback][:format]
-                          []
-                        elsif r[:playback][:format].is_a?(Array)
-                          r[:playback][:format]
-                        else
-                          [r[:playback][:format]]
-                        end
-
-        r.delete(:playback)
-      end
-
-      res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
-    end
+    res = Rails.cache.fetch("#{@room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) if Rails.configuration.cache_enabled
+    res ||= bbb.get_recordings(meetingID: @room.handler)
+    recordings_formatted(res)
   end
 
   def server_running?
@@ -137,25 +120,25 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}")
+    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end
@@ -233,5 +216,23 @@ module BbbHelper
   # Removes trailing forward slash from a URL.
   def remove_slash(str)
     str.nil? ? nil : str.chomp('/')
+  end
+
+  # Format playbacks in a more pleasant way.
+  def recordings_formatted(res)
+    res[:recordings].each do |r|
+      next if r.key?(:error)
+
+      r[:playbacks] = if !r[:playback] || !r[:playback][:format]
+                        []
+                      elsif r[:playback][:format].is_a?(Array)
+                        r[:playback][:format]
+                      else
+                        [r[:playback][:format]]
+                      end
+
+      r.delete(:playback)
+    end
+    res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
   end
 end
