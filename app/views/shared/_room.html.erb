@@ -12,22 +12,32 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
-  <div class="row mt-10 mb-0">
+  <div class="">
       <% unless flash.alert.nil?%>
-        <div class="alert bg-red-100 mb-0 show fade in" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+      <!-- error -->
+      <div id="alert-3" class="flex p-4 mb-4 bg-red-100 rounded-lg dark:bg-red-200" role="alert">
+        <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5 text-green-700 dark:text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Info</span>
+        <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
           <%= flash.alert %>
         </div>
-      <% end %> 
-      <% unless notice == nil %>
-      <div class="alert alert-info show fade in" role="alert">
-        <%= notice %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-red-100 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 dark:bg-red-200 dark:text-red-600 dark:hover:bg-red-300" data-dismiss-target="#alert-3" aria-label="Close">
+          <span class="sr-only">Close</span>
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
         </button>
       </div>
+      <% end %> 
+      <!-- success -->
+      <% unless notice == nil %>
+        <div id="alert-3" class="flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200" role="alert">
+          <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
+          <%= notice %>
+            </div>
+          <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-green-200 dark:text-green-600 dark:hover:bg-green-300" data-dismiss-target="#alert-3" aria-label="Close">
+            <span class="sr-only">Close</span>
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
       <% end %>
   </div>
 
@@ -46,12 +56,12 @@
   <% end %>
 
 <!-- Row 1: Meeting info and edit link -->
-  <div class="row">
+  <div class="">
     <div class="pt-16 font-sans flex justify-between flex-row-reverse">  
       <!-- Link to edit -->
       <div>
         <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-          <%= link_to t('default.room.edit'), edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "text-blue-600 font-semibold text-xl font-sans hover:text-white hover:bg-blue-400 " %>
+          <%= link_to t('default.room.edit'), edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "text-bbb-blue font-semibold text-xl font-sans hover:text-white hover:bg-blue-400 " %>
         <% end %>
       </div>
 
@@ -59,7 +69,7 @@
       <div class="flex items-start text-green-700" style = "<%= visible %>" id = "meeting-info-msg">
         <div class="flex rounded-full bg-green-200 py-1 px-3">
           <div class="mr-2 animate-pulse ">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-live-photo" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="icon icon-tabler icon-tabler-live-photo" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
               <circle cx="12" cy="12" r="1" />
               <circle cx="12" cy="12" r="5" />
@@ -91,7 +101,7 @@
 
 
   <!-- Row 2: Room name and join, end buttons -->
-  <div class="row">
+  <div class="">
     <div class="flex justify-between items-center pt-2 font-sans">
         <div class="flex justify-start items-center">
           <p class="text-6xl font-sans inline-block font-light"><%= @room.name %></p>  
@@ -100,7 +110,7 @@
         <div class="flex justify-end"> 
           <div>
             <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
-                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center px-6 py-3 w-50 mb-0 btn btn-primary bg-blue-600", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-6 py-3 w-50 mb-0 bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
             <% end %> 
           </div>
           <div>
@@ -118,7 +128,7 @@
   </div> 
 
   <!-- Row 3: Room description -->
-  <div class="row pt-3 pb-5">
+  <div class=" pt-3 pb-5">
     <p class= "leading-loose text-xl w-1/2"><%= @room.description %></p>
   </div>
 

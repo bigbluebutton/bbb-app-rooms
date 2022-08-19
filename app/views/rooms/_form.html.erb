@@ -51,26 +51,41 @@
     <div class="field form-group input-group pt-4">
       <%= form.check_box :recording %>&nbsp;
       <b><%= t('default.room.recording') %></b>&nbsp;
-      <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>"></i><br>
+      <i data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>">
+       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+        </svg>
+      </i>
+      <br>
     </div>
   <% end %>
 
   <div class="field form-group input-group">
     <%= form.check_box :wait_moderator, id: 'wait_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.waitmoderator') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>"></i><br>
+     <i data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>">
+       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+        </svg>
+      </i>
+    <br>
   </div>
 
   <div class="field form-group input-group">
     <%= form.check_box :all_moderators, id: 'all_mod_checkbox' %>&nbsp;
     <b><%= t('default.room.allmoderators') %></b>&nbsp;
-    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>"></i><br>
+     <i data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>">
+       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+        </svg>
+      </i>
+    <br>
   </div>
 
   <div class="actions pt-6">
-    <div>
-    <%= form.submit t('default.room.update'), class: "btn btn-primary " %>
-    <%= form.button t('default.room.cancel'), class: "btn btn-default", name: "cancel" %>
+    <div class = "flex-row">
+    <%= form.submit t('default.room.update'), class: "btn-primary m-1 ml-0" %>
+    <%= form.button t('default.room.cancel'), class: "btn-secondary m-1", name: "cancel" %>
   </div>
   </div>
 <% end %>

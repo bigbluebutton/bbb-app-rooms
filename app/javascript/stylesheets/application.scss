@@ -16,6 +16,9 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-//= link_tree ../images
-//= link_directory ../javascripts .js
-//= link_directory ../stylesheets .css
+@import 'rooms';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import 'scaffolds.scss';
+@import 'tailwind';
