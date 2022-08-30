@@ -110,14 +110,14 @@
         <div class="flex justify-end"> 
           <div>
             <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
-                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-6 py-3 w-50 mb-0 bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-6 py-3 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
             <% end %> 
           </div>
           <div>
             <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
               <%= button_tag t('default.room.endmeeting'), 
                   type: 'button', 
-                  class: "font-sans text-center w-50 px-6 py-3 mb-0 ml-3 btn border-red-600 text-red-600 hover:bg-red-600 hover:text-white", 
+                  class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-6 py-3 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
                   id: 'end-meeting-btn', 
                   style: visible,
                   data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>

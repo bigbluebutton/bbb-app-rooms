@@ -15,6 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public License along
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
+
 $(document).on('turbolinks:load', function(){
     var room = window.location.pathname.split('/')[3];
    
