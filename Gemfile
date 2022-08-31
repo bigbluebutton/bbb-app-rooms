@@ -102,4 +102,4 @@ gem 'activerecord-session_store', '>= 2.0.0'
 
 gem 'coveralls', require: false
 gem 'net-smtp'
-gem 'webpacker', '~> 5.4.0'
+gem 'webpacker', '~> 6.0.0.rc.5'
