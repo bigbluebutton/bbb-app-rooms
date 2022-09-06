@@ -23,9 +23,4 @@ module.exports = {
             jQuery: 'jquery/src/jquery'
         })
     ],
-    // Eliminate CORS issue
-    // devServer: {
-    //     host: 'localhost',
-    //     port: 3000
-    // }
 }
