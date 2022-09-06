@@ -55,7 +55,8 @@ module BbbAppRooms
     config.bigbluebutton_recording_enabled = ENV.fetch('BIGBLUEBUTTON_RECORDING_ENABLED', 'true').casecmp?('true')
 
     # Mount Action Cable outside main process or domain
-    config.action_cable.url = "wss://#{config.relative_url_root}/cable"
+    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{config.relative_url_root}/cable"
+    config.action_cable.mount_path = "#{config.relative_url_root}/cable"
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')

@@ -20,8 +20,6 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
-# Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 5.0', '>= 5.0.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -40,10 +38,7 @@ gem 'redis', '~> 4.2'
 # Reduces boot times through caching; required in config/boot.rb
 # gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'sprockets', '< 4.0.0'
-
 # Front-end.
-gem 'font-awesome-sass', '~> 5.9.0'
 gem 'pagy'
 
 group :development, :test do
@@ -93,13 +88,6 @@ gem 'json'
 
 gem 'bigbluebutton-api-ruby', '~> 1.9.0'
 
-gem 'bootstrap-sass', '~> 3.4.1'
-gem 'font-awesome-rails'
-gem 'jquery-fileupload-rails'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'material_icons'
-
 gem 'rest-client'
 
 gem 'omniauth', '>= 2.1.0'
@@ -114,3 +102,4 @@ gem 'activerecord-session_store', '>= 2.0.0'
 
 gem 'coveralls', require: false
 gem 'net-smtp'
+gem 'webpacker', '~> 6.0.0.rc.5'
