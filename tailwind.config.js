@@ -1,16 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  mode: 'jit',
-  purge: {
-    enabled: ["production", "staging"].includes(process.env.NODE_ENV),
-    content: [
-      './app/views/**/*.html.erb',
-      './app/stylesheets/**/*.rb',
-      './app/javascript/**/*.js',
-      "./node_modules/flowbite/**/*.js"
-    ],
-    },
-  content: [],
+  content: [
+    './app/views/**/*.html.erb',
+    './app/stylesheets/**/*.rb',
+    './app/javascript/**/*.js',
+    "./node_modules/flowbite/**/*.js"
+  ],
   presets: [],
   darkMode: 'media', // or 'class'
   theme: {
