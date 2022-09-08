@@ -14,7 +14,7 @@
 %>
 <tr class="border-b text-left ">
   <td class="p-0">
-    <div class="text-left font-sans px-8 py-4 ">
+    <div class="text-left font-sans px-5 py-3 ">
       <% can_edit = @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
       <% if can_edit %>
         <% hover = 'bg-gray-100' %>
@@ -52,15 +52,15 @@
     </div>
   </td>
 
-  <td class="p-0 text-left font-sans px-8 py-4">
+  <td class="p-0 text-left font-sans px-8 py-3">
     <%= recording_date(recording[:startTime]) %>
   </td>
 
-  <td class="p-0 text-left font-sans px-8 py-4">
+  <td class="p-0 text-left font-sans px-8 py-3">
     <%= recording_length(recording[:playbacks]) %>
   </td>
 
-  <td class="p-0 text-left px-8 py-4" style='white-space: nowrap'>
+  <td class="p-0 text-left px-6 py-2" style='white-space: nowrap'>
     <div class="flex items-end ">
       <% if recording[:published] %>
         <% sorted_playbacks = recording[:playbacks].sort_by { |hsh| hsh[:type] }%>
@@ -69,9 +69,9 @@
           <% unless !(@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) && !bigbluebutton_recording_public_formats.include?(p[:type]) %>
             <% if p[:type] == 'presentation' %>
               <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type], target: "_blank", class: "mr-4 hover:bg-white hover:text-blue-700" do %>
-                <div class="bg-gray-200 p-3 rounded hover:bg-gray-300">
+                <div class="bg-gray-200 p-2 rounded hover:bg-gray-300">
                   <div class= "bg-bbb-blue rounded-full" >
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 bg-bbb-blue text-white m-2 ml-2.5 md-18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 bg-bbb-blue text-white m-2" fill="none" viewBox="0 0 22 22" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                   </div>
@@ -79,9 +79,9 @@
               <% end %>
             <% elsif p[:type] == 'statistics' %>
               <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type], target: "_blank" , class: "mr-4 hover:bg-white hover:text-blue-700 " do %>
-                <div class="bg-gray-200 p-3 rounded hover:bg-gray-300">
+                <div class="bg-gray-200 p-2 rounded hover:bg-gray-300">
                   <div class= "bg-bbb-blue rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 bg-bbb-blue text-white m-2 ml-2.5 md-18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 bg-bbb-blue text-white m-2 " fill="none" viewBox="0 0 22 22" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
                     </svg>
@@ -90,9 +90,9 @@
               <% end %>
             <% elsif p[:type] == 'video' %>
               <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "hover:bg-white hover:text-blue-700" do %>
-                <div class="bg-gray-200 p-3 rounded hover:bg-gray-300">
+                <div class="bg-gray-200 p-2 rounded hover:bg-gray-300">
                   <div class= "bg-bbb-blue rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg"  class="h-8 w-8 bg-bbb-blue text-white m-2 ml-2.5 md-18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg xmlns="http://www.w3.org/2000/svg"  class="h-5 w-5 bg-bbb-blue text-white m-2 " fill="none" viewBox="0 0 22 22" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
