@@ -66,10 +66,5 @@ module BbbAppRooms
     config.developer_mode_enabled = ENV.fetch('DEVELOPER_MODE_ENABLED', 'false').casecmp?('true')
 
     config.generators.javascript_engine = :js
-
-    # Allow this to work in an iframe on another domain
-    config.action_dispatch.default_headers = {
-      'X-Frame-Options' => 'ALLOWALL',
-    }
   end
 end
