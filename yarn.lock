@@ -1057,10 +1057,10 @@
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.1.6.tgz#ed0e926112fd476c3ac3c52bd18d39d84624cd62"
   integrity sha512-gD8zYT8u8AA4wulIW7BN4x6tPSR1Ldt7jXDs3ntBKdgtvqiohBJFEKn8YJSDr7vrCpM/hYuEJxYl/4oJvvENfA==
 
-"@rails/activestorage@6.1.6-1":
-  version "6.1.6-1"
-  resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-6.1.6-1.tgz#af99e2f4c43763450d9a383fcda8ff3d593b23a6"
-  integrity sha512-sPjeIPV5R2apk1fd2gIph9wN3qe9MZm0zsnVpY1lI9X2dALK9VwmD8Ovt514RXuINK/Sjkr2pZ4eAB0U3lBGFQ==
+"@rails/activestorage@6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-6.1.6.tgz#d4ffd5327af8e85dee9f9a4867a7cd64d644e26f"
+  integrity sha512-0ajoVtZK5fNbHqAzKWZR+ocDwnd+D36gG9om3CphSL2QevB7e1YIVZo5UFPbB+3KD0kj8KuW6VaaOOT98Qm5bA==
   dependencies:
     spark-md5 "^3.0.0"
 
