@@ -17,6 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb_app_rooms/user'
+require 'json'
 
 class RoomsController < ApplicationController
   # Include libraries.
@@ -188,6 +189,21 @@ class RoomsController < ApplicationController
   def recording_delete
     delete_recording(params[:record_id])
     redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+  end
+
+  # POST /rooms/:id/recording/:record_id/:format/recording
+  # Makes an API call to the BBB server to retrieve an individual recording
+  # Used in the case of protected recordings because they can't be cached.
+  def individual_recording
+    rec = recording(params[:record_id])
+    formats_arr = rec[:playback][:format]
+    format_obj = formats_arr.find { |i| i[:type] == params[:format] }
+
+    playback_url = format_obj[:url]
+
+    redirect_to(playback_url) && return unless playback_url.nil?
+
+    redirect_to(errors_path(401))
   end
 
   helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,

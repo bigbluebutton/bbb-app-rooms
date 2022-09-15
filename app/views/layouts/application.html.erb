@@ -28,6 +28,8 @@
   <body lang="<%= I18n.locale %>" 
         data-controller="<%= params[:controller] %>" 
         data-action="<%= params[:action] %>" >
-    <%= yield %>
+    <div class="justify-center" style="margin: 0 8%">
+      <%= yield %>
+    </div>
   </body>
 </html>

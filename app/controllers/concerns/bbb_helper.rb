@@ -107,6 +107,25 @@ module BbbHelper
     recordings_formatted(res)
   end
 
+  # Fetch an individual recording
+  def recording(record_id)
+    r = bbb.get_recordings(meetingID: @room.handler, recordID: record_id)
+    unless r.key?(:error)
+
+      r[:playbacks] = if !r[:playback] || !r[:playback][:format]
+                        []
+                      elsif r[:playback][:format].is_a?(Array)
+                        r[:playback][:format]
+                      else
+                        [r[:playback][:format]]
+                      end
+
+      r.delete(:playback)
+    end
+
+    r[:recordings][0]
+  end
+
   def server_running?
     begin
       bbb.get_meeting_info(@room.handler, @user)
