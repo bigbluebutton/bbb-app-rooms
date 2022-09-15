@@ -1052,10 +1052,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@rails/actioncable@6.1.6-1":
-  version "6.1.6-1"
-  resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.1.6-1.tgz#bd017a03bf31dc2f1f0b51b41e807de064478810"
-  integrity sha512-0hAY2kyR7zzjcT5Yy0HZeJEx/IkWzvmSmzq5uNGIIjAvADv8aIWGNe5S3Ixr3nu9VXHvPje9CbiVLOurtN9K3A==
+"@rails/actioncable@6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.1.6.tgz#ed0e926112fd476c3ac3c52bd18d39d84624cd62"
+  integrity sha512-gD8zYT8u8AA4wulIW7BN4x6tPSR1Ldt7jXDs3ntBKdgtvqiohBJFEKn8YJSDr7vrCpM/hYuEJxYl/4oJvvENfA==
 
 "@rails/activestorage@6.1.6":
   version "6.1.6"
@@ -1064,10 +1064,10 @@
   dependencies:
     spark-md5 "^3.0.0"
 
-"@rails/ujs@6.1.6-1":
-  version "6.1.6-1"
-  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.6-1.tgz#34a7b3a84f4bd928502503fc1db1afce54c91630"
-  integrity sha512-ANozE2BlDP+Bp6gmy9xgOPUmP0e3AXYSbCFmtVGHeUcjHaYBG3Pb3dW6PrWht1a4ChOPpQ8SPLEORfp0fWgn0w==
+"@rails/ujs@6.1.6":
+  version "6.1.6"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.6.tgz#de486ae0a663e1bed637a012cbb2739bfcfa2031"
+  integrity sha512-2M4zlthYmOC6X/tcPcFd//sIL26a7JbCpGNl8uIrQf+pR1Z47uhYt9cOwVqJTJZPurdy2k+YY3Pn64pqruAPEA==
 
 "@rails/webpacker@^6.0.0-rc.6":
   version "6.0.0-rc.6"
