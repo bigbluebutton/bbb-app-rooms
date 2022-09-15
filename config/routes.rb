@@ -44,6 +44,7 @@ Rails.application.routes.draw do
         post '/unprotect', to: 'rooms#recording_unprotect', as: :recording_unprotect
         post '/update', to: 'rooms#recording_update', as: :recording_update
         post '/delete', to: 'rooms#recording_delete', as: :recording_delete
+        post '/:format/recording', to: 'rooms#individual_recording', as: :show_recording
       end
 
       # Handles launches.
