@@ -57,11 +57,11 @@
 
 <!-- Row 1: Meeting info and edit link -->
   <div class="">
-    <div class="pt-16 font-sans flex justify-between flex-row-reverse">  
+    <div class="font-sans flex justify-between flex-row-reverse">  
       <!-- Link to edit -->
       <div>
         <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-          <%= link_to t('default.room.edit'), edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "text-bbb-blue font-semibold text-xl font-sans hover:text-white hover:bg-blue-400 " %>
+          <%= link_to t('default.room.edit'), edit_room_path(@room, :launch_nonce => @launch_nonce), :name => t('default.room.edit'), :class => "text-bbb-blue font-semibold  font-sans hover:text-white hover:bg-blue-400 " %>
         <% end %>
       </div>
 
@@ -103,81 +103,78 @@
   <!-- Row 2: Room name and join, end buttons -->
   <div class="">
     <div class="flex justify-between items-center pt-2">
-        <div class="flex justify-start items-center">
-          <p class="text-4xl font-sans inline-block font-light"><%= @room.name %></p>  
-        </div>
+      <div class="flex justify-start items-center">
+        <p class="text-4xl font-sans inline-block font-light"><%= @room.name %></p>  
+      </div>
 
-        <div class="flex justify-end"> 
-          <div>
-            <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
-                <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-6 py-3 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-            <% end %> 
-          </div>
-          <div>
-            <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-              <%= button_tag t('default.room.endmeeting'), 
-                  type: 'button', 
-                  class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-6 py-3 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
-                  id: 'end-meeting-btn', 
-                  style: visible,
-                  data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
-            <% end %> 
-          </div>
-        </div>     
+      <div class="flex justify-end"> 
+        <div>
+          <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
+              <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+          <% end %> 
+        </div>
+        <div>
+          <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+            <%= button_tag t('default.room.endmeeting'), 
+                type: 'button', 
+                class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-4 py-2 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
+                id: 'end-meeting-btn', 
+                style: visible,
+                data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+          <% end %> 
+        </div>
+      </div>     
     </div>
   </div> 
 
   <!-- Row 3: Room description -->
-  <div class=" pt-3 pb-5">
-    <p class= "leading-loose text-lg w-1/2"><%= @room.description %></p>
+  <div class="pt-3 pb-5">
+    <p class= "leading-loose text-md w-1/2"><%= @room.description %></p>
   </div>
 
   <hr>
 
   <!-- recordings -->
   <% if bigbluebutton_recording_enabled %>
-    
+    <div class= "">
     <%= render "shared/components/search_bar", subtitle: t("default.room.recordings")%>
 
-          <div class = "w-full inline-block rounded-lg border">
-            <table class="w-full rounded-lg text-left border-collapse" >
-              <thead class="text-left uppercase border-b rounded-lg bg-gray-100 py-6" >
-                <tr>
-                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.name") + "/" + t("default.recording.table.description") %></th>
-                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.date") %></th>
-                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.duration") %></th>
-                  <th class="px-8 py-6 text-gray-700 font-sans font-medium"><%= t("default.recording.table.formats") %></th>
-                  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
-                    <th class="px-2 py-6"></th>
-                  <% end %>
-                </tr>
-              </thead>
-              <tbody id="recording-table">
-                <tr id="no_recordings_found" style="display: none;">
-                  <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
-                    <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
-                  </td>
-                </tr>
-                <% if @recordings.empty? %>
-                  <tr>
-                    <td colspan="7" class="text-center h4 p-6 font-weight-normal">
-                      <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
-                    </td>
-                  </tr>
+      <div class = "flex justify-between items-center rounded-lg border mb-10">
+        <table class="w-full max-w-full rounded-lg text-left border-collapse text-sm" >
+          <thead class="text-left uppercase border-b rounded-lg bg-gray-100 text-sm text-gray-500 font-sans py-4" >
+            <tr>
+              <th class="px-6 py-4"><%= t("default.recording.table.name") + "/" + t("default.recording.table.description") %></th>
+              <th class="px-6"><%= t("default.recording.table.date") %></th>
+              <th class="px-6"><%= t("default.recording.table.duration") %></th>
+              <th class="px-6"><%= t("default.recording.table.formats") %></th>
+              <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+                <th class="px-2 "></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody id="recording-table">
+            <tr id="no_recordings_found" style="display: none;">
+              <td colspan="7" class="text-center h4 p-6 font-weight-normal" >
+                <%= t("default.recording.no_matched_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
+              </td>
+            </tr>
+            <% if @recordings.empty? %>
+              <tr>
+                <td colspan="7" class="text-center h4 p-6 font-weight-normal">
+                  <%= t("default.recording.no_recordings", inject: only_public ? t("default.recording.visibility.public").downcase + " "  : "") %>
+                </td>
+              </tr>
+            <% else %>
+              <% @recordings.each do |recording| %>
+                <% if only_public %>
+                  <%= render "shared/components/public_recording_row", recording: recording %>
                 <% else %>
-                  <% @recordings.each do |recording| %>
-                    <% if only_public %>
-                      <%= render "shared/components/public_recording_row", recording: recording %>
-                    <% else %>
-                      <%= render "shared/components/recording_row", recording: recording %>
-                    <% end %>
-                  <% end %>
+                  <%= render "shared/components/recording_row", recording: recording %>
                 <% end %>
-              </tbody>
-            </table>
-            </div>
-          </div>
-        </div>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
   <% end %>
