@@ -2294,10 +2294,10 @@ find-up@^4.0.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-flowbite@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/flowbite/-/flowbite-1.5.2.tgz#c7a6f0320404544d977f794269f48ec34a4e2759"
-  integrity sha512-oSKhPkg0bYb4dZG4ypSh++dPrFM3IOSER6HOwJHYRFPW5u9PXL4AQFMQh7Kytgws2xrDQyl/zqefZmymeWt2IA==
+flowbite@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/flowbite/-/flowbite-1.5.3.tgz#99f0ba31b6d9a6fa8a1c25fb9aefa575a2a5efe6"
+  integrity sha512-e2OHfndxTHtGMqcPqvqwg3gGLg57hmIDVgE/BazMDccgirQ0JEtirKnbZZ4WSOIEhNDgO9pJZuyC8rRlcMm6pQ==
   dependencies:
     "@popperjs/core" "^2.9.3"
     mini-svg-data-uri "^1.4.3"

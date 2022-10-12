@@ -19,7 +19,7 @@
     "autoprefixer": "^10.4.8",
     "css-loader": "^6.7.1",
     "dotenv": "^16.0.1",
-    "flowbite": "^1.5.2",
+    "flowbite": "^1.5.3",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^2.6.1",
     "postcss": "^8.4.16",
