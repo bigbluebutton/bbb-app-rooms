@@ -74,3 +74,6 @@ RAILS_SERVE_STATIC_FILES=true
 # [debug|info|warn|error|fatal]
 # Default 'warn'.
 # LOG_LEVEL=warn
+
+## sha256 by default
+# BIGBLUEBUTTON_CHECKSUM_ALGORITHM='sha1' 
