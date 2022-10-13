@@ -13,5 +13,5 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-json.extract!(room, :id, :name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :created_at, :updated_at)
+json.extract!(room, :id, :name, :hide_name, :description, :hide_description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :created_at, :updated_at)
 json.url(room_url(room, format: :json))
