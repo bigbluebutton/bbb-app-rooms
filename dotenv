@@ -75,5 +75,6 @@ RAILS_SERVE_STATIC_FILES=true
 # Default 'warn'.
 # LOG_LEVEL=warn
 
-## sha256 by default
-# BIGBLUEBUTTON_CHECKSUM_ALGORITHM='sha1' 
+## SHA algorithm to use for checksum. sha1 is default
+## BIGBLUEBUTTON_CHECKSUM_ALGORITHM: "SHA1|SHA256|SHA512" 
+# BIGBLUEBUTTON_CHECKSUM_ALGORITHM='sha256' 
