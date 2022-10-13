@@ -104,7 +104,9 @@
   <div class="">
     <div class="flex justify-between items-center pt-2">
       <div class="flex justify-start items-center">
-        <p class="text-4xl font-sans inline-block font-light"><%= @room.name %></p>  
+        <% unless @room.hide_name %>
+          <p class="text-4xl font-sans inline-block font-light"><%= @room.name %></p>  
+        <% end %>
       </div>
 
       <div class="flex justify-end"> 
@@ -129,7 +131,9 @@
 
   <!-- Row 3: Room description -->
   <div class="pt-3 pb-5">
-    <p class= "leading-loose text-md w-1/2"><%= @room.description %></p>
+    <% unless @room.hide_description %>
+      <p class= "leading-loose text-md w-1/2"><%= @room.description %></p>
+    <% end %>
   </div>
 
   <hr>

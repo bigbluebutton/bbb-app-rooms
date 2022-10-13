@@ -79,6 +79,8 @@ en:
       recordings:     "Recordings"
       waitmoderator:  "Wait for moderator"
       allmoderators:  "All moderators"
+      hidename:       "Hide name"
+      hidedescription: "Hide description"
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
