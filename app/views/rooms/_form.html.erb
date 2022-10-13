@@ -33,13 +33,23 @@
     </p>
     <%= form.text_field :name, :required => true,  class: "form-control rounded-none rounded input mt-1 block w-full" %>
   </div> 
+  <div class="field form-group input-group">
+    <%= form.check_box :hide_name, id: 'hide_name_checkbox' %>&nbsp;
+    <%= t('default.room.hidename') %>&nbsp;
+    <br>
+  </div>
 
   <div class="field form-group input-group w-full pt-4">
     <%= form.label t('default.room.description') %>
     <%= form.text_area :description, size: "45x8", class: 'form-control input' %>
   </div>
+  <div class="field form-group input-group">
+    <%= form.check_box :hide_description, id: 'hide_description_checkbox' %>&nbsp;
+    <%= t('default.room.hidedescription') %>&nbsp;
+    <br>
+  </div>
 
-  <div class="field form-group input-group w-full">
+  <div class="field form-group input-group w-full pt-4">
     <%= form.label t('default.room.welcome') %>
     <%= form.text_area :welcome, size: "45x4", class: 'form-control w-full input form-input' %>
   </div>
