@@ -16,7 +16,7 @@
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.7",
     "autocomplete": "0.0.1",
-    "autoprefixer": "^10.4.8",
+    "autoprefixer": "^10.4.12",
     "css-loader": "^6.7.1",
     "dotenv": "^16.0.1",
     "flowbite": "^1.5.3",
