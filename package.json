@@ -8,7 +8,7 @@
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^4.0.3",
     "@rails/actioncable": "6.1.7",
-    "@rails/activestorage": "6.1.6",
+    "@rails/activestorage": "6.1.7",
     "@rails/ujs": "6.1.6",
     "@rails/webpacker": "^6.0.0-rc.6",
     "@tailwindcss/aspect-ratio": "^0.4.2",
