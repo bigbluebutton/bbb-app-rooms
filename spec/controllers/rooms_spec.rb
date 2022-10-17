@@ -20,6 +20,13 @@ describe RoomsController, type: :controller do
       },
     }
 
+    @user = BbbAppRooms::User.new(uid: 'uid',
+                                  full_name: 'Jane Doe',
+                                  first_name: 'Jane',
+                                  last_name: 'Doe',
+                                  email: 'jane.doe@email.com',
+                                  roles: 'Administrator,Instructor,Administrator')
+
     # Currently a new room is created before every test. This could be optimized by creating a new room only before tests that require it.
     @room = create(:room)
   end
@@ -42,7 +49,39 @@ describe RoomsController, type: :controller do
   end
 
   describe '#show' do
-    it 'should show the page for the room' do
+    it 'should show the page for the room with no recordings' do
+      expect(get(:show, params: { id: @room.id })).to(have_http_status(:ok))
+    end
+
+    it 'should show the page for the room with recordings' do
+      @recordings = [
+        {
+          meetingID: @room.handler,
+          name: Faker::Name.name,
+          description: 'Sample description',
+          participants: '3',
+          playback: {
+            format:
+            {
+              type: 'presentation',
+              url: Faker::Internet.url,
+            },
+          },
+        },
+        {
+          meetingID: @room.handler,
+          name: Faker::Name.name,
+          description: 'Sample description',
+          participants: '5',
+          playback: {
+            format:
+            {
+              type: 'other',
+              url: Faker::Internet.url,
+            },
+          },
+        },
+      ]
       expect(get(:show, params: { id: @room.id })).to(have_http_status(:ok))
     end
   end
@@ -89,6 +128,73 @@ describe RoomsController, type: :controller do
     it 'should end the meeting' do
       post :meeting_end, params: { id: @room.id }
       expect(response).to(have_http_status(:found))
+    end
+  end
+
+  describe 'recordings' do
+    context 'POST #recording_update' do
+      it 'updates the recordings details' do
+        allow_any_instance_of(BbbHelper).to(receive(:update_recording).and_return(updated: true))
+        @request.session[:user_id] = @user.uid
+
+        post :recording_update, params: { id: @room.id, record_id: Faker::IDNumber.valid, setting: 'rename_recording', record_name: 'New name' }
+
+        expect(response).to(have_http_status(204))
+      end
+    end
+
+    context 'DELETE #recording_delete' do
+      it 'deletes the recording' do
+        allow_any_instance_of(BbbHelper).to(receive(:delete_recording).and_return(true))
+        @request.session[:user_id] = @user.uid
+
+        post :recording_delete, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+
+        expect(response).to(have_http_status(302))
+      end
+    end
+
+    context 'POST publish' do
+      it 'publishes the recording' do
+        allow_any_instance_of(BbbHelper).to(receive(:publish_recording).and_return(true))
+
+        post :recording_publish, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+
+        expect(response).to(have_http_status(302))
+      end
+
+      it 'unpublishes the recording' do
+        allow_any_instance_of(BbbHelper).to(receive(:unpublish_recording).and_return(true))
+
+        post :recording_unpublish, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+
+        expect(response).to(have_http_status(302))
+      end
+    end
+  end
+
+  describe 'meeting configurations' do
+    context 'wait for moderators' do
+      it 'redirects the user to the wait page' do
+        allow_any_instance_of(BbbHelper).to(receive(:wait_for_mod?).and_return(true))
+        allow_any_instance_of(BbbHelper).to(receive(:meeting_running?).and_return(false))
+
+        post :meeting_join, params: { id: @room.id }
+
+        expect(response).to(render_template(:meeting_join))
+      end
+    end
+
+    context 'all moderators' do
+      it 'allows any user to start the meeting' do
+        allow_any_instance_of(BbbHelper).to(receive(:wait_for_mod?).and_return(false))
+        allow_any_instance_of(BbbHelper).to(receive(:meeting_running?).and_return(false))
+        allow_any_instance_of(BbbHelper).to(receive(:join_meeting_url).and_return('bbb.example.com'))
+
+        post :meeting_join, params: { id: @room.id }
+
+        expect(response).to(redirect_to('bbb.example.com'))
+      end
     end
   end
 end
