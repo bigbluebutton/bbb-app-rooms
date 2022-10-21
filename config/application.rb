@@ -66,5 +66,10 @@ module BbbAppRooms
     config.developer_mode_enabled = ENV.fetch('DEVELOPER_MODE_ENABLED', 'false').casecmp?('true')
 
     config.generators.javascript_engine = :js
+
+    valid_sha_versions = %w[sha1 sha256 sha384 sha512]
+    checksum_env_var = ENV['BIGBLUEBUTTON_CHECKSUM_ALGORITHM']
+    null_or_invalid = checksum_env_var.nil? || !valid_sha_versions.include?(checksum_env_var.downcase)
+    config.checksum_algorithm = null_or_invalid ? 'sha1' : checksum_env_var.downcase
   end
 end
