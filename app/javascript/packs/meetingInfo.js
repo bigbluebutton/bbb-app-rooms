@@ -33,7 +33,7 @@ $(document).on('turbolinks:load', function(){
         console.log("Disconnected from meeting info channel");
       },
       received: function(data) {
-        console.log("Received data from meeting info channel");
+        console.log("Received data from meeting info channel. data: " + JSON.stringify(data));
         if (data.meeting_in_progress == true){
           startTime = data.elapsed_time
           in_progress = true;
