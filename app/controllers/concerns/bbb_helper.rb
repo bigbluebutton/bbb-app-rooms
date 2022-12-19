@@ -14,6 +14,7 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 require 'bbb/credentials'
+require 'bigbluebutton_api'
 
 module BbbHelper
   extend ActiveSupport::Concern
@@ -83,7 +84,7 @@ module BbbHelper
     begin
       info = bbb.get_meeting_info(@room.handler, @user)
     rescue BigBlueButton::BigBlueButtonException => e
-      logger.info(e.to_s)
+      logger.error(e.to_s)
     end
     info
   end
@@ -93,7 +94,7 @@ module BbbHelper
     begin
       res = bbb.is_meeting_running?(@room.handler)
     rescue BigBlueButton::BigBlueButtonException => e
-      logger.info(e.to_s)
+      logger.error(e.to_s)
       res = false
     end
 
