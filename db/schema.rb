@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_140520) do
+ActiveRecord::Schema.define(version: 2022_09_29_135043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 2020_09_01_140520) do
     t.datetime "updated_at", null: false
     t.string "handler"
     t.string "tenant"
+    t.boolean "hide_name"
+    t.boolean "hide_description"
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
   end
 

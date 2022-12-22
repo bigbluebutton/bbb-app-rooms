@@ -113,7 +113,8 @@ module Bbb
     def encoded_url(endpoint, secret, params)
       encoded_params = params.to_param
       string = "getUser#{encoded_params}#{secret}"
-      checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
+      checksum_algorithm = Rails.configuration.checksum_algorithm
+      checksum = OpenSSL::Digest.digest(checksum_algorithm, string).unpack1('H*')
       URI.parse("#{endpoint}?#{encoded_params}&checksum=#{checksum}")
     end
 
