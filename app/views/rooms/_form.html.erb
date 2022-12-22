@@ -44,6 +44,94 @@
     <%= form.text_area :welcome, size: "45x4", class: 'form-control w-full input form-input' %>
   </div>
 
+  <button id="lock-settings-drawer-button">Default Lock Settings</button>
+  <div id="lock-settings-drawer">
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsDisableCam') %>
+      <%= form.check_box :lockSettingsDisableCam, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsDisableMic') %>
+      <%= form.check_box :lockSettingsDisableMic, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsDisablePrivateChat') %>
+      <%= form.check_box :lockSettingsDisablePrivateChat, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsDisablePublicChat') %>
+      <%= form.check_box :lockSettingsDisablePublicChat, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsDisableNote') %>
+      <%= form.check_box :lockSettingsDisableNote, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsLockedLayout') %>
+      <%= form.check_box :lockSettingsLockedLayout, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsLockOnJoin') %>
+      <%= form.check_box :lockSettingsLockOnJoin, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsLockOnJoinConfigurable') %>
+      <%= form.check_box :lockSettingsLockOnJoinConfigurable, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+
+    <div class="field form-group input-group w-full">
+      <%= form.label t('default.room.lockSettingsHideViewersCursor') %>
+      <%= form.check_box :lockSettingsHideViewersCursor, size: "45x4", class: 'form-control w-full input form-input' %>
+    </div>
+  </div>
+
+  <style>
+    #lock-settings-drawer-button {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+    }
+
+    .active-lock-settings-drawer, .accordion:hover {
+      background-color: #ccc;
+    }
+
+    #lock-settings-drawer {
+      padding: 0 18px;
+      background-color: white;
+      display: none;
+      overflow: hidden;
+    } 
+  </style>
+  <script>
+    var acc = document.getElementByID("lock-settings-drawer-button"));
+
+    acc.addEventListener("click", function() {
+      this.classList.toggle("active-lock-settings-drawer");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+      }
+    });
+  </script>
+
+  
+
   <%= form.hidden_field :moderator, value: @room.moderator %>
   <%= form.hidden_field :viewer, value: @room.viewer %>
 
