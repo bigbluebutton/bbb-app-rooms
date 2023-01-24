@@ -41,7 +41,7 @@
 
   <div class="field form-group input-group w-full pt-4">
     <%= form.label t('default.room.description') %>
-    <%= form.text_area :description, size: "45x8", class: 'form-control input' %>
+    <%= form.text_area :description, size: "45x8", class: 'form-control w-full input form-input' %>
   </div>
   <div class="field form-group input-group">
     <%= form.check_box :hide_description, id: 'hide_description_checkbox' %>&nbsp;
@@ -92,10 +92,64 @@
     <br>
   </div>
 
+  <details>
+    <summary class="text-black ">Lock Settings</summary>
+    
+    <div class="field form-group input-group" style="padding-left: 5%">
+      <%= form.check_box :disable_webcams, id: 'disable_webcams_checkbox' %>&nbsp; 
+      <%= t('default.room.disablewebcams') %>&nbsp;
+      <br>
+    
+      <%= form.check_box :disable_mics, id: 'disable_mics_checkbox' %>&nbsp; 
+      <%= t('default.room.disablemics') %>&nbsp;
+      <br>
+
+      <%= form.check_box :disable_private_chat, id: 'disable_private_chat_checkbox' %>&nbsp; 
+      <%= t('default.room.disableprvtchat') %>&nbsp; 
+      <br>
+
+      <%= form.check_box :disable_public_chat, id: 'disable_public_chat_checkbox' %>&nbsp; 
+      <%= t('default.room.disablepublicchat') %>&nbsp;
+      <br>
+
+      <%= form.check_box :disable_shared_notes, id: 'disable_shared_notes_checkbox' %>&nbsp; 
+      <%= t('default.room.disablesharednotes') %>&nbsp;
+      <br>
+
+      <%= form.check_box :hide_user_list, id: 'hide_user_list_checkbox' %>&nbsp; 
+      <%= t('default.room.disableuserlist') %>&nbsp;
+    </div>
+  </details>
+
+  <hr>
+
+   <details>
+    <summary class="text-black ">Room Settings</summary>
+    
+    <div class="field form-group input-group" style="padding-left: 5%">
+      <%= form.check_box :wait_moderator, id: 'wait_moderator_checkbox' %>&nbsp; 
+      <%= t('default.room.waitmoderator') %>&nbsp;
+      <br>
+    
+      <%= form.check_box :session_may_be_recorded, id: 'session_may_be_recorde_checkbox' %>&nbsp; 
+      <%= t('default.room.sessionmayberecorded') %>&nbsp;
+      <br>
+
+      <%= form.check_box :record_from_start, id: 'record_from_start_checkbox' %>&nbsp; 
+      <%= t('default.room.recordfromstart') %>&nbsp; 
+      <br>
+
+      <%= form.check_box :hide_recording_btn, id: 'hide_recording_btn_checkbox' %>&nbsp; 
+      <%= t('default.room.hiderecordingbtn') %>&nbsp;
+    </div>
+  </details>
+
+  <hr>
+
   <div class="actions pt-6">
     <div class = "flex-row">
-    <%= form.submit t('default.room.update'), class: "btn-primary m-1 ml-0" %>
-    <%= form.button t('default.room.cancel'), class: "btn-secondary m-1", name: "cancel" %>
-  </div>
+      <%= form.submit t('default.room.update'), class: "btn-primary m-1 ml-0" %>
+      <%= form.button t('default.room.cancel'), class: "btn-secondary m-1", name: "cancel" %>
+    </div>
   </div>
 <% end %>
