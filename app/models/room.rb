@@ -32,6 +32,7 @@ class Room < ApplicationRecord
 
   def handler
     return self[:handler_legacy] unless self[:handler_legacy].nil?
+
     self[:handler]
   end
 
