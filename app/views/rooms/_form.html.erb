@@ -55,93 +55,49 @@
   </div>
 
   <%= form.hidden_field :moderator, value: @room.moderator %>
-  <%= form.hidden_field :viewer, value: @room.viewer %>
+  <%= form.hidden_field :viewer, value: @room.viewer %> 
 
-  <% if bigbluebutton_recording_enabled %>
-    <div class="field form-group input-group pt-4">
-      <%= form.check_box :recording %>&nbsp;
-      <b><%= t('default.room.recording') %></b>&nbsp;
-      <i data-toggle="tooltip" title="<%= t('default.room.tooltip.recording') %>">
-       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-        </svg>
-      </i>
-      <br>
-    </div>
-  <% end %>
-
-  <div class="field form-group input-group">
-    <%= form.check_box :wait_moderator, id: 'wait_mod_checkbox' %>&nbsp;
-    <b><%= t('default.room.waitmoderator') %></b>&nbsp;
-     <i data-toggle="tooltip" title="<%= t('default.room.tooltip.waitmoderator') %>">
-       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-        </svg>
-      </i>
-    <br>
-  </div>
-
-  <div class="field form-group input-group">
-    <%= form.check_box :all_moderators, id: 'all_mod_checkbox' %>&nbsp;
-    <b><%= t('default.room.allmoderators') %></b>&nbsp;
-     <i data-toggle="tooltip" title="<%= t('default.room.tooltip.allmoderators') %>">
-       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-        <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-        </svg>
-      </i>
-    <br>
-  </div>
+  <% @lockSettings = @room.settings.select { |key, value| key.start_with?("lock")} %>
+  <% @roomSettings = @room.settings.select { |key, value| !key.start_with?("lock")} %>
 
   <details>
-    <summary class="text-black ">Lock Settings</summary>
-    
-    <div class="field form-group input-group" style="padding-left: 5%">
-      <%= form.check_box :disable_webcams, id: 'disable_webcams_checkbox' %>&nbsp; 
-      <%= t('default.room.disablewebcams') %>&nbsp;
-      <br>
-    
-      <%= form.check_box :disable_mics, id: 'disable_mics_checkbox' %>&nbsp; 
-      <%= t('default.room.disablemics') %>&nbsp;
-      <br>
-
-      <%= form.check_box :disable_private_chat, id: 'disable_private_chat_checkbox' %>&nbsp; 
-      <%= t('default.room.disableprvtchat') %>&nbsp; 
-      <br>
-
-      <%= form.check_box :disable_public_chat, id: 'disable_public_chat_checkbox' %>&nbsp; 
-      <%= t('default.room.disablepublicchat') %>&nbsp;
-      <br>
-
-      <%= form.check_box :disable_shared_notes, id: 'disable_shared_notes_checkbox' %>&nbsp; 
-      <%= t('default.room.disablesharednotes') %>&nbsp;
-      <br>
-
-      <%= form.check_box :hide_user_list, id: 'hide_user_list_checkbox' %>&nbsp; 
-      <%= t('default.room.disableuserlist') %>&nbsp;
-    </div>
+    <summary class="text-black">Lock Settings</summary>
+      <div class="field form-group input-group" style="padding-left: 5%">
+        <% @lockSettings.each do |setting| %>
+            <% @setting_name = setting[0] %>
+            <% @setting_value = setting[1].to_i %>
+            <% puts("******* @setting_name= #{@setting_name} @setting_value = #{@setting_value}")%>
+            <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+            <%= t("default.room.settings.#{@setting_name}") %>&nbsp; 
+            <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
+              <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+            </i>
+            <br>
+        <% end %>
+      </div>
   </details>
 
   <hr>
 
    <details>
-    <summary class="text-black ">Room Settings</summary>
-    
-    <div class="field form-group input-group" style="padding-left: 5%">
-      <%= form.check_box :wait_moderator, id: 'wait_moderator_checkbox' %>&nbsp; 
-      <%= t('default.room.waitmoderator') %>&nbsp;
-      <br>
-    
-      <%= form.check_box :session_may_be_recorded, id: 'session_may_be_recorde_checkbox' %>&nbsp; 
-      <%= t('default.room.sessionmayberecorded') %>&nbsp;
-      <br>
-
-      <%= form.check_box :record_from_start, id: 'record_from_start_checkbox' %>&nbsp; 
-      <%= t('default.room.recordfromstart') %>&nbsp; 
-      <br>
-
-      <%= form.check_box :hide_recording_btn, id: 'hide_recording_btn_checkbox' %>&nbsp; 
-      <%= t('default.room.hiderecordingbtn') %>&nbsp;
-    </div>
+    <summary class="text-black">Room Settings</summary>
+      <div class="field form-group input-group" style="padding-left: 5%">
+        <% @roomSettings.each do |setting| %>
+          <% @setting_name = setting[0] %>
+          <% next if @setting_name == 'record' && !bigbluebutton_recording_enabled %>
+          <% @setting_value = setting[1].to_i %>
+          <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+          <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
+          <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
+            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+              <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+          </i> 
+          <br>
+        <% end %>
+      </div>
   </details>
 
   <hr>
