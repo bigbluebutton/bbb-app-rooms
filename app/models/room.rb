@@ -35,6 +35,12 @@ class Room < ApplicationRecord
     ActionCable.server.broadcast("wait_channel:room_#{id}", action: 'started')
   end
 
+  def handler
+    return self[:handler_legacy] unless self[:handler_legacy].nil?
+
+    self[:handler]
+  end
+
   private
 
   def random_password(length, reference = '')
