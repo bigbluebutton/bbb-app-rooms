@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_29_135043) do
+ActiveRecord::Schema.define(version: 2023_01_30_170203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,7 +30,9 @@ ActiveRecord::Schema.define(version: 2022_09_29_135043) do
     t.string "tenant"
     t.boolean "hide_name"
     t.boolean "hide_description"
+    t.string "handler_legacy"
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
+    t.index ["tenant", "handler_legacy"], name: "index_rooms_on_tenant_and_handler_legacy", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
