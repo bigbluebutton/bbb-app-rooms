@@ -85,8 +85,8 @@ class Room < ApplicationRecord
     # these settings existed as their own column in the db
     # therefore we take the value in that column if it already exists
     # this is done to ensure previous values are not overwritten.
-    self.waitForModerator = wait_moderator.nil? ? '0' : bool_to_binary(wait_moderator) unless waitForModerator_changed?
-    self.allModerators = all_moderators.nil? ? '0' : bool_to_binary(all_moderators) unless waitForModerator_changed?
+    self.waitForModerator = wait_moderator.nil? ? '1' : bool_to_binary(wait_moderator) unless waitForModerator_changed?
+    self.allModerators = all_moderators.nil? ? '0' : bool_to_binary(all_moderators) unless allModerators_changed?
     self.record = record.nil? ? '1' : bool_to_binary(record) unless record_changed?
   end
 

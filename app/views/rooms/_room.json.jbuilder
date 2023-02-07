@@ -14,5 +14,5 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 json.extract!(room, :id, :name, :hide_name, :description, :hide_description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :disable_webcams, :disable_mics,
-              :disable_private_chat, :disable_public_chat, :created_at, :updated_at)
+              :settings, :created_at, :updated_at)
 json.url(room_url(room, format: :json))
