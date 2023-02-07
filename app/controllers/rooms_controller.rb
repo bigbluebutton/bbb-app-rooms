@@ -269,7 +269,7 @@ class RoomsController < ApplicationController
     params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :hide_name, :hide_description)
   end
 
-  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description)
+  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
     params.permit.merge(
       name: name,
       description: description,
@@ -278,7 +278,8 @@ class RoomsController < ApplicationController
       wait_moderator: wait_moderator || false,
       all_moderators: all_moderators || false,
       hide_name: hide_name || false,
-      hide_description: hide_description || false
+      hide_description: hide_description || false,
+      handler_legacy: handler_legacy
     )
   end
 
@@ -290,7 +291,8 @@ class RoomsController < ApplicationController
     all_moderators = message_has_custom?(launch_params, 'all_moderators')
     hide_name = message_has_custom?(launch_params, 'hide_name')
     hide_description = message_has_custom?(launch_params, 'hide_description')
-    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description)
+    handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
+    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
   end
 
   def launch_params_to_new_user_params(launch_params)
