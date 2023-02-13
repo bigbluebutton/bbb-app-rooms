@@ -258,9 +258,14 @@ class RoomsController < ApplicationController
     # Continue through happy path.
     @tenant = session_params['tenant']
     resource_handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
-    @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
-      room.update(launch_params_to_new_room_params(launch_params))
+    to_new_room_params = launch_params_to_new_room_params(launch_params)
+    @room = Room.find_by(handler: resource_handler, tenant: @tenant)
+    if @room
+      @room.update(to_new_room_params)
+    else
+      @room = Room.create(to_new_room_params)
     end
+
     user_params = launch_params_to_new_user_params(launch_params)
     session[@room.handler] = { user_params: user_params }
   end
