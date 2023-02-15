@@ -258,18 +258,35 @@ class RoomsController < ApplicationController
     # Continue through happy path.
     @tenant = session_params['tenant']
     resource_handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
-    @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
-      room.update(launch_params_to_new_room_params(launch_params))
+    to_new_room_params = launch_params_to_new_room_params(launch_params)
+    @room = Room.find_by(handler: resource_handler, tenant: @tenant)
+    if @room
+      @room.update(to_new_room_params)
+    else
+      @room = Room.create(to_new_room_params)
     end
+
     user_params = launch_params_to_new_user_params(launch_params)
     session[@room.handler] = { user_params: user_params }
   end
 
   def room_params
-    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :hide_name, :hide_description)
+    params.require(:room).permit(
+      :name,
+      :description,
+      :welcome,
+      :moderator,
+      :viewer,
+      :recording,
+      :wait_moderator,
+      :all_moderators,
+      :hide_name,
+      :hide_description,
+      settings: Room.stored_attributes[:settings]
+    )
   end
 
-  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
+  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy, settings)
     params.permit.merge(
       name: name,
       description: description,
@@ -279,7 +296,8 @@ class RoomsController < ApplicationController
       all_moderators: all_moderators || false,
       hide_name: hide_name || false,
       hide_description: hide_description || false,
-      handler_legacy: handler_legacy
+      handler_legacy: handler_legacy,
+      settings: settings || {}
     )
   end
 
@@ -292,7 +310,8 @@ class RoomsController < ApplicationController
     hide_name = message_has_custom?(launch_params, 'hide_name')
     hide_description = message_has_custom?(launch_params, 'hide_description')
     handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
-    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
+    settings = message_has_custom?(launch_params, 'settings')
+    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy, settings)
   end
 
   def launch_params_to_new_user_params(launch_params)
