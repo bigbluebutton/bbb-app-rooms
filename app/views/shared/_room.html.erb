@@ -12,6 +12,15 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
+  <div id="access-alert" class="p-4 mb-4 bg-red-100 rounded-lg dark:bg-red-200 hidden">
+      <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
+        <p> The browser you are using blocks third-party cookies, which are necessary for this application to function. Clicking on the button below will prompt you to allow. Please note that you must refresh the page after doing so. </p>
+      </div>
+      <button type="button" id="accept-btn" class="ml-3 mt-1 bg-lime-400 text-black rounded-lg p-1 hover:bg-slate-200 border border-red-900">
+          <p>Review</p>        
+      </button>
+  </div>
+
   <div class="">
       <% unless flash.alert.nil?%>
       <!-- error -->
@@ -111,8 +120,14 @@
 
       <div class="flex justify-end"> 
         <div>
-          <%= form_with(url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
-              <%= button_tag t('default.room.join'),:type => 'submit', :class => "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+
+          <%= form_with( id: 'meeting_join_form', url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
+              <%= button_tag t('default.room.join'),
+                    type: 'submit', 
+                    id: 'join-room-btn', 
+                    class: "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", 
+                    formtarget: "_blank", 
+                    data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
           <% end %> 
         </div>
         <div>
