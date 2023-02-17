@@ -321,9 +321,11 @@ class RoomsController < ApplicationController
       recording: room['recording'],
       wait_moderator: room['wait_moderator'],
       handler_legacy: handler_legacy,
+      all_moderators: room['all_moderators'],
       settings: {
         waitForModerator: room['wait_moderator'],
         record: room['recording'],
+        allModerators: room['all_moderators'],
       }
     )
   end
