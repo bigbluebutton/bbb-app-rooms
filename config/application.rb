@@ -71,5 +71,9 @@ module BbbAppRooms
     checksum_env_var = ENV['BIGBLUEBUTTON_CHECKSUM_ALGORITHM']
     null_or_invalid = checksum_env_var.nil? || !valid_sha_versions.include?(checksum_env_var.downcase)
     config.checksum_algorithm = null_or_invalid ? 'sha1' : checksum_env_var.downcase
+
+    config.handler_legacy_api_endpoint = ENV['HANDLER_LEGACY_API_ENDPOINT']
+    config.handler_legacy_api_secret = ENV['HANDLER_LEGACY_API_SECRET']
+    config.handler_legacy_api_enabled = (config.handler_legacy_api_endpoint && config.handler_legacy_api_secret)
   end
 end

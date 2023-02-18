@@ -45,7 +45,7 @@ module BbbHelper
     end
 
     create_meeting
-    role = @user.moderator?(bigbluebutton_moderator_roles) || @room.all_moderators ? 'moderator' : 'viewer'
+    role = @user.moderator?(bigbluebutton_moderator_roles) || string_to_bool(@room.allModerators) ? 'moderator' : 'viewer'
     join_options = {}
     join_options[:createTime] = meeting_info[:createTime]
     join_options[:userID] = @user.uid
@@ -54,13 +54,20 @@ module BbbHelper
 
   # Create meeting for the current @room.
   def create_meeting
-    record = bigbluebutton_recording_enabled ? @room.recording : false
+    record = bigbluebutton_recording_enabled ? string_to_bool(@room.record) : false
     create_options = {
       moderatorPW: @room.moderator,
       attendeePW: @room.viewer,
       welcome: @room.welcome,
       record: record,
       logoutURL: autoclose_url,
+      lockSettingsDisableCam: string_to_bool(@room.lockSettingsDisableCam),
+      lockSettingsDisableMic: string_to_bool(@room.lockSettingsDisableMic),
+      lockSettingsDisableNote: string_to_bool(@room.lockSettingsDisableNote),
+      lockSettingsDisablePrivateChat: string_to_bool(@room.lockSettingsDisablePrivateChat),
+      lockSettingsDisablePublicChat: string_to_bool(@room.lockSettingsDisablePublicChat),
+      autoStartRecording: string_to_bool(@room.autoStartRecording),
+      allowStartStopRecording: string_to_bool(@room.allowStartStopRecording),
       'meta_description': @room.description.truncate(128, separator: ' '),
     }
     # Send the create request.
@@ -163,12 +170,12 @@ module BbbHelper
     bbb.send_api_request('updateRecordings', meta)
   end
 
-  # Check if the current @user must wait_for_moderator to join the current @room.
+  # Check if the current @user must wait for moderator to join the current @room.
   def wait_for_mod?
     return unless @room && @user
 
     Rails.cache.fetch("#{@room.handler}/#{__method__}") do
-      @room.wait_moderator && !@user.moderator?(bigbluebutton_moderator_roles)
+      @room.waitForModerator && !@user.moderator?(bigbluebutton_moderator_roles)
     end
   end
 
@@ -254,5 +261,11 @@ module BbbHelper
       r.delete(:playback)
     end
     res[:recordings].sort_by { |rec| rec[:endTime] }.reverse
+  end
+
+  # The value for each setting is stored in the db as a string.
+  # This method converts it to a boolean
+  def string_to_bool(value)
+    ActiveModel::Type::Boolean.new.cast(value)
   end
 end
