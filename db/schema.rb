@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 2023_01_30_170203) do
     t.boolean "hide_name"
     t.boolean "hide_description"
     t.string "handler_legacy"
+    t.jsonb "settings", default: {}, null: false
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
     t.index ["tenant", "handler_legacy"], name: "index_rooms_on_tenant_and_handler_legacy", unique: true
   end

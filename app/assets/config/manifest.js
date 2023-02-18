@@ -16,19 +16,4 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).on('turbolinks:load', function(){
-
-    $('#allModerators_checkbox').on('click', function() {
-        var all_mod_checked = $('#allModerators_checkbox').prop("checked");
-        if (all_mod_checked){
-            $('#waitForModerator_checkbox').prop("checked", false);
-        }
-    })
-
-    $('#waitForModerator_checkbox').on('click', function() {
-        var wait_mod_checked = $('#waitForModerator_checkbox').prop("checked");
-        if (wait_mod_checked){
-            $('#allModerators_checkbox').prop("checked", false);
-        }
-    })
-});
+//= link_tree ../images

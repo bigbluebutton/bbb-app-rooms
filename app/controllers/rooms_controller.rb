@@ -16,8 +16,10 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'bbb_app_rooms/user'
 require 'json'
+require 'uri'
+require 'bbb_app_rooms/user'
+require 'net/http'
 
 class RoomsController < ApplicationController
   # Include libraries.
@@ -257,42 +259,75 @@ class RoomsController < ApplicationController
 
     # Continue through happy path.
     @tenant = session_params['tenant']
-    resource_handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
-    @room = Room.find_or_create_by(handler: resource_handler, tenant: @tenant) do |room|
-      room.update(launch_params_to_new_room_params(launch_params))
+    handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
+    new_room_params = launch_params_to_new_room_params(launch_params)
+    @room = Room.find_by(handler: handler, tenant: @tenant)
+    if @room
+      @room.update(new_room_params)
+    else
+      # Overrides with fetched parameters if  legacy api is enabled
+      new_room_params = fetch_new_room_params(new_room_params) if Rails.configuration.handler_legacy_api_enabled
+      @room = Room.create(new_room_params)
     end
+
     user_params = launch_params_to_new_user_params(launch_params)
     session[@room.handler] = { user_params: user_params }
   end
 
   def room_params
-    params.require(:room).permit(:name, :description, :welcome, :moderator, :viewer, :recording, :wait_moderator, :all_moderators, :hide_name, :hide_description)
-  end
-
-  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
-    params.permit.merge(
-      name: name,
-      description: description,
-      welcome: '',
-      recording: recording || true,
-      wait_moderator: wait_moderator || false,
-      all_moderators: all_moderators || false,
-      hide_name: hide_name || false,
-      hide_description: hide_description || false,
-      handler_legacy: handler_legacy
+    params.require(:room).permit(
+      :name,
+      :description,
+      :welcome,
+      :moderator,
+      :viewer,
+      :recording,
+      :wait_moderator,
+      :all_moderators,
+      :hide_name,
+      :hide_description,
+      settings: Room.stored_attributes[:settings]
     )
   end
 
   def launch_params_to_new_room_params(launch_params)
-    name = launch_params['resource_link_title'] || t('default.room.room')
-    description = launch_params['resource_link_description'] || ''
-    record = launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true
-    wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
-    all_moderators = message_has_custom?(launch_params, 'all_moderators')
-    hide_name = message_has_custom?(launch_params, 'hide_name')
-    hide_description = message_has_custom?(launch_params, 'hide_description')
-    handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
-    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy)
+    params.permit.merge(
+      name: launch_params['resource_link_title'] || t('default.room.room'),
+      description: launch_params['resource_link_description'] || '',
+      welcome: '',
+      recording: launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true,
+      wait_moderator: message_has_custom?(launch_params, 'wait_moderator') || false,
+      all_moderators: message_has_custom?(launch_params, 'all_moderators') || false,
+      hide_name: message_has_custom?(launch_params, 'hide_name') || false,
+      hide_description: message_has_custom?(launch_params, 'hide_description') || false,
+      handler_legacy: launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil,
+      settings: message_has_custom?(launch_params, 'settings') || {}
+    )
+  end
+
+  def fetch_new_room_params(new_room_params)
+    handler_legacy = new_room_params.key?('handler_legacy') ? new_room_params['handler_legacy'] : nil
+    handler_legacy_api_url = "#{Rails.configuration.handler_legacy_api_endpoint}rooms/#{handler_legacy}"
+    checksum = Digest::SHA256.hexdigest(handler_legacy_api_url + Rails.configuration.handler_legacy_api_secret)
+    uri = URI("#{handler_legacy_api_url}?checksum=#{checksum}")
+    res = Net::HTTP.get_response(uri)
+    return new_room_params unless res.is_a?(Net::HTTPSuccess)
+
+    room = JSON.parse(res.body)
+    params.permit.merge(
+      name: room['name'],
+      description: room['description'],
+      welcome: room['welcome'],
+      recording: room['recording'],
+      wait_moderator: room['wait_moderator'],
+      handler_legacy: handler_legacy,
+      all_moderators: room['all_moderators'],
+      settings: {
+        waitForModerator: room['wait_moderator'],
+        record: room['recording'],
+        allModerators: room['all_moderators'],
+      }
+    )
   end
 
   def launch_params_to_new_user_params(launch_params)
