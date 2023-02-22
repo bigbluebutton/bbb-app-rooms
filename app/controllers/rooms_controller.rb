@@ -28,6 +28,7 @@ class RoomsController < ApplicationController
   include BbbHelper
   include OmniauthHelper
 
+  before_action :print_parameters if Rails.configuration.developer_mode_enabled
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
   before_action :set_room, except: %i[launch]
@@ -35,6 +36,7 @@ class RoomsController < ApplicationController
   before_action :allow_iframe_requests
   before_action :set_current_locale
   after_action :broadcast_meeting, only: [:meeting_end]
+
 
   # GET /rooms/1
   # GET /rooms/1.json

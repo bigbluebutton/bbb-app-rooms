@@ -20,6 +20,8 @@ class SessionsController < ApplicationController
   # Include concerns.
   include OmniauthHelper
 
+  before_action :print_parameters if Rails.configuration.developer_mode_enabled
+
   def new; end
 
   def create
