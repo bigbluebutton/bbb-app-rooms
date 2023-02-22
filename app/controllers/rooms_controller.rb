@@ -108,8 +108,9 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirector = room_path(@room.id, launch_nonce: params['launch_nonce'])
-    redirect_to(redirector)
+    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) && return if @room
+
+    redirect_to(errors_path(410))
   end
 
   # POST /rooms/:id/meeting/join
@@ -247,7 +248,7 @@ class RoomsController < ApplicationController
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
-    logger.debug(session_params.to_json) if Rails.configuration.developer_mode_enabled
+    logger.debug(session_params.to_yaml) if Rails.configuration.developer_mode_enabled
 
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
@@ -258,18 +259,29 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @tenant = session_params['tenant']
-    handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
-    new_room_params = launch_params_to_new_room_params(launch_params)
-    @room = Room.find_by(handler: handler, tenant: @tenant)
-    if @room
-      @room.update(new_room_params)
-    else
-      # Overrides with fetched parameters if  legacy api is enabled
-      new_room_params = fetch_new_room_params(new_room_params) if Rails.configuration.handler_legacy_api_enabled
-      @room = Room.create(new_room_params)
+    launch_room(launch_params, session_params['tenant'])
+    launch_user(launch_params) if @room
+  end
+
+  def launch_room(launch_params, tenant)
+    handler = Digest::SHA1.hexdigest("rooms#{tenant}#{launch_params['resource_link_id']}")
+    @room = Room.find_by(handler: handler, handler_legacy: nil, tenant: (tenant.empty? ? nil : tenant))
+    return if @room # this is a regular launch on an existing room.
+
+    handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
+    @room = Room.find_by(handler_legacy: handler_legacy, tenant: (tenant.empty? ? nil : tenant))
+    new_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
+    @room.update(new_room_params) && return if @room # this is a legacy launch on an existing room.
+
+    # Overrides with fetched parameters only if it is a legacy launch and legacy api is enabled
+    if handler_legacy && Rails.configuration.handler_legacy_api_enabled && !(new_room_params = fetch_new_room_params(handler, handler_legacy))
+      return
     end
 
+    @room = Room.create(new_room_params)
+  end
+
+  def launch_user(launch_params)
     user_params = launch_params_to_new_user_params(launch_params)
     session[@room.handler] = { user_params: user_params }
   end
@@ -290,8 +302,10 @@ class RoomsController < ApplicationController
     )
   end
 
-  def launch_params_to_new_room_params(launch_params)
+  def launch_params_to_new_room_params(handler, handler_legacy, launch_params)
     params.permit.merge(
+      handler: handler,
+      handler_legacy: handler_legacy,
       name: launch_params['resource_link_title'] || t('default.room.room'),
       description: launch_params['resource_link_description'] || '',
       welcome: '',
@@ -300,27 +314,29 @@ class RoomsController < ApplicationController
       all_moderators: message_has_custom?(launch_params, 'all_moderators') || false,
       hide_name: message_has_custom?(launch_params, 'hide_name') || false,
       hide_description: message_has_custom?(launch_params, 'hide_description') || false,
-      handler_legacy: launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil,
       settings: message_has_custom?(launch_params, 'settings') || {}
     )
   end
 
-  def fetch_new_room_params(new_room_params)
-    handler_legacy = new_room_params.key?('handler_legacy') ? new_room_params['handler_legacy'] : nil
+  def fetch_new_room_params(handler, handler_legacy)
     handler_legacy_api_url = "#{Rails.configuration.handler_legacy_api_endpoint}rooms/#{handler_legacy}"
     checksum = Digest::SHA256.hexdigest(handler_legacy_api_url + Rails.configuration.handler_legacy_api_secret)
+    logger.debug("Fetching from: #{handler_legacy_api_url}?checksum=#{checksum}")
     uri = URI("#{handler_legacy_api_url}?checksum=#{checksum}")
     res = Net::HTTP.get_response(uri)
-    return new_room_params unless res.is_a?(Net::HTTPSuccess)
+    return nil unless res.is_a?(Net::HTTPSuccess)
 
     room = JSON.parse(res.body)
     params.permit.merge(
+      handler: handler,
+      handler_legacy: handler_legacy,
       name: room['name'],
       description: room['description'],
       welcome: room['welcome'],
+      moderator: room['moderator'],
+      viewer: room['viewer'],
       recording: room['recording'],
       wait_moderator: room['wait_moderator'],
-      handler_legacy: handler_legacy,
       all_moderators: room['all_moderators'],
       settings: {
         waitForModerator: room['wait_moderator'],

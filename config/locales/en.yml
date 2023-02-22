@@ -122,7 +122,7 @@ en:
         record:                         "Enable recording"
         autoStartRecording:             "Auto start recording"
         allowStartStopRecording:        "Enable the user to start/stop recording"
-        
+
     meeting:
       close:          "Close tab/window"
       close_manually: "This tab/window must be closed manually"
@@ -162,6 +162,10 @@ en:
         code:       "Unauthorized"
         message:    "Unauthorized access"
         suggestion: "If you are using this room through LTI try launching the app again by using the link or refreshing the browser"
+      _410:
+        code:       "Gone"
+        message:    "Unreachable resource"
+        suggestion: "It seems that you are trying to access this resource using an LTI endpoint that is no longer supported. Try updating the endpoint o credentials for the external tool"
     bigbluebutton:
       invalidrequest:
         code:       "BBBAPICallInvalid"
