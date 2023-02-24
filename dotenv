@@ -82,3 +82,6 @@ RAILS_SERVE_STATIC_FILES=true
 ## Define endpoint for fetching data for rooms based on legacy_handler
 # HANDLER_LEGACY_API_ENDPOINT=
 # HANDLER_LEGACY_API_SECRET=
+
+## Allow the use of legacy launches to create new rooms
+# HANDLER_LEGACY_NEW_ROOM_ENABLED=false

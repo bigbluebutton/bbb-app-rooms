@@ -37,7 +37,6 @@ class RoomsController < ApplicationController
   before_action :set_current_locale
   after_action :broadcast_meeting, only: [:meeting_end]
 
-
   # GET /rooms/1
   # GET /rooms/1.json
   def show
@@ -272,15 +271,17 @@ class RoomsController < ApplicationController
 
     handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
     @room = Room.find_by(handler_legacy: handler_legacy, tenant: (tenant.empty? ? nil : tenant))
-    new_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
-    @room.update(new_room_params) && return if @room # this is a legacy launch on an existing room.
+    return if @room # this is a legacy launch on existing room already migrated.
 
-    # Overrides with fetched parameters only if it is a legacy launch and legacy api is enabled
-    if handler_legacy && Rails.configuration.handler_legacy_api_enabled && !(new_room_params = fetch_new_room_params(handler, handler_legacy))
-      return
-    end
+    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
+    @room = Room.create(launch_room_params) && return unless handler_legacy # this is a regular launch on an new room.
 
-    @room = Room.create(new_room_params)
+    # this is a legacy launch on a new room
+    fetched_room_params = fetch_new_room_params(handler, handler_legacy) if Rails.configuration.handler_legacy_api_enabled
+
+    @room = Room.create(fetched_room_params) && return if fetched_room_params # create new room with fetched params if fetched.
+
+    @room = Room.create(launch_room_params) if Rails.configuration.handler_legacy_new_room_enabled # create new room with launch params only if allowed.
   end
 
   def launch_user(launch_params)

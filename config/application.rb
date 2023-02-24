@@ -75,5 +75,7 @@ module BbbAppRooms
     config.handler_legacy_api_endpoint = ENV['HANDLER_LEGACY_API_ENDPOINT']
     config.handler_legacy_api_secret = ENV['HANDLER_LEGACY_API_SECRET']
     config.handler_legacy_api_enabled = (config.handler_legacy_api_endpoint && config.handler_legacy_api_secret)
+
+    config.handler_legacy_new_room_enabled = ENV.fetch('HANDLER_LEGACY_NEW_ROOM_ENABLED', 'true').casecmp?('true')
   end
 end
