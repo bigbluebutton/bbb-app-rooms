@@ -43,8 +43,7 @@ module BbbAppRooms
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
     config.bigbluebutton_recording_public_formats = ENV['BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS'] || 'presentation'
 
-    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT'] || 'apps'}/rooms"
-    config.assets.prefix = "#{config.relative_url_root}/assets"
+    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT']}"
 
     config.omniauth_path_prefix = "#{config.relative_url_root}/auth"
     config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE']
