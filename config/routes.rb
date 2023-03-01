@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     # Handles Omniauth authentication.
     match '/auth/:provider', to: 'sessions#new', via: [:get, :post], as: :omniauth_authorize
     match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post], as: :omniauth_callback
-    get '/auth/failure', to: 'sessions#failure', as: :omniauth_failure
+    get   '/auth/failure', to: 'sessions#failure', as: :omniauth_failure
 
     # Handles errors.
     get '/errors/:code', to: 'errors#index', as: :errors
