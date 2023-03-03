@@ -13,12 +13,28 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<div class="alert alert-danger fade in">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  <h4><strong><%= key %></strong>: <%= message %></h4>
-  <p>
-    <% if suggestion %>
-    <%= suggestion %>
-    <% end %>
-  </p>
+<head>
+<style>
+.error-code {
+    font-size: 8rem;
+    color: #263f88;
+}
+
+.error-message {
+  font-size: 2rem;
+}
+</style>
+</head>
+<div class="text-center" style="margin-top: 8%">
+    <h2 class= "error-code">
+      <%= code %> <br>
+    </h2>
+    <div class="error-message font-extrabold">
+      <span class="sr-only"><%= message %></span><%= message %>
+    </div>
+    <div>
+      <% if suggestion %>
+      <%= suggestion %>
+      <% end %>
+    </div>
 </div>
