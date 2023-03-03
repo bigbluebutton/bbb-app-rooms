@@ -20,8 +20,8 @@ Rails.application.routes.draw do
   mount ActionCable.server => Rails.configuration.action_cable.url
 
   scope 'rooms' do
-    get '/health_check', to: 'health_check#all'
-    get '/healthz', to: 'health_check#all'
+    get '/health_check', to: 'health_check#show'
+    get '/healthz', to: 'health_check#show'
 
     root to: 'health_check#all'
 
