@@ -29,8 +29,8 @@ Rails.application.config.middleware.use(OmniAuth::Builder) do
       Rails.configuration.omniauth_key,
       Rails.configuration.omniauth_secret,
       provider_ignores_state: true,
-      path_prefix: "#{Rails.configuration.relative_url_root}/auth",
-      omniauth_root: Rails.configuration.omniauth_root.to_s,
+      path_prefix: Rails.configuration.omniauth_path_prefix,
+      omniauth_root: Rails.configuration.omniauth_root,
       raw_info_url: "#{Rails.configuration.omniauth_root}/api/v1/user.json",
       scope: 'api',
       info_params: %w[
