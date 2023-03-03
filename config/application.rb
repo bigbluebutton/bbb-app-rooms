@@ -43,10 +43,9 @@ module BbbAppRooms
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
     config.bigbluebutton_recording_public_formats = ENV['BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS'] || 'presentation'
 
-    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT'] || 'apps'}/rooms"
-    config.assets.prefix = "#{config.relative_url_root}/assets"
+    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT']}"
 
-    config.omniauth_path_prefix = "#{config.relative_url_root}/auth"
+    config.omniauth_path_prefix = '/rooms/auth'
     config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE']
     config.omniauth_root = "/#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] || 'lti'}"
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
@@ -55,8 +54,10 @@ module BbbAppRooms
     config.bigbluebutton_recording_enabled = ENV.fetch('BIGBLUEBUTTON_RECORDING_ENABLED', 'true').casecmp?('true')
 
     # Mount Action Cable outside main process or domain
-    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{config.relative_url_root}/cable"
-    config.action_cable.mount_path = "#{config.relative_url_root}/cable"
+    relative_url_root = config.relative_url_root
+    relative_url_root = relative_url_root.chop if relative_url_root[-1] == '/'
+    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{relative_url_root}/rooms/cable"
+    config.action_cable.mount_path = '/rooms/cable'
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')

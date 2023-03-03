@@ -5,7 +5,7 @@
 #
 #   docker run --rm bigbluebutton/bbb-app-rooms:latest bundle exec rake secret
 #
-SECRET_KEY_BASE=secret
+SECRET_KEY_BASE=
 
 # RELATIVE_URL_ROOT=apps
 
