@@ -17,52 +17,48 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 Rails.application.routes.draw do
-  get '/health_check', to: 'health_check#all'
-  get '/healthz', to: 'health_check#all'
-  root to: 'health_check#all'
-
   mount ActionCable.server => Rails.configuration.action_cable.url
 
-  scope ENV['RELATIVE_URL_ROOT'] || 'apps' do
-    scope 'rooms' do
-      get '/health_check', to: 'health_check#all'
-      get '/healthz', to: 'health_check#all'
+  scope 'rooms' do
+    get '/health_check', to: 'health_check#all'
+    get '/healthz', to: 'health_check#all'
 
-      # Handles meeting management.
-      scope ':id/meeting' do
-        post '/join', to: 'rooms#meeting_join', as: :meeting_join
-        get '/join', to: 'rooms#meeting_join'
-        post '/end', to: 'rooms#meeting_end', as: :meeting_end
-        get '/close', to: 'rooms#meeting_close', as: :autoclose
-      end
+    root to: 'health_check#all'
 
-      # Handles recording management.
-      scope ':id/recording/:record_id' do
-        post '/publish', to: 'rooms#recording_publish', as: :recording_publish
-        post '/unpublish', to: 'rooms#recording_unpublish', as: :recording_unpublish
-        post '/protect', to: 'rooms#recording_protect', as: :recording_protect
-        post '/unprotect', to: 'rooms#recording_unprotect', as: :recording_unprotect
-        post '/update', to: 'rooms#recording_update', as: :recording_update
-        post '/delete', to: 'rooms#recording_delete', as: :recording_delete
-        post '/:format/recording', to: 'rooms#individual_recording', as: :show_recording
-      end
-
-      # Handles launches.
-      post 'launch', to: 'rooms#launch', as: :room_launch
-
-      # Handles sessions.
-      get '/sessions/create'
-      get '/sessions/failure'
-
-      # Handles Omniauth authentication.
-      match '/auth/:provider', to: 'sessions#new', via: [:get, :post], as: :omniauth_authorize
-      match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post], as: :omniauth_callback
-      get '/auth/failure', to: 'sessions#failure', as: :omniauth_failure
-
-      # Handles errors.
-      get '/errors/:code', to: 'errors#index', as: :errors
+    # Handles meeting management.
+    scope ':id/meeting' do
+      post '/join', to: 'rooms#meeting_join', as: :meeting_join
+      get  '/join', to: 'rooms#meeting_join'
+      post '/end', to: 'rooms#meeting_end', as: :meeting_end
+      get  '/close', to: 'rooms#meeting_close', as: :autoclose
     end
 
-    resources :rooms
+    # Handles recording management.
+    scope ':id/recording/:record_id' do
+      post '/publish', to: 'rooms#recording_publish', as: :recording_publish
+      post '/unpublish', to: 'rooms#recording_unpublish', as: :recording_unpublish
+      post '/protect', to: 'rooms#recording_protect', as: :recording_protect
+      post '/unprotect', to: 'rooms#recording_unprotect', as: :recording_unprotect
+      post '/update', to: 'rooms#recording_update', as: :recording_update
+      post '/delete', to: 'rooms#recording_delete', as: :recording_delete
+      post '/:format/recording', to: 'rooms#individual_recording', as: :show_recording
+    end
+
+    # Handles launches.
+    post '/launch', to: 'rooms#launch', as: :room_launch
+
+    # Handles sessions.
+    get '/sessions/create'
+    get '/sessions/failure'
+
+    # Handles Omniauth authentication.
+    match '/auth/:provider', to: 'sessions#new', via: [:get, :post], as: :omniauth_authorize
+    match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post], as: :omniauth_callback
+    get   '/auth/failure', to: 'sessions#failure', as: :omniauth_failure
+
+    # Handles errors.
+    get '/errors/:code', to: 'errors#index', as: :errors
   end
+
+  resources :rooms
 end
