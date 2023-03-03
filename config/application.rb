@@ -57,7 +57,7 @@ module BbbAppRooms
     relative_url_root = config.relative_url_root
     relative_url_root = relative_url_root.chop if relative_url_root[-1] == '/'
     config.action_cable.url = "wss://#{ENV['URL_HOST']}#{relative_url_root}/rooms/cable"
-    config.action_cable.mount_path = "/rooms/cable"
+    config.action_cable.mount_path = '/rooms/cable'
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')

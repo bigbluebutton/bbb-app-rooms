@@ -17,7 +17,6 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 Rails.application.routes.draw do
-
   mount ActionCable.server => Rails.configuration.action_cable.url
 
   scope 'rooms' do
