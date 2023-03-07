@@ -134,5 +134,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.lograge.enabled = true
-  config.lograge.ignore_actions = ['HealthCheckController#all']
+  config.lograge.ignore_actions = ['HealthCheckController#show']
 end
