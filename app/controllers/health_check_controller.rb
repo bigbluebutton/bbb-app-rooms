@@ -17,7 +17,9 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 class HealthCheckController < ApplicationController
-  def all
+  rescue_from(Exception) { render(plain: 'error') }
+
+  def show
     render(plain: 'success')
   end
 end
