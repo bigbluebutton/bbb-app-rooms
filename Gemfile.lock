@@ -99,7 +99,7 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     childprocess (4.1.0)
-    concurrent-ruby (1.2.0)
+    concurrent-ruby (1.2.2)
     coveralls (0.8.23)
       json (>= 1.8, < 3)
       simplecov (~> 0.16.1)
@@ -173,7 +173,8 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
-    minitest (5.17.0)
+    mini_portile2 (2.8.1)
+    minitest (5.18.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     net-imap (0.3.4)
@@ -187,7 +188,10 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.14.1-x86_64-linux)
+    nokogiri (1.14.2)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
+    nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -208,14 +212,14 @@ GEM
       omniauth (~> 2.0)
     pagy (6.0.1)
     parallel (1.22.1)
-    parser (3.2.0.0)
+    parser (3.2.1.1)
       ast (~> 2.4.1)
     pg (1.4.5)
     public_suffix (5.0.1)
     puma (4.3.12)
       nio4r (~> 2.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.3)
     rack-protection (3.0.5)
       rack
     rack-proxy (0.7.6)
@@ -258,7 +262,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.8.0)
-    regexp_parser (2.6.2)
+    regexp_parser (2.7.0)
     remote_syslog_logger (1.0.4)
       syslog_protocol
     repost (0.3.8)
@@ -302,12 +306,12 @@ GEM
       rubocop-ast (>= 1.2.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.24.1)
-      parser (>= 3.1.1.0)
+    rubocop-ast (1.27.0)
+      parser (>= 3.2.1.0)
     rubocop-rails (2.4.2)
       rack (>= 1.1)
       rubocop (>= 0.72.0)
-    ruby-progressbar (1.11.0)
+    ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     sass-rails (6.0.0)
@@ -349,8 +353,8 @@ GEM
     term-ansicolor (1.7.1)
       tins (~> 1.0)
     thor (1.2.1)
-    tilt (2.0.11)
-    timeout (0.3.1)
+    tilt (2.1.0)
+    timeout (0.3.2)
     tins (1.32.1)
       sync
     turbolinks (5.2.1)
@@ -393,9 +397,10 @@ GEM
       rexml
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.6)
+    zeitwerk (2.6.7)
 
 PLATFORMS
+  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -415,14 +420,14 @@ DEPENDENCIES
   lograge (~> 0.11.2)
   minitest
   net-smtp
-  omniauth (>= 2.1.0)
+  omniauth (>= 2.1.1)
   omniauth-bbbltibroker!
   omniauth-oauth2 (>= 1.8.0)
   omniauth-rails_csrf_protection (~> 1.0.1)
   pagy
   pg (~> 1.0)
   puma (~> 4.3)
-  rails (~> 6.1, >= 6.1.7.1)
+  rails (~> 6.1, >= 6.1.7.2)
   rails-controller-testing
   redis (~> 4.2)
   remote_syslog_logger
@@ -444,3 +449,6 @@ DEPENDENCIES
   webdrivers
   webmock
   webpacker (~> 6.0.0.rc.5)
+
+BUNDLED WITH
+   2.1.4
