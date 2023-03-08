@@ -1,4 +1,4 @@
-FROM alpine:3.15 AS alpine
+FROM alpine:3.17 AS alpine
 
 FROM alpine AS base
 RUN apk add --no-cache \
