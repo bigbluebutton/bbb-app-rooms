@@ -127,7 +127,8 @@ class RoomsController < ApplicationController
       end
     else
       broadcast_meeting(action: 'join', delay: true)
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room, { action: 'started' }) if @room.wait_moderator
+      NotifyRoomWatcherJob.perform_now(@room, { action: 'started' })
+
       redirect_to(@meeting)
     end
   end

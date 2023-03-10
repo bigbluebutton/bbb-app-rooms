@@ -25,7 +25,10 @@ $(document).on('turbolinks:load', function(){
 
   if (!(controller == "rooms" && action == "meeting_join")){
     var room = window.location.pathname.split('/')[3];
-    App.meetingInfo = App.cable.subscriptions.create({channel: "MeetingInfoChannel", room_id: room}, {
+    App.meetingInfo = App.cable.subscriptions.create({
+        channel: "MeetingInfoChannel", 
+        room_id: room
+      }, {
       connected: function() {
         console.log("Connected to meeting info channel");
       },

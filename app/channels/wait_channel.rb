@@ -28,6 +28,6 @@ class WaitChannel < ApplicationCable::Channel
   end
 
   def notify_join
-    NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(Room.find(params[:room_id]), action: 'joined from wait')
+    NotifyMeetingWatcherJob.perform_now(Room.find(params[:room_id]), action: 'joined from wait')
   end
 end

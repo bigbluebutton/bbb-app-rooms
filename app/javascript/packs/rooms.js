@@ -34,9 +34,6 @@ $(document).on('turbolinks:load', function(){
                 console.log("disconnected to wait");
                 console.log(data);
             },
-            rejected: function() {
-                console.log("rejected from wait");
-            },
             received: function(data) {
                 console.log("This is the wait data: " + JSON.stringify(data));
                 if (data.action == "started"){
