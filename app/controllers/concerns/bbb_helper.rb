@@ -174,9 +174,7 @@ module BbbHelper
   def wait_for_mod?
     return unless @room && @user
 
-    Rails.cache.fetch("#{@room.handler}/#{__method__}") do
-      @room.waitForModerator && !@user.moderator?(bigbluebutton_moderator_roles)
-    end
+    @room.waitForModerator && !@user.moderator?(bigbluebutton_moderator_roles)
   end
 
   # Return the number of participants in a meeting for the current room.
