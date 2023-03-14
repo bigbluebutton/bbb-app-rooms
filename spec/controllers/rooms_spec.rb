@@ -4,9 +4,12 @@ require 'rails_helper'
 
 describe RoomsController, type: :controller do
   let(:rooms) { Room.all }
+  let(:bbb_api) { BigBlueButton::BigBlueButtonApi.new('http://bbb.example.com/bigbluebutton/api', 'secret', '1.0', Rails.logger) }
 
   before :each do
     allow_any_instance_of(RoomsController).to(receive(:authenticate_user!).and_return(:success))
+    allow_any_instance_of(RoomsController).to(receive(:bbb).and_return(bbb_api))
+    allow_any_instance_of(NotifyMeetingWatcherJob).to(receive(:bbb).and_return(bbb_api)) # stub actioncable processes
 
     @request.session['handler'] = {
       user_params: {
