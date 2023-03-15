@@ -20,10 +20,12 @@ require 'json'
 require 'uri'
 require 'bbb_app_rooms/user'
 require 'net/http'
+require 'rooms_error/error'
 
 class RoomsController < ApplicationController
   # Include libraries.
   include BbbAppRooms
+  include RoomsError
   # Include concerns.
   include BbbHelper
   include OmniauthHelper
@@ -44,6 +46,8 @@ class RoomsController < ApplicationController
       if @room
         begin
           @recordings = recordings
+          @meeting_info = meeting_info
+          @meeting_running = @meeting_info[:returncode] == true
         rescue BigBlueButton::BigBlueButtonException => e
           logger.error(e.to_s)
           flash.now[:alert] = t('default.recording.server_down')
@@ -56,6 +60,14 @@ class RoomsController < ApplicationController
         format.html { render(:error, status: @error[:status]) }
         format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
       end
+    end
+
+  # if there's an error besides the server being down (ex. something wrong with initializing the BBB API)
+  rescue RoomsError::CustomError => e
+    @error = e.fetch_json
+    respond_to do |format|
+      format.html { render(:error, status: @error[:status]) }
+      format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
     end
   end
 
@@ -130,6 +142,13 @@ class RoomsController < ApplicationController
       NotifyRoomWatcherJob.perform_now(@room, { action: 'started' })
 
       redirect_to(@meeting)
+    end
+  rescue BigBlueButton::BigBlueButtonException => e
+    logger.error(e.to_s)
+    set_error(e.key, 500, 'bigbluebutton')
+    respond_to do |format|
+      format.html { render(:error, status: @error[:status]) }
+      format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
     end
   end
 
@@ -216,9 +235,9 @@ class RoomsController < ApplicationController
 
   private
 
-  def set_error(error, status)
+  def set_error(error, status, domain = 'room')
     @room = @user = nil
-    @error = { key: t("error.room.#{error}.code"), message: t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), status: status }
+    @error = { key: t("error.#{domain}.#{error}.code"), message: t("error.#{domain}.#{error}.message"), suggestion: t("error.#{domain}.#{error}.suggestion"), status: status }
   end
 
   def authenticate_user!
