@@ -13,5 +13,6 @@ FactoryBot.define do
     created_at { Time.zone.local(2020) }
     updated_at { Time.zone.now }
     handler { 'handler' }
+    tenant { Faker::Name.unique.first_name }
   end
 end

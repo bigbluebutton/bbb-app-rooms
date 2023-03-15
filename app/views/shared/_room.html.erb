@@ -41,12 +41,10 @@
       <% end %>
   </div>
 
-  <% meeting_running = meeting_running? %>
   <% visible = "display: none;" %>
-  <% if meeting_running %>
-    <% meeting_info_dict = meeting_info %>
-    <% elapsedTime = elapsed_time(meeting_info_dict[:startTime], DateTime.now) %>
-    <% pplPresent = meeting_info_dict[:participantCount] %>
+  <% if @meeting_running %>
+    <% elapsedTime = elapsed_time(@meeting_info[:startTime], DateTime.now) %>
+    <% pplPresent = @meeting_info[:participantCount] %>
     <% if pplPresent == 1 %>
       <% pplprson = "person" %>
     <% else %>
