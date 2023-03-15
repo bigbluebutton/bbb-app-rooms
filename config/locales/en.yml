@@ -171,6 +171,10 @@ en:
         code:       "BBBAPICallInvalid"
         message:    "BBB API call invalid"
         suggestion: "Make sure the BigBlueButton server used is available and accesible from the server where the LTI application is installed"
+      IncorrectUrlError:
+        code:       "IncorrectURLError"
+        message:    "Connection error. Your URL is probably incorrect"
+        suggestion: "Make sure that the BBB credentials are configured correctly"
     room:
       forbidden:
         code:       "AccessForbidden"

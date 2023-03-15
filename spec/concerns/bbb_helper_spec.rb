@@ -23,10 +23,11 @@ describe BbbHelper do
   include BbbHelper
   include ActionView::Helpers::TranslationHelper
 
-  let(:bbb_helper) { BigBlueButton::BigBlueButtonApi.new('http://bbb.example.com/bigbluebutton/api', 'secret', '1.0') }
+  let(:bbb_api) { BigBlueButton::BigBlueButtonApi.new('http://bbb.example.com/bigbluebutton/api', 'secret', '1.0', Rails.logger) }
 
   before do
     @room = create(:room)
+    allow_any_instance_of(BbbHelper).to(receive(:bbb).and_return(bbb_api))
   end
 
   describe 'meeting' do
@@ -56,8 +57,8 @@ describe BbbHelper do
                                       email: 'jane.doe@email.com',
                                       roles: 'Administrator,Instructor,Administrator')
 
-        endpoint = Rails.configuration.bigbluebutton_endpoint
-        secret = Rails.configuration.bigbluebutton_secret
+        endpoint = 'http://bbb.example.com/bigbluebutton/api'
+        secret = 'secret'
         fullname = "fullName=#{@user.full_name}"
 
         meeting_id = "&meetingID=#{@room.handler}"
@@ -65,9 +66,11 @@ describe BbbHelper do
         userid = "&userID=#{@user.uid}"
 
         encoded_params = (fullname + meeting_id + password + userid).gsub(' ', '+')
-        string = "join#{encoded_params}#{secret}"
 
-        checksum = OpenSSL::Digest.digest('sha1', string).unpack1('H*')
+        # checksum calc (taken from bigbluebutton_api gem's get_url method)
+        checksum_param = encoded_params + secret
+        checksum_param = "join#{checksum_param}"
+        checksum = Digest::SHA1.hexdigest(checksum_param)
 
         expect(join_meeting_url).to(eql("#{endpoint}/join?#{encoded_params}&checksum=#{checksum}"))
       end
