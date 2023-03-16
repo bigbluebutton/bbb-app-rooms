@@ -16,16 +16,21 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-require 'bbb_app_rooms/user'
 require 'json'
+require 'uri'
+require 'bbb_app_rooms/user'
+require 'net/http'
+require 'rooms_error/error'
 
 class RoomsController < ApplicationController
   # Include libraries.
   include BbbAppRooms
+  include RoomsError
   # Include concerns.
   include BbbHelper
   include OmniauthHelper
 
+  before_action :print_parameters if Rails.configuration.developer_mode_enabled
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
   before_action :set_room, except: %i[launch]
@@ -41,6 +46,8 @@ class RoomsController < ApplicationController
       if @room
         begin
           @recordings = recordings
+          @meeting_info = meeting_info
+          @meeting_running = @meeting_info[:returncode] == true
         rescue BigBlueButton::BigBlueButtonException => e
           logger.error(e.to_s)
           flash.now[:alert] = t('default.recording.server_down')
@@ -53,6 +60,14 @@ class RoomsController < ApplicationController
         format.html { render(:error, status: @error[:status]) }
         format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
       end
+    end
+
+  # if there's an error besides the server being down (ex. something wrong with initializing the BBB API)
+  rescue RoomsError::CustomError => e
+    @error = e.fetch_json
+    respond_to do |format|
+      format.html { render(:error, status: @error[:status]) }
+      format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
     end
   end
 
@@ -106,8 +121,9 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirector = room_path(@room.id, launch_nonce: params['launch_nonce'])
-    redirect_to(redirector)
+    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) && return if @room
+
+    redirect_to(errors_path(410))
   end
 
   # POST /rooms/:id/meeting/join
@@ -123,8 +139,16 @@ class RoomsController < ApplicationController
       end
     else
       broadcast_meeting(action: 'join', delay: true)
-      NotifyRoomWatcherJob.set(wait: 5.seconds).perform_later(@room, { action: 'started' }) if @room.wait_moderator
+      NotifyRoomWatcherJob.perform_now(@room, { action: 'started' })
+
       redirect_to(@meeting)
+    end
+  rescue BigBlueButton::BigBlueButtonException => e
+    logger.error(e.to_s)
+    set_error(e.key, 500, 'bigbluebutton')
+    respond_to do |format|
+      format.html { render(:error, status: @error[:status]) }
+      format.json { render(json: { error: @error[:message] }, status: @error[:status]) }
     end
   end
 
@@ -211,9 +235,9 @@ class RoomsController < ApplicationController
 
   private
 
-  def set_error(error, status)
+  def set_error(error, status, domain = 'room')
     @room = @user = nil
-    @error = { key: t("error.room.#{error}.code"), message: t("error.room.#{error}.message"), suggestion: t("error.room.#{error}.suggestion"), status: status }
+    @error = { key: t("error.#{domain}.#{error}.code"), message: t("error.#{domain}.#{error}.message"), suggestion: t("error.#{domain}.#{error}.suggestion"), status: status }
   end
 
   def authenticate_user!
@@ -245,7 +269,7 @@ class RoomsController < ApplicationController
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
-    logger.debug(session_params.to_json) if Rails.configuration.developer_mode_enabled
+    logger.debug(session_params.to_yaml) if Rails.configuration.developer_mode_enabled
 
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
@@ -256,16 +280,36 @@ class RoomsController < ApplicationController
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    @tenant = session_params['tenant']
-    resource_handler = Digest::SHA1.hexdigest("rooms#{@tenant}#{launch_params['resource_link_id']}")
-    to_new_room_params = launch_params_to_new_room_params(launch_params)
-    @room = Room.find_by(handler: resource_handler, tenant: @tenant)
-    if @room
-      @room.update(to_new_room_params)
-    else
-      @room = Room.create(to_new_room_params)
+    launch_room(launch_params, session_params['tenant'].presence)
+    launch_user(launch_params) if @room
+  end
+
+  def launch_room(launch_params, tenant)
+    handler = Digest::SHA1.hexdigest("rooms#{tenant}#{launch_params['resource_link_id']}")
+    handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
+    @room = Room.find_by(handler: handler, handler_legacy: handler_legacy, tenant: tenant)
+
+    # Exit if this is a launch on an existing room or continue path for new rooms.
+    return if @room
+
+    # For a legacy launch.
+    unless handler_legacy.nil?
+      # Fetch room parameters if the API is enabled.
+      fetched_room_params = fetch_new_room_params(handler, handler_legacy) if Rails.configuration.handler_legacy_api_enabled
+      # Create new room with fetched params if fetched.
+      @room = Room.create(fetched_room_params.merge({ tenant: tenant })) if fetched_room_params
+      # Exit if the room was created.
+      return if @room
+      # When new room creation is disabled, there is nothing else to do, just exit.
+      return unless Rails.configuration.handler_legacy_new_room_enabled
     end
 
+    # For any regular launch or if the new room creation for legacy launches is enabled.
+    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
+    @room = Room.create(launch_room_params.merge({ tenant: tenant }))
+  end
+
+  def launch_user(launch_params)
     user_params = launch_params_to_new_user_params(launch_params)
     session[@room.handler] = { user_params: user_params }
   end
@@ -286,32 +330,48 @@ class RoomsController < ApplicationController
     )
   end
 
-  def new_room_params(name, description, recording, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy, settings)
+  def launch_params_to_new_room_params(handler, handler_legacy, launch_params)
     params.permit.merge(
-      name: name,
-      description: description,
-      welcome: '',
-      recording: recording || true,
-      wait_moderator: wait_moderator || false,
-      all_moderators: all_moderators || false,
-      hide_name: hide_name || false,
-      hide_description: hide_description || false,
+      handler: handler,
       handler_legacy: handler_legacy,
-      settings: settings || {}
+      name: launch_params['resource_link_title'] || t('default.room.room'),
+      description: launch_params['resource_link_description'] || '',
+      welcome: '',
+      recording: launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true,
+      wait_moderator: message_has_custom?(launch_params, 'wait_moderator') || false,
+      all_moderators: message_has_custom?(launch_params, 'all_moderators') || false,
+      hide_name: message_has_custom?(launch_params, 'hide_name') || false,
+      hide_description: message_has_custom?(launch_params, 'hide_description') || false,
+      settings: message_has_custom?(launch_params, 'settings') || {}
     )
   end
 
-  def launch_params_to_new_room_params(launch_params)
-    name = launch_params['resource_link_title'] || t('default.room.room')
-    description = launch_params['resource_link_description'] || ''
-    record = launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true
-    wait_moderator = message_has_custom?(launch_params, 'wait_moderator')
-    all_moderators = message_has_custom?(launch_params, 'all_moderators')
-    hide_name = message_has_custom?(launch_params, 'hide_name')
-    hide_description = message_has_custom?(launch_params, 'hide_description')
-    handler_legacy = launch_params['custom_params'].key?('custom_handler_legacy') ? launch_params['custom_params']['custom_handler_legacy'] : nil
-    settings = message_has_custom?(launch_params, 'settings')
-    new_room_params(name, description, record, wait_moderator, all_moderators, hide_name, hide_description, handler_legacy, settings)
+  def fetch_new_room_params(handler, handler_legacy)
+    handler_legacy_api_url = "#{Rails.configuration.handler_legacy_api_endpoint}rooms/#{handler_legacy}"
+    checksum = Digest::SHA256.hexdigest(handler_legacy_api_url + Rails.configuration.handler_legacy_api_secret)
+    logger.debug("Fetching from: #{handler_legacy_api_url}?checksum=#{checksum}")
+    uri = URI("#{handler_legacy_api_url}?checksum=#{checksum}")
+    res = Net::HTTP.get_response(uri)
+    return nil unless res.is_a?(Net::HTTPSuccess)
+
+    room = JSON.parse(res.body)
+    params.permit.merge(
+      handler: handler,
+      handler_legacy: handler_legacy,
+      name: room['name'],
+      description: room['description'],
+      welcome: room['welcome'],
+      moderator: room['moderator'],
+      viewer: room['viewer'],
+      recording: room['recording'],
+      wait_moderator: room['wait_moderator'],
+      all_moderators: room['all_moderators'],
+      settings: {
+        waitForModerator: room['wait_moderator'],
+        record: room['recording'],
+        allModerators: room['all_moderators'],
+      }
+    )
   end
 
   def launch_params_to_new_user_params(launch_params)

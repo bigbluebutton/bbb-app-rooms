@@ -15,19 +15,26 @@
 #
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
-class WaitChannel < ApplicationCable::Channel
-  def subscribed
-    @room = Room.find(params[:room_id])
-    stream_for(@room)
-  rescue ActiveRecord::RecordNotFound
-    nil # To catch attempts to subscribe when wait for mod isn't required.
-  end
 
-  def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
-  end
+module RoomsError
+  class CustomError < StandardError
+    attr_accessor :code, :key, :message, :suggestion, :status
 
-  def notify_join
-    NotifyMeetingWatcherJob.perform_now(Room.find(params[:room_id]), action: 'joined from wait')
+    def initialize(options = {})
+      super(options[:message])
+      self.code = options[:code] || 500
+      self.key = options[:key] || :internal_error
+      self.message = options[:message] || 'Something went wrong'
+      self.suggestion = options[:suggestion]
+      self.status = options[:status] || @code
+    end
+
+    def fetch_json
+      { code: code,
+        key: key,
+        message: message,
+        suggestion: suggestion,
+        status: status, }
+    end
   end
 end

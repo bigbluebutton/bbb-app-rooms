@@ -38,15 +38,14 @@ module BbbAppRooms
 
     config.build_number = ENV['BUILD_NUMBER'] || 'v1'
 
-    config.bigbluebutton_endpoint = ENV['BIGBLUEBUTTON_ENDPOINT'] || 'http://test-install.blindsidenetworks.com/bigbluebutton/api'
-    config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET'] || '8cd8ef52e8e101574e400365b55e11a6'
+    config.bigbluebutton_endpoint = ENV['BIGBLUEBUTTON_ENDPOINT']
+    config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET']
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
     config.bigbluebutton_recording_public_formats = ENV['BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS'] || 'presentation'
 
-    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT'] || 'apps'}/rooms"
-    config.assets.prefix = "#{config.relative_url_root}/assets"
+    config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT']}"
 
-    config.omniauth_path_prefix = "#{config.relative_url_root}/auth"
+    config.omniauth_path_prefix = '/rooms/auth'
     config.omniauth_site = ENV['OMNIAUTH_BBBLTIBROKER_SITE']
     config.omniauth_root = "/#{ENV['OMNIAUTH_BBBLTIBROKER_ROOT'] || 'lti'}"
     config.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY']
@@ -55,8 +54,10 @@ module BbbAppRooms
     config.bigbluebutton_recording_enabled = ENV.fetch('BIGBLUEBUTTON_RECORDING_ENABLED', 'true').casecmp?('true')
 
     # Mount Action Cable outside main process or domain
-    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{config.relative_url_root}/cable"
-    config.action_cable.mount_path = "#{config.relative_url_root}/cable"
+    relative_url_root = config.relative_url_root
+    relative_url_root = relative_url_root.chop if relative_url_root[-1] == '/'
+    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{relative_url_root}/rooms/cable"
+    config.action_cable.mount_path = '/rooms/cable'
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')
@@ -71,5 +72,11 @@ module BbbAppRooms
     checksum_env_var = ENV['BIGBLUEBUTTON_CHECKSUM_ALGORITHM']
     null_or_invalid = checksum_env_var.nil? || !valid_sha_versions.include?(checksum_env_var.downcase)
     config.checksum_algorithm = null_or_invalid ? 'sha1' : checksum_env_var.downcase
+
+    config.handler_legacy_api_endpoint = ENV['HANDLER_LEGACY_API_ENDPOINT']
+    config.handler_legacy_api_secret = ENV['HANDLER_LEGACY_API_SECRET']
+    config.handler_legacy_api_enabled = (config.handler_legacy_api_endpoint && config.handler_legacy_api_secret)
+
+    config.handler_legacy_new_room_enabled = ENV.fetch('HANDLER_LEGACY_NEW_ROOM_ENABLED', 'true').casecmp?('true')
   end
 end

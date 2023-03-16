@@ -15,6 +15,7 @@
 
 require 'bbb/credentials'
 require 'bigbluebutton_api'
+require 'rooms_error/error'
 
 module BbbHelper
   extend ActiveSupport::Concern
@@ -22,12 +23,17 @@ module BbbHelper
 
   RECORDINGS_KEY = :recordings
 
+  include RoomsError
+
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
     bbb_url = remove_slash(@bbb_credentials.endpoint(@room.tenant))
     bbb_secret = @bbb_credentials.secret(@room.tenant)
     BigBlueButton::BigBlueButtonApi.new(bbb_url, bbb_secret, '1.0', Rails.logger)
+  rescue StandardError => e
+    logger.error("Error in creating BBB object: #{e}")
+    raise RoomsError::CustomError.new(code: 500, message: 'There was an error initializing BigBlueButton credentials', key: 'BigBlueButton Error')
   end
 
   # Generates URL for joining the current @room meeting.
@@ -98,14 +104,9 @@ module BbbHelper
 
   # Checks if the meeting for current @room is running.
   def meeting_running?
-    begin
-      res = bbb.is_meeting_running?(@room.handler)
-    rescue BigBlueButton::BigBlueButtonException => e
-      logger.error(e.to_s)
-      res = false
-    end
-
-    res
+    bbb.is_meeting_running?(@room.handler)
+  rescue BigBlueButton::BigBlueButtonException => e
+    logger.error(e.to_s)
   end
 
   # Fetches all recordings for a room.
@@ -174,9 +175,8 @@ module BbbHelper
   def wait_for_mod?
     return unless @room && @user
 
-    Rails.cache.fetch("#{@room.handler}/#{__method__}") do
-      @room.waitForModerator && !@user.moderator?(bigbluebutton_moderator_roles)
-    end
+    wait_setting = @room.waitForModerator != '0'
+    wait_setting && !@user.moderator?(bigbluebutton_moderator_roles)
   end
 
   # Return the number of participants in a meeting for the current room.

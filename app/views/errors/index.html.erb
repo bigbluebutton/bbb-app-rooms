@@ -13,6 +13,4 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<h1><%= t('default.app.error') + ': ' + @error[:code] %></h1>
-
-<%= render 'error', key: @error[:key], message: @error[:message], suggestion: @error[:suggestion] %>
+<%= render 'shared/error', code: @error[:code], key: @error[:key], message: @error[:message], suggestion: @error[:suggestion] %>

@@ -1,5 +1,11 @@
 FROM alpine:3.15 AS alpine
 
+ARG RAILS_ROOT=/usr/src/app
+ENV RAILS_ROOT=${RAILS_ROOT}
+
+USER root
+WORKDIR $RAILS_ROOT
+
 FROM alpine AS base
 RUN apk add --no-cache \
     libpq \
@@ -14,8 +20,9 @@ RUN apk add --no-cache \
     nodejs npm yarn \
     tini \
     tzdata \
+    gettext \
+    imagemagick \
     shared-mime-info
-WORKDIR /usr/src/app
 
 FROM base as builder
 RUN apk add --update --no-cache \
@@ -29,8 +36,6 @@ RUN apk add --update --no-cache \
     zlib-dev \
     curl-dev git \
     && ( echo 'install: --no-document' ; echo 'update: --no-document' ) >>/etc/gemrc
-
-USER root
 COPY . ./
 RUN bundle config build.nokogiri --use-system-libraries \
     && bundle config set --local deployment 'true' \
@@ -41,21 +46,22 @@ RUN bundle config build.nokogiri --use-system-libraries \
 RUN yarn install --check-files
 
 FROM base AS application
-USER root
+RUN apk add --no-cache \
+    bash \
+    postgresql-client
 ARG RAILS_ENV
 ENV RAILS_ENV=${RAILS_ENV:-production}
-COPY --from=builder /usr/src/app ./
-
 ARG BUILD_NUMBER
 ENV BUILD_NUMBER=${BUILD_NUMBER}
+COPY --from=builder /usr/src/app ./
 
 FROM application
-
-EXPOSE 3000
+ARG PORT
+ENV PORT=${PORT:-3000}
+EXPOSE ${PORT}
 
 # Precompile assets
-#   The assets are precompiled in runtime because RELATIVE_URL_ROOT can be set up through .env
+RUN SECRET_KEY_BASE=1 RAILS_ENV=production bundle exec rake assets:precompile --trace
 
 # Run startup command
 CMD ["scripts/start.sh"]
-RUN SECRET_KEY_BASE=1 RAILS_ENV=production bundle exec rake assets:precompile --trace

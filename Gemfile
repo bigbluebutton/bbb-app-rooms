@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1', '>= 6.1.7.1'
+gem 'rails', '~> 6.1', '>= 6.1.7.3'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.3'
 # Use postgres as the database for Active Record
@@ -90,13 +90,13 @@ gem 'bigbluebutton-api-ruby', '~> 1.9.0'
 
 gem 'rest-client'
 
-gem 'omniauth', '>= 2.1.0'
+gem 'omniauth', '>= 2.1.1'
 gem 'omniauth-oauth2', '>= 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'repost', '~> 0.3.8'
 
 gem 'minitest'
-gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.3'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.4'
 
 gem 'activerecord-session_store', '>= 2.0.0'
 

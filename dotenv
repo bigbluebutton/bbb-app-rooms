@@ -5,7 +5,7 @@
 #
 #   docker run --rm bigbluebutton/bbb-app-rooms:latest bundle exec rake secret
 #
-SECRET_KEY_BASE=secret
+SECRET_KEY_BASE=
 
 # RELATIVE_URL_ROOT=apps
 
@@ -76,5 +76,12 @@ RAILS_SERVE_STATIC_FILES=true
 # LOG_LEVEL=warn
 
 ## SHA algorithm to use for checksum. sha1 is default
-## BIGBLUEBUTTON_CHECKSUM_ALGORITHM: "SHA1|SHA256|SHA512" 
-# BIGBLUEBUTTON_CHECKSUM_ALGORITHM='sha256' 
+## BIGBLUEBUTTON_CHECKSUM_ALGORITHM: "SHA1|SHA256|SHA512"
+# BIGBLUEBUTTON_CHECKSUM_ALGORITHM='sha256'
+
+## Define endpoint for fetching data for rooms based on legacy_handler
+# HANDLER_LEGACY_API_ENDPOINT=
+# HANDLER_LEGACY_API_SECRET=
+
+## Allow the use of legacy launches to create new rooms
+# HANDLER_LEGACY_NEW_ROOM_ENABLED=false
