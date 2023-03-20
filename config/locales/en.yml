@@ -112,6 +112,8 @@ en:
         allowStartStopRecording:        "If you select both 'auto start recording' and 'Enable the user to start/stop recording', then the entire length of the session will be recorded, and the moderators in the session will not be able to pause/resume the recording."
       waitmodmsg:     "Please wait for a moderator to enter the room. You will be redirected automatically."
       settings:
+        roomSettingsTitle:              "Room Settings"
+        lockSettingsTitle:              "Lock Settings"
         lockSettingsDisableCam:         "Disable cameras"
         lockSettingsDisableMic:         "Disable microphones"
         lockSettingsDisableNote:        "Disable shared notes"
@@ -155,7 +157,12 @@ en:
     waiting_room:
       hang_tight:   "Hang tight ..."
       redirect_msg:  "You will be automatically redirected once the meeting starts"
-
+  warning:
+    cookies:
+      title:  "Disable 3rd Party cookies"
+      message:      "Your browser is not allowing 3rd party cookies, which is necessary for this application to function. Clicking the 'Continue' button will prompt you to enable it."
+      emphasis:     "Please note you may need to refresh this page after giving permission."
+      continue:     "Continue"
   error:
     http:
       _401:
