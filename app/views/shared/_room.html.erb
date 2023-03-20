@@ -12,13 +12,13 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
-  <div id="access-alert" class="p-4 mb-4 bg-red-100 rounded-lg dark:bg-red-200 hidden">
-      <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
-        <p> The browser you are using blocks third-party cookies, which are necessary for this application to function. Clicking on the button below will prompt you to allow. Please note that you must refresh the page after doing so. </p>
-      </div>
-      <button type="button" id="accept-btn" class="ml-3 mt-1 bg-lime-400 text-black rounded-lg p-1 hover:bg-slate-200 border border-red-900">
-          <p>Review</p>        
-      </button>
+  <div id="access-alert" style="background-color: #fffacd;" class="mb-4 p-4 rounded-lg hidden">
+   
+    <h4><b>Disable 3rd Party cookies</b></h4>
+    <h5> Your browser is not allowing 3rd party cookies, which is necessary for this application to function. Clicking the "Continue" button will prompt you to enable it.<b> Please note you may need to refresh this page after giving permission.</b> </h5>
+
+    <button type="button" id="accept-btn" style="background-color: black; border-color: black" class="border border-black text-white bg-black hover:bg-slate-200 rounded-lg p-2 mt-2" > Continue </button>
+      
   </div>
 
   <div class="">
