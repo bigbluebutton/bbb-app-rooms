@@ -61,7 +61,7 @@
   <% @roomSettings = @room.settings.select { |key, value| !key.start_with?("lock")} %>
 
   <details>
-    <summary class="text-black">Lock Settings</summary>
+    <summary class="text-black"><%= t('default.room.settings.lockSettingsTitle') %></summary>
       <div class="field form-group input-group" style="padding-left: 5%">
         <% @lockSettings.each do |setting| %>
             <% @setting_name = setting[0] %>
@@ -81,7 +81,7 @@
   <hr>
 
    <details>
-    <summary class="text-black">Room Settings</summary>
+    <summary class="text-black"><%= t('default.room.settings.roomSettingsTitle') %></summary>
       <div class="field form-group input-group" style="padding-left: 5%">
         <% @roomSettings.each do |setting| %>
           <% @setting_name = setting[0] %>
