@@ -242,7 +242,7 @@ module BbbHelper
 
   # Removes trailing forward slash from a URL.
   def remove_slash(str)
-    str.nil? ? nil : str.chomp('/')
+    str&.chomp('/')
   end
 
   # Format playbacks in a more pleasant way.

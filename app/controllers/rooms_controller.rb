@@ -289,7 +289,7 @@ class RoomsController < ApplicationController
     handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
     @room = Room.find_by(handler: handler, handler_legacy: handler_legacy, tenant: tenant)
 
-    # Exit if this is a launch on an existing room or continue path for new rooms.
+    # Exit if this is a launch on an existing room or continue path for a new one.
     return if @room
 
     # For a legacy launch.
