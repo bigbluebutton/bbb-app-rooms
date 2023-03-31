@@ -1,0 +1,33 @@
+<%
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+%>
+
+<body>
+    <div class="container">
+
+        <%= form_with(local: false, url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do |form| %>
+        <div class="bg-gray-200 grid justify-items-center grid-cols-1 py-28 px-10 mt-40 ">
+            <div class="field form-group input-group rounded">
+            
+                <%= form.label t('default.meeting.user_full_name') , style: "display: inline" %>
+            
+                <%= form.text_field :full_name, :required => true,  class: "form-control rounded input mt-1 ml-2" %>
+            </div>
+            <p class="text-center p-2"><%= t('default.meeting.personal_info_message') %> </p>
+            <%= button_tag t('default.app.accept'),:type => 'submit', :class => "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+            </div>
+        <% end %>
+       
+    </div>
+</body>
