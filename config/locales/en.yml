@@ -46,6 +46,7 @@ en:
   default:
     app:
       error:          "Error"
+      accept:         "Accept"
     admin:
       back:           "Back"
       handler:        "Handler"
@@ -128,6 +129,8 @@ en:
     meeting:
       close:          "Close tab/window"
       close_manually: "This tab/window must be closed manually"
+      user_full_name: "Full Name"
+      personal_info_message: "This Tool Consumer does not pass personal information to external applications. BigBlueButton require a way to identify users during the live session. By accepting this, you agree to pass your name to BigBlueButton for the purposes of identification during the meeting."
     recording:
       action:
         delete:       "Delete"

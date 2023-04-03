@@ -129,6 +129,17 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/meeting/join
   # POST /rooms/:id/meeting/join.json
   def meeting_join
+    @user.full_name ||= cookies[:full_name] # if full_name in cookies, use that.
+    @user.full_name ||= params[:full_name] # if it's coming form name_form, this param will be populated
+    cookies[:full_name] ||= @user.full_name # set cookie if null
+
+    # if name was not passed by the LMS, prompt for name before joining meeting
+    unless @user.full_name
+      respond_to do |format|
+        format.html { render(:name_form) }
+      end and return
+    end
+
     wait = wait_for_mod? && !meeting_running?
     @meeting = join_meeting_url
 
