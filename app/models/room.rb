@@ -25,6 +25,8 @@ class Room < ApplicationRecord
 
   attr_accessor :can_grade
 
+  RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
+
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
     self.moderator = random_password(8) if moderator.blank?
@@ -39,6 +41,10 @@ class Room < ApplicationRecord
     return self[:handler_legacy] unless self[:handler_legacy].nil?
 
     self[:handler]
+  end
+
+  def self.recording_setting?(setting)
+    RECORDING_SETTINGS.include?(setting.to_sym)
   end
 
   private
