@@ -63,6 +63,7 @@ module BbbAppRooms
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')
     config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
     config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
+    config.tenant_credentials = ENV['TENANT_CREDENTIALS'] || '{}'
 
     config.developer_mode_enabled = ENV.fetch('DEVELOPER_MODE_ENABLED', 'false').casecmp?('true')
 

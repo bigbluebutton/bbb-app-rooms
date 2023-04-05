@@ -18,6 +18,7 @@
 
 require 'net/http'
 require 'xmlsimple'
+require 'json'
 
 module Bbb
   class Credentials
@@ -62,7 +63,9 @@ module Bbb
     end
 
     def fetch_tenant_info(tenant)
-      raise 'Multitenant API not defined' if @multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?
+      tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
+
+      raise 'Multitenant API not defined' if (@multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?) && tenant_credentials.nil?
 
       # Check up cached info.
       if @cache_enabled
@@ -70,15 +73,19 @@ module Bbb
         return cached_tenant unless cached_tenant.nil?
       end
 
-      # Build the URI.
-      uri = encoded_url(
-        "#{@multitenant_api_endpoint}api/getUser",
-        @multitenant_api_secret,
-        { name: tenant }
-      )
+      if tenant_credentials
+        response = { 'apiURL' => tenant_credentials['bigbluebutton_url'], 'secret' => tenant_credentials['bigbluebutton_secret'] }
+      else
+        # Build the URI.
+        uri = encoded_url(
+          "#{@multitenant_api_endpoint}api/getUser",
+          @multitenant_api_secret,
+          { name: tenant }
+        )
 
-      http_response = http_request(uri)
-      response = parse_response(http_response)
+        http_response = http_request(uri)
+        response = parse_response(http_response)
+      end
 
       # Return the user credentials if the request succeeded on the External Tenant Manager.
       @cache.fetch("#{tenant}/api", expires_in: 1.hour) do
