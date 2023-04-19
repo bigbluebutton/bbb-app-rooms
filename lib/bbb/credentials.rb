@@ -61,7 +61,10 @@ module Bbb
 
       info[key]
     end
-
+    
+    ##
+    # TODO: This new mechanism for tenant_credentials should be discarded when tenant settings are implemented in the brocker (LTI-172).
+    ##
     def fetch_tenant_info(tenant)
       tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
 
