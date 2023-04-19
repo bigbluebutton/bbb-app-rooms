@@ -61,7 +61,7 @@ module Bbb
 
       info[key]
     end
-    
+
     ##
     # TODO: This new mechanism for tenant_credentials should be discarded when tenant settings are implemented in the brocker (LTI-172).
     ##
