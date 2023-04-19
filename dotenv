@@ -55,6 +55,8 @@ RAILS_SERVE_STATIC_FILES=true
 ## Use to retrieve credentials for a BigBlueButton server per tenant (Optional)
 # EXTERNAL_MULTITENANT_ENDPOINT=
 # EXTERNAL_MULTITENANT_SECRET=
+# TENANT_CREDENTIALS={<tenant-id>: {bigbluebutton_url: <bbb-url>, bigbluebutton_secret: <bbb-secret> }}
+
 
 ## Enable redis as the Action Cable adapter.
 # CABLE_ADAPTER=redis
