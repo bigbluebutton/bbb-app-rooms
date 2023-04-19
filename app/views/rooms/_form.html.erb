@@ -85,7 +85,7 @@
       <div class="field form-group input-group" style="padding-left: 5%">
         <% @roomSettings.each do |setting| %>
           <% @setting_name = setting[0] %>
-          <% next if @setting_name == 'record' && !bigbluebutton_recording_enabled %>
+          <% next if Room.recording_setting?(@setting_name) && !bigbluebutton_recording_enabled %>
           <% @setting_value = setting[1].to_i %>
           <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
           <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
