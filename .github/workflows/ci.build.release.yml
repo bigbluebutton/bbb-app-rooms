@@ -3,6 +3,8 @@ on:
   release:
     types: [released]
 
+
+
 jobs:
   main:
     name: Build Docker Image
@@ -41,23 +43,17 @@ jobs:
         id: ci_docker_repository
         if: contains(env.DOCKER_BUILD_ENABLED, 'true')
         shell: bash
-        run: echo "##[set-output name=repository;]$(echo ${DOCKER_REPOSITORY:-$GITHUB_REPOSITORY})"
-
-      - name: Extract Tag Release Revision
-        id: ci_tag_release
-        if: contains(env.DOCKER_BUILD_ENABLED, 'true')
-        shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+        run: echo "repository=$(echo ${DOCKER_REPOSITORY:-$GITHUB_REPOSITORY})" >> $GITHUB_OUTPUT
 
       - name: Build and Push release
         if: contains(env.DOCKER_BUILD_ENABLED, 'true')
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           push: true
           tags: |
             "${{ steps.ci_docker_repository.outputs.repository }}:latest"
-            "${{ steps.ci_docker_repository.outputs.repository }}:${{ steps.ci_tag_release.outputs.tag }}"
-          build-args: "BUILD_NUMBER=${{ steps.ci_tag_release.outputs.tag }}"
+            "${{ steps.ci_docker_repository.outputs.repository }}:${{ github.event.release.tag_name }}"
+          build-args: BUILD_NUMBER=${{ github.event.release.tag_name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
