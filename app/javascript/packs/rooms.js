@@ -76,16 +76,17 @@ $(document).on('turbolinks:load', function(){
         );
     }
 
-
-    document.hasStorageAccess().then((hasAccess) => {
-        if (!hasAccess && (isFirefox || isSafari)) {
-            $('#access-alert').show();
-            console.log("no access");
-            
-        } else {    
-            console.log("Already has access");
-        }
-      });
+    if (isFirefox || isSafari){
+        document.hasStorageAccess().then((hasAccess) => {
+            if (!hasAccess && (isFirefox || isSafari)) {
+                $('#access-alert').show();
+                console.log("no access");
+                
+            } else {    
+                console.log("Already has access");
+            }
+        });
+    }
 
     $('#accept-btn').on('click', requestAccess);
     
