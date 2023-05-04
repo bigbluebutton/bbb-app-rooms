@@ -31,4 +31,25 @@ $(document).on('turbolinks:load', function(){
             $('#allModerators_checkbox').prop("checked", false);
         }
     })
+
+   
+
+    function check_record_status(){
+        var record_checked = $('#record_checkbox').prop("checked");
+        if (!record_checked){
+            $('#allowStartStopRecording_checkbox').prop("checked", false);
+            $('#allowStartStopRecording_checkbox').prop("disabled", true);
+            $('#autoStartRecording_checkbox').prop("checked", false);
+            $('#autoStartRecording_checkbox').prop("disabled", true);
+        } else {
+            $('#allowStartStopRecording_checkbox').prop("disabled", false);
+            $('#autoStartRecording_checkbox').prop("disabled", false);
+        }
+    }
+    
+    check_record_status(); // check status every time page is loaded
+
+    $('#record_checkbox').on('click', function() {
+        check_record_status();
+    })
 });
