@@ -87,3 +87,5 @@ RAILS_SERVE_STATIC_FILES=true
 
 ## Allow the use of legacy launches to create new rooms
 # HANDLER_LEGACY_NEW_ROOM_ENABLED=false
+
+VIEW_BUILD_TAG_ENABLED=false
