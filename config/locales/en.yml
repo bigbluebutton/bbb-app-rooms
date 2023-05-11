@@ -115,6 +115,7 @@ en:
       settings:
         roomSettingsTitle:              "Room Settings"
         lockSettingsTitle:              "Lock Settings"
+        recordingSettingsTitle:         "Recording Settings"
         lockSettingsDisableCam:         "Disable cameras"
         lockSettingsDisableMic:         "Disable microphones"
         lockSettingsDisableNote:        "Disable shared notes"
