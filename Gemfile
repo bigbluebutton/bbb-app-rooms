@@ -49,8 +49,8 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 4.1.0'
-  gem 'rubocop', '~> 1.26', require: false
-  gem 'rubocop-rails', '~> 2.17', '>= 2.17.4', require: false
+  gem 'rubocop', '~> 1.54', require: false
+  gem 'rubocop-rails', '~> 2.20', '>= 2.20.2', require: false
 end
 
 group :development do
@@ -93,7 +93,7 @@ gem 'rest-client'
 gem 'omniauth', '>= 2.1.1'
 gem 'omniauth-oauth2', '>= 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
-gem 'repost', '~> 0.3.8'
+gem 'repost', '~> 0.4.1'
 
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.4'
