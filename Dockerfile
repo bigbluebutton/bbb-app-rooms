@@ -17,6 +17,8 @@ RUN apk add --no-cache \
     ruby-bigdecimal \
     ruby-bundler \
     ruby-json \
+    ruby-rake \
+    ruby-dev \
     nodejs npm yarn \
     tini \
     tzdata \
@@ -31,7 +33,6 @@ RUN apk add --update --no-cache \
     libxslt-dev \
     pkgconf \
     postgresql-dev \
-    ruby-dev \
     yaml-dev \
     zlib-dev \
     curl-dev git \
@@ -61,7 +62,7 @@ ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
 
 # Precompile assets
-RUN SECRET_KEY_BASE=1 RAILS_ENV=production bundle exec rake assets:precompile --trace
+RUN SECRET_KEY_BASE=1 RAILS_ENV=${RAILS_ENV:-production} rake assets:precompile --trace
 
 # Run startup command
 CMD ["scripts/start.sh"]
