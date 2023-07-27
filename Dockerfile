@@ -1,4 +1,4 @@
-FROM alpine:3.16 AS alpine
+FROM alpine:3 AS alpine
 
 ARG RAILS_ROOT=/usr/src/app
 ENV RAILS_ROOT=${RAILS_ROOT}
