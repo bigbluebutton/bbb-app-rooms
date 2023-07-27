@@ -150,6 +150,7 @@ GEM
       activesupport (>= 5.0.0)
     json (2.6.3)
     jwt (2.7.0)
+    language_server-protocol (3.17.0.3)
     listen (3.0.8)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -212,8 +213,9 @@ GEM
       omniauth (~> 2.0)
     pagy (6.0.4)
     parallel (1.23.0)
-    parser (3.2.2.1)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
+      racc
     pg (1.5.3)
     psych (5.1.0)
       stringio
@@ -270,7 +272,7 @@ GEM
     regexp_parser (2.8.0)
     remote_syslog_logger (1.0.4)
       syslog_protocol
-    repost (0.3.8)
+    repost (0.4.1)
     request_store (1.5.1)
       rack (>= 1.4)
     rest-client (2.1.0)
@@ -302,19 +304,20 @@ GEM
     rspec-support (3.12.1)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.50.2)
+    rubocop (1.54.2)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.0.0)
+      parser (>= 3.2.2.3)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
       rubocop-ast (>= 1.28.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.28.1)
+    rubocop-ast (1.29.0)
       parser (>= 3.2.1.0)
-    rubocop-rails (2.19.1)
+    rubocop-rails (2.20.2)
       activesupport (>= 4.2.0)
       rack (>= 1.1)
       rubocop (>= 1.33.0, < 2.0)
@@ -440,13 +443,13 @@ DEPENDENCIES
   rdoc
   redis (~> 4.2)
   remote_syslog_logger
-  repost (~> 0.3.8)
+  repost (~> 0.4.1)
   rest-client
   rspec
   rspec-rails (~> 4.1.0)
   rspec_junit_formatter
-  rubocop (~> 1.26)
-  rubocop-rails (~> 2.17, >= 2.17.4)
+  rubocop (~> 1.54)
+  rubocop-rails (~> 2.20, >= 2.20.2)
   sass-rails (~> 6.0, >= 6.0.0)
   selenium-webdriver
   spring
