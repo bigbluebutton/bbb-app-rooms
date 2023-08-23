@@ -72,10 +72,10 @@ module Bbb
       # Get tenant credentials from TENANT_CREDENTIALS environment variable
       tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
 
-      raise 'Tenant does not exist' if tenant_info.nil? && tenant_settings.nil? && tenant.present?
+      raise 'Tenant does not exist' if tenant_info.nil? && tenant_credentials.nil? && tenant.present?
 
       # use credentials from broker first, if not found then use env variable, and then use bbb_endpoint &  bbb_secret if single tenant
-      tenant_settings = tenant_info['settings']
+      tenant_settings = tenant_info&.[]('settings')
 
       api_url = tenant_settings&.[]('bigbluebutton_url') ||
                 tenant_credentials&.[]('bigbluebutton_url') ||
@@ -114,6 +114,9 @@ module Bbb
       bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
       get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
       JSON.parse(get_response)
+    rescue StandardError
+      Rails.logger.error('Could not fetch tenant credentials from broker')
+      nil
     end
 
     def http_request(uri)
