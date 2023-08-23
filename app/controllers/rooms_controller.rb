@@ -316,10 +316,10 @@ class RoomsController < ApplicationController
     return if @room
 
     # Attempt creating a Legacy Room with launch parameters if the new room creation for legacy launches is enabled.
-    if Rails.configuration.handler_legacy_new_room_enabled
-      launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
-      @room = Room.create(launch_room_params.merge({ tenant: tenant }))
-    end
+    return unless Rails.configuration.handler_legacy_new_room_enabled
+
+    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
+    @room = Room.create(launch_room_params.merge({ tenant: tenant }))
   end
 
   def launch_user(launch_params)
