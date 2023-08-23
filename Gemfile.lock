@@ -438,7 +438,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 1.0.1)
   pagy
   pg (~> 1.0)
-  puma (~> 5.6)
+  puma (~> 5.6, >= 5.6.7)
   rails (~> 6.1, >= 6.1.7.4)
   rails-controller-testing
   rdoc
