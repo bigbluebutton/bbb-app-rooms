@@ -6,13 +6,13 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1', '>= 6.1.7.4'
+gem 'rails', '~> 6.1', '>= 6.1.7.5'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.3'
 # Use postgres as the database for Active Record
 gem 'pg', '~> 1.0'
 # Use Puma as the app server
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 5.6', '>= 5.6.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0', '>= 6.0.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -48,7 +48,7 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'rspec'
   gem 'rspec_junit_formatter'
-  gem 'rspec-rails', '~> 4.1.0'
+  gem 'rspec-rails', '~> 5.0.0'
   gem 'rubocop', '~> 1.54', require: false
   gem 'rubocop-rails', '~> 2.20', '>= 2.20.2', require: false
 end
@@ -77,7 +77,7 @@ group :test do
 end
 
 group :production do
-  gem 'lograge', '~> 0.12.0'
+  gem 'lograge', '~> 0.13.0'
   gem 'remote_syslog_logger'
 end
 
