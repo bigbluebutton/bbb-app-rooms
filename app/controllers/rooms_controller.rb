@@ -298,24 +298,23 @@ class RoomsController < ApplicationController
   def launch_room(launch_params, tenant)
     handler = Digest::SHA1.hexdigest("rooms#{tenant}#{launch_params['resource_link_id']}")
     handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
-    @room = Room.find_by(handler: handler, handler_legacy: handler_legacy, tenant: tenant)
 
-    # Exit if this is a launch on an existing room or continue path for a new one.
+    ## Any launch.
+    @room = Room.find_by(handler: handler, tenant: tenant)
     return if @room
 
-    # For a legacy launch.
+    # Legacy launch.
     unless handler_legacy.nil?
-      # Fetch room parameters if the API is enabled.
+      # Attempt creating a Legacy Room with fetched parameters
       fetched_room_params = fetch_new_room_params(handler, handler_legacy) if Rails.configuration.handler_legacy_api_enabled
-      # Create new room with fetched params if fetched.
       @room = Room.create(fetched_room_params.merge({ tenant: tenant })) if fetched_room_params
-      # Exit if the room was created.
       return if @room
-      # When new room creation is disabled, there is nothing else to do, just exit.
+
+      # Attempt creating a Legacy Room with launch parameters only if the new room creation for legacy launches is enabled.
       return unless Rails.configuration.handler_legacy_new_room_enabled
     end
 
-    # For any regular launch or if the new room creation for legacy launches is enabled.
+    ## Regular launch
     launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
     @room = Room.create(launch_room_params.merge({ tenant: tenant }))
   end
