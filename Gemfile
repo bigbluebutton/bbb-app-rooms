@@ -98,7 +98,7 @@ gem 'repost', '~> 0.4.1'
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.4'
 
-gem 'activerecord-session_store', '>= 2.0.0'
+gem 'activerecord-session_store', '>= 2.1.0'
 
 gem 'coveralls', require: false
 gem 'net-smtp'
