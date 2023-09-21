@@ -22,6 +22,8 @@ require 'json'
 
 module Bbb
   class Credentials
+    include OmniauthHelper
+
     attr_writer :cache, :cache_enabled, :multitenant_api_endpoint, :multitenant_api_secret # Rails.cache store is assumed.  # Enabled by default.
 
     def initialize(endpoint, secret)
@@ -34,14 +36,10 @@ module Bbb
     end
 
     def endpoint(tenant)
-      return fix_bbb_endpoint_format(@endpoint) if tenant.blank?
-
       fix_bbb_endpoint_format(tenant_endpoint(tenant))
     end
 
     def secret(tenant)
-      return @secret if tenant.blank?
-
       tenant_secret(tenant)
     end
 
@@ -56,29 +54,45 @@ module Bbb
     end
 
     def tenant_info(tenant, key)
-      info = fetch_tenant_info(tenant)
+      info = formatted_tenant_info(tenant)
       return if info.nil?
 
       info[key]
     end
 
-    ##
-    # TODO: This new mechanism for tenant_credentials should be discarded when tenant settings are implemented in the brocker (LTI-172).
-    ##
-    def fetch_tenant_info(tenant)
-      tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
-
-      raise 'Multitenant API not defined' if (@multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?) && tenant_credentials.nil?
-
-      # Check up cached info.
+    def formatted_tenant_info(tenant)
       if @cache_enabled
-        cached_tenant = @cache.fetch("#{tenant}/api")
+        cached_tenant = @cache.fetch("#{tenant}/tenantInfo")
         return cached_tenant unless cached_tenant.nil?
       end
 
-      if tenant_credentials
-        response = { 'apiURL' => tenant_credentials['bigbluebutton_url'], 'secret' => tenant_credentials['bigbluebutton_secret'] }
-      else
+      # Get tenant info from broker
+      tenant_info = fetch_tenant_info(tenant)
+
+      # Get tenant credentials from TENANT_CREDENTIALS environment variable
+      tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
+
+      raise 'Tenant does not exist' if tenant_info.nil? && tenant_credentials.nil? && tenant.present?
+
+      # use credentials from broker first, if not found then use env variable, and then use bbb_endpoint &  bbb_secret if single tenant
+      tenant_settings = tenant_info&.[]('settings')
+
+      api_url = tenant_settings&.[]('bigbluebutton_url') ||
+                tenant_credentials&.[]('bigbluebutton_url') ||
+                (@endpoint if tenant.blank?)
+
+      secret = tenant_settings&.[]('bigbluebutton_secret') ||
+               tenant_credentials&.[]('bigbluebutton_secret') ||
+               (@secret if tenant.blank?)
+
+      missing_creds = !(api_url && secret)
+
+      raise 'Bigbluebutton credentials not found' if tenant.blank? && missing_creds
+
+      raise 'Multitenant API not defined' if tenant.present? && missing_creds && (@multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?)
+
+      # get the api URL and secret from the LB if not defined in tenant settings
+      if missing_creds
         # Build the URI.
         uri = encoded_url(
           "#{@multitenant_api_endpoint}api/getUser",
@@ -88,12 +102,21 @@ module Bbb
 
         http_response = http_request(uri)
         response = parse_response(http_response)
+        response['settings'] = tenant_settings
       end
 
-      # Return the user credentials if the request succeeded on the External Tenant Manager.
-      @cache.fetch("#{tenant}/api", expires_in: 1.hour) do
-        response
+      @cache.fetch("#{tenant}/tenantInfo", expires_in: 1.hour) do
+        response || { 'apiURL' => api_url, 'secret' => secret, 'settings' => tenant_settings }
       end
+    end
+
+    def fetch_tenant_info(tenant)
+      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
+      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+      JSON.parse(get_response)
+    rescue StandardError
+      Rails.logger.error('Could not fetch tenant credentials from broker')
+      nil
     end
 
     def http_request(uri)
