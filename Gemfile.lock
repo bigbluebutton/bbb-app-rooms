@@ -56,12 +56,13 @@ GEM
     activerecord (6.1.7.6)
       activemodel (= 6.1.7.6)
       activesupport (= 6.1.7.6)
-    activerecord-session_store (2.0.0)
-      actionpack (>= 5.2.4.1)
-      activerecord (>= 5.2.4.1)
+    activerecord-session_store (2.1.0)
+      actionpack (>= 6.1)
+      activerecord (>= 6.1)
+      cgi (>= 0.3.6)
       multi_json (~> 1.11, >= 1.11.2)
-      rack (>= 2.0.8, < 3)
-      railties (>= 5.2.4.1)
+      rack (>= 2.0.8, < 4)
+      railties (>= 6.1)
     activestorage (6.1.7.6)
       actionpack (= 6.1.7.6)
       activejob (= 6.1.7.6)
@@ -99,6 +100,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    cgi (0.3.6)
     childprocess (4.1.0)
     concurrent-ruby (1.2.2)
     coveralls (0.8.23)
@@ -419,7 +421,7 @@ PLATFORMS
 
 DEPENDENCIES
   action-cable-testing
-  activerecord-session_store (>= 2.0.0)
+  activerecord-session_store (>= 2.1.0)
   bigbluebutton-api-ruby (~> 1.9.0)
   byebug
   capybara
