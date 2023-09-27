@@ -29,6 +29,7 @@ module OmniauthHelper
       grant_type: 'client_credentials',
       client_id: Rails.configuration.omniauth_key,
       client_secret: Rails.configuration.omniauth_secret,
+      scope: 'api',
     }
     response = RestClient.post("#{lti_broker_url}/oauth/token", oauth_options)
     JSON.parse(response)['access_token']
