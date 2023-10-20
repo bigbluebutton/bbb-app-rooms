@@ -182,13 +182,13 @@ module BbbHelper
   # Return the number of participants in a meeting for the current room.
   def participant_count
     info = meeting_info
-    return info[:participantCount] if info[:returncode] == 'SUCCESS'
+    info[:participantCount] if info[:returncode] == 'SUCCESS'
   end
 
   # Return the meeting start time for the current room.
   def meeting_start_time
     info = meeting_info
-    return info[:startTime] if info[:returncode] == 'SUCCESS'
+    info[:startTime] if info[:returncode] == 'SUCCESS'
   end
 
   def bigbluebutton_moderator_roles
