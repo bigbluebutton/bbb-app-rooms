@@ -29,6 +29,7 @@ class RoomsController < ApplicationController
   # Include concerns.
   include BbbHelper
   include OmniauthHelper
+  include BrokerHelper
 
   before_action :print_parameters if Rails.configuration.developer_mode_enabled
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
@@ -296,7 +297,7 @@ class RoomsController < ApplicationController
   end
 
   def launch_room(launch_params, tenant)
-    handler = Digest::SHA1.hexdigest("rooms#{tenant}#{launch_params['resource_link_id']}")
+    handler = room_handler(launch_params, tenant)
     handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
 
     ## Any launch.
@@ -426,5 +427,20 @@ class RoomsController < ApplicationController
     end
 
     response.set_header('Content-Language', I18n.locale)
+  end
+
+  # Generate room handler based on the settings pulled from the broker
+  def room_handler(launch_params, tenant)
+    input = "rooms#{tenant}"
+
+    # use resource_link_id as the default param if nothing was specified in the broker settings
+    room_handler_params = handler_params(tenant).presence || ['resource_link_id']
+
+    room_handler_params.each do |param|
+      param_val = launch_params[param]
+      input += param_val.to_s if param_val
+    end
+
+    Digest::SHA1.hexdigest(input)
   end
 end
