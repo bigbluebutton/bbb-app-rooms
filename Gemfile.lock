@@ -466,6 +466,3 @@ DEPENDENCIES
   webdrivers
   webmock
   webpacker (~> 6.0.0.rc.5)
-
-BUNDLED WITH
-   2.1.4
