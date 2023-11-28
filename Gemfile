@@ -69,7 +69,7 @@ group :test do
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
   gem 'database_cleaner-active_record'
-  gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '>= 6.3.0'
   gem 'faker'
   gem 'rails-controller-testing'
   gem 'webdrivers'
