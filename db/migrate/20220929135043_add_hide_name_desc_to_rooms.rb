@@ -2,7 +2,9 @@
 
 class AddHideNameDescToRooms < ActiveRecord::Migration[6.1]
   def change
-    add_column(:rooms, :hide_name, :boolean)
-    add_column(:rooms, :hide_description, :boolean)
+    change_table(:rooms, bulk: true) do |t|
+      t.boolean(:hide_name)
+      t.boolean(:hide_description)
+    end
   end
 end
