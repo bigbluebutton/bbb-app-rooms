@@ -176,7 +176,7 @@ en:
       _410:
         code:       "Gone"
         message:    "Unreachable resource"
-        suggestion: "It seems that you are trying to access this resource using an LTI endpoint that is no longer supported. Try updating the endpoint o credentials for the external tool"
+        suggestion: "It seems that you are trying to access this resource using an LTI endpoint that is no longer supported. Try updating the endpoint or credentials for the external tool"
     bigbluebutton:
       invalidrequest:
         code:       "BBBAPICallInvalid"

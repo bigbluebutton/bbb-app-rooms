@@ -298,25 +298,31 @@ class RoomsController < ApplicationController
 
   def launch_room(launch_params, tenant)
     handler = room_handler(launch_params, tenant)
-    handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
 
     ## Any launch.
     @room = Room.find_by(handler: handler, tenant: tenant)
     return if @room
 
+    handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
+    Rails.logger.debug("handler_legacy = #{launch_params['custom_params']['custom_handler_legacy']}")
+
     # Legacy launch.
     unless handler_legacy.nil?
+      logger.debug('Legacy handler found in launch params')
+
       # Attempt creating a Legacy Room with fetched parameters
       fetched_room_params = fetch_new_room_params(handler, handler_legacy) if Rails.configuration.handler_legacy_api_enabled
       @room = Room.create(fetched_room_params.merge({ tenant: tenant })) if fetched_room_params
       return if @room
+
+      logger.debug('Could not fetch room params for legacy room.')
 
       # Attempt creating a Legacy Room with launch parameters only if the new room creation for legacy launches is enabled.
       return unless Rails.configuration.handler_legacy_new_room_enabled
     end
 
     ## Regular launch
-    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
+    launch_room_params = launch_params_to_new_room_params(handler, nil, launch_params)
     @room = Room.create(launch_room_params.merge({ tenant: tenant }))
   end
 
