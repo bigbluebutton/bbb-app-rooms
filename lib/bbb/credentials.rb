@@ -23,6 +23,7 @@ require 'json'
 module Bbb
   class Credentials
     include OmniauthHelper
+    include BrokerHelper
 
     attr_writer :cache, :cache_enabled, :multitenant_api_endpoint, :multitenant_api_secret # Rails.cache store is assumed.  # Enabled by default.
 
@@ -67,7 +68,7 @@ module Bbb
       end
 
       # Get tenant info from broker
-      tenant_info = fetch_tenant_info(tenant)
+      tenant_info = tenant_settings(tenant: tenant)
 
       # Get tenant credentials from TENANT_CREDENTIALS environment variable
       tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
@@ -108,15 +109,6 @@ module Bbb
       @cache.fetch("#{tenant}/tenantInfo", expires_in: 1.hour) do
         response || { 'apiURL' => api_url, 'secret' => secret, 'settings' => tenant_settings }
       end
-    end
-
-    def fetch_tenant_info(tenant)
-      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
-      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
-      JSON.parse(get_response)
-    rescue StandardError
-      Rails.logger.error('Could not fetch tenant credentials from broker')
-      nil
     end
 
     def http_request(uri)
