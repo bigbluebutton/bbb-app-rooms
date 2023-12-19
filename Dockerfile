@@ -24,7 +24,8 @@ RUN apk add --no-cache \
     tzdata \
     gettext \
     imagemagick \
-    shared-mime-info
+    shared-mime-info \
+    libffi-dev
 
 FROM base as builder
 RUN apk add --update --no-cache \
