@@ -267,8 +267,8 @@ class RoomsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_room
     @room = Room.find_by(id: params[:id])
-    @room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @room.use_shared_code
-    logger.debug("Room with id #{params[:id]} is using shared code: #{@room.shared_code}") if @room.use_shared_code
+    @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @room&.use_shared_code
+    logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}") if @room&.use_shared_code
 
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
