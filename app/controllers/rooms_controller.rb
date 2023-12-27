@@ -267,6 +267,9 @@ class RoomsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_room
     @room = Room.find_by(id: params[:id])
+    @room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @room.use_shared_code
+    logger.debug("Room with id #{params[:id]} is using shared code: #{@room.shared_code}") if @room.use_shared_code
+
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
     # Exit with error by re-setting the room to nil if the session for the room.handler is not set
@@ -337,6 +340,9 @@ class RoomsController < ApplicationController
       :all_moderators,
       :hide_name,
       :hide_description,
+      :code,
+      :shared_code,
+      :use_shared_code,
       settings: Room.stored_attributes[:settings]
     )
   end
@@ -353,7 +359,10 @@ class RoomsController < ApplicationController
       all_moderators: message_has_custom?(launch_params, 'all_moderators') || false,
       hide_name: message_has_custom?(launch_params, 'hide_name') || false,
       hide_description: message_has_custom?(launch_params, 'hide_description') || false,
-      settings: message_has_custom?(launch_params, 'settings') || {}
+      settings: message_has_custom?(launch_params, 'settings') || {},
+      code: '',
+      shared_code: '',
+      use_shared_code: false
     )
   end
 

@@ -122,6 +122,19 @@
     <hr>
   <% end %>
 
+  <!-- Shared Room Stuff -->
+  <%= form.hidden_field :code, id: 'room_code_value', value: @room.code %> 
+
+  <div class="field form-group input-group w-full pt-4">
+    <%= form.label t('default.room.code') %>
+    <%= form.text_field :shared_code, class: "form-control input mt-1 block disabled:border-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:bg-slate-100", id: 'shared_code_field', disabled: true %>
+  </div>
+  <div class="field form-group input-group">
+    <%= form.check_box :use_shared_code, id: 'use_shared_code_checkbox' %>&nbsp;
+    <%= t('default.room.usesharedcode') %>&nbsp;
+    <br>
+  </div>
+
 
   <div class="actions pt-6">
     <div class = "flex-row">

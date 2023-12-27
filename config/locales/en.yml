@@ -91,11 +91,13 @@ en:
       disableuserlist: "Disable user list"
       hidename:       "Hide name"
       hidedescription: "Hide description"
+      usesharedcode:  "Use Shared Code"
       update:         "Update"
       updated:        "Updated"
       cancel:         "Cancel"
       endmeeting:     "End Session"
       started:        "Started"
+      code:           "Room Code"
       tooltip:
         recording:    "The session may be recorded"
         waitmoderator: "Viewers are unable to join until a moderator joins"

@@ -17,15 +17,17 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class Room < ApplicationRecord
   before_save :default_values
+  validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
   store_accessor :settings, [:waitForModerator, :allModerators, :record, :autoStartRecording, :allowStartStopRecording]
   after_find :initialize_setting_defaults, if: :settings_blank?
-  after_find :delete_settings
+  after_find :set_empty_code
 
   attr_accessor :can_grade
 
   RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
+  CODE_LENGTH = 10
 
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
@@ -100,5 +102,13 @@ class Room < ApplicationRecord
     return '1' if value
 
     '0'
+  end
+
+  # Assign a random alphanumeric code to the room if it doesn't already have one
+  # Assign the shared_code to equal to the room's code.
+  def set_empty_code
+    self.code = SecureRandom.alphanumeric(CODE_LENGTH) if code.blank?
+    self.shared_code = code if shared_code.blank?
+    save!
   end
 end
