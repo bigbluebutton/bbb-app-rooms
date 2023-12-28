@@ -24,7 +24,7 @@ class Room < ApplicationRecord
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
-  after_find :set_empty_code, if: proc { :code.blank? }
+  after_find :set_empty_code
 
   attr_accessor :can_grade
 

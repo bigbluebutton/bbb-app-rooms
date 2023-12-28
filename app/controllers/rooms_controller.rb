@@ -99,10 +99,16 @@ class RoomsController < ApplicationController
   # PATCH/PUT /rooms/1.json
   def update
     respond_to do |format|
-      if @room.update(room_params)
+      # block update if shared_code doesn't exist
+      shared_code = room_params[:shared_code]
+      code_found =  shared_code.blank? ? true : Room.where(code: shared_code, tenant: @room.tenant).exists?
+
+      if code_found && @room.update(room_params)
         format.html { redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: t('default.room.updated')) }
         format.json { render(:show, status: :ok, location: @room) }
       else
+        # If the room wasn't updated because a code was not found then show an error message
+        flash.now[:alert] = code_found ? nil : t('error.room.codenotfound.message')
         format.html { render(:edit) }
         format.json { render(json: @error, status: :unprocessable_entity) }
       end

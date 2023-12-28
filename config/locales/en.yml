@@ -201,3 +201,7 @@ en:
         code:       "InvalidSecret"
         message:    "The token could not be validated"
         suggestion: "This problem can be caused by using an invalid key when validating the request through the LTI Provider"
+      codenotfound:
+        code:       "Not found"
+        message:    "A room with this code could not be found"
+        suggestion: "Please verify that the code shared with you is correct"

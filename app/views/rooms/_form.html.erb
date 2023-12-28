@@ -129,6 +129,12 @@
     <%= form.label t('default.room.code') %>
     <%= form.text_field :shared_code, class: "form-control input mt-1 block disabled:border-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:bg-slate-100", id: 'shared_code_field', disabled: true %>
   </div>
+
+	<% unless flash[:alert] == nil %>
+		<div class="ml-3 text-sm font-medium text-red-500">
+      <%= flash.alert %>
+    </div>
+	<% end %>
   <div class="field form-group input-group">
     <%= form.check_box :use_shared_code, id: 'use_shared_code_checkbox' %>&nbsp;
     <%= t('default.room.usesharedcode') %>&nbsp;

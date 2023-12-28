@@ -2,9 +2,11 @@
 
 class AddColumnsToRooms < ActiveRecord::Migration[6.1]
   def change
-    add_column(:rooms, :code, :string)
-    add_column(:rooms, :shared_code, :string)
-    add_column(:rooms, :use_shared_code, :boolean)
+    change_table(:rooms, bulk: true) do |t|
+      t.string(:code)
+      t.string(:shared_code)
+      t.boolean(:use_shared_code)
+    end
 
     add_index(:rooms, :code, unique: true)
   end

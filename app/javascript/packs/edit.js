@@ -18,7 +18,6 @@
 
 $(document).on('turbolinks:load', function(){
 
-    console.log("loaded...");
     $('#allModerators_checkbox').on('click', function() {
         var all_mod_checked = $('#allModerators_checkbox').prop("checked");
         if (all_mod_checked){
@@ -54,15 +53,26 @@ $(document).on('turbolinks:load', function(){
 
     // If shared room is selected, allow the code field to be editable
     $('#use_shared_code_checkbox').on('click', function() {
-        console.log("clicked...")
         var use_shared_code_checked = $('#use_shared_code_checkbox').prop("checked");
         if (use_shared_code_checked){
             $('#shared_code_field').prop("disabled", false);
             $('#shared_code_field').val('');
         } else {
-            $('#code_field').prop("disabled", true);
+            $('#shared_code_field').prop("disabled", true);
             console.log("code_val: = ",$('#room_code_value').val() )
             $('#shared_code_field').val($('#room_code_value').val());
         }
     })
+
+		function checkSharedCodeCheckboxStatus() {
+			var sharedcode_checked = $('#use_shared_code_checkbox').prop("checked");
+        if (!sharedcode_checked){
+					$('#shared_code_field').prop("disabled", true);
+				} else {
+					$('#shared_code_field').prop("disabled", false);
+				}
+		}
+
+		checkSharedCodeCheckboxStatus();
+
 });
