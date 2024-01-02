@@ -86,7 +86,7 @@ gem 'tzinfo-data'
 
 gem 'json'
 
-gem 'bigbluebutton-api-ruby', '~> 1.9.0'
+gem 'bigbluebutton-api-ruby', '~> 1.9.1'
 
 gem 'rest-client'
 

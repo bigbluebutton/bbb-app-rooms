@@ -419,7 +419,7 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing
   activerecord-session_store (>= 2.1.0)
-  bigbluebutton-api-ruby (~> 1.9.0)
+  bigbluebutton-api-ruby (~> 1.9.1)
   byebug
   capybara
   coveralls
