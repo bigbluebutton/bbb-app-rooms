@@ -50,7 +50,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0.0'
   gem 'rubocop', '~> 1.54', require: false
-  gem 'rubocop-rails', '~> 2.23', '>= 2.23.0', require: false
+  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1', require: false
 end
 
 group :development do
@@ -69,7 +69,7 @@ group :test do
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
   gem 'database_cleaner-active_record'
-  gem 'factory_bot_rails', '>= 6.3.0'
+  gem 'factory_bot_rails', '>= 6.4.3'
   gem 'faker'
   gem 'rails-controller-testing'
   gem 'webdrivers'
@@ -86,11 +86,11 @@ gem 'tzinfo-data'
 
 gem 'json'
 
-gem 'bigbluebutton-api-ruby', '~> 1.9.0'
+gem 'bigbluebutton-api-ruby', '~> 1.9.1'
 
 gem 'rest-client'
 
-gem 'omniauth', '>= 2.1.1'
+gem 'omniauth', '>= 2.1.2'
 gem 'omniauth-oauth2', '>= 1.8.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'repost', '~> 0.4.1'
