@@ -12,6 +12,9 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
+
+	<% room = @room.use_shared_code ? @shared_room : @room %>
+
   <div id="access-alert" style="background-color: #fffacd;" class="mb-4 p-4 rounded-lg hidden">
    
     <h4><b><%= t('warning.cookies.title')%></b></h4>
@@ -111,21 +114,21 @@
   <div class="">
     <div class="flex justify-between items-center pt-2">
       <div class="flex justify-start items-center">
-        <% unless @room.hide_name %>
-          <p class="text-4xl font-sans inline-block font-light"><%= @room.name %></p>  
+        <% unless room.hide_name %>
+          <p class="text-4xl font-sans inline-block font-light"><%= room.name %></p>  
         <% end %>
       </div>
 
       <div class="flex justify-end"> 
         <div>
 
-          <%= form_with( id: 'meeting_join_form', url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
+          <%= form_with( id: 'meeting_join_form', url: meeting_join_path(room, :launch_nonce => @launch_nonce), method: "post") do %>
               <%= button_tag t('default.room.join'),
                     type: 'submit', 
                     id: 'join-room-btn', 
                     class: "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", 
                     formtarget: "_blank", 
-                    data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+                    data: {url: meeting_join_path(room, :launch_nonce => @launch_nonce), room: room.id} %>
           <% end %> 
         </div>
         <div>
@@ -135,7 +138,7 @@
                 class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-4 py-2 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
                 id: 'end-meeting-btn', 
                 style: visible,
-                data: {url: meeting_end_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+                data: {url: meeting_end_path(room, :launch_nonce => @launch_nonce), room: room.id} %>
           <% end %> 
         </div>
       </div>     
@@ -144,8 +147,8 @@
 
   <!-- Row 3: Room description -->
   <div class="pt-3 pb-5">
-    <% unless @room.hide_description %>
-      <p class= "leading-loose text-md w-1/2"><%= @room.description %></p>
+    <% unless room.hide_description %>
+      <p class= "leading-loose text-md w-1/2"><%= room.description %></p>
     <% end %>
   </div>
 

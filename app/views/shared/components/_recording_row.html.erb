@@ -159,7 +159,7 @@
     </div>
   </td>
     
-  <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+  <% if !@room.use_shared_code && (@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) %>
     <td class="p-0 text-left mx-6 mr-2 px-2 my-4">
       <div class="item-action dropdown place-items-center items-center">
       <% dropdown_id = "dropdown#{recording[:recordID]}"%>
