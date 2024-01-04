@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  mode: 'jit',
   content: [
     './app/views/**/*.html.erb',
     './app/stylesheets/**/*.rb',
@@ -957,6 +958,9 @@ module.exports = {
     'active',
     'disabled',
   ],
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+  },
   plugins: [
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),

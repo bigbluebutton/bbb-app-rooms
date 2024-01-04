@@ -28,17 +28,17 @@ module BbbHelper
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb
     @bbb_credentials ||= initialize_bbb_credentials
-    bbb_url = remove_slash(@bbb_credentials.endpoint(@room.tenant))
-    bbb_secret = @bbb_credentials.secret(@room.tenant)
+    bbb_url = remove_slash(@bbb_credentials.endpoint(room.tenant))
+    bbb_secret = @bbb_credentials.secret(room.tenant)
     BigBlueButton::BigBlueButtonApi.new(bbb_url, bbb_secret, '1.0', Rails.logger)
   rescue StandardError => e
     logger.error("Error in creating BBB object: #{e}")
     raise RoomsError::CustomError.new(code: 500, message: 'There was an error initializing BigBlueButton credentials', key: 'BigBlueButton Error')
   end
 
-  # Generates URL for joining the current @room meeting.
+  # Generates URL for joining the current room meeting.
   def join_meeting_url
-    return unless @room && @user
+    return unless room && @user
 
     unless bbb
       @error = {
@@ -51,40 +51,40 @@ module BbbHelper
     end
 
     create_meeting
-    role = @user.moderator?(bigbluebutton_moderator_roles) || string_to_bool(@room.allModerators) ? 'moderator' : 'viewer'
+    role = @user.moderator?(bigbluebutton_moderator_roles) || string_to_bool(room.allModerators) ? 'moderator' : 'viewer'
     join_options = {}
     join_options[:createTime] = meeting_info[:createTime]
     join_options[:userID] = @user.uid
-    bbb.join_meeting_url(@room.handler, @user.username(t("default.bigbluebutton.#{role}")), @room.attributes[role], join_options)
+    bbb.join_meeting_url(room.handler, @user.username(t("default.bigbluebutton.#{role}")), room.attributes[role], join_options)
   end
 
-  # Create meeting for the current @room.
+  # Create meeting for the current room.
   def create_meeting
-    record = bigbluebutton_recording_enabled ? string_to_bool(@room.record) : false
+    record = bigbluebutton_recording_enabled ? string_to_bool(room.record) : false
     create_options = {
-      moderatorPW: @room.moderator,
-      attendeePW: @room.viewer,
-      welcome: @room.welcome,
+      moderatorPW: room.moderator,
+      attendeePW: room.viewer,
+      welcome: room.welcome,
       record: record,
       logoutURL: autoclose_url,
-      lockSettingsDisableCam: string_to_bool(@room.lockSettingsDisableCam),
-      lockSettingsDisableMic: string_to_bool(@room.lockSettingsDisableMic),
-      lockSettingsDisableNote: string_to_bool(@room.lockSettingsDisableNote),
-      lockSettingsDisablePrivateChat: string_to_bool(@room.lockSettingsDisablePrivateChat),
-      lockSettingsDisablePublicChat: string_to_bool(@room.lockSettingsDisablePublicChat),
-      autoStartRecording: string_to_bool(@room.autoStartRecording),
-      allowStartStopRecording: string_to_bool(@room.allowStartStopRecording),
-      'meta_description': @room.description.truncate(128, separator: ' '),
+      lockSettingsDisableCam: string_to_bool(room.lockSettingsDisableCam),
+      lockSettingsDisableMic: string_to_bool(room.lockSettingsDisableMic),
+      lockSettingsDisableNote: string_to_bool(room.lockSettingsDisableNote),
+      lockSettingsDisablePrivateChat: string_to_bool(room.lockSettingsDisablePrivateChat),
+      lockSettingsDisablePublicChat: string_to_bool(room.lockSettingsDisablePublicChat),
+      autoStartRecording: string_to_bool(room.autoStartRecording),
+      allowStartStopRecording: string_to_bool(room.allowStartStopRecording),
+      'meta_description': room.description.truncate(128, separator: ' '),
     }
     # Send the create request.
-    bbb.create_meeting(@room.name, @room.handler, create_options)
+    bbb.create_meeting(room.name, room.handler, create_options)
   end
 
-  # Perform ends meeting for the current @room.
+  # Perform ends meeting for the current room.
   def end_meeting
     response = { returncode: 'FAILED' }
     begin
-      response = bbb.end_meeting(@room.handler, @room.moderator)
+      response = bbb.end_meeting(room.handler, room.moderator)
     rescue BigBlueButton::BigBlueButtonException
       # this can be thrown if all participants left (clicked 'x' before pressing the end button)
     end
@@ -95,30 +95,30 @@ module BbbHelper
   def meeting_info
     info = { returncode: 'FAILED' }
     begin
-      info = bbb.get_meeting_info(@room.handler, @user)
+      info = bbb.get_meeting_info(room.handler, @user)
     rescue BigBlueButton::BigBlueButtonException => e
       logger.error(e.to_s)
     end
     info
   end
 
-  # Checks if the meeting for current @room is running.
+  # Checks if the meeting for current room is running.
   def meeting_running?
-    bbb.is_meeting_running?(@room.handler)
+    bbb.is_meeting_running?(room.handler)
   rescue BigBlueButton::BigBlueButtonException => e
     logger.error(e.to_s)
   end
 
   # Fetches all recordings for a room.
   def recordings
-    res = Rails.cache.fetch("#{@room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) if Rails.configuration.cache_enabled
-    res ||= bbb.get_recordings(meetingID: @room.handler)
+    res = Rails.cache.fetch("#{room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) if Rails.configuration.cache_enabled
+    res ||= bbb.get_recordings(meetingID: room.handler)
     recordings_formatted(res)
   end
 
   # Fetch an individual recording
   def recording(record_id)
-    r = bbb.get_recordings(meetingID: @room.handler, recordID: record_id)
+    r = bbb.get_recordings(meetingID: room.handler, recordID: record_id)
     unless r.key?(:error)
 
       r[:playbacks] = if !r[:playback] || !r[:playback][:format]
@@ -137,7 +137,7 @@ module BbbHelper
 
   def server_running?
     begin
-      bbb.get_meeting_info(@room.handler, @user)
+      bbb.get_meeting_info(room.handler, @user)
     rescue BigBlueButton::BigBlueButtonException => e
       logger.info('We could not find a meeting with that meeting ID')
       return e.to_s
@@ -148,34 +148,34 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("#{room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("#{room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("#{room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
-    Rails.cache.delete("#{@room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("#{room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end
 
-  # Check if the current @user must wait for moderator to join the current @room.
+  # Check if the current @user must wait for moderator to join the current room.
   def wait_for_mod?
-    return unless @room && @user
+    return unless room && @user
 
-    wait_setting = @room.waitForModerator != '0'
+    wait_setting = room.waitForModerator != '0'
     wait_setting && !@user.moderator?(bigbluebutton_moderator_roles)
   end
 
@@ -267,5 +267,15 @@ module BbbHelper
   # This method converts it to a boolean
   def string_to_bool(value)
     ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  # If the room is using a shared code, then use the shared room's recordings and bbb link
+  def room
+    use_shared_room? ? @shared_room : @room
+  end
+
+  # Returns true only if @room.use_shared_code and the shared code is valid
+  def use_shared_room?
+    @room.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
   end
 end

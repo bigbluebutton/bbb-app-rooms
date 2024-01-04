@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_30_170203) do
+ActiveRecord::Schema.define(version: 2023_11_02_145703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,8 +30,12 @@ ActiveRecord::Schema.define(version: 2023_01_30_170203) do
     t.string "tenant"
     t.boolean "hide_name"
     t.boolean "hide_description"
-    t.string "handler_legacy"
     t.jsonb "settings", default: {}, null: false
+    t.string "handler_legacy"
+    t.string "code"
+    t.string "shared_code"
+    t.boolean "use_shared_code"
+    t.index ["code"], name: "index_rooms_on_code", unique: true
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
     t.index ["tenant", "handler_legacy"], name: "index_rooms_on_tenant_and_handler_legacy", unique: true
   end
