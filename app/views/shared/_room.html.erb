@@ -132,7 +132,7 @@
           <% end %> 
         </div>
         <div>
-          <% if @user.admin? || @user.moderator?(bigbluebutton_moderator_roles) %>
+          <% if !@room.use_shared_code && (@user.admin? || @user.moderator?(bigbluebutton_moderator_roles)) %>
             <%= button_tag t('default.room.endmeeting'), 
                 type: 'button', 
                 class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-4 py-2 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
