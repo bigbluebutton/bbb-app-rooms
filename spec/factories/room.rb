@@ -14,5 +14,8 @@ FactoryBot.define do
     updated_at { Time.zone.now }
     handler { 'handler' }
     tenant { Faker::Name.unique.first_name }
+    code { Faker::Alphanumeric.alphanumeric(number: 10) }
+    shared_code { code }
+    use_shared_code { false }
   end
 end
