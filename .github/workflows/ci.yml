@@ -63,4 +63,4 @@ jobs:
           DATABASE_URL: postgres://postgres:password@localhost:5432/bbb_app_rooms_test
         run: |
           bundle exec rake db:setup
-      #     bundle exec rspec
+          bundle exec rspec
