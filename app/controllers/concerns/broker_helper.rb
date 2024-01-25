@@ -36,4 +36,9 @@ module BrokerHelper
   def handler_params(tenant)
     tenant_settings(tenant: tenant)&.[]('settings')&.[]('handler_params')&.split(',')
   end
+
+  # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
+  def shared_rooms_enabled(tenant)
+    tenant_settings(tenant: tenant)&.[]('settings')&.[]('enable_shared_rooms') == 'true' || false
+  end
 end
