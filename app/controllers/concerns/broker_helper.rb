@@ -21,12 +21,12 @@ module BrokerHelper
   # Fetch tenant settings from the broker
   def tenant_settings(options = {})
     tenant = options[:tenant] || @room&.tenant || ''
-    # Rails.cache.fetch("rooms/tenant_settings/#{tenant}", expires_in: 1.hour) do
-    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
-    get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+    Rails.cache.fetch("rooms/tenant_settings/#{tenant}", expires_in: 1.hour) do
+      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
+      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
 
-    JSON.parse(get_response)
-    # end
+      JSON.parse(get_response)
+    end
   rescue StandardError => e
     Rails.logger.error("Could not fetch tenant credentials from broker. Error message: #{e}")
     nil
@@ -39,6 +39,8 @@ module BrokerHelper
 
   # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
   def shared_rooms_enabled(tenant)
-    tenant_settings(tenant: tenant)&.[]('settings')&.[]('enable_shared_rooms') == 'true' || false
+    Rails.cache.fetch("rooms/tenant_settings/shared_rooms_enabled/#{tenant}", expires_in: 1.hour) do
+      tenant_settings(tenant: tenant)&.[]('settings')&.[]('enable_shared_rooms') == 'true' || false
+    end
   end
 end
