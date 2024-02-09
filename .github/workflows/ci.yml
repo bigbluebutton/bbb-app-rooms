@@ -1,17 +1,19 @@
 name: CI
 on:
   push:
-    branches-ignore: master
+    branches-ignore:
+      - 'master'
+      - 'release**'
   pull_request:
     branches: "*"
 env:
-  RUBY_VERSION: 3.0.x
+  RUBY_VERSION: '3.1.4'
   DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
 jobs:
   test:
     name: Rubocop + RSpec
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     services:
       postgres:
@@ -30,15 +32,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Ruby ${{ env.RUBY_VERSION }}
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
 
       - name: Bundle cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}

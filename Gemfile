@@ -100,7 +100,7 @@ gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbb
 
 gem 'activerecord-session_store', '>= 2.1.0'
 
-gem 'coveralls', require: false
+gem 'coveralls_reborn', require: false
 gem 'net-smtp'
 gem 'webpacker', '~> 6.0.0.rc.5'
 
