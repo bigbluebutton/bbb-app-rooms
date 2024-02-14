@@ -135,7 +135,7 @@
   <!-- Shared Room Stuff -->
   <%= form.hidden_field :code, id: 'room_code_value', value: @room.code %> 
 
-	<% if shared_rooms_enabled(@room.tenant) %>
+	<% if @shared_rooms_enabled %>
 		<div class="field form-group input-group w-full pt-4">
 			<%= form.label t('default.room.code') %>
 

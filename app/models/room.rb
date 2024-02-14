@@ -110,7 +110,7 @@ class Room < ApplicationRecord
   # Assign the shared_code to equal to the room's code.
   def set_empty_code
     self.code = SecureRandom.alphanumeric(CODE_LENGTH) if code.blank?
-    self.shared_code = code if shared_code.blank?
+    self.shared_code = code if shared_code.blank? || !use_shared_code
     save!
   end
 end

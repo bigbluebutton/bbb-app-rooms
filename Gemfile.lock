@@ -103,12 +103,11 @@ GEM
     cgi (0.4.0)
     childprocess (4.1.0)
     concurrent-ruby (1.2.2)
-    coveralls (0.8.23)
-      json (>= 1.8, < 3)
-      simplecov (~> 0.16.1)
-      term-ansicolor (~> 1.3)
-      thor (>= 0.19.4, < 2.0)
-      tins (~> 1.6)
+    coveralls_reborn (0.28.0)
+      simplecov (~> 0.22.0)
+      term-ansicolor (~> 1.7)
+      thor (~> 1.2)
+      tins (~> 1.32)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -344,11 +343,12 @@ GEM
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
     semantic_range (3.0.0)
-    simplecov (0.16.1)
+    simplecov (0.22.0)
       docile (~> 1.1)
-      json (>= 1.8, < 3)
-      simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.2)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov_json_formatter (0.1.4)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -422,7 +422,7 @@ DEPENDENCIES
   bigbluebutton-api-ruby (~> 1.9.1)
   byebug
   capybara
-  coveralls
+  coveralls_reborn
   database_cleaner-active_record
   dotenv-rails
   factory_bot_rails (>= 6.4.3)

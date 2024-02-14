@@ -276,6 +276,6 @@ module BbbHelper
 
   # Returns true only if @room.use_shared_code and the shared code is valid
   def use_shared_room?
-    @room.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
+    @shared_rooms_enabled && @room.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
   end
 end
