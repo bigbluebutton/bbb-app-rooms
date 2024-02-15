@@ -13,16 +13,6 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<style>
-  .input-group-prepend {
-    display: flex;
-  }
-  .copy-icon {
-    margin-left: 5px;
-    cursor: pointer;
-  }
-</style>
-
 <%= form_with(model: room, local: true, class: "form fill", :url => room_path(@room, :launch_nonce => @launch_nonce) ) do |form| %>
   <% if room.errors.any? %>
     <div id="error_explanation">
@@ -143,6 +133,7 @@
 			  <%= form.text_field :shared_code, class: "form-control input mt-1 block disabled:border-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:bg-slate-100", id: 'shared_code_field', disabled: true %>
         <span class="input-group-text" id="copy-icon-group" style="display: flex; justify-content: center; align-items: center;">
           <%= image_tag('copy.svg', width: '30', height: '30', alt: 'Copy', class: 'copy-icon') %>
+          <%= image_tag('check.svg', width: '30', height: '30', alt: 'Check', class: 'check-icon', style: 'display: none;') %>
           <span id="copied-text" class="copied-text" style="display: none;"> Copied!</span>
         </span>
       </div>
@@ -168,29 +159,3 @@
     </div>
   </div>
 <% end %>
-
-
-<script>
-  document.getElementById('copy-icon-group').addEventListener('click', async function() {
-    let useSharedCodeCheckbox = document.getElementById('use_shared_code_checkbox');
-    
-    let inputField = document.querySelector('#shared_code_field');
-    inputField.removeAttribute('disabled');
-    let copyText = document.querySelector('#shared_code_field').select();
-    document.execCommand('copy');
-    window.getSelection().removeAllRanges();
-    if (!useSharedCodeCheckbox.checked) {
-      inputField.setAttribute('disabled', 'true');
-    }
-    let copyIcon = document.querySelector('.copy-icon');
-    copyIcon.src = '<%= asset_path("check.svg") %>';
-
-    let copiedText = document.getElementById('copied-text');
-    copiedText.style.display = 'inline';
-
-    setTimeout(function() {
-      copyIcon.src = '<%= asset_path("copy.svg") %>';
-      copiedText.style.display = 'none';
-    }, 2000);
-  });
-</script>

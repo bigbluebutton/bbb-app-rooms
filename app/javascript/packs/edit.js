@@ -17,6 +17,31 @@
  */
 
 $(document).on('turbolinks:load', function(){
+    $('#copy-icon-group').on('click', function() {
+        let useSharedCodeCheckbox = $('#use_shared_code_checkbox');
+        let inputField = $('#shared_code_field');
+    
+        inputField.removeAttr('disabled');
+        inputField.select();
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        if (!useSharedCodeCheckbox.prop('checked')) {
+            inputField.attr('disabled', 'true');
+        }
+
+        let copyIcon = $('.copy-icon');
+        copyIcon.css('display', 'none');
+        let checkIcon = $('.check-icon');
+        checkIcon.css('display', 'inline-block');
+        let copiedText = $('#copied-text');
+        copiedText.css('display', 'inline');
+    
+        setTimeout(function() {
+            checkIcon.css('display', 'none');
+            copyIcon.css('display', 'inline-block');
+            copiedText.css('display', 'none');
+        }, 2000);
+    })
 
     $('#allModerators_checkbox').on('click', function() {
         var all_mod_checked = $('#allModerators_checkbox').prop("checked");
@@ -50,7 +75,7 @@ $(document).on('turbolinks:load', function(){
     $('#record_checkbox').on('click', function() {
         check_record_status();
     })
-
+    
     // If shared room is selected, allow the code field to be editable
     $('#use_shared_code_checkbox').on('click', function() {
         var use_shared_code_checked = $('#use_shared_code_checkbox').prop("checked");
@@ -72,7 +97,8 @@ $(document).on('turbolinks:load', function(){
 					$('#shared_code_field').prop("disabled", false);
 				}
 		}
-
+        
 		checkSharedCodeCheckboxStatus();
+
 
 });
