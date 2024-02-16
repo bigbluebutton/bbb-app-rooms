@@ -128,7 +128,15 @@
 	<% if @shared_rooms_enabled %>
 		<div class="field form-group input-group w-full pt-4">
 			<%= form.label t('default.room.code') %>
-			<%= form.text_field :shared_code, class: "form-control input mt-1 block disabled:border-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:bg-slate-100", id: 'shared_code_field', disabled: true %>
+
+      <div class="input-group-prepend">
+			  <%= form.text_field :shared_code, class: "form-control input mt-1 block disabled:border-slate-200 disabled:text-slate-500 disabled:shadow-none disabled:bg-slate-100", id: 'shared_code_field', disabled: true %>
+        <span class="input-group-text" id="copy-icon-group" style="display: flex; justify-content: center; align-items: center;">
+          <%= image_tag('copy.svg', width: '30', height: '30', alt: 'Copy', class: 'copy-icon') %>
+          <%= image_tag('check.svg', width: '30', height: '30', alt: 'Check', class: 'check-icon', style: 'display: none;') %>
+          <span id="copied-text" class="copied-text" style="display: none;"> Copied!</span>
+        </span>
+      </div>
 		</div>
 
 		<% unless flash[:alert] == nil %>
