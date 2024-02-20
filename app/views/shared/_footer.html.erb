@@ -14,9 +14,11 @@
 %>
 
 <div id="footer">
+    <% unless hide_build_tag(@room.tenant) %>
       <div class="navbar fixed-bottom">
         <div class="text-center">
           <p class>Build number <%= Rails.configuration.build_number || 'v1' %>.</p>
         </div>
       </div>
-    </div>
+    <% end %>
+</div>

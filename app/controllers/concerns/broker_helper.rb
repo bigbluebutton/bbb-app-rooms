@@ -43,4 +43,8 @@ module BrokerHelper
       tenant_settings(tenant: tenant)&.[]('settings')&.[]('enable_shared_rooms') == 'true' || false
     end
   end
+
+  def hide_build_tag(tenant)
+    tenant_settings(tenant: tenant)&.[]('settings')&.[]('hide_build_tag') == 'true' || false
+  end
 end
