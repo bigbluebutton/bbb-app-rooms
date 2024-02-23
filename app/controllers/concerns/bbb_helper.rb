@@ -192,7 +192,12 @@ module BbbHelper
   end
 
   def bigbluebutton_moderator_roles
-    Rails.configuration.bigbluebutton_moderator_roles.split(',')
+    roles_params = bbb_moderator_roles_params(@room.tenant)
+    if roles_params && roles_params.present?
+      roles_params
+    else
+      Rails.configuration.bigbluebutton_moderator_roles.split(',')
+    end
   end
 
   def bigbluebutton_recording_public_formats
