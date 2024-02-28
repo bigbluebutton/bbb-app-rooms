@@ -91,3 +91,6 @@ RAILS_SERVE_STATIC_FILES=true
 
 ## Shows the build tag to the client.
 # VIEW_BUILD_TAG_ENABLED=false
+
+## Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies
+# ENABLE_SSL=true
