@@ -106,6 +106,14 @@ input.recording-text {
   background-color: white;
 }
 
+.input-group-prepend {
+  display: flex;
+}
+.copy-icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }

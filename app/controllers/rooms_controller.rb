@@ -249,7 +249,7 @@ class RoomsController < ApplicationController
   end
 
   helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,
-                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?, :shared_rooms_enabled
+                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?, :shared_rooms_enabled, :hide_build_tag
 
   private
 
