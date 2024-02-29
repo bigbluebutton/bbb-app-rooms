@@ -17,7 +17,7 @@
 
 attrs = {
   key: '_bbb_app_rooms_session',
-  secure: Rails.env.production?,
+  secure: ENV['COOKIES_SECURE_OFF'].blank?,
   same_site: ENV['COOKIES_SAME_SITE'].presence || 'None',
 }
 
