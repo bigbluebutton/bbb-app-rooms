@@ -45,10 +45,10 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'action-cable-testing'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'dotenv-rails'
+  gem 'dotenv-rails', '>= 3.0.0'
   gem 'rspec'
   gem 'rspec_junit_formatter'
-  gem 'rspec-rails', '~> 5.0.0'
+  gem 'rspec-rails', '~> 5.1.0'
   gem 'rubocop', '~> 1.54', require: false
   gem 'rubocop-rails', '~> 2.23', '>= 2.23.1', require: false
 end
