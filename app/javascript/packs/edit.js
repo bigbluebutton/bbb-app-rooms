@@ -43,6 +43,21 @@ $(document).on('turbolinks:load', function(){
         }, 2000);
     })
 
+    $('#use_shared_code_checkbox').on('click', function() {
+        var textAreas = $('.check-disabled');
+        var elements = $('.lock-visibility');
+        var use_shared_code_checked = $('#use_shared_code_checkbox').prop("checked");
+        if (use_shared_code_checked) {
+            textAreas.prop('disabled', true);
+            textAreas.addClass('disabled-textarea');
+            elements.css('display', 'inline');
+        } else {
+            textAreas.prop('disabled', false);
+            textAreas.removeClass('disabled-textarea');
+            elements.css('display', 'none');
+        }
+    });
+
     $('#allModerators_checkbox').on('click', function() {
         var all_mod_checked = $('#allModerators_checkbox').prop("checked");
         if (all_mod_checked){

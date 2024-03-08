@@ -114,6 +114,21 @@ input.recording-text {
   cursor: pointer;
 }
 
+.disabled-textarea {
+  color: #777 !important;
+  background-color: #eee !important;
+  cursor: not-allowed !important;
+}
+
+.lock-icon-placement {
+  display: inline;
+  padding-bottom: 5px;
+}
+
+.lock-visibility {
+  display: none;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
