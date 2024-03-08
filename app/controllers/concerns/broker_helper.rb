@@ -45,4 +45,8 @@ module BrokerHelper
   def hide_build_tag(tenant)
     tenant_settings(tenant: tenant)&.[]('settings')&.[]('hide_build_tag') == 'true' || false
   end
+
+  def bbb_moderator_roles_params(tenant)
+    tenant_settings(tenant: tenant)&.[]('settings')&.[]('bigbluebutton_moderator_roles')&.split(',')
+  end
 end
