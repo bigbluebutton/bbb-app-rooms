@@ -30,35 +30,28 @@
     <p>
       <%= form.label t('default.room.name') , style: "display: inline" %>
       <span class="text-muted small text-red-500" style="display: inline"> *Required  </span>
-      <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-icon-placement lock-visibility', title: 'Disabled because "Use Shared Code" is enabled') %>
     </p>
-    <%= form.text_field :name, :required => true,  class: "form-control rounded-none rounded input mt-1 block w-full check-disabled" %>
+    <%= form.text_field :name, :required => true,  class: "form-control rounded-none rounded input mt-1 block w-full" %>
   </div>
   <div class="field form-group input-group">
-    <%= form.check_box :hide_name, class: "check-disabled", id: 'hide_name_checkbox' %>&nbsp;
+    <%= form.check_box :hide_name, id: 'hide_name_checkbox' %>&nbsp;
     <%= t('default.room.hidename') %>&nbsp;
     <br>
   </div>
 
   <div class="field form-group input-group w-full pt-4">
-    <div style="display: flex;">
-      <%= form.label t('default.room.description') %>
-      <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-visibility', style: 'margin-left: 3px;', title: 'Disabled because "Use Shared Code" is enabled') %>
-    </div>
-    <%= form.text_area :description, size: "45x8", class: 'form-control w-full input form-input check-disabled' %>
+    <%= form.label t('default.room.description') %>
+    <%= form.text_area :description, size: "45x8", class: 'form-control w-full input form-input' %>
   </div>
   <div class="field form-group input-group">
-    <%= form.check_box :hide_description, class: "check-disabled", id: 'hide_description_checkbox' %>&nbsp;
+    <%= form.check_box :hide_description, id: 'hide_description_checkbox' %>&nbsp;
     <%= t('default.room.hidedescription') %>&nbsp;
     <br>
   </div>
 
   <div class="field form-group input-group w-full pt-4">
-    <div style="display: flex;">
-      <%= form.label t('default.room.welcome') %>
-      <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-visibility', style: 'margin-left: 3px;', title: 'Disabled because "Use Shared Code" is enabled') %>
-    </div>
-    <%= form.text_area :welcome, size: "45x4", class: 'form-control w-full input form-input check-disabled' %>
+    <%= form.label t('default.room.welcome') %>
+    <%= form.text_area :welcome, size: "45x4", class: 'form-control w-full input form-input' %>
   </div>
 
   <%= form.hidden_field :moderator, value: @room.moderator %>
@@ -69,14 +62,12 @@
   <% @roomSettings = @room.settings.select { |key, value| !key.start_with?("lock") && !Room::RECORDING_SETTINGS.include?(key.to_sym)} %>
 
   <details>
-    <summary class="text-black"><%= t('default.room.settings.lockSettingsTitle') %>
-    <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-icon-placement lock-visibility', title: 'Disabled because "Use Shared Code" is enabled') %>
-    </summary>
+    <summary class="text-black"><%= t('default.room.settings.lockSettingsTitle') %></summary>
       <div class="field form-group input-group" style="padding-left: 5%">
         <% @lockSettings.each do |setting| %>
             <% @setting_name = setting[0] %>
             <% @setting_value = setting[1].to_i %>
-            <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+            <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
             <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
             <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
               <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -91,14 +82,12 @@
   <hr>
 
    <details>
-    <summary class="text-black"><%= t('default.room.settings.roomSettingsTitle') %>
-    <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-icon-placement lock-visibility', title: 'Disabled because "Use Shared Code" is enabled') %>
-    </summary>
+    <summary class="text-black"><%= t('default.room.settings.roomSettingsTitle') %></summary>
       <div class="field form-group input-group" style="padding-left: 5%">
         <% @roomSettings.each do |setting| %>
           <% @setting_name = setting[0] %>
           <% @setting_value = setting[1].to_i %>
-          <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+          <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
           <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
           <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
             <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -114,14 +103,12 @@
 
   <% if bigbluebutton_recording_enabled %>
     <details>
-      <summary class="text-black"><%= t('default.room.settings.recordingSettingsTitle') %>
-      <%= image_tag('lock.svg', width: '15', height: '15', alt: 'lock', class: 'lock-icon-placement lock-visibility', title: 'Disabled because "Use Shared Code" is enabled') %>
-      </summary>
+      <summary class="text-black"><%= t('default.room.settings.recordingSettingsTitle') %></summary>
         <div class="field form-group input-group" style="padding-left: 5%">
           <% @recordingSettings.each do |setting| %>
             <% @setting_name = setting[0] %>
             <% @setting_value = setting[1].to_i %>
-            <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1, class: "disabled:bg-slate-100 disabled:border-slate-200 check-disabled" %>
+            <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1, class: "disabled:bg-slate-100 disabled:border-slate-200" %>
             <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
             <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
               <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
