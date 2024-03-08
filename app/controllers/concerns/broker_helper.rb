@@ -21,12 +21,10 @@ module BrokerHelper
   # Fetch tenant settings from the broker
   def tenant_settings(options = {})
     tenant = options[:tenant] || @room&.tenant || ''
-    Rails.cache.fetch("rooms/tenant_settings/#{tenant}", expires_in: 1.hour) do
-      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
-      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
+    get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
 
-      JSON.parse(get_response)
-    end
+    JSON.parse(get_response)
   rescue StandardError => e
     Rails.logger.error("Could not fetch tenant credentials from broker. Error message: #{e}")
     nil
@@ -46,5 +44,9 @@ module BrokerHelper
 
   def hide_build_tag(tenant)
     tenant_settings(tenant: tenant)&.[]('settings')&.[]('hide_build_tag') == 'true' || false
+  end
+
+  def bbb_moderator_roles_params(tenant)
+    tenant_settings(tenant: tenant)&.[]('settings')&.[]('bigbluebutton_moderator_roles')&.split(',')
   end
 end
