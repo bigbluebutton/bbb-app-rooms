@@ -14,6 +14,7 @@
 %>
 
 	<% room = @room.use_shared_code ? @shared_room : @room %>
+	<div id="chosenRoomId" ></div>
 
   <div id="access-alert" style="background-color: #fffacd;" class="mb-4 p-4 rounded-lg hidden">
    
@@ -122,13 +123,13 @@
       <div class="flex justify-end"> 
         <div>
 
-          <%= form_with( id: 'meeting_join_form', url: meeting_join_path(room, :launch_nonce => @launch_nonce), method: "post") do %>
+          <%= form_with( id: 'meeting_join_form', url: meeting_join_path(@room, :launch_nonce => @launch_nonce), method: "post") do %>
               <%= button_tag t('default.room.join'),
                     type: 'submit', 
                     id: 'join-room-btn', 
                     class: "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", 
                     formtarget: "_blank", 
-                    data: {url: meeting_join_path(room, :launch_nonce => @launch_nonce), room: room.id} %>
+                    data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
           <% end %> 
         </div>
         <div>
