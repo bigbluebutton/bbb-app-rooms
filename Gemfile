@@ -50,7 +50,7 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.1.0'
   gem 'rubocop', '~> 1.54', require: false
-  gem 'rubocop-rails', '~> 2.23', '>= 2.23.1', require: false
+  gem 'rubocop-rails', '~> 2.24', '>= 2.24.0', require: false
 end
 
 group :development do
