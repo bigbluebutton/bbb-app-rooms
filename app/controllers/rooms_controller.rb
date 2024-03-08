@@ -35,6 +35,7 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!, except: %i[meeting_close], raise: false
   before_action :set_launch, only: %i[launch]
   before_action :set_room, except: %i[launch]
+  before_action :set_chosen_room, except: %i[launch]
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
@@ -44,7 +45,7 @@ class RoomsController < ApplicationController
   # GET /rooms/1.json
   def show
     respond_to do |format|
-      if @room
+      if @room && @chosen_room
         begin
           @recordings = recordings
           @meeting_info = meeting_info
@@ -157,8 +158,7 @@ class RoomsController < ApplicationController
       end
     else
       broadcast_meeting(action: 'join', delay: true)
-      NotifyRoomWatcherJob.perform_now(@room, { action: 'started' })
-
+      NotifyRoomWatcherJob.perform_now(@chosen_room, { action: 'started' })
       redirect_to(@meeting)
     end
   rescue BigBlueButton::BigBlueButtonException => e
@@ -179,9 +179,9 @@ class RoomsController < ApplicationController
 
   def broadcast_meeting(action: 'none', delay: false)
     if delay
-      NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@room, action: action)
+      NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@chosen_room, action: action)
     else
-      NotifyMeetingWatcherJob.perform_now(@room, action: action)
+      NotifyMeetingWatcherJob.perform_now(@chosen_room, action: action)
     end
   end
 
@@ -273,9 +273,6 @@ class RoomsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_room
     @room = Room.find_by(id: params[:id])
-    @shared_rooms_enabled = shared_rooms_enabled(@room&.tenant)
-    @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @shared_rooms_enabled && @room&.use_shared_code
-    logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}") if @shared_rooms_enabled && @room&.use_shared_code
 
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
@@ -284,6 +281,18 @@ class RoomsController < ApplicationController
 
     # Continue through happy path
     @user = BbbAppRooms::User.new(session[@room.handler][:user_params])
+  end
+
+  # If the room is using a shared code, then use the shared room's recordings and bbb link
+  def set_chosen_room
+    @shared_rooms_enabled = shared_rooms_enabled(@room&.tenant)
+    @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @shared_rooms_enabled && @room&.use_shared_code
+
+    use_shared_room = @shared_rooms_enabled && @room&.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
+
+    logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}") if @shared_rooms_enabled && @room&.use_shared_code
+
+    @chosen_room = use_shared_room ? @shared_room : @room
   end
 
   def set_launch

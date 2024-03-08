@@ -22,12 +22,12 @@ $(document).on('turbolinks:load', function(){
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
-
+	var chosenRoomId = $("#body").data("chosenroomid");
+	
   if (!(controller == "rooms" && action == "meeting_join")){
-    var room = window.location.pathname.split('/')[3];
     App.meetingInfo = App.cable.subscriptions.create({
         channel: "MeetingInfoChannel", 
-        room_id: room
+        room_id: chosenRoomId
       }, {
       connected: function() {
         console.log("Connected to meeting info channel");
@@ -39,13 +39,11 @@ $(document).on('turbolinks:load', function(){
         console.log("Received data from meeting info channel. data: " + JSON.stringify(data));
         if (data.meeting_in_progress == true){
           startTime = data.elapsed_time
-          in_progress = true;
           start_elapsed_time();
           display_participant_count(data.participant_count);
           show_elems(); 
         }
         if (data.action == "end"){
-          in_progress = false;
           hide_elements();          
         }
       }
@@ -54,7 +52,6 @@ $(document).on('turbolinks:load', function(){
 });
 
 var startTime = 0;
-var in_progress = false;
 
 var show_elems = function(){
   $('#end-meeting-btn').show();

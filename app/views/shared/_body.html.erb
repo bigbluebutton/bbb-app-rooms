@@ -13,7 +13,7 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<div id="body">
+<div id="body" data-chosenRoomId="<%= @chosen_room.id %>">
 
   <%= render "shared/room", only_public: false %>
 
