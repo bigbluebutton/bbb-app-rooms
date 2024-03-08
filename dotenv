@@ -93,4 +93,5 @@ RAILS_SERVE_STATIC_FILES=true
 # VIEW_BUILD_TAG_ENABLED=false
 
 ## Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies
+## If serving directly from the container, set to true. Otherwise, if behind a proxy, set to false
 # ENABLE_SSL=true

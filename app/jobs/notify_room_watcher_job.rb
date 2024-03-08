@@ -20,7 +20,7 @@ class NotifyRoomWatcherJob < ApplicationJob
   queue_as :default
 
   def perform(room, data)
-    @room = room
+    @chosen_room = room
     WaitChannel.broadcast_to(room, data)
   end
 end
