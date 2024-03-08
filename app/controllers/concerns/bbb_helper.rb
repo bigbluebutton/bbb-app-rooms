@@ -24,6 +24,7 @@ module BbbHelper
   RECORDINGS_KEY = :recordings
 
   include RoomsError
+  include BrokerHelper
 
   # Sets a BigBlueButtonApi object for interacting with the API.
   def bbb

@@ -28,6 +28,14 @@ describe BbbHelper do
   before do
     @room = create(:room)
     allow_any_instance_of(BbbHelper).to(receive(:bbb).and_return(bbb_api))
+    allow_any_instance_of(BrokerHelper).to(receive(:tenant_settings).and_return({
+                                                                                  'handler_params' => 'context_id',
+                                                                                  'hide_build_tag' => 'false',
+                                                                                  'bigbluebutton_url' => 'https://example-bbb-server.com/bigbluebutton/api',
+                                                                                  'bigbluebutton_secret' => 'supersecretsecret',
+                                                                                  'enable_shared_rooms' => 'true',
+                                                                                  'bigbluebutton_moderator_roles' => 'administrator,teacher',
+                                                                                }))
   end
 
   describe 'meeting' do
