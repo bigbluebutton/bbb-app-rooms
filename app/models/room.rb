@@ -28,6 +28,8 @@ class Room < ApplicationRecord
 
   attr_accessor :can_grade
 
+  include BrokerHelper
+
   RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
   CODE_LENGTH = 10
 
@@ -84,20 +86,50 @@ class Room < ApplicationRecord
   end
 
   def initialize_setting_defaults
-    self.lockSettingsDisableCam = '0'  unless lockSettingsDisableCam_changed?
-    self.lockSettingsDisableMic = '0'  unless lockSettingsDisableMic_changed?
-    self.lockSettingsDisablePrivateChat = '0' unless lockSettingsDisablePrivateChat_changed?
-    self.lockSettingsDisablePublicChat = '0' unless lockSettingsDisablePublicChat_changed?
-    self.lockSettingsDisableNote = '0' unless lockSettingsDisableNote_changed?
-    self.autoStartRecording = '0'  unless autoStartRecording_changed?
-    self.allowStartStopRecording = '1' unless allowStartStopRecording_changed?
+
+    #get the key value pair from the broker using the room_setting_defaults function
+    room_settings = room_setting_defaults(self.tenant)
+    #check if it is nil
+    if room_settings
+      #parse the values using the parse_defaults function
+      parsed_defaults = parse_defaults(room_settings)
+      #set the values if present in parsed_defaults
+      self.lockSettingsDisableCam = parsed_defaults[:lockSettingsDisableCam] unless lockSettingsDisableCam_changed?
+      self.lockSettingsDisableMic = parsed_defaults[:lockSettingsDisableMic] unless lockSettingsDisableMic_changed?
+      self.lockSettingsDisablePrivateChat = parsed_defaults[:lockSettingsDisablePrivateChat] unless lockSettingsDisablePrivateChat_changed?
+      self.lockSettingsDisablePublicChat = parsed_defaults[:lockSettingsDisablePublicChat] unless lockSettingsDisablePublicChat_changed?
+      self.lockSettingsDisableNote = parsed_defaults[:lockSettingsDisableNote] unless lockSettingsDisableNote_changed?
+      self.autoStartRecording = parsed_defaults[:autoStartRecording] unless autoStartRecording_changed?
+      self.allowStartStopRecording = parsed_defaults[:allowStartStopRecording] unless allowStartStopRecording_changed?
+
+      self.waitForModerator = parsed_defaults[:waitForModerator] unless waitForModerator_changed?
+      self.allModerators = parsed_defaults[:allModerators] unless allModerators_changed?
+      self.record = parsed_defaults[:record] unless record_changed?
+    end
+
+    # Use default values if not provided by parsed_defaults
+    self.lockSettingsDisableCam ||= '0'
+    self.lockSettingsDisableMic ||= '0'
+    self.lockSettingsDisablePrivateChat ||= '0'
+    self.lockSettingsDisablePublicChat ||= '0'
+    self.lockSettingsDisableNote ||= '0'
+    self.autoStartRecording ||= '0'
+    self.allowStartStopRecording ||= '1'
 
     # these settings existed as their own column in the db
     # therefore we take the value in that column if it already exists
     # this is done to ensure previous values are not overwritten.
-    self.waitForModerator = wait_moderator.nil? ? '1' : bool_to_binary(wait_moderator) unless waitForModerator_changed?
-    self.allModerators = all_moderators.nil? ? '0' : bool_to_binary(all_moderators) unless allModerators_changed?
+
+    self.waitForModerator ||= '1'
+    self.allModerators ||= '0'
     self.record = record.nil? ? '1' : bool_to_binary(record) unless record_changed?
+  end
+
+  def parse_defaults(defaults_str)
+    defaults_str.gsub(/[{}]/, '').split(',').map do |pair|
+      key, value = pair.split(':')
+      [key.strip.to_sym, value.strip]
+    end.to_h
   end
 
   def bool_to_binary(value)
