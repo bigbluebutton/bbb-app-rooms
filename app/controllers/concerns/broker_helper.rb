@@ -51,6 +51,6 @@ module BrokerHelper
   end
 
   def room_setting_defaults(tenant)
-    tenant_settings(tenant: tenant)&.[]('settings').[]('room_setting_defaults')
+    tenant_settings(tenant: tenant)&.dig('settings', 'room_setting_defaults')
   end
 end

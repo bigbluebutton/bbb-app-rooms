@@ -86,14 +86,13 @@ class Room < ApplicationRecord
   end
 
   def initialize_setting_defaults
-
-    #get the key value pair from the broker using the room_setting_defaults function
-    room_settings = room_setting_defaults(self.tenant)
-    #check if it is nil
+    # get the key value pair from the broker using the room_setting_defaults function
+    room_settings = room_setting_defaults(tenant)
+    # check if it is nil
     if room_settings
-      #parse the values using the parse_defaults function
+      # parse the values using the parse_defaults function
       parsed_defaults = parse_defaults(room_settings)
-      #set the values if present in parsed_defaults
+      # set the values if present in parsed_defaults
       self.lockSettingsDisableCam = parsed_defaults[:lockSettingsDisableCam] unless lockSettingsDisableCam_changed?
       self.lockSettingsDisableMic = parsed_defaults[:lockSettingsDisableMic] unless lockSettingsDisableMic_changed?
       self.lockSettingsDisablePrivateChat = parsed_defaults[:lockSettingsDisablePrivateChat] unless lockSettingsDisablePrivateChat_changed?
