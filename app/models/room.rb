@@ -88,40 +88,28 @@ class Room < ApplicationRecord
   def initialize_setting_defaults
     # get the key value pair from the broker using the room_setting_defaults function
     room_settings = room_setting_defaults(tenant)
-    # check if it is nil
-    if room_settings
-      # parse the values using the parse_defaults function
-      parsed_defaults = parse_defaults(room_settings)
-      # set the values if present in parsed_defaults
-      self.lockSettingsDisableCam = parsed_defaults[:lockSettingsDisableCam] unless lockSettingsDisableCam_changed?
-      self.lockSettingsDisableMic = parsed_defaults[:lockSettingsDisableMic] unless lockSettingsDisableMic_changed?
-      self.lockSettingsDisablePrivateChat = parsed_defaults[:lockSettingsDisablePrivateChat] unless lockSettingsDisablePrivateChat_changed?
-      self.lockSettingsDisablePublicChat = parsed_defaults[:lockSettingsDisablePublicChat] unless lockSettingsDisablePublicChat_changed?
-      self.lockSettingsDisableNote = parsed_defaults[:lockSettingsDisableNote] unless lockSettingsDisableNote_changed?
-      self.autoStartRecording = parsed_defaults[:autoStartRecording] unless autoStartRecording_changed?
-      self.allowStartStopRecording = parsed_defaults[:allowStartStopRecording] unless allowStartStopRecording_changed?
 
-      self.waitForModerator = parsed_defaults[:waitForModerator] unless waitForModerator_changed?
-      self.allModerators = parsed_defaults[:allModerators] unless allModerators_changed?
-      self.record = parsed_defaults[:record] unless record_changed?
+    # Define default values
+    defaults = {
+      lockSettingsDisableCam: '0',
+      lockSettingsDisableMic: '0',
+      lockSettingsDisablePrivateChat: '0',
+      lockSettingsDisablePublicChat: '0',
+      lockSettingsDisableNote: '0',
+      autoStartRecording: '0',
+      allowStartStopRecording: '1',
+      waitForModerator: '1',
+      allModerators: '0',
+      record: '1'
+    }
+
+    # Parse the values using the parse_defaults function
+    parsed_defaults = parse_defaults(room_settings) if room_settings
+
+    # Iterate over default values and set them using send method
+    defaults.each do |key, value|
+      send("#{key}=", parsed_defaults[key] || value) unless send("#{key}_changed?")
     end
-
-    # Use default values if not provided by parsed_defaults
-    self.lockSettingsDisableCam ||= '0'
-    self.lockSettingsDisableMic ||= '0'
-    self.lockSettingsDisablePrivateChat ||= '0'
-    self.lockSettingsDisablePublicChat ||= '0'
-    self.lockSettingsDisableNote ||= '0'
-    self.autoStartRecording ||= '0'
-    self.allowStartStopRecording ||= '1'
-
-    # these settings existed as their own column in the db
-    # therefore we take the value in that column if it already exists
-    # this is done to ensure previous values are not overwritten.
-
-    self.waitForModerator ||= '1'
-    self.allModerators ||= '0'
-    self.record = record.nil? ? '1' : bool_to_binary(record) unless record_changed?
   end
 
   def parse_defaults(defaults_str)
