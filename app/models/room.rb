@@ -100,7 +100,7 @@ class Room < ApplicationRecord
       allowStartStopRecording: '1',
       waitForModerator: '1',
       allModerators: '0',
-      record: '1'
+      record: '1',
     }
 
     # Parse the values using the parse_defaults function
