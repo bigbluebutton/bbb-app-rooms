@@ -108,7 +108,7 @@ class Room < ApplicationRecord
 
     # Iterate over default values and set them using send method
     defaults.each do |key, value|
-      send("#{key}=", parsed_defaults[key] || value) unless send("#{key}_changed?")
+      send("#{key}=", parsed_defaults&.fetch(key, value)) unless send("#{key}_changed?")
     end
   end
 
