@@ -20,7 +20,7 @@ class Room < ApplicationRecord
   validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
-  store_accessor :settings, [:waitForModerator, :allModerators, :record, :autoStartRecording, :allowStartStopRecording]
+  store_accessor :settings, [:waitForModerator, :allModerators, :guestPolicy, :record, :autoStartRecording, :allowStartStopRecording]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
@@ -84,20 +84,38 @@ class Room < ApplicationRecord
   end
 
   def initialize_setting_defaults
-    self.lockSettingsDisableCam = '0'  unless lockSettingsDisableCam_changed?
-    self.lockSettingsDisableMic = '0'  unless lockSettingsDisableMic_changed?
-    self.lockSettingsDisablePrivateChat = '0' unless lockSettingsDisablePrivateChat_changed?
-    self.lockSettingsDisablePublicChat = '0' unless lockSettingsDisablePublicChat_changed?
-    self.lockSettingsDisableNote = '0' unless lockSettingsDisableNote_changed?
-    self.autoStartRecording = '0'  unless autoStartRecording_changed?
-    self.allowStartStopRecording = '1' unless allowStartStopRecording_changed?
+    # get the key value pair from the broker using the room_setting_defaults function
+    room_settings = room_setting_defaults(tenant)
 
-    # these settings existed as their own column in the db
-    # therefore we take the value in that column if it already exists
-    # this is done to ensure previous values are not overwritten.
-    self.waitForModerator = wait_moderator.nil? ? '1' : bool_to_binary(wait_moderator) unless waitForModerator_changed?
-    self.allModerators = all_moderators.nil? ? '0' : bool_to_binary(all_moderators) unless allModerators_changed?
-    self.record = record.nil? ? '1' : bool_to_binary(record) unless record_changed?
+    # Define default values
+    defaults = {
+      lockSettingsDisableCam: '0',
+      lockSettingsDisableMic: '0',
+      lockSettingsDisablePrivateChat: '0',
+      lockSettingsDisablePublicChat: '0',
+      lockSettingsDisableNote: '0',
+      autoStartRecording: '0',
+      allowStartStopRecording: '1',
+      waitForModerator: '1',
+      allModerators: '0',
+      guestPolicy: '0',
+      record: '1',
+    }
+
+    # Parse the values using the parse_defaults function
+    parsed_defaults = parse_defaults(room_settings) if room_settings
+
+    # Iterate over default values and set them using send method
+    defaults.each do |key, value|
+      send("#{key}=", parsed_defaults&.fetch(key, value)) unless send("#{key}_changed?")
+    end
+  end
+
+  def parse_defaults(defaults_str)
+    defaults_str.gsub(/[{}]/, '').split(',').map do |pair|
+      key, value = pair.split(':')
+      [key.strip.to_sym, value.strip]
+    end.to_h
   end
 
   def bool_to_binary(value)
