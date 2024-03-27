@@ -28,7 +28,7 @@ class NotifyMeetingWatcherJob < ApplicationJob
   queue_as :default
 
   def perform(room, data)
-    @room = room
+    @chosen_room = room
     MeetingInfoChannel.broadcast_to(room, job_data(data))
   end
 
