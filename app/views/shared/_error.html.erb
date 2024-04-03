@@ -13,28 +13,29 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<head>
-<style>
-.error-code {
-    font-size: 8rem;
-    color: #263f88;
-}
-
-.error-message {
-  font-size: 2rem;
-}
-</style>
-</head>
-<div class="text-center" style="margin-top: 8%">
-    <h2 class= "error-code">
-      <%= code %> <br>
-    </h2>
-    <div class="error-message font-extrabold">
-      <span class="sr-only"><%= message %></span><%= message %>
-    </div>
-    <div>
-      <% if suggestion %>
-      <%= suggestion %>
-      <% end %>
-    </div>
+<div class="container bg-white">
+	<div class = "row">
+			<div class ="flex items-start mt-20 mr-10 mb-10 ">
+					<img style ="top:50%" alt="" src="">
+			</div>
+	</div>
+	<div class="row">
+			<div class = "bg-gray-200 grid justify-items-center grid-cols-1 gap-10 p-20 pt-40 pb-40" >
+					<div class="text-center">
+							<% if code %>
+								<h2 class= "error-code">
+									<%= code %> <br>
+								</h2>
+							<% end %>
+							<div class="error-message font-extrabold">
+								<span class="sr-only"><%= message %></span><%= message %>
+							</div>
+							<div>
+								<% if suggestion %>
+									<%= suggestion %>
+								<% end %>
+							</div>
+					</div>
+			</div>
+	</div>
 </div>
