@@ -6,7 +6,7 @@
   "scss": "application.scss",
   "private": true,
   "dependencies": {
-    "@fullhuman/postcss-purgecss": "^4.0.3",
+    "@fullhuman/postcss-purgecss": "^6.0.0",
     "@rails/actioncable": "6.1.7",
     "@rails/activestorage": "6.1.7",
     "@rails/ujs": "6.1.7",
