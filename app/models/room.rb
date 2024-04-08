@@ -20,13 +20,15 @@ class Room < ApplicationRecord
   validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
-  store_accessor :settings, [:waitForModerator, :allModerators, :guestPolicy, :record, :autoStartRecording, :allowStartStopRecording]
+  store_accessor :settings, %i[waitForModerator allModerators guestPolicy record autoStartRecording allowStartStopRecording]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
   after_find :set_empty_code
 
   attr_accessor :can_grade
+
+  include BrokerHelper
 
   RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
   CODE_LENGTH = 10
@@ -98,7 +100,7 @@ class Room < ApplicationRecord
       allowStartStopRecording: '1',
       waitForModerator: '1',
       allModerators: '0',
-      guestPolicy: '0',
+      guestPolicy: '1',
       record: '1',
     }
 
