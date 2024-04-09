@@ -91,19 +91,19 @@ class Room < ApplicationRecord
 
     # Define default values
     defaults = {
-      lockSettingsDisableCam: '1',
+      lockSettingsDisableCam: '0',
       lockSettingsDisableMic: '0',
-      lockSettingsDisablePrivateChat: '1',
+      lockSettingsDisablePrivateChat: '0',
       lockSettingsDisablePublicChat: '0',
       lockSettingsDisableNote: '0',
-      autoStartRecording: '1',
-      allowStartStopRecording: '0',
+      autoStartRecording: '0',
+      allowStartStopRecording: '1',
       waitForModerator: '1',
       allModerators: '0',
       record: '1',
     }
 
-    if room_settings.nil? || room_settings.empty?
+    if room_settings.blank?
       # If room_settings is not present or null, assign defaults directly
       defaults.each do |key, value|
         send("#{key}=", value) unless send("#{key}_changed?")
