@@ -58,15 +58,14 @@ module BbbHelper
     join_options[:userID] = @user.uid
     join_options[:avatarURL] = @user.user_image
     join_options[:pronoun] = @user.lis_person_pronoun
-    bbb.join_meeting_url(@chosen_room.handler, @user.username(t("default.bigbluebutton.#{role}")), @chosen_room.attributes[role], join_options)
+    join_options[:role] = role
+    bbb.join_meeting_url(@chosen_room.handler, @user.username(t("default.bigbluebutton.#{role}")), '', join_options)
   end
 
   # Create meeting for the current room.
   def create_meeting
     record = bigbluebutton_recording_enabled ? string_to_bool(@chosen_room.record) : false
     create_options = {
-      moderatorPW: @chosen_room.moderator,
-      attendeePW: @chosen_room.viewer,
       welcome: @chosen_room.welcome,
       record: record,
       logoutURL: autoclose_url,

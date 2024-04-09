@@ -70,10 +70,11 @@ describe BbbHelper do
         fullname = "fullName=#{@user.full_name}"
 
         meeting_id = "&meetingID=#{@room.handler}"
-        password = "&password=#{@room.moderator}"
+        password = '&password='
         userid = "&userID=#{@user.uid}"
+        role = '&role=moderator'
 
-        encoded_params = (fullname + meeting_id + password + userid).gsub(' ', '+')
+        encoded_params = (fullname + meeting_id + password + role + userid).gsub(' ', '+')
 
         # checksum calc (taken from bigbluebutton_api gem's get_url method)
         checksum_param = encoded_params + secret
