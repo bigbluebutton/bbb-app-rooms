@@ -91,24 +91,31 @@ class Room < ApplicationRecord
 
     # Define default values
     defaults = {
-      lockSettingsDisableCam: '0',
+      lockSettingsDisableCam: '1',
       lockSettingsDisableMic: '0',
-      lockSettingsDisablePrivateChat: '0',
+      lockSettingsDisablePrivateChat: '1',
       lockSettingsDisablePublicChat: '0',
       lockSettingsDisableNote: '0',
-      autoStartRecording: '0',
-      allowStartStopRecording: '1',
+      autoStartRecording: '1',
+      allowStartStopRecording: '0',
       waitForModerator: '1',
       allModerators: '0',
       record: '1',
     }
 
-    # Parse the values using the parse_defaults function
-    parsed_defaults = parse_defaults(room_settings) if room_settings
+    if room_settings.nil? || room_settings.empty?
+      # If room_settings is not present or null, assign defaults directly
+      defaults.each do |key, value|
+        send("#{key}=", value) unless send("#{key}_changed?")
+      end
+    else
+      # Parse the values using the parse_defaults function
+      parsed_defaults = parse_defaults(room_settings)
 
-    # Iterate over default values and set them using send method
-    defaults.each do |key, value|
-      send("#{key}=", parsed_defaults&.fetch(key, value)) unless send("#{key}_changed?")
+      # Iterate over default values and set them using send method
+      defaults.each do |key, value|
+        send("#{key}=", parsed_defaults.fetch(key, value)) unless send("#{key}_changed?")
+      end
     end
   end
 
