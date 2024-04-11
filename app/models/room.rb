@@ -104,12 +104,19 @@ class Room < ApplicationRecord
       record: '1',
     }
 
-    # Parse the values using the parse_defaults function
-    parsed_defaults = parse_defaults(room_settings) if room_settings
+    if room_settings.blank?
+      # If room_settings is not present or null, assign defaults directly
+      defaults.each do |key, value|
+        send("#{key}=", value) unless send("#{key}_changed?")
+      end
+    else
+      # Parse the values using the parse_defaults function
+      parsed_defaults = parse_defaults(room_settings)
 
-    # Iterate over default values and set them using send method
-    defaults.each do |key, value|
-      send("#{key}=", parsed_defaults&.fetch(key, value)) unless send("#{key}_changed?")
+      # Iterate over default values and set them using send method
+      defaults.each do |key, value|
+        send("#{key}=", parsed_defaults.fetch(key, value)) unless send("#{key}_changed?")
+      end
     end
   end
 
