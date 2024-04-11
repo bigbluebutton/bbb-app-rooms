@@ -49,8 +49,4 @@ module BrokerHelper
   def bbb_moderator_roles_params(tenant)
     tenant_settings(tenant: tenant)&.[]('settings')&.[]('bigbluebutton_moderator_roles')&.split(',')
   end
-
-  def room_setting_defaults(tenant)
-    tenant_settings(tenant: tenant)&.dig('settings', 'room_setting_defaults')
-  end
 end
