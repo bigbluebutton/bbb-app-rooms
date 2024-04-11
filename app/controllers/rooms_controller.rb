@@ -321,22 +321,42 @@ class RoomsController < ApplicationController
 
     ## Any launch.
     @room = Room.find_by(handler: handler, tenant: tenant)
-    return if @room
+    logger.debug("Room #{@room.id} found...") && return if @room
 
-    # Legacy launch.
-    unless handler_legacy.nil?
-      # Attempt creating a Legacy Room with fetched parameters
-      fetched_room_params = fetch_new_room_params(handler, handler_legacy) if Rails.configuration.handler_legacy_api_enabled
-      @room = Room.create(fetched_room_params.merge({ tenant: tenant })) if fetched_room_params
-      return if @room
-
-      # Attempt creating a Legacy Room with launch parameters only if the new room creation for legacy launches is enabled.
-      return unless Rails.configuration.handler_legacy_new_room_enabled
+    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params).merge({ tenant: tenant })
+    if handler_legacy.nil?
+      ## Regular launch
+      logger.debug('This is a Regular launch...')
+      @room = Room.create(launch_room_params)
     end
 
-    ## Regular launch
-    launch_room_params = launch_params_to_new_room_params(handler, handler_legacy, launch_params)
-    @room = Room.create(launch_room_params.merge({ tenant: tenant }))
+    # Legacy launch.
+    logger.debug('This is a Legacy launch...')
+    if Rails.configuration.handler_legacy_api_enabled
+      # Attempt creating a Legacy Room with fetched parameters
+      logger.debug('Attempting to create a Legacy Room with fetched parameters...')
+      fetched_room_params = fetch_new_room_params(handler, handler_legacy)
+      unless fetched_room_params.nil?
+        fetched_room_params = fetched_room_params.merge({ tenant: tenant })
+        @room = Room.find_by(handler: fetched_room_params['handler'], tenant: tenant)
+        if @room
+          # Update
+          @room = Room.update(fetched_room_params)
+          logger.debug("Room #{@room.id} updated with fetched parameters...") && return if @room
+        else
+          # Create
+          @room = Room.create(fetched_room_params)
+          logger.debug("Room #{@room.id} created with fetched parameters...") && return if @room
+        end
+        logger.debug(@room.errors.full_messages) if @room.errors.any?
+      end
+    end
+
+    # Attempt creating a Legacy Room with launch parameters only if the new room creation for legacy launches is enabled.
+    return unless Rails.configuration.handler_legacy_new_room_enabled
+
+    logger.debug('It will attempt to create a Room with passed parameters even though a handler_legacy was passed...')
+    @room = Room.create(launch_room_params)
   end
 
   def launch_user(launch_params)
