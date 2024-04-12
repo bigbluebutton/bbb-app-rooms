@@ -297,6 +297,7 @@ class RoomsController < ApplicationController
 
   def set_launch
     # Pull the Launch request_parameters.
+    logger.debug('Pulling the Launch request_parameters.')
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
@@ -328,6 +329,8 @@ class RoomsController < ApplicationController
       ## Regular launch
       logger.debug('This is a Regular launch...')
       @room = Room.create(launch_room_params)
+      logger.debug(@room.errors.full_messages) if @room.errors.any?
+      return
     end
 
     # Legacy launch.
