@@ -20,7 +20,7 @@ class Room < ApplicationRecord
   validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
-  store_accessor :settings, [:waitForModerator, :allModerators, :record, :autoStartRecording, :allowStartStopRecording]
+  store_accessor :settings, %i[waitForModerator allModerators guestPolicy record autoStartRecording allowStartStopRecording]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
@@ -100,6 +100,7 @@ class Room < ApplicationRecord
       allowStartStopRecording: '1',
       waitForModerator: '1',
       allModerators: '0',
+      guestPolicy: '1',
       record: '1',
     }
 

@@ -73,6 +73,7 @@ module BbbHelper
       lockSettingsDisableNote: string_to_bool(@chosen_room.lockSettingsDisableNote),
       lockSettingsDisablePrivateChat: string_to_bool(@chosen_room.lockSettingsDisablePrivateChat),
       lockSettingsDisablePublicChat: string_to_bool(@chosen_room.lockSettingsDisablePublicChat),
+      guestPolicy: string_to_bool(@chosen_room.guestPolicy) ? 'ASK_MODERATOR' : 'ALWAYS_ACCEPT',
       autoStartRecording: string_to_bool(@chosen_room.autoStartRecording),
       allowStartStopRecording: string_to_bool(@chosen_room.allowStartStopRecording),
       'meta_description': @chosen_room.description.truncate(128, separator: ' '),
