@@ -129,7 +129,7 @@ Rails.application.configure do
                          :memory_store
                        end
 
-  config.hosts = ENV['WHITELIST_HOST'].presence || nil
+  config.hosts = ENV['WHITELIST_HOST']&.split(',') || nil
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

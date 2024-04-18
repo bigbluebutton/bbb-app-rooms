@@ -20,6 +20,7 @@ Rails.configuration.omniauth_key = ENV['OMNIAUTH_BBBLTIBROKER_KEY'] || ''
 Rails.configuration.omniauth_secret = ENV['OMNIAUTH_BBBLTIBROKER_SECRET'] || ''
 
 OmniAuth.config.logger = Rails.logger
+OmniAuth.config.allowed_request_methods = [:post]
 
 Rails.application.config.middleware.use(OmniAuth::Builder) do
   # Initialize the provider
@@ -40,11 +41,14 @@ Rails.application.config.middleware.use(OmniAuth::Builder) do
         email
       ],
       client_options: {
-        site: Rails.configuration.omniauth_site.to_s,
         code: 'rooms',
         authorize_url: "#{Rails.configuration.omniauth_root}/oauth/authorize",
         token_url: "#{Rails.configuration.omniauth_root}/oauth/token",
         revoke_url: "#{Rails.configuration.omniauth_root}/oauth/revoke",
+      },
+      setup: lambda { |env|
+        request = Rack::Request.new(env)
+        env['omniauth.strategy'].options[:client_options].site = request.base_url # dynamic
       }
     )
   end

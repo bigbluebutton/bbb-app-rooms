@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 # BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+
 # Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+
 # This program is free software; you can redistribute it and/or modify it under the
 # terms of the GNU Lesser General Public License as published by the Free Software
 # Foundation; either version 3.0 of the License, or (at your option) any later
@@ -10,6 +12,7 @@
 # BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
@@ -21,6 +24,6 @@ attrs = {
   same_site: ENV['COOKIES_SAME_SITE'].presence || 'None',
 }
 
-BbbAppRooms::Application.config.session_store(:active_record_store, **attrs)
+Rails.application.config.session_store(:active_record_store, **attrs)
 
 Rails.logger.class.include ActiveSupport::LoggerSilence

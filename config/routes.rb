@@ -47,11 +47,8 @@ Rails.application.routes.draw do
     # Handles launches.
     post '/launch', to: 'rooms#launch', as: :room_launch
 
-    # Handles sessions.
-    get '/sessions/create'
-    get '/sessions/failure'
-
     # Handles Omniauth authentication.
+    # TODO: In order to limit access to only post requests, we need to change the way Doorkeeper makes the callback from the broker.
     match '/auth/:provider', to: 'sessions#new', via: [:get, :post], as: :omniauth_authorize
     match '/auth/:provider/callback', to: 'sessions#create', via: [:get, :post], as: :omniauth_callback
     get   '/auth/failure', to: 'sessions#failure', as: :omniauth_failure

@@ -96,7 +96,7 @@ gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
 gem 'repost', '~> 0.4.1'
 
 gem 'minitest'
-gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.4'
+gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.5'
 
 gem 'activerecord-session_store', '>= 2.1.0'
 
