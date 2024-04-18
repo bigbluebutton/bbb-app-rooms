@@ -261,10 +261,11 @@ class RoomsController < ApplicationController
   def authenticate_user!
     @launch_nonce = params['launch_nonce']
     return unless omniauth_provider?(:bbbltibroker)
+
     # Assume user authenticated if session [params[launch_nonce]] is set
     return if session[@launch_nonce]
 
-    redirector = omniauth_authorize_path(:bbbltibroker, launch_nonce: params[:launch_nonce])
+    redirector = omniauth_authorize_url(:bbbltibroker, launch_nonce: @launch_nonce)
     redirect_post(redirector, options: { authenticity_token: :auto }) && return if params['action'] == 'launch'
 
     redirect_to(errors_path(401))
@@ -297,7 +298,7 @@ class RoomsController < ApplicationController
 
   def set_launch
     # Pull the Launch request_parameters.
-    logger.debug('Pulling the Launch request_parameters.')
+    logger.debug('Pulling the Launch request_parameters...')
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
     get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
     session_params = JSON.parse(get_response)
