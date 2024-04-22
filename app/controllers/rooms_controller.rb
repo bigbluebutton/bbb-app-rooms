@@ -39,6 +39,8 @@ class RoomsController < ApplicationController
   before_action :check_for_cancel, only: [:create, :update]
   before_action :allow_iframe_requests
   before_action :set_current_locale
+  before_action :set_action_cable, only: %i[launch]
+
   after_action :broadcast_meeting, only: [:meeting_end]
 
   # GET /rooms/1
@@ -491,5 +493,14 @@ class RoomsController < ApplicationController
     end
 
     Digest::SHA1.hexdigest(input)
+  end
+
+  def set_action_cable
+    relative_url_root = Rails.configuration.relative_url_root
+    relative_url_root = relative_url_root.chop if relative_url_root[-1] == '/'
+    config = ActionCable::Server::Configuration.new
+    config.cable = { url: "wss://#{request.host}#{relative_url_root}/rooms/cable" }
+
+    ActionCable::Server::Base.new(config: config)
   end
 end

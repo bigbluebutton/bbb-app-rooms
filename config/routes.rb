@@ -17,7 +17,7 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
 Rails.application.routes.draw do
-  mount ActionCable.server => Rails.configuration.action_cable.url
+  mount ActionCable.server => '/rooms/cable'
 
   scope 'rooms' do
     get '/health_check', to: 'health_check#show'
