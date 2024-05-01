@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 PORT="${PORT:=3000}"
 
 echo ">>> LTI broker starting on port: $PORT"
