@@ -351,8 +351,12 @@ class RoomsController < ApplicationController
           logger.debug("Room #{@room.id} updated with fetched parameters...") && return if @room
         else
           # Create
-          @room = Room.create(fetched_room_params)
-          logger.debug("Room #{@room.id} created with fetched parameters...") && return if @room
+          @room = Room.create(fetched_room_params.merge({ code: '', shared_code: '' }))
+          if @room.persisted?
+            logger.debug("Room #{@room.id} created with fetched parameters...") && return if @room
+          else
+            logger.debug("Room creation failed: #{@room.errors.full_messages.join(', ')}")
+          end
         end
         logger.debug(@room.errors.full_messages) if @room.errors.any?
       end
