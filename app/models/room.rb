@@ -17,7 +17,6 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class Room < ApplicationRecord
   before_save :default_values
-  validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
   store_accessor :settings, %i[waitForModerator allModerators guestPolicy record autoStartRecording allowStartStopRecording]
