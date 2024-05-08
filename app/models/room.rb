@@ -17,14 +17,13 @@
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class Room < ApplicationRecord
   before_save :default_values
-  validates :code, uniqueness: true
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
   store_accessor :settings, %i[waitForModerator allModerators guestPolicy record autoStartRecording allowStartStopRecording]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
-  after_find :set_empty_code
+  before_create :ensure_unique_code
 
   attr_accessor :can_grade
 
@@ -135,9 +134,17 @@ class Room < ApplicationRecord
 
   # Assign a random alphanumeric code to the room if it doesn't already have one
   # Assign the shared_code to equal to the room's code.
-  def set_empty_code
-    self.code = SecureRandom.alphanumeric(CODE_LENGTH) if code.blank?
+  def ensure_unique_code
+    self.code = generate_unique_code
     self.shared_code = code if shared_code.blank? || !use_shared_code
-    save!
+  end
+
+  def generate_unique_code
+    loop do
+      # Generate a random string or other value
+      random_code = SecureRandom.alphanumeric(CODE_LENGTH)
+      # Check if the value is unique in the database
+      break random_code unless Room.exists?(code: random_code)
+    end
   end
 end
