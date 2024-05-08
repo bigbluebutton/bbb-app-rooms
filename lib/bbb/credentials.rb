@@ -63,11 +63,13 @@ module Bbb
 
     def formatted_tenant_info(tenant)
       if @cache_enabled
-        cached_tenant = @cache.fetch("#{tenant}/tenantInfo")
+        Rails.logger.debug('Cache enabled, attempt to fetch credentials from cache...')
+        cached_tenant = @cache.fetch("#{tenant}/tenantInfo", expires_in: 10.minutes)
         return cached_tenant unless cached_tenant.nil?
       end
 
       # Get tenant info from broker
+      Rails.logger.debug('No cache. Attempt to fetch credentials from broker...')
       tenant_info = tenant_settings(tenant: tenant)
 
       # Get tenant credentials from TENANT_CREDENTIALS environment variable
@@ -94,6 +96,7 @@ module Bbb
 
       # get the api URL and secret from the LB if not defined in tenant settings
       if missing_creds
+        Rails.logger.debug('Missing credentials, attempt to fetch from multitenant_api_endpoint...')
         # Build the URI.
         uri = encoded_url(
           "#{@multitenant_api_endpoint}api/getUser",
@@ -106,7 +109,7 @@ module Bbb
         response['settings'] = tenant_settings
       end
 
-      @cache.fetch("#{tenant}/tenantInfo", expires_in: 1.hour) do
+      @cache.fetch("#{tenant}/tenantInfo", expires_in: 10.minutes) do
         response || { 'apiURL' => api_url, 'secret' => secret, 'settings' => tenant_settings }
       end
     end

@@ -322,6 +322,7 @@ class RoomsController < ApplicationController
   def launch_room(launch_params, tenant)
     handler = room_handler(launch_params, tenant)
     handler_legacy = launch_params['custom_params']['custom_handler_legacy'].presence
+    code = SecureRandom.alphanumeric(10)
 
     ## Any launch.
     @room = Room.find_by(handler: handler, tenant: tenant)
@@ -331,7 +332,7 @@ class RoomsController < ApplicationController
     if handler_legacy.nil?
       ## Regular launch
       logger.debug('This is a Regular launch...')
-      @room = Room.create(launch_room_params)
+      @room = Room.create(launch_room_params.merge({ code: code, shared_code: code }))
       logger.debug(@room.errors.full_messages) if @room.errors.any?
       return
     end
@@ -351,8 +352,12 @@ class RoomsController < ApplicationController
           logger.debug("Room #{@room.id} updated with fetched parameters...") && return if @room
         else
           # Create
-          @room = Room.create(fetched_room_params)
-          logger.debug("Room #{@room.id} created with fetched parameters...") && return if @room
+          @room = Room.create(fetched_room_params.merge({ code: code, shared_code: code }))
+          if @room.persisted?
+            logger.debug("Room #{@room.id} created with fetched parameters...") && return if @room
+          else
+            logger.debug("Room creation failed: #{@room.errors.full_messages.join(', ')}")
+          end
         end
         logger.debug(@room.errors.full_messages) if @room.errors.any?
       end
@@ -362,7 +367,7 @@ class RoomsController < ApplicationController
     return unless Rails.configuration.handler_legacy_new_room_enabled
 
     logger.debug('It will attempt to create a Room with passed parameters even though a handler_legacy was passed...')
-    @room = Room.create(launch_room_params)
+    @room = Room.create(launch_room_params.merge({ code: code, shared_code: code }))
   end
 
   def launch_user(launch_params)
