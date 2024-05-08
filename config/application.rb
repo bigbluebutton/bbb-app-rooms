@@ -34,7 +34,6 @@ module BbbAppRooms
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-    config.url_host = ENV['URL_HOST']
 
     config.build_number = ENV['BUILD_NUMBER'] || 'v1'
 
@@ -56,8 +55,7 @@ module BbbAppRooms
     # Mount Action Cable outside main process or domain
     relative_url_root = config.relative_url_root
     relative_url_root = relative_url_root.chop if relative_url_root[-1] == '/'
-    config.action_cable.url = "wss://#{ENV['URL_HOST']}#{relative_url_root}/rooms/cable"
-    config.action_cable.mount_path = '/rooms/cable'
+    config.action_cable.mount_path = "#{relative_url_root}/rooms/cable"
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')
