@@ -451,6 +451,7 @@ class RoomsController < ApplicationController
       roles: launch_params['roles'],
       locale: launch_params['launch_presentation_locale'],
       user_image: launch_params['user_image'],
+      lis_person_pronoun: launch_params['lis_person_pronoun'],
     }
   end
 
