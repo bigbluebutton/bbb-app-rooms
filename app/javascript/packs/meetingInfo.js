@@ -18,33 +18,33 @@
 
 import '../channels/consumer'
 
-$(document).on('turbolinks:load', function(){
+$(document).on('turbolinks:load', function () {
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
-	var chosenRoomId = $("#body").data("chosenroomid");
-	
-  if (!(controller == "rooms" && action == "meeting_join")){
+  var chosenRoomId = $("#body").data("chosenroomid");
+
+  if (!(controller == "rooms" && action == "meeting_join")) {
     App.meetingInfo = App.cable.subscriptions.create({
-        channel: "MeetingInfoChannel", 
-        room_id: chosenRoomId
-      }, {
-      connected: function() {
-        console.log("Connected to meeting info channel");
+      channel: "MeetingInfoChannel",
+      room_id: chosenRoomId
+    }, {
+      connected: function () {
+        console.log("Connected to meeting info channel for [" + chosenRoomId + "]");
       },
-      disconnected: function() {
+      disconnected: function () {
         console.log("Disconnected from meeting info channel");
       },
-      received: function(data) {
+      received: function (data) {
         console.log("Received data from meeting info channel. data: " + JSON.stringify(data));
-        if (data.meeting_in_progress == true){
+        if (data.meeting_in_progress == true) {
           startTime = data.elapsed_time
           start_elapsed_time();
           display_participant_count(data.participant_count);
-          show_elems(); 
+          show_elems();
         }
-        if (data.action == "end"){
-          hide_elements();          
+        if (data.action == "end") {
+          hide_elements();
         }
       }
     });
@@ -53,20 +53,20 @@ $(document).on('turbolinks:load', function(){
 
 var startTime = 0;
 
-var show_elems = function(){
+var show_elems = function () {
   $('#end-meeting-btn').show();
   $('#meeting-info-msg').show();
   $('#wait-for-mod-msg').hide();
 }
 
-var hide_elements = function(){
+var hide_elements = function () {
   $('#end-meeting-btn').hide();
   $('#meeting-info-msg').hide();
   $('#wait-for-mod-msg').hide();
 }
 
-var display_participant_count = function(participantCount){
-  if (participantCount == 1){
+var display_participant_count = function (participantCount) {
+  if (participantCount == 1) {
     var pplprson = "person";
   } else {
     var pplprson = "people";
@@ -75,7 +75,7 @@ var display_participant_count = function(participantCount){
   document.getElementById('ppl-or-person-elem').innerHTML = pplprson;
 }
 
-var start_elapsed_time = function(){
+var start_elapsed_time = function () {
   var diff = new Date() - new Date(startTime); // the elapsed time in ms
 
   var secs = Math.floor((diff / 1000) % 60);
@@ -86,7 +86,7 @@ var start_elapsed_time = function(){
   secs = addZeroMaybe(secs);
   hrs = addZeroMaybe(hrs);
 
-  document.getElementById('elapsed-time-elem').innerHTML =  hrs + ":" + mins + ":" + secs;
+  document.getElementById('elapsed-time-elem').innerHTML = hrs + ":" + mins + ":" + secs;
 
   setTimeout(start_elapsed_time, 500);
 }

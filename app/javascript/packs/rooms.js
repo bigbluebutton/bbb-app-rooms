@@ -16,43 +16,43 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).on('turbolinks:load', function(){
+$(document).on('turbolinks:load', function () {
     var room = window.location.pathname.split('/')[3];
-   
+
     var controller = $("body").data('controller');
     var action = $("body").data('action');
-    if (controller == "rooms" && action == "meeting_join"){
+    if (controller == "rooms" && action == "meeting_join") {
         var personal_join_link = $("body").data('meeting');
         App.waiter = App.cable.subscriptions.create({
             channel: "WaitChannel",
             room_id: room
         }, {
-            connected: function(data) {
+            connected: function (data) {
                 console.log("connected to wait");
             },
-            disconnected: function(data) {
+            disconnected: function (data) {
                 console.log("disconnected to wait");
                 console.log(data);
             },
-            received: function(data) {
+            received: function (data) {
                 console.log("This is the wait data: " + JSON.stringify(data));
-                if (data.action == "started"){
+                if (data.action == "started") {
                     $('#wait-for-mod-msg').hide();
                     window.location.replace(personal_join_link);
                     this.perform("notify_join");
-                    this.unsubscribe();                                
+                    this.unsubscribe();
                 }
             }
         })
     }
-   
-    $('#end-meeting-btn').on('click', function() {
+
+    $('#end-meeting-btn').on('click', function () {
         var end_meeting_url = $(this).data('url');
 
         $.ajax({
             url: end_meeting_url,
             type: "POST",
-            beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+            beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
             data: "",
         });
     })
@@ -66,28 +66,28 @@ $(document).on('turbolinks:load', function(){
     With Dynamic State Partitioning enabled, Firefox provides embedded resources with a separate storage bucket for every top-level website, causing the request to be denied if it comes from a third party. Embedded third-parties may request access to the top-level storage bucket, which is what we're doing with the requestAccess() method.
     */
     function requestAccess() {
-         document.requestStorageAccess().then(
-          () => { 
-            console.log('access granted!');
-            $('#access-alert').hide();
-            // the user needs to reload and then press the button again for it to work 
-           },
-          () => { console.log('access denied') }
+        document.requestStorageAccess().then(
+            () => {
+                console.log('access granted!');
+                $('#access-alert').hide();
+                // the user needs to reload and then press the button again for it to work 
+            },
+            () => { console.log('access denied') }
         );
     }
 
-    if (isFirefox || isSafari){
+    if (isFirefox || isSafari) {
         document.hasStorageAccess().then((hasAccess) => {
             if (!hasAccess && (isFirefox || isSafari)) {
                 $('#access-alert').show();
                 console.log("no access");
-                
-            } else {    
+
+            } else {
                 console.log("Already has access");
             }
         });
     }
 
     $('#accept-btn').on('click', requestAccess);
-    
+
 });
