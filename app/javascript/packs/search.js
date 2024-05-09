@@ -16,14 +16,14 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).on('turbolinks:load', function(){
+$(document).on('turbolinks:load', function () {
   var controller = $("body").data('controller');
   var action = $("body").data('action');
 
-  if(controller == "rooms" && action == "show"){
+  if (controller == "rooms" && action == "show") {
     search_input = $('#search_bar');
 
-    search_input.bind("keyup", function(event){
+    search_input.bind("keyup", function (event) {
 
       // Retrieve the current search query
       search_query = search_input.find(".form-control").val();
@@ -33,21 +33,21 @@ $(document).on('turbolinks:load', function(){
 
       recordings = $('#recording-table').find('tr');
 
-      recordings.each(function(){
-        if($(this).find('text').text().toLowerCase().includes(search_query.toLowerCase())){
+      recordings.each(function () {
+        if ($(this).find('text').text().toLowerCase().includes(search_query.toLowerCase())) {
           recordings_found = recordings_found + 1;
           $(this).show();
         }
-        else{
+        else {
           $(this).hide();
         }
       });
 
       // Show "No recordings match your search" if no recordings found
-      if(recordings_found == 0){
+      if (recordings_found == 0) {
         $('#no_recordings_found').show();
       }
-      else{
+      else {
         $('#no_recordings_found').hide();
       }
     });
