@@ -30,7 +30,7 @@ $(document).on('turbolinks:load', function () {
       room_id: chosenRoomId
     }, {
       connected: function () {
-        console.log("Connected to meeting info channel");
+        console.log("Connected to meeting info channel for [" + chosenRoomId + "]");
       },
       disconnected: function () {
         console.log("Disconnected from meeting info channel");
