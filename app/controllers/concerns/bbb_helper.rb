@@ -59,7 +59,7 @@ module BbbHelper
     join_options[:avatarURL] = @user.user_image
     join_options[:pronoun] = @user.lis_person_pronouns
     join_options[:role] = role
-    bbb.join_meeting_url(@chosen_room.handler, @user.username(t("default.bigbluebutton.#{role}")), @chosen_room.attributes[role], join_options)
+    bbb.join_meeting_url(@chosen_room.handler, @user.username(t("default.bigbluebutton.#{role}")), '', join_options)
   end
 
   # Create meeting for the current room.

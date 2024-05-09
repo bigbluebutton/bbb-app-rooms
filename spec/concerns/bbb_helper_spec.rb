@@ -73,7 +73,7 @@ describe BbbHelper do
         avatar_url = 'avatarURL=avatarURL'
         fullname = "&fullName=#{@user.full_name}"
         meeting_id = "&meetingID=#{@room.handler}"
-        password = "&password=#{@room.moderator}"
+        password = '&password='
         role = '&role=moderator'
         userid = "&userID=#{@user.uid}"
 
