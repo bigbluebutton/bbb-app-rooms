@@ -21,12 +21,15 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-html,body,.container {
-    height: 94%;
-}
+html,
+body,
 .container {
-    display:table;
-    width: 100%;
+  height: 94%;
+}
+
+.container {
+  display: table;
+  width: 100%;
 }
 
 .dropdown {
@@ -35,11 +38,11 @@ html,body,.container {
 }
 
 /* Dropdown Content (Hidden by Default) */
-.dropdown-content{
+.dropdown-content {
   display: none;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 9;
 }
 
@@ -74,7 +77,8 @@ input.recording-text {
   border-top: 10px solid #263f88;
   width: 140px;
   height: 140px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
+  -webkit-animation: spin 2s linear infinite;
+  /* Safari */
   animation: spin 2s linear infinite;
 }
 
@@ -87,7 +91,7 @@ input.recording-text {
   text-align: center;
   padding: 5px 0;
   border-radius: 6px;
- 
+
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
@@ -98,17 +102,19 @@ input.recording-text {
   visibility: visible;
 }
 
-.edit_hover_class a{
-  visibility:hidden;
+.edit_hover_class a {
+  visibility: hidden;
 }
+
 .edit_hover_class:hover a {
-  visibility:visible;
+  visibility: visible;
   background-color: white;
 }
 
 .input-group-prepend {
   display: flex;
 }
+
 .copy-icon {
   margin-left: 5px;
   cursor: pointer;
@@ -131,11 +137,21 @@ input.recording-text {
 
 /* Safari */
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

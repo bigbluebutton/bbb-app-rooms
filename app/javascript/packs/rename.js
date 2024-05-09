@@ -16,16 +16,16 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-function func(){
+function func() {
   var controller = $("body").data('controller');
   var action = $("body").data('action');
 
-  if(controller == "rooms" && action == "show" || controller == "rooms" && action == "update"){
+  if (controller == "rooms" && action == "show" || controller == "rooms" && action == "update") {
 
     // Set a recording row rename event
-    var configure_recording_row = function(recording_text, recording_text_id){
+    var configure_recording_row = function (recording_text, recording_text_id) {
 
-      function register_recording_text_event(e){
+      function register_recording_text_event(e) {
         // Remove current window events
         $(window).off('mousedown keydown');
 
@@ -34,33 +34,33 @@ function func(){
         let $input = $('<input type="text"/>').val($el.text().trim()).attr('id', $el.attr('id')).attr('class', $el.attr('class'));
         $el.replaceWith($input);
 
-        var save = function(){
+        var save = function () {
           let $text = $('<text/>').text($input.val()).attr('class', $input.attr('class'));
           $input.replaceWith($text);
           submit_rename_request(recording_text);
         };
 
-        $input.on('blur keyup', function(e) {
-          if (e.type === 'blur' || e.keyCode === 13)  { // keycode is depreciated by still recognized by browsers, it's alt (.key) doesnt work in firefox
+        $input.on('blur keyup', function (e) {
+          if (e.type === 'blur' || e.keyCode === 13) { // keycode is depreciated by still recognized by browsers, it's alt (.key) doesnt work in firefox
             save();
             this.focus();
           }
         });
-       
+
         // Register the events for being able to exit the input box.
         register_window_event(recording_text, recording_text_id, '#edit-record', 'edit-recordid');
       }
 
-      recording_text.find('a').on('click focusout', function(e){
+      recording_text.find('a').on('click focusout', function (e) {
         register_recording_text_event(e);
       });
 
-      recording_text.find('#recording-title-text').on('focusout', function(e){
+      recording_text.find('#recording-title-text').on('focusout', function (e) {
         $(window).off('mousedown keydown');
         submit_rename_request(recording_text);
       });
 
-      recording_text.find('#recording-description-text').on('focusout', function(e){
+      recording_text.find('#recording-description-text').on('focusout', function (e) {
         $(window).off('mousedown keydown');
         submit_rename_request(recording_text);
       });
@@ -68,22 +68,22 @@ function func(){
 
     // Register window event to submit new name
     // upon click or upon pressing the enter key
-    var register_window_event = function(element, textfield_id, edit_button_id, edit_button_data){
-      $(window).on('mousedown keydown', function(clickEvent){
+    var register_window_event = function (element, textfield_id, edit_button_id, edit_button_data) {
+      $(window).on('mousedown keydown', function (clickEvent) {
 
         // Return if the text is clicked
-        if(clickEvent.type == "mousedown" && clickEvent.target.id == textfield_id){
+        if (clickEvent.type == "mousedown" && clickEvent.target.id == textfield_id) {
           return;
         }
 
         // Return if the edit icon is clicked
-        if(clickEvent.type == "mousedown" && $(clickEvent.target).is(edit_button_id) &&
-          $(clickEvent.target).data(edit_button_data) === element.find(edit_button_id).data(edit_button_data)){
+        if (clickEvent.type == "mousedown" && $(clickEvent.target).is(edit_button_id) &&
+          $(clickEvent.target).data(edit_button_data) === element.find(edit_button_id).data(edit_button_data)) {
           return;
         }
 
         // Check if event is keydown and enter key is not pressed
-        if(clickEvent.type == "keydown" && clickEvent.which !== 13){
+        if (clickEvent.type == "keydown" && clickEvent.which !== 13) {
           return;
         }
 
@@ -95,8 +95,8 @@ function func(){
     }
 
     // Apply ajax request depending on the element that triggered the event
-    var submit_rename_request = function(element){
-      if(element.is('#recording-title')){
+    var submit_rename_request = function (element) {
+      if (element.is('#recording-title')) {
         submit_update_request({
           setting: "rename_recording",
           record_id: element.data('recordid'),
@@ -104,7 +104,7 @@ function func(){
           launch_nonce: element.data('launch-nonce'),
         });
       }
-      else if(element.is('#recording-description')){
+      else if (element.is('#recording-description')) {
         submit_update_request({
           setting: "describe_recording",
           record_id: element.data('recordid'),
@@ -115,12 +115,12 @@ function func(){
     }
 
     // Helper for submitting ajax requests
-    var submit_update_request = function(data){
+    var submit_update_request = function (data) {
       // Send ajax request for update
       $.ajax({
         url: window.location.pathname + '/recording/' + data['record_id'] + '/update?launch_nonce=' + data['launch_nonce'],
         type: "POST",
-        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
         data: data,
       });
     }
@@ -128,7 +128,7 @@ function func(){
     var recording_rows = $('#recording-table').find('tr');
 
     // Configure renaming for recording rows
-    recording_rows.each(function(){
+    recording_rows.each(function () {
       var recording_title = $(this).find('#recording-title');
       var recording_description = $(this).find('#recording-description');
       configure_recording_row(recording_title, 'recording-title-text');
