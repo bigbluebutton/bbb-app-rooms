@@ -115,7 +115,7 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
-    res = Rails.cache.fetch("#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: 30.minutes) if Rails.configuration.cache_enabled
+    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
     res ||= bbb.get_recordings(meetingID: @chosen_room.handler)
     recordings_formatted(res)
   end
@@ -152,25 +152,25 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
-    Rails.cache.delete("#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
-    Rails.cache.delete("#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
-    Rails.cache.delete("#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
-    Rails.cache.delete("#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
   end
