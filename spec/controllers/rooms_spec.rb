@@ -11,13 +11,13 @@ describe RoomsController, type: :controller do
     allow_any_instance_of(RoomsController).to(receive(:bbb).and_return(bbb_api))
     allow_any_instance_of(NotifyMeetingWatcherJob).to(receive(:bbb).and_return(bbb_api)) # stub actioncable processes
     allow_any_instance_of(BrokerHelper).to(receive(:broker_tenant_info).and_return({
-                                                                                  'handler_params' => 'context_id',
-                                                                                  'hide_build_tag' => 'false',
-                                                                                  'bigbluebutton_url' => 'https://example-bbb-server.com/bigbluebutton/api',
-                                                                                  'bigbluebutton_secret' => 'supersecretsecret',
-                                                                                  'enable_shared_rooms' => 'true',
-                                                                                  'bigbluebutton_moderator_roles' => 'administrator,teacher',
-                                                                                }))
+                                                                                     'handler_params' => 'context_id',
+                                                                                     'hide_build_tag' => 'false',
+                                                                                     'bigbluebutton_url' => 'https://example-bbb-server.com/bigbluebutton/api',
+                                                                                     'bigbluebutton_secret' => 'supersecretsecret',
+                                                                                     'enable_shared_rooms' => 'true',
+                                                                                     'bigbluebutton_moderator_roles' => 'administrator,teacher',
+                                                                                   }))
 
     @request.session['handler'] = {
       user_params: {
