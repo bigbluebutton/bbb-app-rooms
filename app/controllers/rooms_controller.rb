@@ -455,8 +455,8 @@ class RoomsController < ApplicationController
       email: launch_params['lis_person_contact_email_primary'],
       roles: launch_params['roles'],
       locale: launch_params['launch_presentation_locale'],
-      user_image: launch_params['user_image'],
-      lis_person_pronoun: launch_params['lis_person_pronoun'],
+      user_image: launch_params['user_image'] || launch_params['custom_user_image'],
+      lis_person_pronouns: launch_params['lis_person_pronouns'] || launch_params['custom_lis_person_pronouns'],
     }
   end
 
