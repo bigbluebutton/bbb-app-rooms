@@ -19,7 +19,7 @@ module BrokerHelper
   include OmniauthHelper
 
   # Fetch tenant object from the broker
-  def broker_tenant(tenant)
+  def broker_tenant_info(tenant)
     # tenant ||= @room&.tenant || ''
     Rails.cache.fetch("rooms/tenant/#{tenant}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
       bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
@@ -33,7 +33,7 @@ module BrokerHelper
   end
 
   def tenant_setting(tenant, setting)
-    tenant_settings = broker_tenant(tenant)&.[]('settings')
+    tenant_settings = broker_tenant_info(tenant)&.[]('settings')
     tenant_settings&.[](setting)
   end
 end

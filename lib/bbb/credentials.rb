@@ -70,7 +70,7 @@ module Bbb
 
       # Get tenant info from broker
       Rails.logger.debug('No cache. Attempt to fetch credentials from broker...')
-      tenant_info = broker_tenant(tenant)
+      tenant_info = broker_tenant_info(tenant)
 
       # Get tenant credentials from TENANT_CREDENTIALS environment variable
       tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
