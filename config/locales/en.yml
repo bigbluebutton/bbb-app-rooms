@@ -182,6 +182,10 @@ en:
         message:    "Unreachable resource"
         suggestion: "It seems that you are trying to access this resource using an LTI endpoint that is no longer supported. Try updating the endpoint o credentials for the external tool"
     bigbluebutton:
+      default:
+        code:       "BigBlueButton error"
+        message:    "BigBlueButton encountered an error"
+        suggestion: "Please try again later or contact technical support if the issue persists"
       invalidrequest:
         code:       "BBBAPICallInvalid"
         message:    "BBB API call invalid"
@@ -191,6 +195,10 @@ en:
         message:    "Connection error. Your URL is probably incorrect"
         suggestion: "Make sure that the BBB credentials are configured correctly"
     room:
+      default:
+        code:       "Error"
+        message:    "An unexpected error occured"
+        suggestion: "Please try again later or contact technical support if the issue persists"
       forbidden:
         code:       "AccessForbidden"
         message:    "The session has expired"

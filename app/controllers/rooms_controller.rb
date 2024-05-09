@@ -257,7 +257,12 @@ class RoomsController < ApplicationController
 
   def set_error(error, status, domain = 'room')
     @room = @user = nil
-    @error = { key: t("error.#{domain}.#{error}.code"), message: t("error.#{domain}.#{error}.message"), suggestion: t("error.#{domain}.#{error}.suggestion"), status: status }
+    @error = {
+      key: t("error.#{domain}.#{error}.code", default: t("error.#{domain}.default.code")),
+      message: t("error.#{domain}.#{error}.message", default: t("error.#{domain}.default.message")),
+      suggestion: t("error.#{domain}.#{error}.suggestion", default: t("error.#{domain}.default.suggestion")),
+      status: status,
+    }
   end
 
   def authenticate_user!
@@ -450,8 +455,8 @@ class RoomsController < ApplicationController
       email: launch_params['lis_person_contact_email_primary'],
       roles: launch_params['roles'],
       locale: launch_params['launch_presentation_locale'],
-      user_image: launch_params['user_image'],
-      lis_person_pronoun: launch_params['lis_person_pronoun'],
+      user_image: launch_params['user_image'] || launch_params['custom_user_image'],
+      lis_person_pronouns: launch_params['lis_person_pronouns'] || launch_params['custom_lis_person_pronouns'],
     }
   end
 
