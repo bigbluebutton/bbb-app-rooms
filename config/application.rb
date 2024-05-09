@@ -59,6 +59,7 @@ module BbbAppRooms
 
     # Settings for external services.
     config.cache_enabled = ENV.fetch('CACHE_ENABLED', 'false').casecmp?('true')
+    config.cache_expires_in_minutes = ENV.fetch('CACHE_EXPIRES_IN_MINUTES', '10').to_i
     config.external_multitenant_endpoint = ENV['EXTERNAL_MULTITENANT_ENDPOINT']
     config.external_multitenant_secret = ENV['EXTERNAL_MULTITENANT_SECRET']
     config.tenant_credentials = ENV['TENANT_CREDENTIALS'] || '{}'

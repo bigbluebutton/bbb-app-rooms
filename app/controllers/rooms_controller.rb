@@ -251,7 +251,7 @@ class RoomsController < ApplicationController
   end
 
   helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,
-                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?, :shared_rooms_enabled, :hide_build_tag
+                :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?
 
   private
 
@@ -293,7 +293,8 @@ class RoomsController < ApplicationController
 
   # If the room is using a shared code, then use the shared room's recordings and bbb link
   def set_chosen_room
-    @shared_rooms_enabled = shared_rooms_enabled(@room&.tenant)
+    # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
+    @shared_rooms_enabled = tenant_setting(@room&.tenant, 'enable_shared_rooms') == 'true'
     @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @shared_rooms_enabled && @room&.use_shared_code
 
     use_shared_room = @shared_rooms_enabled && @room&.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
@@ -497,7 +498,7 @@ class RoomsController < ApplicationController
     input = "rooms#{tenant}"
 
     # use resource_link_id as the default param if nothing was specified in the broker settings
-    room_handler_params = handler_params(tenant).presence || ['resource_link_id']
+    room_handler_params = tenant_setting(tenant, 'handler_params')&.split(',').presence || ['resource_link_id']
 
     room_handler_params.each do |param|
       param_val = launch_params[param]
