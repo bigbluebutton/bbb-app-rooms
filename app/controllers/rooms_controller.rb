@@ -257,7 +257,12 @@ class RoomsController < ApplicationController
 
   def set_error(error, status, domain = 'room')
     @room = @user = nil
-    @error = { key: t("error.#{domain}.#{error}.code"), message: t("error.#{domain}.#{error}.message"), suggestion: t("error.#{domain}.#{error}.suggestion"), status: status }
+    @error = {
+      key: t("error.#{domain}.#{error}.code", default: t("error.#{domain}.default.code")),
+      message: t("error.#{domain}.#{error}.message", default: t("error.#{domain}.default.message")),
+      suggestion: t("error.#{domain}.#{error}.suggestion", default: t("error.#{domain}.default.suggestion")),
+      status: status,
+    }
   end
 
   def authenticate_user!
