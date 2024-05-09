@@ -64,13 +64,13 @@ module Bbb
     def formatted_tenant_info(tenant)
       if @cache_enabled
         Rails.logger.debug('Cache enabled, attempt to fetch credentials from cache...')
-        cached_tenant = @cache.fetch("#{tenant}/tenantInfo", expires_in: 10.minutes)
+        cached_tenant = @cache.fetch("rooms/#{tenant}/tenantInfo", expires_in: Rails.configuration.cache_expires_in_minutes.minutes)
         return cached_tenant unless cached_tenant.nil?
       end
 
       # Get tenant info from broker
       Rails.logger.debug('No cache. Attempt to fetch credentials from broker...')
-      tenant_info = tenant_settings(tenant: tenant)
+      tenant_info = broker_tenant_info(tenant)
 
       # Get tenant credentials from TENANT_CREDENTIALS environment variable
       tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
@@ -109,7 +109,7 @@ module Bbb
         response['settings'] = tenant_settings
       end
 
-      @cache.fetch("#{tenant}/tenantInfo", expires_in: 10.minutes) do
+      @cache.fetch("rooms/#{tenant}/tenantInfo", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
         response || { 'apiURL' => api_url, 'secret' => secret, 'settings' => tenant_settings }
       end
     end

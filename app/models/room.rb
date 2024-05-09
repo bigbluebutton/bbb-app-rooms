@@ -86,7 +86,7 @@ class Room < ApplicationRecord
 
   def initialize_setting_defaults
     # get the key value pair from the broker using the room_setting_defaults function
-    room_settings = room_setting_defaults(tenant)
+    room_settings = tenant_setting(tenant, 'room_setting_defaults')
 
     # Define default values
     defaults = {

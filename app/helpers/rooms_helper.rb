@@ -16,6 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 module RoomsHelper
+  include BrokerHelper
+
   def autoclose_url
     'javascript:window.close();'
   end
@@ -40,5 +42,9 @@ module RoomsHelper
     num = "0#{num}" if num < 10
 
     num
+  end
+
+  def hide_build_tag?
+    tenant_setting(@room.tenant, 'hide_build_tag') == 'true'
   end
 end

@@ -18,39 +18,22 @@ module BrokerHelper
 
   include OmniauthHelper
 
-  # Fetch tenant settings from the broker
-  def tenant_settings(options = {})
-    tenant = options[:tenant] || @room&.tenant || ''
-    bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
-    get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
+  # Fetch tenant object from the broker
+  def broker_tenant_info(tenant)
+    # tenant ||= @room&.tenant || ''
+    Rails.cache.fetch("rooms/tenant/#{tenant}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
+      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
+      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
 
-    JSON.parse(get_response)
+      JSON.parse(get_response)
+    end
   rescue StandardError => e
     Rails.logger.error("Could not fetch tenant credentials from broker. Error message: #{e}")
     nil
   end
 
-  # Fetch the params to use when creating the room handler
-  def handler_params(tenant)
-    tenant_settings(tenant: tenant)&.[]('settings')&.[]('handler_params')&.split(',')
-  end
-
-  # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
-  def shared_rooms_enabled(tenant)
-    Rails.cache.fetch("rooms/tenant_settings/shared_rooms_enabled/#{tenant}", expires_in: 1.hour) do
-      tenant_settings(tenant: tenant)&.[]('settings')&.[]('enable_shared_rooms') == 'true' || false
-    end
-  end
-
-  def hide_build_tag(tenant)
-    tenant_settings(tenant: tenant)&.[]('settings')&.[]('hide_build_tag') == 'true' || false
-  end
-
-  def bbb_moderator_roles_params(tenant)
-    tenant_settings(tenant: tenant)&.[]('settings')&.[]('bigbluebutton_moderator_roles')&.split(',')
-  end
-
-  def room_setting_defaults(tenant)
-    tenant_settings(tenant: tenant)&.dig('settings', 'room_setting_defaults')
+  def tenant_setting(tenant, setting)
+    tenant_settings = broker_tenant_info(tenant)&.[]('settings')
+    tenant_settings&.[](setting)
   end
 end
