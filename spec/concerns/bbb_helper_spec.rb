@@ -63,18 +63,21 @@ describe BbbHelper do
                                       first_name: 'Jane',
                                       last_name: 'Doe',
                                       email: 'jane.doe@email.com',
-                                      roles: 'Administrator,Instructor,Administrator')
+                                      roles: 'Administrator,Instructor,Administrator',
+                                      user_image: 'avatarURL')
 
         endpoint = 'http://bbb.example.com/bigbluebutton/api'
         secret = 'secret'
-        fullname = "fullName=#{@user.full_name}"
 
+        # Alphabetical order
+        avatar_url = 'avatarURL=avatarURL'
+        fullname = "&fullName=#{@user.full_name}"
         meeting_id = "&meetingID=#{@room.handler}"
-        password = '&password='
-        userid = "&userID=#{@user.uid}"
+        password = "&password=#{@room.moderator}"
         role = '&role=moderator'
+        userid = "&userID=#{@user.uid}"
 
-        encoded_params = (fullname + meeting_id + password + role + userid).gsub(' ', '+')
+        encoded_params = (avatar_url + fullname + meeting_id + password + role + userid).gsub(' ', '+')
 
         # checksum calc (taken from bigbluebutton_api gem's get_url method)
         checksum_param = encoded_params + secret
