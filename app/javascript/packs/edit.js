@@ -120,4 +120,17 @@ $(document).on('turbolinks:load', function () {
     checkSharedCodeCheckboxStatus();
 
 
+		// Show loading indicator when 'Update' or 'Cancel' buttons are pressed
+		const updateButton = $('#form-update-btn');
+		updateButton.on('click', (event) => {
+			event.preventDefault();
+			updateButton.attr('value', 'Loading...');
+			$('#edit-form').trigger('submit');
+		})
+
+		const cancelButton = $(this.getElementsByName('cancel'));
+		cancelButton.on('click', (event) => {
+			cancelButton.text('Loading...');
+		})
+
 });
