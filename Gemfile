@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1'
+gem 'rails', '~> 6.1', '>= 6.1.7.8'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.3'
 # Use postgres as the database for Active Record
@@ -48,7 +48,7 @@ group :development, :test do
   gem 'dotenv-rails', '>= 3.1.1'
   gem 'rspec'
   gem 'rspec_junit_formatter'
-  gem 'rspec-rails', '~> 5.1.0'
+  gem 'rspec-rails', '~> 6.0.0'
   gem 'rubocop', '~> 1.54', require: false
   gem 'rubocop-rails', '~> 2.24', '>= 2.24.1', require: false
 end
@@ -92,7 +92,7 @@ gem 'rest-client'
 
 gem 'omniauth', '>= 2.1.2'
 gem 'omniauth-oauth2', '>= 1.8.0'
-gem 'omniauth-rails_csrf_protection', '~> 1.0.1'
+gem 'omniauth-rails_csrf_protection', '~> 1.0.2'
 gem 'repost', '~> 0.4.1'
 
 gem 'minitest'
