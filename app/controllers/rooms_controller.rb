@@ -40,6 +40,7 @@ class RoomsController < ApplicationController
   before_action :allow_iframe_requests
   before_action :set_current_locale
   before_action :set_action_cable, only: %i[launch]
+  before_action :set_ext_params, only: [:show]
 
   after_action :broadcast_meeting, only: [:meeting_end]
 
@@ -304,7 +305,7 @@ class RoomsController < ApplicationController
     @chosen_room = use_shared_room ? @shared_room : @room
   end
 
-  def set_launch
+  def launch_request_params
     # Pull the Launch request_parameters.
     logger.debug('Pulling the Launch request_parameters...')
     bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/sessions/#{@launch_nonce}")
@@ -315,13 +316,18 @@ class RoomsController < ApplicationController
     # Exit with error if session_params is not valid.
     set_error('forbidden', :forbidden) && return unless session_params['valid']
 
-    launch_params = session_params['message']
+    session_params
+  end
+
+  def set_launch
+    request_params = launch_request_params
+    launch_params = request_params['message']
 
     # Exit with error if user is not authenticated.
     set_error('forbidden', :forbidden) && return unless launch_params['user_id'] == session[@launch_nonce]['uid']
 
     # Continue through happy path.
-    launch_room(launch_params, session_params['tenant'].presence)
+    launch_room(launch_params, request_params['tenant'].presence)
     launch_user(launch_params) if @room
   end
 
@@ -515,5 +521,21 @@ class RoomsController < ApplicationController
     config.cable = { url: "wss://#{request.host}#{relative_url_root}/rooms/cable" }
 
     ActionCable::Server::Base.new(config: config)
+  end
+
+  def set_ext_params
+    logger.debug('[Rooms\'s Controller] Setting ext_params in room controller.')
+    tenant = @room.tenant
+    broker_ext_params = tenant_setting(tenant, 'ext_params')
+    lms_custom_params = launch_request_params['message']['custom_params']
+
+    pass_on_join_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('join')&.key?(k) }
+    pass_on_create_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('create')&.key?(k) }
+
+    @room.add_settings({ ext_params: { 'join' => pass_on_join_params, 'create' => pass_on_create_params } })
+
+    logger.debug("[Rooms\'s Controller] Set the following external params for room #{@room.id}: #{@room.settings['ext_params'].to_json}")
+  rescue StandardError => e
+    logger.error("[Rooms\'s Controller] Error setting extra parameters: #{e}")
   end
 end

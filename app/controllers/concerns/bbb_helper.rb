@@ -59,6 +59,11 @@ module BbbHelper
     join_options[:avatarURL] = @user.user_image
     join_options[:pronoun] = @user.lis_person_pronouns
     join_options[:role] = role
+
+    # pass any extra parameters set in the broker to BBB
+    add_ext_params('join', join_options)
+    logger.debug("[BbbHelper] join_options for room #{@chosen_room.id}: #{join_options}")
+
     bbb.join_meeting_url(@chosen_room.handler, @user.username(t("default.bigbluebutton.#{role}")), '', join_options)
   end
 
@@ -79,6 +84,11 @@ module BbbHelper
       allowStartStopRecording: string_to_bool(@chosen_room.allowStartStopRecording),
       'meta_description': @chosen_room.description.truncate(128, separator: ' '),
     }
+
+    # pass any extra parameters set in the broker to BBB
+    add_ext_params('create', create_options)
+    logger.debug("[BbbHelper] create_options for room #{@chosen_room.id}: #{create_options}")
+
     # Send the create request.
     bbb.create_meeting(@chosen_room.name, @chosen_room.handler, create_options)
   end
@@ -271,5 +281,19 @@ module BbbHelper
   # This method converts it to a boolean
   def string_to_bool(value)
     ActiveModel::Type::Boolean.new.cast(value)
+  end
+
+  # Add any extra parameters defined in the broker to either the 'join' or 'create' API calls
+  # Params:
+  # - action: either 'join' or 'create'
+  # - options: the hash of params sent as part of the request
+  def add_ext_params(action, options)
+    ext_params = tenant_setting(@chosen_room.tenant, 'ext_params')
+
+    @chosen_room.settings['ext_params']&.[](action)&.each do |key, value|
+      # the value in ext_params from the tenant settings is the name that should be passed to BBB
+      bbb_name = ext_params&.[](action)&.[](key)
+      options["userdata-#{bbb_name}"] = value if bbb_name
+    end
   end
 end

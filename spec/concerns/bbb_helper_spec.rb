@@ -24,6 +24,7 @@ describe BbbHelper do
   include ActionView::Helpers::TranslationHelper
 
   let(:bbb_api) { BigBlueButton::BigBlueButtonApi.new('http://bbb.example.com/bigbluebutton/api', 'secret', '1.0', Rails.logger) }
+  let(:logger) { Rails.logger }
 
   before do
     @room = @chosen_room = create(:room)
@@ -35,6 +36,12 @@ describe BbbHelper do
                                                                                      'bigbluebutton_secret' => 'supersecretsecret',
                                                                                      'enable_shared_rooms' => 'true',
                                                                                      'bigbluebutton_moderator_roles' => 'administrator,teacher',
+                                                                                     'ext_params' => {
+                                                                                       'join' =>
+                                                                                         { 'custom_user_image' => 'ext_user_image' },
+                                                                                       'create' =>
+                                                                                          { 'custom_context_id' => 'ext_course_id' },
+                                                                                     },
                                                                                    }))
   end
 
