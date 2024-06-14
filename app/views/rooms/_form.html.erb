@@ -13,7 +13,7 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-<%= form_with(model: room, local: true, class: "form fill", :url => room_path(@room, :launch_nonce => @launch_nonce) ) do |form| %>
+<%= form_with(model: room, local: true, class: "form fill", :url => room_path(@room, :launch_nonce => @launch_nonce), name: 'edit-form', id: 'edit-form' ) do |form| %>
   <% if room.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
@@ -167,7 +167,7 @@
 
   <div class="actions pt-6">
     <div class = "flex-row">
-      <%= form.submit t('default.room.update'), class: "btn-primary m-1 ml-0" %>
+      <%= form.submit t('default.room.update'), class: "btn-primary m-1 ml-0", id: 'form-update-btn' %>
       <%= form.button t('default.room.cancel'), class: "btn-secondary m-1", name: "cancel" %>
     </div>
   </div>
