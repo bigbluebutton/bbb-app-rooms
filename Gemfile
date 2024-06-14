@@ -49,8 +49,8 @@ group :development, :test do
   gem 'rspec'
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 6.0.0'
-  gem 'rubocop', '~> 1.54', require: false
-  gem 'rubocop-rails', '~> 2.24', '>= 2.24.1', require: false
+  gem 'rubocop', '~> 1.63', '>= 1.63.0', require: false
+  gem 'rubocop-rails', '~> 2.25', '>= 2.25.0', require: false
 end
 
 group :development do
@@ -65,7 +65,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 3.40.0' # , '>= 2.15', '< 4.0'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '>= 4.11.0'
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
   gem 'database_cleaner-active_record'
@@ -73,7 +73,7 @@ group :test do
   gem 'faker'
   gem 'rails-controller-testing'
   gem 'webdrivers'
-  gem 'webmock'
+  gem 'webmock', '>= 3.20.0'
 end
 
 group :production do
