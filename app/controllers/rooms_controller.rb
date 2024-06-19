@@ -529,6 +529,8 @@ class RoomsController < ApplicationController
     broker_ext_params = tenant_setting(tenant, 'ext_params')
     lms_custom_params = launch_request_params['message']['custom_params']
 
+    logger.debug("[Rooms\'s Controller] extra params from broker: #{broker_ext_params} \n custom params from lms: #{lms_custom_params}")
+
     pass_on_join_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('join')&.key?(k) }
     pass_on_create_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('create')&.key?(k) }
 
