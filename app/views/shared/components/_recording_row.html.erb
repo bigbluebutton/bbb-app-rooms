@@ -143,7 +143,7 @@
                   </div>
                 <% end %>
               <% elsif p[:type] == 'video' %>
-                <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "hover:bg-white hover:text-blue-700" do %>
+                <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "mr-4 hover:bg-white hover:text-blue-700" do %>
                   <div class="bg-gray-200 p-2 rounded hover:bg-gray-300">
                     <div class= "bg-bbb-blue rounded-full">
                       <svg xmlns="http://www.w3.org/2000/svg"  class="h-5 w-5 bg-bbb-blue text-white m-2 " fill="none" viewBox="0 0 22 22" stroke="currentColor" stroke-width="2">
@@ -154,7 +154,7 @@
                   </div>
                 <% end %>
               <% else # other format %> 
-                <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "hover:bg-white hover:text-blue-700" do %>
+                <%= link_to p[:url], :'data-toggle' => 'tooltip' , title: p[:type],  target: "_blank", class: "mr-4 hover:bg-white hover:text-blue-700" do %>
                   <div class="bg-gray-200 p-2 rounded hover:bg-gray-300">
                      <div class= "bg-bbb-blue rounded-full">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 bg-bbb-blue text-white m-2" fill="none" viewBox="0 0 22 22" stroke-width="1.5" stroke="currentColor" >
