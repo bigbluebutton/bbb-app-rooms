@@ -18,7 +18,7 @@
 class Room < ApplicationRecord
   before_save :default_values
 
-  store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
+  store_accessor :settings, %i[lockSettingsDisableCam lockSettingsDisableMic lockSettingsDisablePrivateChat lockSettingsDisablePublicChat lockSettingsDisableNote]
   store_accessor :settings, %i[waitForModerator allModerators guestPolicy record autoStartRecording allowStartStopRecording]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
@@ -30,6 +30,7 @@ class Room < ApplicationRecord
   include BrokerHelper
 
   RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
+  ROOM_SETTINGS = [:guestPolicy, :allModerators, :waitForModerator].freeze
   CODE_LENGTH = 10
 
   def default_values
