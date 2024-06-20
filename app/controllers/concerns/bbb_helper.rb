@@ -293,7 +293,7 @@ module BbbHelper
     @chosen_room.settings['ext_params']&.[](action)&.each do |key, value|
       # the value in ext_params from the tenant settings is the name that should be passed to BBB
       bbb_name = ext_params&.[](action)&.[](key)
-      options["userdata-#{bbb_name}"] = value if bbb_name
+      options[bbb_name] = value if bbb_name
     end
   end
 end
