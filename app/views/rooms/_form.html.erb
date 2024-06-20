@@ -65,8 +65,8 @@
   <%= form.hidden_field :viewer, value: @room.viewer %> 
 
   <% @lockSettings = @room.settings.select { |key, value| key.start_with?("lock")} %>
-  <% @recordingSettings = @room.settings.select { |key, value| !key.start_with?("lock") && Room::RECORDING_SETTINGS.include?(key.to_sym)} %>
-  <% @roomSettings = @room.settings.select { |key, value| !key.start_with?("lock") && !Room::RECORDING_SETTINGS.include?(key.to_sym)} %>
+  <% @recordingSettings = @room.settings.select { |key, value| Room::RECORDING_SETTINGS.include?(key.to_sym)} %>
+  <% @roomSettings = @room.settings.select { |key, value| Room::ROOM_SETTINGS.include?(key.to_sym)} %>
 
   <details>
     <summary class="text-black"><%= t('default.room.settings.lockSettingsTitle') %>
