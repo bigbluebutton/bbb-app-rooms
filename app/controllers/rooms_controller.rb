@@ -40,7 +40,7 @@ class RoomsController < ApplicationController
   before_action :allow_iframe_requests
   before_action :set_current_locale
   before_action :set_action_cable, only: %i[launch]
-  before_action :set_ext_params, only: [:show]
+  before_action :set_ext_params, except: [:launch]
 
   after_action :broadcast_meeting, only: [:meeting_end]
 
@@ -524,20 +524,26 @@ class RoomsController < ApplicationController
   end
 
   def set_ext_params
-    logger.debug('[Rooms\'s Controller] Setting ext_params in room controller.')
-    tenant = @room.tenant
-    broker_ext_params = tenant_setting(tenant, 'ext_params')
-    lms_custom_params = launch_request_params['message']['custom_params']
+    logger.debug('[Rooms Controller] Setting ext_params in room controller.')
+    tenant = @chosen_room.tenant
+    @broker_ext_params ||= tenant_setting(tenant, 'ext_params')
 
-    logger.debug("[Rooms\'s Controller] extra params from broker: #{broker_ext_params} \n custom params from lms: #{lms_custom_params}")
+    if Rails.configuration.cache_enabled
+      lms_custom_params = Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{tenant}/user/#{@user.uid}/launch_params",
+                                            expires_in: Rails.configuration.cache_expires_in_seconds.seconds)
+    end
+    lms_custom_params ||= launch_request_params['message']['custom_params']
 
-    pass_on_join_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('join')&.key?(k) }
-    pass_on_create_params = lms_custom_params.select { |k, _| broker_ext_params&.[]('create')&.key?(k) }
+    logger.debug("[Rooms Controller] extra params from broker for room #{@chosen_room.name}: #{@broker_ext_params}")
+    logger.debug("[Rooms Controller] custom params from lms: #{lms_custom_params}")
 
-    @room.add_settings({ ext_params: { 'join' => pass_on_join_params, 'create' => pass_on_create_params } })
+    pass_on_join_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('join')&.key?(k) }
+    pass_on_create_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('create')&.key?(k) }
 
-    logger.debug("[Rooms\'s Controller] Set the following external params for room #{@room.id}: #{@room.settings['ext_params'].to_json}")
+    @extra_params_to_bbb = { join: pass_on_join_params, create: pass_on_create_params }
+
+    logger.debug("[Rooms Controller] The extra parameters to be passed to BBB are: #{@extra_params_to_bbb}")
   rescue StandardError => e
-    logger.error("[Rooms\'s Controller] Error setting extra parameters: #{e}")
+    logger.error("[Rooms Controller] Error setting extra parameters: #{e}")
   end
 end

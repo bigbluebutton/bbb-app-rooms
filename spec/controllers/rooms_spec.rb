@@ -9,6 +9,17 @@ describe RoomsController, type: :controller do
   before :each do
     allow_any_instance_of(RoomsController).to(receive(:authenticate_user!).and_return(:success))
     allow_any_instance_of(RoomsController).to(receive(:bbb).and_return(bbb_api))
+    allow_any_instance_of(RoomsController).to(receive(:launch_request_params)).and_return({
+                                                                                            'token' => '319bda5a0141d39e003767cf3b4f675b',
+                                                                                            'valid' => true,
+                                                                                            'tenant' => 'test',
+                                                                                            'message' => {
+                                                                                              'custom_params' => {
+                                                                                                'custom_one' => 'this is one',
+                                                                                                'custom_two' => 'this is two',
+                                                                                              },
+                                                                                            },
+                                                                                          })
     allow_any_instance_of(NotifyMeetingWatcherJob).to(receive(:bbb).and_return(bbb_api)) # stub actioncable processes
     allow_any_instance_of(BrokerHelper).to(receive(:broker_tenant_info).and_return({
                                                                                      'handler_params' => 'context_id',
@@ -17,6 +28,12 @@ describe RoomsController, type: :controller do
                                                                                      'bigbluebutton_secret' => 'supersecretsecret',
                                                                                      'enable_shared_rooms' => 'true',
                                                                                      'bigbluebutton_moderator_roles' => 'administrator,teacher',
+                                                                                     'ext_params' => {
+                                                                                       'join' =>
+                                                                                          { 'custom_one' => 'userdata-one' },
+                                                                                       'create' =>
+                                                                                          { 'custom_two' => 'meta_two' },
+                                                                                     },
                                                                                    }))
 
     @request.session['handler'] = {
