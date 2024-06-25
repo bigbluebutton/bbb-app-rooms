@@ -540,7 +540,7 @@ class RoomsController < ApplicationController
     pass_on_join_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('join')&.key?(k) }
     pass_on_create_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('create')&.key?(k) }
 
-    @extra_params_to_bbb = { join: pass_on_join_params, create: pass_on_create_params }
+    @extra_params_to_bbb = { 'join' => pass_on_join_params, 'create' => pass_on_create_params }
 
     logger.debug("[Rooms Controller] The extra parameters to be passed to BBB are: #{@extra_params_to_bbb}")
   rescue StandardError => e
