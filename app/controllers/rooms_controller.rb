@@ -528,22 +528,62 @@ class RoomsController < ApplicationController
     tenant = @chosen_room.tenant
     @broker_ext_params ||= tenant_setting(tenant, 'ext_params')
 
-    if Rails.configuration.cache_enabled
-      lms_custom_params = Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{tenant}/user/#{@user.uid}/launch_params",
-                                            expires_in: Rails.configuration.cache_expires_in_seconds.seconds)
-    end
-    lms_custom_params ||= launch_request_params['message']['custom_params']
+    launch_params = if Rails.configuration.cache_enabled
+                      Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{tenant}/user/#{@user.uid}/launch_params",
+                                        expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
+                        logger.debug('fetching launch params for extra params from cache')
+                        launch_request_params['message']
+                      end
+                    else
+                      launch_request_params['message']
+                    end
 
     logger.debug("[Rooms Controller] extra params from broker for room #{@chosen_room.name}: #{@broker_ext_params}")
-    logger.debug("[Rooms Controller] custom params from lms: #{lms_custom_params}")
 
-    pass_on_join_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('join')&.key?(k) }
-    pass_on_create_params = lms_custom_params.select { |k, _| @broker_ext_params&.[]('create')&.key?(k) }
+    pass_on_join_params = launch_and_extra_params_intersection_hash(launch_params, 'join', @broker_ext_params&.[]('join'))
+    pass_on_create_params = launch_and_extra_params_intersection_hash(launch_params, 'create', @broker_ext_params&.[]('create'))
 
     @extra_params_to_bbb = { 'join' => pass_on_join_params, 'create' => pass_on_create_params }
 
     logger.debug("[Rooms Controller] The extra parameters to be passed to BBB are: #{@extra_params_to_bbb}")
   rescue StandardError => e
     logger.error("[Rooms Controller] Error setting extra parameters: #{e}")
+  end
+
+  # return a hash of key:value pairs from the launch_params,
+  # for keys that exist in the extra params hash retrieved from the broker settings
+  def launch_and_extra_params_intersection_hash(launch_params, action, actions_hash)
+    if Rails.configuration.cache_enabled
+      Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{@chosen_room.tenant}/user/#{@user.uid}/ext_#{action}_params",
+                        expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
+        calculate_intersection_hash(launch_params, actions_hash)
+      end
+    else
+      calculate_intersection_hash(launch_params, actions_hash)
+    end
+  end
+
+  def calculate_intersection_hash(launch_params, actions_hash)
+    result = {}
+    actions_hash&.each_key do |key|
+      value = find_launch_param(launch_params, key)
+      result[key] = value if value
+    end
+    result
+  end
+
+  # Check if the launch params contain a certain param
+  # If they do, return the value of that param
+  def find_launch_param(launch_params, key)
+    return launch_params[key] if launch_params.key?(key)
+
+    launch_params.each_value do |value|
+      if value.is_a?(Hash)
+        result = find_launch_param(value, key)
+        return result unless result.nil?
+      end
+    end
+
+    nil
   end
 end
