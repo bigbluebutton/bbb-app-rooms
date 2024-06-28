@@ -53,14 +53,6 @@ class Room < ApplicationRecord
     RECORDING_SETTINGS.include?(setting.to_sym)
   end
 
-  # Add key-value paris to the settings jsonb column
-  # new-settings is a hash
-  def add_settings(new_settings)
-    updated_settings = settings.deep_merge(new_settings)
-
-    update(settings: updated_settings)
-  end
-
   private
 
   def random_password(length, reference = '')

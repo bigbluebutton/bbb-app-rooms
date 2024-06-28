@@ -288,11 +288,9 @@ module BbbHelper
   # - action: either 'join' or 'create'
   # - options: the hash of params sent as part of the request
   def add_ext_params(action, options)
-    ext_params = tenant_setting(@chosen_room.tenant, 'ext_params')
-
-    @chosen_room.settings['ext_params']&.[](action)&.each do |key, value|
+    @extra_params_to_bbb[action]&.each do |key, value|
       # the value in ext_params from the tenant settings is the name that should be passed to BBB
-      bbb_name = ext_params&.[](action)&.[](key)
+      bbb_name = @broker_ext_params&.[](action)&.[](key)
       options[bbb_name] = value if bbb_name
     end
   end

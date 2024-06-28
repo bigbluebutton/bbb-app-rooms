@@ -28,6 +28,13 @@ describe BbbHelper do
 
   before do
     @room = @chosen_room = create(:room)
+    @extra_params_to_bbb = { join: { 'custom_one' => 'this is one' }, create: { 'custom_two' => 'this is two' } }
+    @broker_ext_params = {
+      'join' =>
+        { 'custom_one' => 'userdata-bbb_one' },
+      'create' =>
+        { 'custom_two' => 'meta_bbb_two' },
+    }
     allow_any_instance_of(BbbHelper).to(receive(:bbb).and_return(bbb_api))
     allow_any_instance_of(BrokerHelper).to(receive(:broker_tenant_info).and_return({
                                                                                      'handler_params' => 'context_id',
@@ -38,9 +45,9 @@ describe BbbHelper do
                                                                                      'bigbluebutton_moderator_roles' => 'administrator,teacher',
                                                                                      'ext_params' => {
                                                                                        'join' =>
-                                                                                         { 'custom_user_image' => 'ext_user_image' },
+                                                                                         { 'custom_one' => 'userdata-bbb_one' },
                                                                                        'create' =>
-                                                                                          { 'custom_context_id' => 'ext_course_id' },
+                                                                                         { 'custom_two' => 'meta_bbb_two' },
                                                                                      },
                                                                                    }))
   end
