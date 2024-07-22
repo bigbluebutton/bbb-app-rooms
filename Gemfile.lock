@@ -473,7 +473,7 @@ DEPENDENCIES
   rspec-rails (~> 6.0.0)
   rspec_junit_formatter
   rubocop (~> 1.63, >= 1.63.0)
-  rubocop-rails (~> 2.25, >= 2.25.0)
+  rubocop-rails (~> 2.25, >= 2.25.1)
   sass-rails (~> 6.0, >= 6.0.0)
   selenium-webdriver (>= 4.11.0)
   spring
