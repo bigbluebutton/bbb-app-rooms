@@ -18,10 +18,20 @@
 
 # Be sure to restart your server when you modify this file.
 
+# Define allowed values for SameSite attribute
+same_site_allowed_values = %w[Strict Lax None]
+
+same_site = if ENV['COOKIES_SAME_SITE'].present?
+              value = ENV['COOKIES_SAME_SITE'].capitalize
+              same_site_allowed_values.include?(value) ? value : 'None'
+            else
+              'None' # Default value if not present or invalid
+            end
+
 attrs = {
   key: '_bbb_app_rooms_session',
-  secure: ENV['COOKIES_SECURE_OFF'].blank?,
-  same_site: ENV['COOKIES_SAME_SITE'].presence || 'None',
+  secure: ENV['COOKIES_SECURE'].blank? || ENV['COOKIES_SECURE'].downcase == 'true',
+  same_site: same_site,
 }
 
 Rails.application.config.session_store(:active_record_store, **attrs)

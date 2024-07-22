@@ -19,6 +19,16 @@
 require 'bigbluebutton_api'
 
 class ApplicationController < ActionController::Base
+  before_action :allow_iframe_requests
+
+  private
+
+  def allow_iframe_requests
+    response.headers.delete('X-Frame-Options')
+  end
+
+  protected
+
   def print_parameters
     logger.debug(params.to_yaml)
   end
