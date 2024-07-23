@@ -287,6 +287,8 @@ module BbbHelper
   # Params:
   # - action: either 'join' or 'create'
   # - options: the hash of params sent as part of the request
+  # Note:
+  #   The value in ext_params from the tenant settings is the name that should be passed to BBB. And it can be a comma separated list.
   def add_ext_params(action, options)
     @extra_params_to_bbb[action]&.each do |key, value|
       # the value in ext_params from the tenant settings is the name that should be passed to BBB
