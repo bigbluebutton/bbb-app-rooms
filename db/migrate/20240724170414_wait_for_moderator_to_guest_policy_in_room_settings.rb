@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WaitForModeratorToGuestPolicyInRoomSettings < ActiveRecord::Migration[6.1]
   def change
     Room.find_each do |room|
