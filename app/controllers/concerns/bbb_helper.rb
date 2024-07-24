@@ -184,14 +184,6 @@ module BbbHelper
     bbb.send_api_request('updateRecordings', meta)
   end
 
-  # Check if the current @user must wait for moderator to join the current room.
-  def wait_for_mod?
-    return unless @chosen_room && @user
-
-    wait_setting = @chosen_room.waitForModerator != '0'
-    wait_setting && !@user.moderator?(bigbluebutton_moderator_roles)
-  end
-
   # Return the number of participants in a meeting for the current room.
   def participant_count
     info = meeting_info

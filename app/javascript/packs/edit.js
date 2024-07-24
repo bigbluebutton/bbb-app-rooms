@@ -65,14 +65,18 @@ $(document).on('turbolinks:load', function () {
     $('#allModerators_checkbox').on('click', function () {
         var all_mod_checked = $('#allModerators_checkbox').prop("checked");
         if (all_mod_checked) {
-            $('#waitForModerator_checkbox').prop("checked", false);
+            $('#guestPolicy_checkbox').prop("checked", false).prop("disabled", true);
+        } else {
+            $('#guestPolicy_checkbox').prop("disabled", false);
         }
     })
 
-    $('#waitForModerator_checkbox').on('click', function () {
-        var wait_mod_checked = $('#waitForModerator_checkbox').prop("checked");
-        if (wait_mod_checked) {
-            $('#allModerators_checkbox').prop("checked", false);
+    $('#guestPolicy_checkbox').on('click', function () {
+        var guest_policy_checked = $('#guestPolicy_checkbox').prop("checked");
+        if (guest_policy_checked) {
+            $('#allModerators_checkbox').prop("checked", false).prop("disabled", true);
+        } else {
+            $('#allModerators_checkbox').prop("disabled", false);
         }
     })
 
