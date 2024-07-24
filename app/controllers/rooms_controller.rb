@@ -151,19 +151,10 @@ class RoomsController < ApplicationController
       end and return
     end
 
-    wait = wait_for_mod? && !meeting_running?
     @meeting = join_meeting_url
 
-    if wait
-      respond_to do |format|
-        format.html
-        format.json { render(json: { wait_for_mod: wait, meeting: @meeting }) }
-      end
-    else
-      broadcast_meeting(action: 'join', delay: true)
-      NotifyRoomWatcherJob.perform_now(@chosen_room, { action: 'started' })
-      redirect_to(@meeting)
-    end
+    broadcast_meeting(action: 'join', delay: true)
+    redirect_to(@meeting)
   rescue BigBlueButton::BigBlueButtonException => e
     logger.error(e.to_s)
     set_error(e.key, 500, 'bigbluebutton')
@@ -395,7 +386,6 @@ class RoomsController < ApplicationController
       :moderator,
       :viewer,
       :recording,
-      :wait_moderator,
       :all_moderators,
       :hide_name,
       :hide_description,
@@ -414,7 +404,6 @@ class RoomsController < ApplicationController
       description: launch_params['resource_link_description'] || '',
       welcome: '',
       recording: launch_params['custom_params'].key?('custom_record') ? launch_params['custom_params']['custom_record'] : true,
-      wait_moderator: message_has_custom?(launch_params, 'wait_moderator') || false,
       all_moderators: message_has_custom?(launch_params, 'all_moderators') || false,
       hide_name: message_has_custom?(launch_params, 'hide_name') || false,
       hide_description: message_has_custom?(launch_params, 'hide_description') || false,
@@ -443,10 +432,8 @@ class RoomsController < ApplicationController
       moderator: room['moderator'],
       viewer: room['viewer'],
       recording: room['recording'],
-      wait_moderator: room['wait_moderator'],
       all_moderators: room['all_moderators'],
       settings: {
-        waitForModerator: room['wait_moderator'],
         record: room['recording'],
         allModerators: room['all_moderators'],
       }
