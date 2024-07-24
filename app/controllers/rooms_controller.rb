@@ -154,7 +154,6 @@ class RoomsController < ApplicationController
     @meeting = join_meeting_url
 
     broadcast_meeting(action: 'join', delay: true)
-    NotifyRoomWatcherJob.perform_now(@chosen_room, { action: 'started' })
     redirect_to(@meeting)
   rescue BigBlueButton::BigBlueButtonException => e
     logger.error(e.to_s)
