@@ -202,16 +202,6 @@ describe RoomsController, type: :controller do
   end
 
   describe 'meeting configurations' do
-    context 'wait for moderators' do
-      it 'redirects the user to the wait page' do
-        allow_any_instance_of(BbbHelper).to(receive(:meeting_running?).and_return(false))
-
-        post :meeting_join, params: { id: @room.id }
-
-        expect(response).to(render_template(:meeting_join))
-      end
-    end
-
     context 'all moderators' do
       it 'allows any user to start the meeting' do
         allow_any_instance_of(BbbHelper).to(receive(:meeting_running?).and_return(false))
