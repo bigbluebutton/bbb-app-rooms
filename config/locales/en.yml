@@ -167,9 +167,9 @@ en:
       redirect_msg: "You will be automatically redirected once the meeting starts"
   warning:
     cookies:
-      title: "Disable 3rd Party cookies"
-      message: "Your browser is not allowing 3rd party cookies, which is necessary for this application to function. Clicking the 'Continue' button will prompt you to enable it."
-      emphasis: "Please note you may need to refresh this page after giving permission."
+      title: "Enable Storage Access",
+      message: "To ensure the proper functioning of this application, your browser must allow access to cookies, session storage, and partitioned storage. By clicking 'Continue', you will grant the necessary access. Please note that this permission may not work depending on the version of Firefox or Safari you are using. Therefore, we recommend using Chrome for the best experience.",
+      emphasis: "You may need to refresh this page after enabling third-party cookies.",
       continue: "Continue"
   error:
     http:
