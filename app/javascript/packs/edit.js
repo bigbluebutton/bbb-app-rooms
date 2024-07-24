@@ -62,23 +62,34 @@ $(document).on('turbolinks:load', function () {
 
     handleUseSharedCodeCheckbox();
 
-    $('#allModerators_checkbox').on('click', function () {
+    function handleRoomSettingCheckboxes() {
         var all_mod_checked = $('#allModerators_checkbox').prop("checked");
-        if (all_mod_checked) {
-            $('#guestPolicy_checkbox').prop("checked", false).prop("disabled", true);
-        } else {
-            $('#guestPolicy_checkbox').prop("disabled", false);
-        }
-    })
-
-    $('#guestPolicy_checkbox').on('click', function () {
         var guest_policy_checked = $('#guestPolicy_checkbox').prop("checked");
-        if (guest_policy_checked) {
-            $('#allModerators_checkbox').prop("checked", false).prop("disabled", true);
-        } else {
-            $('#allModerators_checkbox').prop("disabled", false);
+
+        if (all_mod_checked) {
+            $('#guestPolicy_checkbox').prop("checked", false);
         }
-    })
+
+        if (guest_policy_checked) {
+            $('#allModerators_checkbox').prop("checked", false);
+        }
+    }
+
+    $('#allModerators_checkbox').on('change', function () {
+        var is_checked = $(this).prop("checked");
+        if (is_checked) {
+            $('#guestPolicy_checkbox').prop("checked", false);
+        }
+    });
+
+    $('#guestPolicy_checkbox').on('change', function () {
+        var is_checked = $(this).prop("checked");
+        if (is_checked) {
+            $('#allModerators_checkbox').prop("checked", false);
+        }
+    });
+
+    handleRoomSettingCheckboxes(); // Apply the rule on page load
 
     function check_record_status() {
         var record_checked = $('#record_checkbox').prop("checked");
