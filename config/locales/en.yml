@@ -79,7 +79,7 @@ en:
       recording: "Recording"
       recordings: "Recordings"
       waitmoderator: "Wait for Moderator"
-      allmoderators: "All Moderators"
+      allmoderators: "Everyone is a Moderator"
       disablewebcams: "Disable Webcams"
       disablemics: "Disable Microphones"
       disableprvtchat: "Disable Private Chat"
