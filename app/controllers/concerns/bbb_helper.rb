@@ -224,7 +224,12 @@ module BbbHelper
     valid_playbacks = playbacks.reject { |p| p[:type] == 'statistics' }
     return '0 min' if valid_playbacks.empty?
 
-    len = valid_playbacks.first[:length]
+    # Extract lengths from each playback format
+    lengths = playbacks.map do |playback|
+      playback[:length] if playback.is_a?(Hash) && playback.key?(:length)
+    end.compact
+
+    len = lengths.max
     if len > 60
       "#{(len / 60).round} hrs"
     elsif len.zero?
