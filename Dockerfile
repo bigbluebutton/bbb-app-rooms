@@ -1,4 +1,4 @@
-FROM alpine:3 as alpine
+FROM alpine:3 AS alpine
 
 ARG RAILS_ROOT=/usr/src/app
 ENV RAILS_ROOT=${RAILS_ROOT}
@@ -6,7 +6,7 @@ ENV RAILS_ROOT=${RAILS_ROOT}
 USER root
 WORKDIR $RAILS_ROOT
 
-FROM alpine as base
+FROM alpine AS base
 RUN apk add --no-cache \
     libpq \
     libxml2 \
@@ -27,7 +27,7 @@ RUN apk add --no-cache \
     shared-mime-info \
     libffi-dev
 
-FROM base as builder
+FROM base AS builder
 RUN apk add --update --no-cache \
     build-base \
     libxml2-dev \
@@ -47,7 +47,7 @@ RUN bundle config build.nokogiri --use-system-libraries \
     && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
 RUN yarn install --check-files
 
-FROM base as application
+FROM base AS application
 RUN apk add --no-cache \
     bash \
     postgresql-client

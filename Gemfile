@@ -109,3 +109,4 @@ gem 'mutex_m'
 gem 'rdoc', require: false
 
 gem 'logging', '~> 2.3'
+gem 'syslog'
