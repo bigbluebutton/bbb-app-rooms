@@ -16,6 +16,8 @@
 #  You should have received a copy of the GNU Lesser General Public License along
 #  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 class Room < ApplicationRecord
+  include BrokerHelper
+
   before_save :default_values
 
   store_accessor :settings, [:lockSettingsDisableCam, :lockSettingsDisableMic, :lockSettingsDisablePrivateChat, :lockSettingsDisablePublicChat, :lockSettingsDisableNote]
@@ -27,7 +29,7 @@ class Room < ApplicationRecord
 
   attr_accessor :can_grade
 
-  include BrokerHelper
+  validate :shared_code_presence, if: -> { use_shared_code }
 
   RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
   CODE_LENGTH = 10
@@ -147,4 +149,12 @@ class Room < ApplicationRecord
       break random_code unless Room.exists?(code: random_code)
     end
   end
+end
+
+def shared_code_presence
+  errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
+
+  return if Room.where(code: shared_code, tenant: tenant).exists?
+
+  errors.add(:shared_code, 'A room with this code could not be found')
 end
