@@ -22,7 +22,6 @@ Rails.application.configure do
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
-  # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
@@ -95,22 +94,8 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-
   # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
   $stdout.sync = true
-  logger = ActiveSupport::Logger.new($stdout)
-
-  if ENV['RAILS_LOG_REMOTE_NAME'] && ENV['RAILS_LOG_REMOTE_PORT']
-    require 'remote_syslog_logger'
-    logger_program = ENV['RAILS_LOG_REMOTE_TAG'] || "bbb-lti-broker-#{ENV['RAILS_ENV']}"
-    logger = RemoteSyslogLogger.new(ENV['RAILS_LOG_REMOTE_NAME'],
-                                    ENV['RAILS_LOG_REMOTE_PORT'], program: logger_program)
-  end
-  logger.formatter = config.log_formatter
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # configure redis for ActionCable
   config.cache_store = if ENV['REDIS_URL'].present?
@@ -136,4 +121,8 @@ Rails.application.configure do
 
   config.lograge.enabled = true
   config.lograge.ignore_actions = ['HealthCheckController#show']
+
+  # Use the custom logger with Rails
+  require_relative '../../lib/custom_logger'
+  config.logger = ActiveSupport::TaggedLogging.new(CustomLogger.new('custom_logger'))
 end

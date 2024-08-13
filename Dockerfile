@@ -1,4 +1,4 @@
-FROM alpine:3 AS alpine
+FROM alpine:3 as alpine
 
 ARG RAILS_ROOT=/usr/src/app
 ENV RAILS_ROOT=${RAILS_ROOT}
@@ -6,7 +6,7 @@ ENV RAILS_ROOT=${RAILS_ROOT}
 USER root
 WORKDIR $RAILS_ROOT
 
-FROM alpine AS base
+FROM alpine as base
 RUN apk add --no-cache \
     libpq \
     libxml2 \
@@ -47,7 +47,7 @@ RUN bundle config build.nokogiri --use-system-libraries \
     && find vendor/bundle/ruby/*/gems/ \( -name '*.c' -o -name '*.o' \) -delete
 RUN yarn install --check-files
 
-FROM base AS application
+FROM base as application
 RUN apk add --no-cache \
     bash \
     postgresql-client
@@ -61,6 +61,12 @@ FROM application
 ARG PORT
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
+
+# Create the log directory
+RUN mkdir -p /usr/src/app/log
+
+# Set the correct permissions for the log directory
+RUN chmod -R 755 /usr/src/app/log
 
 # Precompile assets
 RUN SECRET_KEY_BASE=1 RAILS_ENV=${RAILS_ENV:-production} RELATIVE_URL_ROOT=${RELATIVE_URL_ROOT:-apps} bundle exec rake assets:precompile --trace
