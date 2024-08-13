@@ -77,8 +77,6 @@ group :test do
 end
 
 group :production do
-  gem 'lograge', '~> 0.14.0'
-  gem 'remote_syslog_logger'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -104,4 +102,11 @@ gem 'coveralls_reborn', require: false
 gem 'net-smtp'
 gem 'webpacker', '~> 6.0.0.rc.5'
 
+gem 'bigdecimal'
+gem 'mutex_m'
 gem 'rdoc', require: false
+
+gem 'logging', '~> 2.3'
+gem 'lograge', '~> 0.14.0'
+gem 'remote_syslog_logger'
+gem 'syslog'

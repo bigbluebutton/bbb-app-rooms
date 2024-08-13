@@ -83,4 +83,14 @@ Rails.application.configure do
   config.hosts = nil
 
   config.web_console.whiny_requests = false
+
+  # Disable output buffering when STDOUT isn't a tty (e.g. Docker images, systemd services)
+  $stdout.sync = true
+
+  # Set the logging level for the environment
+  config.log_level = :debug
+
+  # Use the custom logger with Rails
+  require_relative '../../lib/custom_logger'
+  config.logger = ActiveSupport::TaggedLogging.new(CustomLogger.new('custom_logger'))
 end
