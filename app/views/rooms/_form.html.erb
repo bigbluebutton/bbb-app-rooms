@@ -16,13 +16,7 @@
 <%= form_with(model: room, local: true, class: "form fill", :url => room_path(@room, :launch_nonce => @launch_nonce) ) do |form| %>
   <% if room.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved:</h2>
-
-      <ul>
-      <% room.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+      <h2><%= pluralize(room.errors.count, "error") %> prohibited this room from being saved.</h2>
     </div>
   <% end %>
 
@@ -152,9 +146,9 @@
       </div>
 		</div>
 
-		<% unless flash[:alert] == nil %>
-			<div class="ml-3 text-sm font-medium text-red-500">
-				<%= flash.alert %>
+		<% if @room.errors[:shared_code].any? %>
+			<div class="text-sm font-medium text-red-500">
+				<%= @room.errors[:shared_code].first %>
 			</div>
 		<% end %>
 		<div class="field form-group input-group">

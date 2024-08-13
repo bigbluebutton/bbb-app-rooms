@@ -13,7 +13,6 @@
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 %>
 
-	<% room = @room.use_shared_code ? @shared_room : @room %>
 	<div id="chosenRoomId" ></div>
 
   <div id="access-alert" style="background-color: #fffacd;" class="mb-4 p-4 rounded-lg hidden">
@@ -115,8 +114,8 @@
   <div class="">
     <div class="flex justify-between items-center pt-2">
       <div class="flex justify-start items-center">
-        <% unless room.hide_name %>
-          <p class="text-4xl font-sans inline-block font-light"><%= room.name %></p>  
+        <% unless @chosen_room.hide_name %>
+          <p class="text-4xl font-sans inline-block font-light"><%= @chosen_room.name %></p>  
         <% end %>
       </div>
 
@@ -139,7 +138,7 @@
                 class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-4 py-2 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
                 id: 'end-meeting-btn', 
                 style: visible,
-                data: {url: meeting_end_path(room, :launch_nonce => @launch_nonce), room: room.id} %>
+                data: {url: meeting_end_path(@chosen_room, :launch_nonce => @launch_nonce), room: @chosen_room.id} %>
           <% end %> 
         </div>
       </div>     
@@ -148,8 +147,8 @@
 
   <!-- Row 3: Room description -->
   <div class="pt-3 pb-5">
-    <% unless room.hide_description %>
-      <p class= "leading-loose text-md w-1/2"><%= room.description %></p>
+    <% unless @chosen_room.hide_description %>
+      <p class= "leading-loose text-md w-1/2"><%= @chosen_room.description %></p>
     <% end %>
   </div>
 
