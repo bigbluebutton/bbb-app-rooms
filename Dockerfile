@@ -27,7 +27,7 @@ RUN apk add --no-cache \
     shared-mime-info \
     libffi-dev
 
-FROM base as builder
+FROM base AS builder
 RUN apk add --update --no-cache \
     build-base \
     libxml2-dev \
@@ -61,6 +61,12 @@ FROM application
 ARG PORT
 ENV PORT=${PORT:-3000}
 EXPOSE ${PORT}
+
+# Create the log directory
+RUN mkdir -p /usr/src/app/log
+
+# Set the correct permissions for the log directory
+RUN chmod -R 755 /usr/src/app/log
 
 # Precompile assets
 RUN SECRET_KEY_BASE=1 RAILS_ENV=${RAILS_ENV:-production} RELATIVE_URL_ROOT=${RELATIVE_URL_ROOT:-apps} bundle exec rake assets:precompile --trace
