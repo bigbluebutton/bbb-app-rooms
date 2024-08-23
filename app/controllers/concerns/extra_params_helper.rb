@@ -21,14 +21,7 @@ module ExtraParamsHelper
   # return a hash of key:value pairs from the launch_params,
   # for keys that exist in the extra params hash retrieved from the broker settings
   def launch_and_extra_params_intersection_hash(launch_params, action, actions_hash)
-    if Rails.configuration.cache_enabled
-      Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{@chosen_room.tenant}/user/#{@user.uid}/ext_#{action}_params",
-                        expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
-        calculate_intersection_hash(launch_params, actions_hash)
-      end
-    else
-      calculate_intersection_hash(launch_params, actions_hash)
-    end
+    CacheService.fetch_or_compute("rooms/#{@chosen_room.handler}/tenant/#{@chosen_room.tenant}/user/#{@user.uid}/ext_#{action}_params") { calculate_intersection_hash(launch_params, actions_hash) }
   end
 
   def calculate_intersection_hash(launch_params, actions_hash)

@@ -25,7 +25,7 @@ module Bbb
     include OmniauthHelper
     include BrokerHelper
 
-    attr_writer :cache, :cache_enabled, :multitenant_api_endpoint, :multitenant_api_secret # Rails.cache store is assumed.  # Enabled by default.
+    attr_writer :multitenant_api_endpoint, :multitenant_api_secret
 
     def initialize(endpoint, secret)
       # Set default credentials.
@@ -33,7 +33,6 @@ module Bbb
       @secret = secret
       @multitenant_api_endpoint = nil
       @multitenant_api_secret = nil
-      @cache_enabled = true
     end
 
     def endpoint(tenant)
@@ -62,54 +61,48 @@ module Bbb
     end
 
     def formatted_tenant_info(tenant)
-      if @cache_enabled
-        Rails.logger.debug('Cache enabled, attempt to fetch credentials from cache...')
-        cached_tenant = @cache.fetch("rooms/#{tenant}/tenantInfo", expires_in: Rails.configuration.cache_expires_in_minutes.minutes)
-        return cached_tenant unless cached_tenant.nil?
-      end
+      CacheService.fetch_or_compute("rooms/#{tenant}/tenantInfo") do
+        # Get tenant info from broker
+        Rails.logger.debug('No cache. Attempt to fetch credentials from broker...')
+        tenant_info = broker_tenant_info(tenant)
 
-      # Get tenant info from broker
-      Rails.logger.debug('No cache. Attempt to fetch credentials from broker...')
-      tenant_info = broker_tenant_info(tenant)
+        # Get tenant credentials from TENANT_CREDENTIALS environment variable
+        tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
 
-      # Get tenant credentials from TENANT_CREDENTIALS environment variable
-      tenant_credentials = JSON.parse(Rails.configuration.tenant_credentials)[tenant]
+        raise 'Tenant does not exist' if tenant_info.nil? && tenant_credentials.nil? && tenant.present?
 
-      raise 'Tenant does not exist' if tenant_info.nil? && tenant_credentials.nil? && tenant.present?
+        # use credentials from broker first, if not found then use env variable, and then use bbb_endpoint &  bbb_secret if single tenant
+        tenant_settings = tenant_info&.[]('settings')
 
-      # use credentials from broker first, if not found then use env variable, and then use bbb_endpoint &  bbb_secret if single tenant
-      tenant_settings = tenant_info&.[]('settings')
+        api_url = tenant_settings&.[]('bigbluebutton_url') ||
+                  tenant_credentials&.[]('bigbluebutton_url') ||
+                  (@endpoint if tenant.blank?)
 
-      api_url = tenant_settings&.[]('bigbluebutton_url') ||
-                tenant_credentials&.[]('bigbluebutton_url') ||
-                (@endpoint if tenant.blank?)
+        secret = tenant_settings&.[]('bigbluebutton_secret') ||
+                 tenant_credentials&.[]('bigbluebutton_secret') ||
+                 (@secret if tenant.blank?)
 
-      secret = tenant_settings&.[]('bigbluebutton_secret') ||
-               tenant_credentials&.[]('bigbluebutton_secret') ||
-               (@secret if tenant.blank?)
+        missing_creds = !(api_url && secret)
 
-      missing_creds = !(api_url && secret)
+        raise 'Bigbluebutton credentials not found' if tenant.blank? && missing_creds
 
-      raise 'Bigbluebutton credentials not found' if tenant.blank? && missing_creds
+        raise 'Multitenant API not defined' if tenant.present? && missing_creds && (@multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?)
 
-      raise 'Multitenant API not defined' if tenant.present? && missing_creds && (@multitenant_api_endpoint.nil? || @multitenant_api_secret.nil?)
+        # get the api URL and secret from the LB if not defined in tenant settings
+        if missing_creds
+          Rails.logger.debug('Missing credentials, attempt to fetch from multitenant_api_endpoint...')
+          # Build the URI.
+          uri = encoded_url(
+            "#{@multitenant_api_endpoint}api/getUser",
+            @multitenant_api_secret,
+            { name: tenant }
+          )
 
-      # get the api URL and secret from the LB if not defined in tenant settings
-      if missing_creds
-        Rails.logger.debug('Missing credentials, attempt to fetch from multitenant_api_endpoint...')
-        # Build the URI.
-        uri = encoded_url(
-          "#{@multitenant_api_endpoint}api/getUser",
-          @multitenant_api_secret,
-          { name: tenant }
-        )
+          http_response = http_request(uri)
+          response = parse_response(http_response)
+          response['settings'] = tenant_settings
+        end
 
-        http_response = http_request(uri)
-        response = parse_response(http_response)
-        response['settings'] = tenant_settings
-      end
-
-      @cache.fetch("rooms/#{tenant}/tenantInfo", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
         response || { 'apiURL' => api_url, 'secret' => secret, 'settings' => tenant_settings }
       end
     end

@@ -511,15 +511,9 @@ class RoomsController < ApplicationController
     tenant = @chosen_room.tenant
     @broker_ext_params ||= tenant_setting(tenant, 'ext_params')
 
-    launch_params = if Rails.configuration.cache_enabled
-                      Rails.cache.fetch("rooms/#{@chosen_room.handler}/tenant/#{tenant}/user/#{@user.uid}/launch_params",
-                                        expires_in: Rails.configuration.cache_expires_in_minutes.minutes) do
-                        logger.debug('fetching launch params for extra params from cache')
-                        launch_request_params['message']
-                      end
-                    else
-                      launch_request_params['message']
-                    end
+    launch_params = CacheService.fetch_or_compute("rooms/#{@chosen_room.handler}/tenant/#{tenant}/user/#{@user.uid}/launch_params") do
+      launch_request_params['message']
+    end
 
     logger.debug("[Rooms Controller] extra params from broker for room #{@chosen_room.name}: #{@broker_ext_params}")
 
