@@ -17,7 +17,6 @@
  */
 
 $(document).on('turbolinks:load', function () {
-    var room = window.location.pathname.split('/')[3];
 
     $('#end-meeting-btn').on('click', function () {
         var end_meeting_url = $(this).data('url');
@@ -34,21 +33,9 @@ $(document).on('turbolinks:load', function () {
     var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
 
 
-    console.log("Firefox? " + isFirefox + " Safari? " + isSafari);
     /*
     With Dynamic State Partitioning enabled, Firefox provides embedded resources with a separate storage bucket for every top-level website, causing the request to be denied if it comes from a third party. Embedded third-parties may request access to the top-level storage bucket, which is what we're doing with the requestAccess() method.
     */
-    function requestAccess() {
-        document.requestStorageAccess().then(
-            () => {
-                console.log('access granted!');
-                $('#access-alert').hide();
-                // the user needs to reload and then press the button again for it to work
-            },
-            () => { console.log('access denied') }
-        );
-    }
-
     if (isFirefox || isSafari) {
         document.hasStorageAccess().then((hasAccess) => {
             if (!hasAccess && (isFirefox || isSafari)) {
@@ -60,7 +47,4 @@ $(document).on('turbolinks:load', function () {
             }
         });
     }
-
-    $('#accept-btn').on('click', requestAccess);
-
 });
