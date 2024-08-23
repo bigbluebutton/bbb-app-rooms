@@ -124,8 +124,7 @@ module BbbHelper
 
   # Fetches all recordings for a room.
   def recordings
-    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
-    res ||= bbb.get_recordings(meetingID: @chosen_room.handler)
+    res = CacheService.fetch_or_compute("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") { bbb.get_recordings(meetingID: @chosen_room.handler) }
     recordings_formatted(res)
   end
 
@@ -161,27 +160,31 @@ module BbbHelper
 
   # Deletes a recording.
   def delete_recording(record_id)
-    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    delete_recording_cache
     bbb.delete_recordings(record_id)
   end
 
   # Publishes a recording.
   def publish_recording(record_id)
-    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    delete_recording_cache
     bbb.publish_recordings(record_id, true)
   end
 
   # Unpublishes a recording.
   def unpublish_recording(record_id)
-    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    delete_recording_cache
     bbb.publish_recordings(record_id, false)
   end
 
   # Updates a recording.
   def update_recording(record_id, meta)
-    Rails.cache.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}") if Rails.configuration.cache_enabled
+    delete_recording_cache
     meta[:recordID] = record_id
     bbb.send_api_request('updateRecordings', meta)
+  end
+
+  def delete_recording_cache
+    CacheService.delete("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}")
   end
 
   # Return the number of participants in a meeting for the current room.
@@ -246,8 +249,6 @@ module BbbHelper
     bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret)
     bbb_credentials.multitenant_api_endpoint = Rails.configuration.external_multitenant_endpoint
     bbb_credentials.multitenant_api_secret = Rails.configuration.external_multitenant_secret
-    bbb_credentials.cache = Rails.cache
-    bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
     bbb_credentials
   end
 

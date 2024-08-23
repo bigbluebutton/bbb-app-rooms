@@ -13,26 +13,17 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
 
-module BrokerHelper
-  extend ActiveSupport::Concern
-
-  include OmniauthHelper
-
-  # Fetch tenant object from the broker
-  def broker_tenant_info(tenant)
-    CacheService.fetch_or_compute("rooms/tenant/#{tenant}") do
-      bbbltibroker_url = omniauth_bbbltibroker_url("/api/v1/tenants/#{tenant}")
-      get_response = RestClient.get(bbbltibroker_url, 'Authorization' => "Bearer #{omniauth_client_token(omniauth_bbbltibroker_url)}")
-
-      JSON.parse(get_response)
+class CacheService
+  def self.fetch_or_compute(cache_key, expiration = Rails.configuration.cache_expires_in_minutes.minutes, &block)
+    if Rails.configuration.cache_enabled
+      Rails.logger.debug("[CacheService] Cache enabled, attempt to fetch cache for the following key: #{cache_key}")
+      Rails.cache.fetch(cache_key, expires_in: expiration, &block)
+    else
+      yield
     end
-  rescue StandardError => e
-    Rails.logger.error("Could not fetch tenant credentials from broker. Error message: #{e}")
-    nil
   end
 
-  def tenant_setting(tenant, setting)
-    tenant_settings = broker_tenant_info(tenant)&.[]('settings')
-    tenant_settings&.[](setting)
+  def self.delete(cache_key)
+    Rails.cache.delete(cache_key) if Rails.configuration.cache_enabled
   end
 end
