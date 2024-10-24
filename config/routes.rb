@@ -55,6 +55,9 @@ Rails.application.routes.draw do
 
     # Handles errors.
     get '/errors/:code', to: 'errors#index', as: :errors
+
+    # To revoke the shared room
+    post '/:id/revoke_shared_code', to: 'rooms#revoke_shared_code', as: :revoke_shared_code
   end
 
   resources :rooms

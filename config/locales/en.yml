@@ -130,7 +130,11 @@ en:
         record: "Enable Recording"
         autoStartRecording: "Auto Start Recording"
         allowStartStopRecording: "Enable User to Start/Stop Recording"
-
+      sharedCode:
+        numberOfRooms: "Number of rooms using your code: "
+        revokeCode: "Revoke Code"
+        revokeCodeAlert: "Are you sure you want to revoke the code? All rooms sharing yours will no longer be able to, and your room will have a new code."
+        revokedNotice: "The room whose code you were using revoked access to it. This room has been returned to its original state."
     meeting:
       close: "Close Tab/Window"
       close_manually: "This tab/window must be closed manually."
