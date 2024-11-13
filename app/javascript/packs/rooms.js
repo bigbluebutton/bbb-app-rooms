@@ -47,4 +47,50 @@ $(document).on('turbolinks:load', function () {
             }
         });
     }
+
+    /** PAGINATION STUFF */
+    /** disable previous or next buttons if user is on first or last page */
+    const $paginationContainer = $("#pagination-container");
+
+    if ($paginationContainer.length) {
+        const currentPage = parseInt($paginationContainer.data("current-page"));
+        const totalPages = parseInt($paginationContainer.data("total-pages"));
+
+        const $previousButton = $("#backbtn");
+        const $nextButton = $("#nextbtn");
+
+        // Disable Previous button if on the first page
+        if (currentPage <= 1) {
+            $previousButton.addClass("cursor-not-allowed opacity-50")
+                .attr("aria-disabled", "true")
+                .attr("href", "javascript:void(0)");
+        } else {
+            $previousButton.removeClass("cursor-not-allowed opacity-50")
+                .removeAttr("aria-disabled")
+                .attr("href", $previousButton.data("pageNum"));
+        }
+
+        // Disable Next button if on the last page
+        if (currentPage >= totalPages) {
+            $nextButton.addClass("cursor-not-allowed opacity-50")
+                .attr("aria-disabled", "true")
+                .attr("href", "javascript:void(0)");
+        } else {
+            $nextButton.removeClass("cursor-not-allowed opacity-50")
+                .removeAttr("aria-disabled")
+                .attr("href", $nextButton.data("pageNum"));
+        }
+    }
+
+    /** change the colour of the page buttons */
+    // Get the current page number from the container
+    const currentPage = $("#pagination-container").data("current-page");
+
+    // Define the classes
+    const activeClasses = "text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700";
+    const nonActiveClasses = "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700";
+
+    // Remove active styling from all buttons, then apply to the current button
+    $("[id^='pg-']").removeClass(activeClasses).addClass(nonActiveClasses);
+    $(`#pg-${currentPage}-btn`).removeClass(nonActiveClasses).addClass(activeClasses);
 });

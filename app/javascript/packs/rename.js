@@ -16,7 +16,7 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-function func() {
+$(document).on('turbolinks:load', function () {
   var controller = $("body").data('controller');
   var action = $("body").data('action');
 
@@ -135,6 +135,4 @@ function func() {
       configure_recording_row(recording_description, 'recording-description-text');
     });
   }
-};
-
-$(func) // run when the DOM is ready
+});
