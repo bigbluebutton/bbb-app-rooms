@@ -22,6 +22,7 @@ module BbbHelper
   attr_writer :cache, :cache_enabled # Rails.cache store is assumed.  # Enabled by default.
 
   RECORDINGS_KEY = :recordings
+  RECORDINGS_PER_PAGE = 8
 
   include RoomsError
   include BrokerHelper
@@ -123,10 +124,37 @@ module BbbHelper
   end
 
   # Fetches all recordings for a room.
-  def recordings
+  def recordings(page = 1)
+    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
+    offset = (page.to_i - 1) * RECORDINGS_PER_PAGE # The offset is an index that starts at 0.
+    res ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: offset, limit: RECORDINGS_PER_PAGE) # offset and limit are for pagination purposes
+    recordings_formatted(res)
+  end
+
+  def recordings_count
     res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
     res ||= bbb.get_recordings(meetingID: @chosen_room.handler)
-    recordings_formatted(res)
+    res[:recordings].length
+  end
+
+  def paginate?
+    recordings_count > RECORDINGS_PER_PAGE
+  end
+
+  # returns the amount of pages for recordings
+  def pages_count
+    (recordings_count.to_f / RECORDINGS_PER_PAGE).ceil
+  end
+
+  # on the last page, we don't want recordings that were in the second-to-last page to show
+  def recordings_limit(page)
+    page_int = page.to_i
+    num_of_recs = recordings_count
+    recordings_overflow = num_of_recs - page_int * RECORDINGS_PER_PAGE
+    # if offset is > 0 and there are less recordings than the current page * recordings per page, then we'll need to pass a limit that's less than what's defined in RECORDINGS_PER_PAGE
+    return recordings_overflow if page_int.positive? && recordings_overflow < RECORDINGS_PER_PAGE
+
+    RECORDINGS_PER_PAGE
   end
 
   # Fetch an individual recording
