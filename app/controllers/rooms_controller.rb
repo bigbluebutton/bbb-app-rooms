@@ -290,11 +290,15 @@ class RoomsController < ApplicationController
   def set_chosen_room
     # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
     @shared_rooms_enabled = tenant_setting(@room&.tenant, 'enable_shared_rooms') == 'true'
-    @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @shared_rooms_enabled && @room&.use_shared_code
 
-    use_shared_room = @shared_rooms_enabled && @room&.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
-
-    logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}") if @shared_rooms_enabled && @room&.use_shared_code
+    if @shared_rooms_enabled && @room&.use_shared_code
+      @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant)
+      use_shared_room = @shared_room.present?
+      logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}")
+    else
+      @shared_room = nil
+      use_shared_room = false
+    end
 
     @chosen_room = use_shared_room ? @shared_room : @room
   end
