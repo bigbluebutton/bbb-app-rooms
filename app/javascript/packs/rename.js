@@ -23,7 +23,7 @@ $(document).on('turbolinks:load', function () {
   if (controller == "rooms" && action == "show" || controller == "rooms" && action == "update") {
 
     // Set a recording row rename event
-    var configure_recording_row = function (recording_text, recording_text_id) {
+    var configure_recording_row = function (recording_text) {
 
       function register_recording_text_event(e) {
         // Remove current window events
@@ -43,54 +43,12 @@ $(document).on('turbolinks:load', function () {
         $input.on('blur keyup', function (e) {
           if (e.type === 'blur' || e.keyCode === 13) { // keycode is depreciated by still recognized by browsers, it's alt (.key) doesnt work in firefox
             save();
-            this.focus();
           }
         });
-
-        // Register the events for being able to exit the input box.
-        register_window_event(recording_text, recording_text_id, '#edit-record', 'edit-recordid');
       }
 
-      recording_text.find('a').on('click focusout', function (e) {
+      recording_text.find('a').on('click', function (e) {
         register_recording_text_event(e);
-      });
-
-      recording_text.find('#recording-title-text').on('focusout', function (e) {
-        $(window).off('mousedown keydown');
-        submit_rename_request(recording_text);
-      });
-
-      recording_text.find('#recording-description-text').on('focusout', function (e) {
-        $(window).off('mousedown keydown');
-        submit_rename_request(recording_text);
-      });
-    }
-
-    // Register window event to submit new name
-    // upon click or upon pressing the enter key
-    var register_window_event = function (element, textfield_id, edit_button_id, edit_button_data) {
-      $(window).on('mousedown keydown', function (clickEvent) {
-
-        // Return if the text is clicked
-        if (clickEvent.type == "mousedown" && clickEvent.target.id == textfield_id) {
-          return;
-        }
-
-        // Return if the edit icon is clicked
-        if (clickEvent.type == "mousedown" && $(clickEvent.target).is(edit_button_id) &&
-          $(clickEvent.target).data(edit_button_data) === element.find(edit_button_id).data(edit_button_data)) {
-          return;
-        }
-
-        // Check if event is keydown and enter key is not pressed
-        if (clickEvent.type == "keydown" && clickEvent.which !== 13) {
-          return;
-        }
-
-        submit_rename_request(element);
-
-        // Remove window event when ajax call to update name is submitted
-        $(window).off('mousedown keydown');
       });
     }
 
@@ -116,14 +74,22 @@ $(document).on('turbolinks:load', function () {
 
     // Helper for submitting ajax requests
     var submit_update_request = function (data) {
-      // Send ajax request for update
       $.ajax({
         url: window.location.pathname + '/recording/' + data['record_id'] + '/update?launch_nonce=' + data['launch_nonce'],
         type: "POST",
-        beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+        },
         data: data,
+        success: function (response) {
+          console.log("succesfully updated. data = ", data);
+        },
+        error: function (xhr, status, error) {
+          console.log("error in sending ajax request to rename recording");
+        }
       });
     }
+
 
     var recording_rows = $('#recording-table').find('tr');
 
@@ -131,8 +97,8 @@ $(document).on('turbolinks:load', function () {
     recording_rows.each(function () {
       var recording_title = $(this).find('#recording-title');
       var recording_description = $(this).find('#recording-description');
-      configure_recording_row(recording_title, 'recording-title-text');
-      configure_recording_row(recording_description, 'recording-description-text');
+      configure_recording_row(recording_title);
+      configure_recording_row(recording_description);
     });
   }
 });
