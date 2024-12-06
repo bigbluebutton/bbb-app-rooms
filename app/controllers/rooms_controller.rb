@@ -151,7 +151,7 @@ class RoomsController < ApplicationController
 
     @meeting = join_meeting_url
 
-    broadcast_meeting(action: 'join', delay: true)
+    broadcast_meeting(action: 'join')
     redirect_to(@meeting)
   rescue BigBlueButton::BigBlueButtonException => e
     logger.error(e.to_s)
@@ -169,18 +169,14 @@ class RoomsController < ApplicationController
     redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) # fallback if actioncable doesn't work
   end
 
-  def broadcast_meeting(action: 'none', delay: false)
-    if delay
-      NotifyMeetingWatcherJob.set(wait: 5.seconds).perform_later(@chosen_room, action: action)
-    else
-      NotifyMeetingWatcherJob.perform_now(@chosen_room, action: action)
-    end
+  def broadcast_meeting(action: 'none')
+    RoomMeetingWatcherJob.set(wait: 5.seconds).perform_later(@chosen_room, action: action) unless @chosen_room.watcher_job_active
   end
 
   # GET /rooms/:id/meeting/close
   def meeting_close
     respond_to do |format|
-      broadcast_meeting(action: 'someone left', delay: true)
+      broadcast_meeting(action: 'someone left')
       format.html { render(:autoclose) }
     end
   end
