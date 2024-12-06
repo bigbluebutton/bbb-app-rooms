@@ -154,7 +154,7 @@ end
 def shared_code_presence
   errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
 
-  return if Room.where(code: shared_code, tenant: tenant).exists?
+  return if Room.exists?(code: shared_code, tenant: tenant)
 
   errors.add(:shared_code, 'A room with this code could not be found')
 end
