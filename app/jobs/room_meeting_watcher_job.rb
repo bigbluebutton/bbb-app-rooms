@@ -11,7 +11,7 @@ class RoomMeetingWatcherJob < ApplicationJob
 
     info = fetch_meeting_info(data)
     if info[:meeting_in_progress]
-      @chosen_room.update(watcher_job_active: true)
+      @chosen_room.update(watcher_job_active: true) unless @chosen_room.watcher_job_active # no need to update if it's already true
 
       logger.info("Meeting in progress. Sending broadcast to room '#{room.name}'")
       # Broadcast updates to this room’s channel
@@ -24,7 +24,7 @@ class RoomMeetingWatcherJob < ApplicationJob
 
       # Broadcast that the meeting ended
       MeetingInfoChannel.broadcast_to(room, { meeting_in_progress: false, action: 'end' })
-      @chosen_room.update(watcher_job_active: false)
+      @chosen_room.update(watcher_job_active: false) if @chosen_room.watcher_job_active # no need to update if it's already false
       # Do not re-enqueue, job ends here
     end
   end
@@ -41,9 +41,5 @@ class RoomMeetingWatcherJob < ApplicationJob
     data[:elapsed_time] = info[:startTime]
     data[:participant_count] = info[:participantCount]
     data
-  end
-
-  def meeting_running?(info)
-    info[:returncode] == 'SUCCESS' && info[:running] == true
   end
 end
