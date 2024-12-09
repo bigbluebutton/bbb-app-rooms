@@ -128,22 +128,17 @@ module BbbHelper
     res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
     offset = (page.to_i - 1) * RECORDINGS_PER_PAGE # The offset is an index that starts at 0.
     res ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: offset, limit: RECORDINGS_PER_PAGE) # offset and limit are for pagination purposes
+    @num_of_recs = res[:totalElements]&.to_i
     recordings_formatted(res)
   end
 
-  def recordings_count
-    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
-    res ||= bbb.get_recordings(meetingID: @chosen_room.handler)
-    res[:recordings].length
-  end
-
   def paginate?
-    recordings_count > RECORDINGS_PER_PAGE
+    @num_of_recs ? @num_of_recs > RECORDINGS_PER_PAGE : false
   end
 
   # returns the amount of pages for recordings
   def pages_count
-    (recordings_count.to_f / RECORDINGS_PER_PAGE).ceil
+    @num_of_recs ? (@num_of_recs.to_f / RECORDINGS_PER_PAGE).ceil : 1
   end
 
   # on the last page, we don't want recordings that were in the second-to-last page to show
