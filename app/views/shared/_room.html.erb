@@ -196,8 +196,8 @@
       </div>
 
 
-    <% numOfPages = pages_count %>
     <% if paginate? %>
+     <% numOfPages = pages_count %>
       <div class="flex justify-center items-center mb-5" id="pagination-container" data-current-page="<%= @page %>" data-total-pages="<%= numOfPages %>">
         <nav aria-label="Page navigation example">
           <ul class="flex items-center -space-x-px h-8 text-sm">
