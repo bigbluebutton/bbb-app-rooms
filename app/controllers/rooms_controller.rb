@@ -236,6 +236,8 @@ class RoomsController < ApplicationController
   def individual_recording
     rec = recording(params[:record_id])
     formats_arr = rec[:playback][:format]
+    formats_arr = [formats_arr] unless formats_arr.is_a?(Array) # for when BBB returns just one format
+
     format_obj = formats_arr.find { |i| i[:type] == params[:format] }
 
     playback_url = format_obj[:url]
