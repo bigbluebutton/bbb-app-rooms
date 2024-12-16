@@ -47,10 +47,13 @@ class RoomsController < ApplicationController
   # GET /rooms/1
   # GET /rooms/1.json
   def show
+    # page offset is equal to the page number minus 1
+    @page = params[:page] || 1
+    session[:page] = @page
     respond_to do |format|
       if @room && @chosen_room
         begin
-          @recordings = recordings
+          @recordings = recordings(@page)
           @meeting_info = meeting_info
           @meeting_running = @meeting_info[:returncode] == true
         rescue BigBlueButton::BigBlueButtonException => e
@@ -185,25 +188,29 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/unpublish
   def recording_unpublish
     unpublish_recording(params[:record_id])
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+    @page_num = session[:page] || 1
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(params[:record_id])
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+    @page_num = session[:page] || 1
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/protect
   def recording_protect
     update_recording(params[:record_id], protect: true)
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+    @page_num = session[:page] || 1
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/unprotect
   def recording_unprotect
     update_recording(params[:record_id], protect: false)
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+    @page_num = session[:page] || 1
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -219,7 +226,8 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/recording/:record_id/delete
   def recording_delete
     delete_recording(params[:record_id])
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce]))
+    @page_num = session[:page] || 1
+    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/:format/recording
@@ -228,6 +236,8 @@ class RoomsController < ApplicationController
   def individual_recording
     rec = recording(params[:record_id])
     formats_arr = rec[:playback][:format]
+    formats_arr = [formats_arr] unless formats_arr.is_a?(Array) # for when BBB returns just one format
+
     format_obj = formats_arr.find { |i| i[:type] == params[:format] }
 
     playback_url = format_obj[:url]
@@ -237,7 +247,7 @@ class RoomsController < ApplicationController
     redirect_to(errors_path(401))
   end
 
-  helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles,
+  helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles, :paginate?, :recordings_count, :pages_count,
                 :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?
 
   private
@@ -282,11 +292,15 @@ class RoomsController < ApplicationController
   def set_chosen_room
     # See whether shared rooms have been enabled in tenant settings. They are disabled by default.
     @shared_rooms_enabled = tenant_setting(@room&.tenant, 'enable_shared_rooms') == 'true'
-    @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant) if @shared_rooms_enabled && @room&.use_shared_code
 
-    use_shared_room = @shared_rooms_enabled && @room&.use_shared_code && Room.where(code: @room.shared_code, tenant: @room.tenant).exists?
-
-    logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}") if @shared_rooms_enabled && @room&.use_shared_code
+    if @shared_rooms_enabled && @room&.use_shared_code
+      @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant)
+      use_shared_room = @shared_room.present?
+      logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}")
+    else
+      @shared_room = nil
+      use_shared_room = false
+    end
 
     @chosen_room = use_shared_room ? @shared_room : @room
   end

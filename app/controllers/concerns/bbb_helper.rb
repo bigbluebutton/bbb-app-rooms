@@ -22,6 +22,7 @@ module BbbHelper
   attr_writer :cache, :cache_enabled # Rails.cache store is assumed.  # Enabled by default.
 
   RECORDINGS_KEY = :recordings
+  RECORDINGS_PER_PAGE = 8
 
   include RoomsError
   include BrokerHelper
@@ -123,10 +124,41 @@ module BbbHelper
   end
 
   # Fetches all recordings for a room.
-  def recordings
-    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
-    res ||= bbb.get_recordings(meetingID: @chosen_room.handler)
+  def recordings(page = 1)
+    res = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}/page#{page}", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
+
+    if res
+      logger.debug("Pulled recordings from cache: #{res}")
+    else
+      offset = (page.to_i - 1) * RECORDINGS_PER_PAGE # The offset is an index that starts at 0.
+      logger.debug('Could not find recordings in cache. Pulling them from BBB: ')
+      res ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: offset, limit: RECORDINGS_PER_PAGE) # offset and limit are for pagination purposes
+    end
+
+    @num_of_recs = res[:totalElements]&.to_i
     recordings_formatted(res)
+  end
+
+  def paginate?
+    return true if @num_of_recs && @num_of_recs > RECORDINGS_PER_PAGE
+
+    recordings_count > RECORDINGS_PER_PAGE
+  end
+
+  # This method is used if #@num_of_recs is null, which means that totalElements is not present in the BBB response.
+  # Pull the rest of the recordings to see if we need to paginate.
+  # Set offset to 8 because we know that at least one page was already pulled.
+  # Set the limit to the max number of recordings that can be pulled.
+  def recordings_count
+    res_count = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}/remaining", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
+    res_count ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: RECORDINGS_PER_PAGE, limit: 100)[:recordings].length
+    @num_of_recs = res_count + RECORDINGS_PER_PAGE # We add RECORDINGS_PER_PAGE because we set the offset to 1
+    @num_of_recs
+  end
+
+  # returns the amount of pages for recordings
+  def pages_count
+    (@num_of_recs.to_f / RECORDINGS_PER_PAGE).ceil
   end
 
   # Fetch an individual recording

@@ -154,10 +154,10 @@
 
   <!-- recordings -->
   <% if bigbluebutton_recording_enabled %>
-    <div class= "">
+    <div>
     <%= render "shared/components/search_bar", subtitle: t("default.room.recordings")%>
 
-      <div class = "flex justify-between items-center rounded-lg border mb-10">
+      <div class = "flex justify-between items-center rounded-lg border mb-2">
         <table class="w-full max-w-full rounded-lg text-left border-collapse text-sm" >
           <thead class="text-left uppercase border-b rounded-lg bg-gray-100 text-sm text-gray-500 font-sans py-4" >
             <tr>
@@ -194,5 +194,77 @@
           </tbody>
         </table>
       </div>
+
+
+    <% if paginate? %>
+     <% numOfPages = pages_count %>
+      <div class="flex justify-center items-center mb-5" id="pagination-container" data-current-page="<%= @page %>" data-total-pages="<%= numOfPages %>">
+        <nav aria-label="Page navigation example">
+          <ul class="flex items-center -space-x-px h-8 text-sm">
+            <!-- Previous Button (disabled if on first page) -->
+            <li>
+              <% if @page == 1 %>
+                <%= link_to 'javascript:void(0)', 
+                  class: "flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 opacity-50 cursor-not-allowed", aria_disabled: "true", 
+                  disabled: true do %>
+                    <span class="sr-only">Previous</span>
+                    <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                    </svg>
+                  <% end %>
+              <% else %>
+                  <%= link_to room_path(@room, page: @page.to_i - 1, :launch_nonce => @launch_nonce), 
+                    class: "flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white", 
+                    id: 'backbtn', 
+                    data: { turbolinks: false, pageNum: @page.to_i - 1 } do %>
+                      <span class="sr-only">Previous</span>
+                      <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                      </svg>
+                  <% end %>
+              <% end %>
+            </li>
+
+            <!-- Page Buttons -->
+            <% (1..numOfPages).each do |i| %>
+              <% if @page == i %>
+                <% classes = "z-10 flex items-center justify-center px-3 h-8 leading-tight border" %>
+              <% else %>
+                <% classes = "flex items-center justify-center px-3 h-8 leading-tight border"%>
+              <% end %>
+              <li>
+                <%= link_to i.to_s, room_path(@room, page: i, :launch_nonce => @launch_nonce), class: classes, id: "pg-#{i}-btn", data: { turbolinks: false, pageNum: i, currPage: @page } %>
+              </li>
+            <% end %>
+          
+            <!-- Next Button (disabled if on last page) -->
+            <li>
+              <% if @page == numOfPages %>
+                <%= link_to 'javascript:void(0)', 
+                    class: "flex items-center justify-center px-3 h-8 leading-tight text-gray-400 bg-gray-200 border border-gray-300 rounded-e-lg opacity-50 cursor-not-allowed", 
+                    id: 'nextbtndisabled', 
+                    aria_disabled: "true" , 
+                    disabled: true do %>
+                      <span class="sr-only">Next</span>
+                      <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                      </svg>
+                <% end %>
+              <% else %>
+                <%= link_to room_path(@room, page: @page.to_i + 1, launch_nonce: @launch_nonce), 
+                  class: "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700", 
+                  id: 'nextbtn', 
+                  data: { turbolinks: false, pageNum: @page.to_i + 1 } do %>
+                  <span class="sr-only">Next</span>
+                  <svg class="w-2.5 h-2.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                  </svg>
+                <% end %>
+              <% end %>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    <% end %>
     </div>
   <% end %>
