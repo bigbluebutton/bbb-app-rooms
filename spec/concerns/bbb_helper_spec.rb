@@ -110,7 +110,7 @@ describe BbbHelper do
                                                                     returncode: true, deleted: true
                                                                   ))
 
-        expect(delete_recording(Faker::IDNumber.valid))
+        expect(delete_recording(Faker::IdNumber.valid))
           .to(contain_exactly([:returncode, true], [:deleted, true]))
       end
     end

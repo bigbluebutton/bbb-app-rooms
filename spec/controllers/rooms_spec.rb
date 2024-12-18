@@ -165,7 +165,7 @@ describe RoomsController, type: :controller do
         allow_any_instance_of(BbbHelper).to(receive(:update_recording).and_return(updated: true))
         @request.session[:user_id] = @user.uid
 
-        post :recording_update, params: { id: @room.id, record_id: Faker::IDNumber.valid, setting: 'rename_recording', record_name: 'New name' }
+        post :recording_update, params: { id: @room.id, record_id: Faker::IdNumber.valid, setting: 'rename_recording', record_name: 'New name' }
 
         expect(response).to(have_http_status(204))
       end
@@ -176,7 +176,7 @@ describe RoomsController, type: :controller do
         allow_any_instance_of(BbbHelper).to(receive(:delete_recording).and_return(true))
         @request.session[:user_id] = @user.uid
 
-        post :recording_delete, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+        post :recording_delete, params: { id: @room.id, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
@@ -186,7 +186,7 @@ describe RoomsController, type: :controller do
       it 'publishes the recording' do
         allow_any_instance_of(BbbHelper).to(receive(:publish_recording).and_return(true))
 
-        post :recording_publish, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+        post :recording_publish, params: { id: @room.id, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
@@ -194,7 +194,7 @@ describe RoomsController, type: :controller do
       it 'unpublishes the recording' do
         allow_any_instance_of(BbbHelper).to(receive(:unpublish_recording).and_return(true))
 
-        post :recording_unpublish, params: { id: @room.id, record_id: Faker::IDNumber.valid }
+        post :recording_unpublish, params: { id: @room.id, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
