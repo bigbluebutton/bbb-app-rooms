@@ -479,7 +479,7 @@ DEPENDENCIES
   rubocop (~> 1.66, >= 1.66.0)
   rubocop-rails (~> 2.26, >= 2.26.0)
   sass-rails (~> 6.0, >= 6.0.0)
-  selenium-webdriver (>= 4.23.0)
+  selenium-webdriver (>= 4.24.0)
   spring
   spring-watcher-listen (~> 2.0.0)
   syslog
