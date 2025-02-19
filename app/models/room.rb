@@ -81,11 +81,14 @@ class Room < ApplicationRecord
   def count_by_shared_code
     if Rails.configuration.cache_enabled
       Rails.cache.fetch("rooms/#{handler}") do
+        logger.info("[Room.rb] Pulling count by shared code for Room #{id} from cache")
         # if the shared code and code are the same, then this room will be returned as the one of the ones using it's shared code. Therefore we subtract it from the total count
         subtract = shared_code == code ? 1 : 0
         return Room.where(shared_code: code).count - subtract if shared_code.present?
       end
     else
+      logger.info("[Room.rb] Calculating count by shared code for Room #{id}")
+
       subtract = shared_code == code ? 1 : 0
       return Room.where(shared_code: code).count - subtract if shared_code.present?
     end
@@ -179,12 +182,13 @@ class Room < ApplicationRecord
   end
 
   def generate_unique_code
-    loop do
-      # Generate a random string or other value
-      random_code = SecureRandom.alphanumeric(CODE_LENGTH)
-      # Check if the value is unique in the database
-      break random_code unless Room.exists?(code: random_code)
+    unique_code = loop do
+      candidate = SecureRandom.alphanumeric(CODE_LENGTH)
+      break candidate unless Room.exists?(code: candidate) || UsedCode.exists?(code: candidate)
     end
+
+    UsedCode.create!(code: unique_code)
+    unique_code
   end
 end
 
