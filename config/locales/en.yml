@@ -192,6 +192,10 @@ en:
         code: "Incorrect URL Error"
         message: "Connection error. The URL is probably incorrect."
         suggestion: "Ensure the BBB credentials are configured correctly."
+      internalError:
+        code: 500
+        message: "There was an internal error in BBB."
+        suggestion: "Please contact technical support for help."
     room:
       default:
         code: "Error"
