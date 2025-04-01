@@ -56,6 +56,7 @@ class RoomsController < ApplicationController
           @recordings = recordings(@page)
           @meeting_info = meeting_info
           @meeting_running = @meeting_info[:returncode] == true
+          flash.now[:alert] = @room.reset_to_original_room_if_revoked ? t('default.room.sharedCode.revokedNotice') : nil
         rescue BigBlueButton::BigBlueButtonException => e
           logger.error(e.to_s)
           flash.now[:alert] = t('default.recording.server_down')
@@ -245,6 +246,20 @@ class RoomsController < ApplicationController
     redirect_to(playback_url) && return unless playback_url.nil?
 
     redirect_to(errors_path(401))
+  end
+
+  # POST /rooms/:id/revoke_shared_code
+  # Change the shared code so that other rooms can't access yours anymore
+  def revoke_shared_code
+    @room = Room.find(params[:id])
+    logger.info("Room #{params[:id]}: Revoking the shared code")
+    @room.revoke_shared_code
+
+    respond_to do |format|
+      format.html { redirect_to(edit_room_path(@room, launch_nonce: params[:launch_nonce]), notice: 'Shared code has been revoked.') }
+    end
+  rescue StandardError => e
+    logger.error("[Rooms Controller] Error revoking shared code: #{e}")
   end
 
   helper_method :recording_date, :recording_length, :meeting_running?, :bigbluebutton_moderator_roles, :paginate?, :recordings_count, :pages_count,

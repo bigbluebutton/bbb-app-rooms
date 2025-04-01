@@ -55,6 +55,46 @@ class Room < ApplicationRecord
     RECORDING_SETTINGS.include?(setting.to_sym)
   end
 
+  # Changes the shared code such that the other rooms can't connect to it anymore
+  def revoke_shared_code
+    # Generate a new code for the room
+    ensure_unique_code
+    save!
+  end
+
+  # If the room was using a shared room, and that parent room revoked access,
+  # then change the 'use_shared_code' field to false, and the 'shared_code' field to nil
+  # return true if it was indeed revoked
+  def reset_to_original_room_if_revoked
+    if use_shared_code && Room.where(code: shared_code).empty?
+      self.use_shared_code = false
+      self.shared_code = code
+      save!
+      logger.info("Room #{id} was using a shared code that was revoked. It's now been reset.")
+      return true
+    end
+
+    false
+  end
+
+  # Returns many rooms are using this room's code
+  def count_by_shared_code
+    if Rails.configuration.cache_enabled
+      Rails.cache.fetch("rooms/#{handler}") do
+        logger.info("[Room.rb] Pulling count by shared code for Room #{id} from cache")
+        # if the shared code and code are the same, then this room will be returned as the one of the ones using it's shared code. Therefore we subtract it from the total count
+        subtract = shared_code == code ? 1 : 0
+        return Room.where(shared_code: code).count - subtract if shared_code.present?
+      end
+    else
+      logger.info("[Room.rb] Calculating count by shared code for Room #{id}")
+
+      subtract = shared_code == code ? 1 : 0
+      return Room.where(shared_code: code).count - subtract if shared_code.present?
+    end
+    0
+  end
+
   private
 
   def random_password(length, reference = '')
@@ -142,12 +182,13 @@ class Room < ApplicationRecord
   end
 
   def generate_unique_code
-    loop do
-      # Generate a random string or other value
-      random_code = SecureRandom.alphanumeric(CODE_LENGTH)
-      # Check if the value is unique in the database
-      break random_code unless Room.exists?(code: random_code)
+    unique_code = loop do
+      candidate = SecureRandom.alphanumeric(CODE_LENGTH)
+      break candidate unless Room.exists?(code: candidate) || UsedCode.exists?(code: candidate)
     end
+
+    UsedCode.create!(code: unique_code)
+    unique_code
   end
 end
 

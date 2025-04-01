@@ -29,6 +29,19 @@ $(document).on('turbolinks:load', function () {
         });
     })
 
+    $('#revoke-code-btn').on('click', function () {
+        var revoke_code_url = $(this).data('url');
+        console.log("revoke_code_url = ", revoke_code_url)
+        $.ajax({
+            url: revoke_code_url,
+            type: "POST",
+            beforeSend: function (xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+            data: "",
+        });
+    })
+
+
+
     var isFirefox = navigator.userAgent.indexOf("Firefox") != -1;
     var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
 

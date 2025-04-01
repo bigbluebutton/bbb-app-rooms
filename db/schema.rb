@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_11_20_203200) do
+ActiveRecord::Schema.define(version: 2025_02_10_175236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2024_11_20_203200) do
     t.string "code"
     t.string "shared_code"
     t.boolean "use_shared_code"
+    t.boolean "watcher_job_active", default: false, null: false
     t.index ["code"], name: "index_rooms_on_code"
     t.index ["tenant", "code"], name: "index_rooms_on_tenant_and_code", unique: true
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
@@ -48,6 +49,13 @@ ActiveRecord::Schema.define(version: 2024_11_20_203200) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "used_codes", force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_used_codes_on_code", unique: true
   end
 
 end
