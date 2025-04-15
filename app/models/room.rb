@@ -79,20 +79,13 @@ class Room < ApplicationRecord
 
   # Returns many rooms are using this room's code
   def count_by_shared_code
-    if Rails.configuration.cache_enabled
-      Rails.cache.fetch("rooms/#{handler}") do
-        logger.info("[Room.rb] Pulling count by shared code for Room #{id} from cache")
-        # if the shared code and code are the same, then this room will be returned as the one of the ones using it's shared code. Therefore we subtract it from the total count
-        subtract = shared_code == code ? 1 : 0
-        return Room.where(shared_code: code).count - subtract if shared_code.present?
-      end
-    else
-      logger.info("[Room.rb] Calculating count by shared code for Room #{id}")
+    logger.info("[Room.rb] Calculating count by shared code for Room #{id}")
 
-      subtract = shared_code == code ? 1 : 0
-      return Room.where(shared_code: code).count - subtract if shared_code.present?
-    end
-    0
+    return 0 if shared_code.blank?
+
+    children_count = Room.where(shared_code: code).count
+    children_count -= 1 if shared_code == code
+    children_count
   end
 
   private

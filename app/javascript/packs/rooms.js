@@ -31,7 +31,6 @@ $(document).on('turbolinks:load', function () {
 
     $('#revoke-code-btn').on('click', function () {
         var revoke_code_url = $(this).data('url');
-        console.log("revoke_code_url = ", revoke_code_url)
         $.ajax({
             url: revoke_code_url,
             type: "POST",

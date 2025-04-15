@@ -254,10 +254,7 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     logger.info("Room #{params[:id]}: Revoking the shared code")
     @room.revoke_shared_code
-
-    respond_to do |format|
-      format.html { redirect_to(edit_room_path(@room, launch_nonce: params[:launch_nonce]), notice: 'Shared code has been revoked.') }
-    end
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: 'Shared code has been revoked.')
   rescue StandardError => e
     logger.error("[Rooms Controller] Error revoking shared code: #{e}")
   end
