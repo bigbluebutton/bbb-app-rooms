@@ -56,7 +56,7 @@ class RoomsController < ApplicationController
           @recordings = recordings(@page)
           @meeting_info = meeting_info
           @meeting_running = @meeting_info[:returncode] == true
-          flash.now[:alert] = @room.reset_to_original_room_if_revoked ? t('default.room.sharedCode.revokedNotice') : nil
+          flash.now[:alert] = @user.moderator?(bigbluebutton_moderator_roles) && @room.shared_code_revoked? ? t('default.room.sharedCode.revokedNotice') : nil
         rescue BigBlueButton::BigBlueButtonException => e
           logger.error(e.to_s)
           flash.now[:alert] = t('default.recording.server_down')

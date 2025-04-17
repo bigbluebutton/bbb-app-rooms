@@ -57,23 +57,35 @@ class Room < ApplicationRecord
 
   # Changes the shared code such that the other rooms can't connect to it anymore
   def revoke_shared_code
+    # reset the shared code of the children rooms
+    reset_children
     # Generate a new code for the room
     ensure_unique_code
     save!
   end
 
-  # If the room was using a shared room, and that parent room revoked access,
-  # then change the 'use_shared_code' field to false, and the 'shared_code' field to nil
-  # return true if it was indeed revoked
-  def reset_to_original_room_if_revoked
-    if use_shared_code && Room.where(code: shared_code).empty?
-      self.use_shared_code = false
-      self.shared_code = code
-      save!
-      logger.info("Room #{id} was using a shared code that was revoked. It's now been reset.")
-      return true
+  def reset_children
+    children = Room.where(shared_code: code)
+    children.each do |child|
+      child.update!(shared_code: -1, use_shared_code: false)
+      logger.info("[room.rb] Room #{child.id} was using a shared code that was revoked. It's now been reset.")
+    rescue StandardError
+      logger.error("[room.rb] Error resetting room #{child.id} to original code: #{child.code}")
     end
+  end
 
+  # Checks if the room has been reset, and if so, it will reset the room's shared code to the original code
+  # and set use_shared_code to false.
+  # Returns true if the room was reset, false otherwise.
+  def shared_code_revoked?
+    if shared_code == -1.to_s
+      begin
+        update!(shared_code: code)
+        return true
+      rescue StandardError
+        logger.error("[room.rb] Error resetting room #{id}'s shared code to original code: #{code}")
+      end
+    end
     false
   end
 
@@ -175,20 +187,17 @@ class Room < ApplicationRecord
   end
 
   def generate_unique_code
-    unique_code = loop do
-      candidate = SecureRandom.alphanumeric(CODE_LENGTH)
-      break candidate unless Room.exists?(code: candidate) || UsedCode.exists?(code: candidate)
+    loop do
+      code = SecureRandom.alphanumeric(CODE_LENGTH)
+      return code unless Room.exists?(code: code)
     end
-
-    UsedCode.create!(code: unique_code)
-    unique_code
   end
-end
 
-def shared_code_presence
-  errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
+  def shared_code_presence
+    errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
 
-  return if Room.exists?(code: shared_code, tenant: tenant)
+    return if Room.exists?(code: shared_code, tenant: tenant)
 
-  errors.add(:shared_code, 'A room with this code could not be found')
+    errors.add(:shared_code, 'A room with this code could not be found')
+  end
 end
