@@ -35,7 +35,6 @@ ActiveRecord::Schema.define(version: 2024_12_05_194937) do
     t.string "code"
     t.string "shared_code"
     t.boolean "use_shared_code"
-    t.boolean "watcher_job_active", default: false, null: false
     t.index ["code"], name: "index_rooms_on_code"
     t.index ["tenant", "code"], name: "index_rooms_on_tenant_and_code", unique: true
     t.index ["tenant", "handler"], name: "index_rooms_on_tenant_and_handler", unique: true
