@@ -147,19 +147,4 @@ $(document).on('turbolinks:load', function () {
     cancelButton.on('click', (event) => {
         cancelButton.text('Loading...');
     })
-
-    // Confirmation modal for revoking a code
-    const revokeCodeButton = $('#revokeCodeButton');
-    const revokeCodeModal = $('#revokeCodeModal');
-    const cancelRevokeButton = $('#cancelRevokeButton');
-
-    if (revokeCodeModal) {
-      revokeCodeButton.on('click', () => {
-        revokeCodeModal.removeClass('hidden');
-      });
-  
-      cancelRevokeButton.on('click', () => {
-        revokeCodeModal.addClass('hidden');
-      });
-    }
 });

@@ -15,9 +15,11 @@
  *  You should have received a copy of the GNU Lesser General Public License along
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
+import { initFlowbite } from 'flowbite'
 
 $(document).on('turbolinks:load', function () {
-
+    initFlowbite();
+    
     $('#end-meeting-btn').on('click', function () {
         var end_meeting_url = $(this).data('url');
 
