@@ -15,9 +15,11 @@
  *  You should have received a copy of the GNU Lesser General Public License along
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
+import { initFlowbite } from 'flowbite'
 
 $(document).on('turbolinks:load', function () {
-
+    initFlowbite();
+    
     $('#end-meeting-btn').on('click', function () {
         var end_meeting_url = $(this).data('url');
 
@@ -28,6 +30,7 @@ $(document).on('turbolinks:load', function () {
             data: "",
         });
     })
+
 
     var isFirefox = navigator.userAgent.indexOf("Firefox") != -1;
     var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));

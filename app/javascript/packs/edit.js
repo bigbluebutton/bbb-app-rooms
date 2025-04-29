@@ -147,5 +147,4 @@ $(document).on('turbolinks:load', function () {
     cancelButton.on('click', (event) => {
         cancelButton.text('Loading...');
     })
-
 });
