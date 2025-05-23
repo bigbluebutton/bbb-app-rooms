@@ -77,7 +77,7 @@ module BbbHelper
       logoutURL: autoclose_url,
       lockSettingsDisableCam: string_to_bool(@chosen_room.lockSettingsDisableCam),
       lockSettingsDisableMic: string_to_bool(@chosen_room.lockSettingsDisableMic),
-      lockSettingsDisableNote: string_to_bool(@chosen_room.lockSettingsDisableNote),
+      lockSettingsDisableNotes: string_to_bool(@chosen_room.lockSettingsDisableNote),
       lockSettingsDisablePrivateChat: string_to_bool(@chosen_room.lockSettingsDisablePrivateChat),
       lockSettingsDisablePublicChat: string_to_bool(@chosen_room.lockSettingsDisablePublicChat),
       guestPolicy: string_to_bool(@chosen_room.guestPolicy) ? 'ASK_MODERATOR' : 'ALWAYS_ACCEPT',
