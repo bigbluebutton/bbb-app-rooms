@@ -1,0 +1,221 @@
+# BigBlueButton open source conferencing system - http://www.bigbluebutton.org/.
+# Copyright (c) 2018 BigBlueButton Inc. and by respective authors (see below).
+# This program is free software; you can redistribute it and/or modify it under the
+# terms of the GNU Lesser General Public License as published by the Free Software
+# Foundation; either version 3.0 of the License, or (at your option) any later
+# version.
+#
+# BigBlueButton is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public License along
+# with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
+
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  default:
+    app:
+      error: "Errore"
+      accept: "Accetta"
+    admin:
+      back: "Indietro"
+      handler: "Gestore"
+      newroom: "Nuova stanza"
+      showall: "MOstra tutto"
+      showroom:
+        text: "Mostra"
+      editroom:
+        text: "Modifica"
+      destroyroom:
+        text: "Elimina"
+        confirmation: "Sei sicuro di voler eliminare questa stanza?"
+    bigbluebutton:
+      moderator: "Moderatore"
+      viewer: "Spettatore"
+    room:
+      room: "Stanza"
+      created: "La stanza è stata creata con successo."
+      edit: "Modifica stanza"
+      show: "Mostra stanza"
+      showing: "Esposizione della stanza"
+      destroy: "Elimina stanza"
+      destroyed: "La stanza è stata eliminata con successo."
+      join: "Partecipa alla sessione"
+      name: "Nome"
+      description: "Descrizione"
+      welcome: "Benvenuto"
+      moderator: "Token moderatore"
+      viewer: "Token partecipante"
+      recording: "Registrazione"
+      recordings: "Registrazioni"
+      waitmoderator: "Attendi il moderatore"
+      allmoderators: "Tutti sono moderatori"
+      disablewebcams: "Disabilita webcam"
+      disablemics: "Disabilita microfoni"
+      disableprvtchat: "Disabilita Chat privata"
+      disablepublicchat: "Disabilita la chat pubblica"
+      sessionmayberecorded: "Questa sessione potrebbe essere registrata."
+      recordfromstart: "Registra dall'inizio"
+      hiderecordingbtn: "Nascondi pulsante di registrazione"
+      disablesharednotes: "Disabilita le note condivise"
+      disableuserlist: "Disabilita elenco utenti"
+      hidename: "Nascondi Nome"
+      hidedescription: "Nascondi descrizione"
+      usesharedcode: "Usa il codice condiviso"
+      update: "Aggiorna"
+      updated: "Aggiornato"
+      cancel: "Annulla"
+      endmeeting: "Fine sessione"
+      started: "Avviato"
+      code: "Codice stanza"
+      tooltip:
+        recording: "La sessione potrebbe essere registrata."
+        waitmoderator: "I partecipanti non possono partecipare finché non si unisce un moderatore."
+        allmoderators: "Tutti gli utenti si uniranno come moderatori."
+        edit: "Fai clic per modificare."
+        lockSettingsDisableCam: "Impedisci agli utenti di condividere la propria videocamera durante la riunione."
+        lockSettingsDisableMic: "Consenti agli utenti di partecipare in modalità di solo ascolto."
+        lockSettingsDisableNote: "Blocca le note condivise nella riunione."
+        lockSettingsDisablePublicChat: "Blocca la chat pubblica nella riunione."
+        lockSettingsDisablePrivateChat: "Blocca la chat privata nella riunione."
+        waitForModerator: "I partecipanti non possono partecipare finché non si unisce un moderatore."
+        allModerators: "Tutti gli utenti si uniranno come moderatori."
+        guestPolicy: "Richiedi l'approvazione del moderatore prima di partecipare."
+        record: "Consente la generazione di un file di riproduzione se un moderatore fa clic sul pulsante Avvia/Interrompi registrazione almeno una volta durante la sessione."
+        autoStartRecording: "Avvia automaticamente la registrazione quando si unisce il primo utente."
+        allowStartStopRecording: "Se sono selezionate sia "Avvio automatico della registrazione" che "Abilita all'utente di avviare/interrompere la registrazione", l'intera sessione verrà registrata e i moderatori non potranno mettere in pausa/riprendere la registrazione."
+      waitmodmsg: "Attendi che un moderatore entri nella stanza. Verrai reindirizzato automaticamente.."
+      settings:
+        roomSettingsTitle: "Impostazioni della stanza"
+        lockSettingsTitle: "Impostazioni di blocco"
+        recordingSettingsTitle: "Impostazioni di registrazione"
+        lockSettingsDisableCam: "Blocca fotocamere"
+        lockSettingsDisableMic: "Blocca i microfoni"
+        lockSettingsDisableNote: "Blocca note condivise"
+        lockSettingsDisablePublicChat: "Blocca chat pubblica"
+        lockSettingsDisablePrivateChat: "Blocca chat privata"
+        guestPolicy: "Abilita sala d'attesa"
+        waitForModerator: "Attendi il moderatore"
+        allModerators: "Tutti i moderatori"
+        record: "Abilita registrazione"
+        autoStartRecording: "Avvio automatico della registrazione"
+        allowStartStopRecording: "Consenti all'utente di avviare/interrompere la registrazione"
+      sharedCode:
+        numberOfRooms: "Numero di stanze che utilizzano il tuo codice:"
+        revokeCode: "Revoca Codice"
+        revokeCodeAlert: "Vuoi davvero revocare il codice? Tutte le stanze che condividono il tuo non potranno più revocarlo e la tua stanza avrà un nuovo codice.."
+        revokedNotice: "La stanza di cui stavi utilizzando il codice ha revocato l'accesso. Questa stanza è stata riportata al suo stato originale.."
+        revokeCodeConfirmTitle: "Sei sicuro di voler revocare il tuo codice??"
+        revokeCodeConfirmMessage: "Tutte le stanze che avevano il tuo codice perderanno l'accesso alla tua stanza e ne avrai uno nuovo."
+    meeting:
+      close: "Chiudi scheda/finestra"
+      close_manually: "Questa scheda/finestra deve essere chiusa manualmente."
+      user_full_name: "Nome e cognome"
+      personal_info_message: "Questo strumento non trasmette informazioni personali ad applicazioni esterne. BigBlueButton richiede un metodo per identificare gli utenti durante la sessione live. Accettando, acconsenti a trasmettere il tuo nome a BigBlueButton per l'identificazione durante la riunione."
+    recording:
+      action:
+        delete: "Elimina"
+        edit: "Modifica"
+        protect: "Protetto"
+        publish: "Pubblico"
+        unprotect: "Non protetto"
+        unpublish: "Non pubblico"
+      search_placeholder: "Cerca"
+      table:
+        actions: "Azioni"
+        formats: "Riproduzione"
+        name: "Nome"
+        description: "Descrizione"
+        date: "Data"
+        duration: "Durata"
+      visibility:
+        public: "Pubblico"
+        protected: "Protetto"
+      no_matched_recordings: "Nessuna registrazione corrisponde ai criteri di ricerca."
+      server_down: "Si è verificato un errore. Le registrazioni esistenti non sono state recuperate perché il server è inattivo."
+      no_recordings: "Nessuna registrazione."
+      formats:
+        video: "Video"
+        presentation: "Presentazione"
+        statistics: "Statistiche"
+    waiting_room:
+      hang_tight: "Tieni duro..."
+      redirect_msg: "Verrai reindirizzato automaticamente una volta iniziata la riunione."
+  warning:
+    cookies:
+      title: "Abilita i cookie di terze parti"
+      message: "Per garantire il corretto funzionamento di questa applicazione, è necessario disattivare la protezione avanzata per questo sito, consentendo l'accesso ai cookie di terze parti. Per farlo, fare clic sull'icona dello scudo a sinistra della barra degli indirizzi e attivare 'Protezione antitracciamento avanzata'."
+  error:
+    http:
+      _401:
+        code: "Non autorizzato"
+        message: "Accesso non autorizzato."
+        suggestion: "Se stai utilizzando questa stanza tramite LTI, prova ad avviare nuovamente l'app utilizzando il collegamento o aggiornando il browser."
+      _410:
+        code: "Andato"
+        message: "Risorsa non disponibile."
+        suggestion: "Sembra che tu stia tentando di accedere a questa risorsa utilizzando un endpoint LTI non più supportato. Prova ad aggiornare l'endpoint o le credenziali per lo strumento esterno."
+    bigbluebutton:
+      default:
+        code: "Errore BigBlueButton"
+        message: "BigBlueButton ha riscontrato un errore."
+        suggestion: "Riprova più tardi o contatta l'assistenza tecnica se il problema persiste."
+      invalidrequest:
+        code: "Chiamata API BBB non valida"
+        message: "Chiamata API BBB non valida."
+        suggestion: "Assicurarsi che il server BigBlueButton utilizzato sia disponibile e accessibile dal server su cui è installata l'applicazione LTI."
+      IncorrectUrlError:
+        code: "Errore URL non corretto"
+        message: "Errore di connessione. L'URL è probabilmente errato.."
+        suggestion: "Assicurarsi che le credenziali BBB siano configurate correttamente."
+    room:
+      default:
+        code: "Errore"
+        message: "Si è verificato un errore imprevisto."
+        suggestion: "Riprova più tardi o contatta l'assistenza tecnica se il problema persiste."
+      forbidden:
+        code: "Accesso vietato"
+        message: "La sessione è scaduta."
+        suggestion: "Se stai utilizzando questa stanza tramite LTI, prova ad avviare nuovamente l'app utilizzando il collegamento o aggiornando il browser."
+      notfound:
+        code: "Non trovato"
+        message: "La stanza non è stata trovata."
+        suggestion: "La stanza potrebbe essere stata rimossa da un amministratore. Contatta il supporto tecnico."
+      invalidsecret:
+        code: "Segreto non valido"
+        message: "Il token non può essere convalidato."
+        suggestion: "Questo problema potrebbe essere causato dall'utilizzo di una chiave non valida durante la convalida della richiesta tramite il provider LTI."
+      codenotfound:
+        code: "Non trovato"
+        message: "Non è stata trovata una stanza con questo codice."
+        suggestion: "Verifica che il codice condiviso con te sia corretto."
