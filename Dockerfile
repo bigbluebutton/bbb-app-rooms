@@ -13,10 +13,8 @@ RUN apk add --no-cache \
     libxslt \
     libstdc++ \
     ruby \
-    ruby-irb \
     ruby-bigdecimal \
     ruby-bundler \
-    ruby-json \
     ruby-rake \
     ruby-dev \
     nodejs npm yarn \
