@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1', '>= 6.1.7.8'
+gem 'rails', '~> 7.0', '>= 7.0.0'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.3'
 # Use postgres as the database for Active Record
@@ -45,10 +45,10 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'action-cable-testing'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'dotenv-rails', '>= 3.1.1'
+  gem 'dotenv-rails', '>= 3.1.7'
   gem 'rspec'
   gem 'rspec_junit_formatter'
-  gem 'rspec-rails', '~> 6.0.0'
+  gem 'rspec-rails', '~> 6.1.0'
   gem 'rubocop', '~> 1.66', '>= 1.66.0', require: false
   gem 'rubocop-rails', '~> 2.26', '>= 2.26.0', require: false
 end
@@ -69,7 +69,7 @@ group :test do
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
   gem 'database_cleaner-active_record'
-  gem 'factory_bot_rails', '>= 6.4.3'
+  gem 'factory_bot_rails', '>= 6.5.0'
   gem 'faker'
   gem 'rails-controller-testing'
   gem 'webdrivers'
@@ -96,9 +96,9 @@ gem 'repost', '~> 0.4.1'
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.5'
 
-gem 'activerecord-session_store', '>= 2.1.0'
+gem 'activerecord-session_store', '>= 2.2.0'
 
-gem 'coveralls_reborn', require: false
+gem 'coveralls_reborn', '>= 0.29.0', require: false
 gem 'net-smtp'
 gem 'webpacker', '~> 6.0.0.rc.5'
 
