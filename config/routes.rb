@@ -44,6 +44,10 @@ Rails.application.routes.draw do
       post '/:format/recording', to: 'rooms#individual_recording', as: :show_recording
     end
 
+    scope ':id/presentation' do
+      post '/remove', to: 'rooms#remove_presentation', as: :remove_presentation
+    end
+
     # Handles launches.
     post '/launch', to: 'rooms#launch', as: :room_launch
 

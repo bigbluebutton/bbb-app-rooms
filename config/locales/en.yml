@@ -137,6 +137,13 @@ en:
         revokedNotice: "The room whose code you were using revoked access to it. This room has been returned to its original state."
         revokeCodeConfirmTitle: "Are you sure you want to revoke your code?"
         revokeCodeConfirmMessage: "All rooms that had your code will lose access to your room, and you will have a new code."
+        preuploadPresentation: "Pre-upload presentation"
+      preupload:
+        current: "Current Presentation"
+        clickToUpload: "Click to upload"
+        orDragAndDrop: "or drag and drop"
+        fileTypes: "Upload any office document or PDF file (30 MB max)"
+
     meeting:
       close: "Close Tab/Window"
       close_manually: "This tab/window must be closed manually."
