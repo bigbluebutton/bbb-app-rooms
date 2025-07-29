@@ -163,6 +163,7 @@ GEM
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     ffi (1.17.2-x86_64-linux-gnu)
+    ffi (1.17.2-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-apis-core (0.18.0)
@@ -267,6 +268,8 @@ GEM
     netrc (0.11.0)
     nio4r (2.7.4)
     nokogiri (1.18.9-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.18.9-x86_64-linux-musl)
       racc (~> 1.4)
     oauth2 (2.0.9)
       faraday (>= 0.17.3, < 3.0)
@@ -506,6 +509,7 @@ GEM
 
 PLATFORMS
   x86_64-linux
+  x86_64-linux-musl
 
 DEPENDENCIES
   action-cable-testing
