@@ -33,7 +33,7 @@
   "devDependencies": {
     "@webpack-cli/serve": "^1.7.0",
     "postcss-cli": "^8.2.0",
-    "webpack-dev-server": "^4.10.1"
+    "webpack-dev-server": "^5.2.1"
   },
   "babel": {
     "presets": [
