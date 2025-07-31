@@ -18,6 +18,8 @@
 class Room < ApplicationRecord
   include BrokerHelper
 
+  has_one_attached :presentation
+
   before_save :default_values
 
   store_accessor :settings, %i[lockSettingsDisableCam lockSettingsDisableMic lockSettingsDisablePrivateChat lockSettingsDisablePublicChat lockSettingsDisableNote]

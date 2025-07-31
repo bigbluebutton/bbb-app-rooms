@@ -77,6 +77,7 @@ group :test do
 end
 
 group :production do
+  gem 'google-cloud-storage', '~> 1.8', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -110,3 +111,6 @@ gem 'logging', '~> 2.3'
 gem 'lograge', '~> 0.14.0'
 gem 'remote_syslog_logger'
 gem 'syslog'
+
+# So we can upload files to Digital Ocean Spaces (S3-compatible)
+gem 'aws-sdk-s3', require: false
