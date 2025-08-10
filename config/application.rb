@@ -78,5 +78,9 @@ module BbbAppRooms
     config.handler_legacy_api_enabled = (config.handler_legacy_api_endpoint && config.handler_legacy_api_secret)
 
     config.handler_legacy_new_room_enabled = ENV.fetch('HANDLER_LEGACY_NEW_ROOM_ENABLED', 'true').casecmp?('true')
+
+    # File types allowed in preupload presentation
+    config.allowed_file_types = '.doc,.docx,.ppt,.pptx,.pdf,.xls,.xlsx,.txt,.rtf,.odt,.ods,.odp,.odg,.odc,.odi,.jpg,.jpeg,.png'
+    config.active_storage.routes_prefix = '/rooms/rails/active_storage'
   end
 end

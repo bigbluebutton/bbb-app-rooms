@@ -118,6 +118,25 @@ class RoomsController < ApplicationController
     end
   end
 
+  def remove_presentation
+    begin
+      @room.presentation.purge
+
+      flash[:success] = "I18n.t('room.preupload_remove_success')"
+    rescue StandardError => e
+      logger.error("Support: Error in removing room presentation: #{e}")
+      flash[:alert] = "I18n.t('room.preupload_remove_error')"
+    end
+
+    redirect_back(fallback_location: room_path(@room))
+  end
+
+  # Returns a list of allowed file types
+  def allowed_file_types
+    Rails.configuration.allowed_file_types
+  end
+  helper_method :allowed_file_types
+
   # DELETE /rooms/1
   # DELETE /rooms/1.json
   def destroy
@@ -263,6 +282,12 @@ class RoomsController < ApplicationController
                 :bigbluebutton_recording_public_formats, :meeting_info, :bigbluebutton_recording_enabled, :server_running?
 
   private
+
+  # Checks if the file extension is allowed
+  def valid_file_type
+    Rails.configuration.allowed_file_types.split(',')
+         .include?(File.extname(room_params[:presentation].original_filename.downcase))
+  end
 
   def set_error(error, status, domain = 'room')
     @room = @user = nil
@@ -413,6 +438,7 @@ class RoomsController < ApplicationController
       :code,
       :shared_code,
       :use_shared_code,
+      :presentation,
       settings: Room.stored_attributes[:settings]
     )
   end

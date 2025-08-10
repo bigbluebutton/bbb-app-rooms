@@ -5,7 +5,7 @@ module.exports = {
     './app/views/**/*.html.erb',
     './app/stylesheets/**/*.rb',
     './app/javascript/**/*.js',
-    "./node_modules/flowbite/**/*.js"
+    './node_modules/flowbite/**/*.js'
   ],
   presets: [],
   darkMode: 'media', // or 'class'
@@ -966,5 +966,6 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/aspect-ratio'),
+    require('flowbite/plugin'),
   ],
 };
