@@ -20,7 +20,7 @@ describe RoomsController, type: :controller do
                                                                                               },
                                                                                             },
                                                                                           })
-    allow_any_instance_of(NotifyMeetingWatcherJob).to(receive(:bbb).and_return(bbb_api)) # stub actioncable processes
+    allow_any_instance_of(RoomMeetingWatcherJob).to(receive(:bbb).and_return(bbb_api)) # stub actioncable processes
     allow_any_instance_of(BrokerHelper).to(receive(:broker_tenant_info).and_return({
                                                                                      'handler_params' => 'context_id',
                                                                                      'hide_build_tag' => 'false',
