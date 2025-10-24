@@ -150,25 +150,26 @@ module BbbHelper
       res ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: offset, limit: RECORDINGS_PER_PAGE) # offset and limit are for pagination purposes
     end
 
-    @num_of_recs = res[:totalElements]&.to_i
+    # When using a BBB server rather than the LB, pagination fails because the format is different,
+    # and because the BBB server returns an incorrect number of totalElements.
+    # The LB returns :totalElements, so we use that to check if we are using the LB
+    # If not, we want to disable pagination
+    # This is a temporary solution until the pagination logic is fixed in the BBB server.
+    if res[:totalElements]
+      @num_of_recs = res[:totalElements].to_i
+    else
+      res = bbb.get_recordings(meetingID: @chosen_room.handler)
+      @num_of_recs = res.length
+      @disable_pagination = true
+    end
+
     recordings_formatted(res)
   end
 
   def paginate?
-    return true if @num_of_recs && @num_of_recs > RECORDINGS_PER_PAGE
+    return false if @disable_pagination
 
-    recordings_count > RECORDINGS_PER_PAGE
-  end
-
-  # This method is used if #@num_of_recs is null, which means that totalElements is not present in the BBB response.
-  # Pull the rest of the recordings to see if we need to paginate.
-  # Set offset to 8 because we know that at least one page was already pulled.
-  # Set the limit to the max number of recordings that can be pulled.
-  def recordings_count
-    res_count = Rails.cache.fetch("rooms/#{@chosen_room.handler}/#{RECORDINGS_KEY}/remaining", expires_in: Rails.configuration.cache_expires_in_minutes.minutes) if Rails.configuration.cache_enabled
-    res_count ||= bbb.get_recordings(meetingID: @chosen_room.handler, offset: RECORDINGS_PER_PAGE, limit: 100)[:recordings].length
-    @num_of_recs = res_count + RECORDINGS_PER_PAGE # We add RECORDINGS_PER_PAGE because we set the offset to 1
-    @num_of_recs
+    @num_of_recs > RECORDINGS_PER_PAGE
   end
 
   # returns the amount of pages for recordings
