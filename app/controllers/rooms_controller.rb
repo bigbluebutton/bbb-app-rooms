@@ -599,9 +599,14 @@ class RoomsController < ApplicationController
 
   def calculate_intersection_hash(launch_params, actions_hash)
     result = {}
-    actions_hash&.each_key do |key|
-      value = find_launch_param(launch_params, key)
-      result[key] = value if value
+    actions_hash&.each do |key, broker_value|
+      lms_value = find_launch_param(launch_params, key)
+
+      result[key] = if lms_value
+                      { value: lms_value, mapping: true }
+                    else
+                      { value: broker_value, mapping: false }
+                    end
     end
     result
   end
