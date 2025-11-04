@@ -335,11 +335,15 @@ module BbbHelper
   # Note:
   #   The value in ext_params from the tenant settings is the name that should be passed to BBB. And it can be a comma separated list.
   def add_ext_params(action, options)
-    @extra_params_to_bbb[action]&.each do |key, value|
-      # the value in ext_params from the tenant settings is the name that should be passed to BBB
-      bbb_names = @broker_ext_params&.[](action)&.[](key)&.split(',')
-      bbb_names&.each do |bbb_name|
-        options[bbb_name.strip.to_sym] = value if bbb_name
+    @extra_params_to_bbb[action]&.each do |key, value_hash|
+      if value_hash[:mapping] == true
+        # the value in ext_params from the tenant settings is the name that should be passed to BBB
+        bbb_names = @broker_ext_params&.[](action)&.[](key)&.split(',')
+        bbb_names&.each do |bbb_name|
+          options[bbb_name.strip.to_sym] = value_hash[:value]
+        end
+      else
+        options[key.to_sym] = value_hash[:value]
       end
     end
   end
