@@ -100,6 +100,10 @@ RAILS_SERVE_STATIC_FILES=true
 ## If serving directly from the container, set to true. Otherwise, if behind a proxy, set to false
 # ENABLE_SSL=true
 
+## Whether or not to show the setting that sets whether the default recording state is published/unpublished
+## default is false, and should remain false for standalone BBB servers since this setting is only supported in the BN Loadbalancer
+# SHOW_DEFAULT_RECORDING_PUBLISH_SETTING
+
 ### Access Keys and Secrets for Cloud Storage Providers
 
 ## Which cloud provider to use. Default in development is digitalocean, default in prod is google.

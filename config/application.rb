@@ -41,6 +41,7 @@ module BbbAppRooms
     config.bigbluebutton_secret = ENV['BIGBLUEBUTTON_SECRET']
     config.bigbluebutton_moderator_roles = ENV['BIGBLUEBUTTON_MODERATOR_ROLES'] || 'Instructor,Faculty,Teacher,Mentor,Administrator,Admin'
     config.bigbluebutton_recording_public_formats = ENV['BIGBLUEBUTTON_RECORDING_PUBLIC_FORMATS'] || 'presentation'
+    config.show_default_recording_publish_setting = ENV.fetch('SHOW_DEFAULT_RECORDING_PUBLISH_SETTING', 'false').casecmp?('true')
 
     config.relative_url_root = "/#{ENV['RELATIVE_URL_ROOT']}"
 
