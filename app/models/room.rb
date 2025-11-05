@@ -23,7 +23,7 @@ class Room < ApplicationRecord
   before_save :default_values
 
   store_accessor :settings, %i[lockSettingsDisableCam lockSettingsDisableMic lockSettingsDisablePrivateChat lockSettingsDisablePublicChat lockSettingsDisableNote]
-  store_accessor :settings, %i[allModerators guestPolicy record autoStartRecording allowStartStopRecording]
+  store_accessor :settings, %i[allModerators guestPolicy record autoStartRecording allowStartStopRecording defaultRecordingPublish]
 
   # after_find is used for the following so that rooms that already exist will have these fields upon launch
   after_find :initialize_setting_defaults, if: :settings_blank?
@@ -33,7 +33,7 @@ class Room < ApplicationRecord
 
   validate :shared_code_presence, if: -> { use_shared_code }
 
-  RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording].freeze
+  RECORDING_SETTINGS = [:record, :autoStartRecording, :allowStartStopRecording, :defaultRecordingPublish].freeze
   ROOM_SETTINGS = [:guestPolicy, :allModerators].freeze
   CODE_LENGTH = 10
 
@@ -150,6 +150,7 @@ class Room < ApplicationRecord
       allModerators: '0',
       guestPolicy: '1',
       record: '1',
+      defaultRecordingPublish: '0',
     }
 
     if room_settings.blank?

@@ -114,6 +114,7 @@ en:
         record: "Allows a playback file to be generated if a moderator clicks the Start/Stop Recording button at least once during the session."
         autoStartRecording: "Automatically start recording when the first user joins."
         allowStartStopRecording: "If both 'Auto Start Recording' and 'Enable User to Start/Stop Recording' are selected, the entire session will be recorded, and moderators cannot pause/resume the recording."
+        defaultRecordingPublish: "If selected, recordings will be unpublished by default"
       waitmodmsg: "Please wait for a moderator to enter the room. You will be redirected automatically."
       settings:
         roomSettingsTitle: "Room Settings"
@@ -130,6 +131,7 @@ en:
         record: "Enable Recording"
         autoStartRecording: "Auto Start Recording"
         allowStartStopRecording: "Enable User to Start/Stop Recording"
+        defaultRecordingPublish: "Default new recordings to unpublished"
       sharedCode:
         numberOfRooms: "Number of rooms using your code: "
         revokeCode: "Revoke Code"
