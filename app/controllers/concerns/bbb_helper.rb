@@ -84,7 +84,7 @@ module BbbHelper
       autoStartRecording: string_to_bool(@chosen_room.autoStartRecording),
       allowStartStopRecording: string_to_bool(@chosen_room.allowStartStopRecording),
       'meta_description': @chosen_room.description.truncate(128, separator: ' '),
-      'meta_bn-publish': string_to_bool(@chosen_room.defaultRecordingPublish),
+      'meta_bn-publish': !string_to_bool(@chosen_room.defaultRecordingPublish),
     }
 
     # pass any extra parameters set in the broker to BBB
