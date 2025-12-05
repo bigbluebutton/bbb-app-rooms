@@ -107,21 +107,21 @@ RAILS_SERVE_STATIC_FILES=true
 ### Access Keys and Secrets for Cloud Storage Providers
 
 ## Which cloud provider to use. Default in development is digitalocean, default in prod is google.
-; CLOUD_PROVIDER=<digitalocean|google> 
+# CLOUD_PROVIDER=<digitalocean|google> 
 
 ## Digital Ocean
-; DO_ACCESS_KEY=
-; DO_SECRET=
-; DO_STORAGE_ENDPOINT=
-; DO_BUCKET_NAME=
-; DO_STORAGE_REGION=
+# DO_ACCESS_KEY=
+# DO_SECRET=
+# DO_STORAGE_ENDPOINT=
+# DO_BUCKET_NAME=
+# DO_STORAGE_REGION=
 
 ## Google
-; GCS_PROJECT=
-; GCS_BUCKET=
-; GCS_PROJECT_ID=
-; GCS_PRIVATE_KEY_ID=
-; GCS_PRIVATE_KEY=
-; GCS_CLIENT_EMAIL=
-; GCS_CLIENT_ID=
-; GCS_CLIENT_CERT=
+# GCS_PROJECT=
+# GCS_BUCKET=
+# GCS_PROJECT_ID=
+# GCS_PRIVATE_KEY_ID=
+# GCS_PRIVATE_KEY=
+# GCS_CLIENT_EMAIL=
+# GCS_CLIENT_ID=
+# GCS_CLIENT_CERT=
