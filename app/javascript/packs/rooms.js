@@ -17,8 +17,48 @@
  */
 import { initFlowbite } from 'flowbite'
 
+const BROWSER_TIME_ZONE_COOKIE = 'browser_time_zone';
+
+const getCookie = (name) => {
+    const cookies = document.cookie ? document.cookie.split(';') : [];
+    const target = cookies.map(cookie => cookie.trim()).find(cookie => cookie.startsWith(`${name}=`));
+
+    return target ? decodeURIComponent(target.split('=')[1]) : null;
+};
+
+const ensureBrowserTimeZoneCookie = () => {
+    if (!window.Intl || !Intl.DateTimeFormat) {
+        return;
+    }
+
+    const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    if (!browserTimeZone) {
+        return;
+    }
+
+    const currentCookie = getCookie(BROWSER_TIME_ZONE_COOKIE);
+
+    if (currentCookie === browserTimeZone) {
+        return;
+    }
+
+    document.cookie = `${BROWSER_TIME_ZONE_COOKIE}=${encodeURIComponent(browserTimeZone)};path=/`;
+
+    // Force a single reload only when we first set/change the browser_time_zone cookie so the current page render
+    // picks up the new cookie on the server side.
+    // Without it, the cookie will be set but the already-rendered recording dates would stay in UTC until a later navigation;
+    // with Turbolinks present we use Turbolinks.visit to avoid a full unload, otherwise we fall back to a normal reload.
+    if (window.Turbolinks && typeof Turbolinks.visit === 'function') {
+        Turbolinks.visit(window.location.toString(), { action: 'replace' });
+    } else {
+        window.location.reload();
+    }
+};
+
 $(document).on('turbolinks:load', function () {
     initFlowbite();
+    ensureBrowserTimeZoneCookie();
     
     $('#end-meeting-btn').on('click', function () {
         var end_meeting_url = $(this).data('url');
