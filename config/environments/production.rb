@@ -54,7 +54,19 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = ENV.fetch('CLOUD_PROVIDER', 'google').downcase.to_sym
+  config.active_storage.service = if ENV['AS_MIRROR_PRIMARY'].present?
+                                    :mirror
+                                  elsif ENV['S3_ACCESS_KEY_ID'].present? && ENV['S3_ENDPOINT'].present?
+                                    :s3
+                                  elsif ENV['S3_ACCESS_KEY_ID'].present?
+                                    :amazon
+                                  elsif ENV['GCS_PROJECT'].present?
+                                    :google
+                                  elsif ENV['DO_ACCESS_KEY'].present?
+                                    :digitalocean
+                                  else
+                                    :local
+                                  end
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil

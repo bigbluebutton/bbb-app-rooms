@@ -49,7 +49,19 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = ENV.fetch('CLOUD_PROVIDER', 'local').downcase.to_sym
+  config.active_storage.service = if ENV['AS_MIRROR_PRIMARY'].present?
+                                    :mirror
+                                  elsif ENV['S3_ACCESS_KEY_ID'].present? && ENV['S3_ENDPOINT'].present?
+                                    :s3
+                                  elsif ENV['S3_ACCESS_KEY_ID'].present?
+                                    :amazon
+                                  elsif ENV['GCS_PROJECT'].present?
+                                    :google
+                                  elsif ENV['DO_ACCESS_KEY'].present?
+                                    :digitalocean
+                                  else
+                                    :local
+                                  end
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
