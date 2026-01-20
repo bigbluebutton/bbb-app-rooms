@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     root to: 'health_check#all'
 
     # Handles meeting management.
-    scope ':id/meeting' do
+    scope ':handler/meeting' do
       post '/join', to: 'rooms#meeting_join', as: :meeting_join
       get  '/join', to: 'rooms#meeting_join'
       post '/end', to: 'rooms#meeting_end', as: :meeting_end
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
 
     # Handles recording management.
-    scope ':id/recording/:record_id' do
+    scope ':handler/recording/:record_id' do
       post '/publish', to: 'rooms#recording_publish', as: :recording_publish
       post '/unpublish', to: 'rooms#recording_unpublish', as: :recording_unpublish
       post '/protect', to: 'rooms#recording_protect', as: :recording_protect
@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       post '/:format/recording', to: 'rooms#individual_recording', as: :show_recording
     end
 
-    scope ':id/presentation' do
+    scope ':handler/presentation' do
       post '/remove', to: 'rooms#remove_presentation', as: :remove_presentation
     end
 
@@ -61,8 +61,8 @@ Rails.application.routes.draw do
     get '/errors/:code', to: 'errors#index', as: :errors
 
     # To revoke the shared room
-    post '/:id/revoke_shared_code', to: 'rooms#revoke_shared_code', as: :revoke_shared_code
+    post '/:handler/revoke_shared_code', to: 'rooms#revoke_shared_code', as: :revoke_shared_code
   end
 
-  resources :rooms
+  resources :rooms, param: :handler
 end
