@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1', '>= 6.1.7.8'
+gem 'rails', '~> 7.1', '>= 7.1.5.2'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3', '~> 1.3'
 # Use postgres as the database for Active Record
@@ -68,7 +68,7 @@ group :test do
   gem 'selenium-webdriver', '>= 4.24.0'
   # Easy installation and use of chromedriver to run system tests with Chrome
   # gem 'chromedriver-helper'
-  gem 'database_cleaner-active_record'
+  gem 'database_cleaner-active_record', '>= 2.2.1'
   gem 'factory_bot_rails', '>= 6.4.3'
   gem 'faker'
   gem 'rails-controller-testing'
@@ -97,7 +97,7 @@ gem 'repost', '~> 0.4.1'
 gem 'minitest'
 gem 'omniauth-bbbltibroker', git: 'https://github.com/bigbluebutton/omniauth-bbbltibroker.git', tag: '0.1.5'
 
-gem 'activerecord-session_store', '>= 2.1.0'
+gem 'activerecord-session_store', '>= 2.2.0'
 
 gem 'coveralls_reborn', require: false
 gem 'net-smtp'
