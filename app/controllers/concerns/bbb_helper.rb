@@ -293,8 +293,9 @@ module BbbHelper
   # Emulates a builder for initializing the a newly created Bbb::Credentials object.
   def initialize_bbb_credentials
     bbb_credentials = Bbb::Credentials.new(Rails.configuration.bigbluebutton_endpoint, Rails.configuration.bigbluebutton_secret)
-    bbb_credentials.multitenant_api_endpoint = Rails.configuration.external_multitenant_endpoint
-    bbb_credentials.multitenant_api_secret = Rails.configuration.external_multitenant_secret
+    credentials = regional_credentials
+    bbb_credentials.multitenant_api_endpoint = credentials[:endpoint]
+    bbb_credentials.multitenant_api_secret = credentials[:secret]
     bbb_credentials.cache = Rails.cache
     bbb_credentials.cache_enabled = Rails.configuration.cache_enabled
     bbb_credentials
@@ -347,5 +348,38 @@ module BbbHelper
         options[key.to_sym] = value_hash[:value]
       end
     end
+  end
+
+  # This is required because the old deployment had 4 regions that are consolidated in the new deployment.
+  def regional_credentials
+    region = @chosen_room.region
+    if region.blank?
+      region = broker_tenant_info(@chosen_room.tenant)&.[]('region')
+      if region.present?
+        # rubocop:disable Rails/SkipsModelValidations
+        @chosen_room.update_column(:region, region)
+        # rubocop:enable Rails/SkipsModelValidations
+      end
+    end
+
+    case region
+    when 'rna1'
+      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA1'), '/api/')
+      secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_RNA1')
+    when 'reu1'
+      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_REU1'), '/api/')
+      secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_REU1')
+    when 'rna2'
+      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA2'), '/api/')
+      secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_RNA2')
+    when 'roc2'
+      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_ROC2'), '/api/')
+      secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_ROC2')
+    else
+      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT'), '/api/')
+      secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET')
+    end
+
+    { endpoint:, secret: }
   end
 end

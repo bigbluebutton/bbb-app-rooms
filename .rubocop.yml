@@ -14,7 +14,7 @@ AllCops:
     - bin/update
     - bin/yarn
     - vendor/bundle/**/*
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.4
 Layout/HashAlignment:
   EnforcedHashRocketStyle: [ key, table ]
   EnforcedColonStyle: [ key, table ]
