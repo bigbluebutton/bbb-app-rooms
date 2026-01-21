@@ -37,6 +37,14 @@ class Room < ApplicationRecord
   ROOM_SETTINGS = [:guestPolicy, :allModerators].freeze
   CODE_LENGTH = 10
 
+  # This method controls what Rails uses in URL helpers.
+  # By default it’s the record’s id. In Room, returning handler makes helpers like room_path(@room)
+  # generate /rooms/<handler> instead of /rooms/<id>. It also matches
+  # how 'resources :rooms, param: :handler' expects the route parameter.
+  def to_param
+    handler
+  end
+
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
     self.moderator = random_password(8) if moderator.blank?

@@ -126,7 +126,7 @@
                     id: 'join-room-btn', 
                     class: "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", 
                     formtarget: "_blank", 
-                    data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+                    data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.handler} %>
           <% end %> 
         </div>
         <div>
@@ -136,7 +136,7 @@
                 class: "font-sans text-center text-red-600 border ml-2 border-red-600 px-4 py-2 w-50 mb-0 bg-white rounded hover:text-white hover:bg-red-600", 
                 id: 'end-meeting-btn', 
                 style: visible,
-                data: {url: meeting_end_path(@chosen_room, :launch_nonce => @launch_nonce), room: @chosen_room.id} %>
+                data: {url: meeting_end_path(@chosen_room, :launch_nonce => @launch_nonce), room: @chosen_room.handler} %>
           <% end %> 
         </div>
       </div>     

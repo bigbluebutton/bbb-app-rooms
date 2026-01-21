@@ -78,7 +78,7 @@ describe RoomsController, type: :controller do
 
   describe '#show' do
     it 'should show the page for the room with no recordings' do
-      expect(get(:show, params: { id: @room.id })).to(have_http_status(:ok))
+      expect(get(:show, params: { handler: @room.handler })).to(have_http_status(:ok))
     end
 
     it 'should show the page for the room with recordings' do
@@ -110,19 +110,19 @@ describe RoomsController, type: :controller do
           },
         },
       ]
-      expect(get(:show, params: { id: @room.id })).to(have_http_status(:ok))
+      expect(get(:show, params: { handler: @room.handler })).to(have_http_status(:ok))
     end
   end
 
   describe '#destroy' do
     it 'should delete the room' do
-      expect { delete(:destroy, params: { id: @room.id }) }.to(change { Room.count }.by(-1))
+      expect { delete(:destroy, params: { handler: @room.handler }) }.to(change { Room.count }.by(-1))
     end
   end
 
   describe '#edit' do
     it 'gets the edit room' do
-      get :edit, params: { id: @room.id }
+      get :edit, params: { handler: @room.handler }
       expect(response).to(have_http_status(:success))
     end
   end
@@ -137,7 +137,7 @@ describe RoomsController, type: :controller do
   describe '#update' do
     it 'should redirect to edit url' do
       patch :update, params: {
-        id: @room.id,
+        handler: @room.handler,
         room: {
           all_moderators: @room.all_moderators,
           description: @room.description,
@@ -154,7 +154,7 @@ describe RoomsController, type: :controller do
 
   describe '#meeting_end' do
     it 'should end the meeting' do
-      post :meeting_end, params: { id: @room.id }
+      post :meeting_end, params: { handler: @room.handler }
       expect(response).to(have_http_status(:found))
     end
   end
@@ -165,7 +165,7 @@ describe RoomsController, type: :controller do
         allow_any_instance_of(BbbHelper).to(receive(:update_recording).and_return(updated: true))
         @request.session[:user_id] = @user.uid
 
-        post :recording_update, params: { id: @room.id, record_id: Faker::IdNumber.valid, setting: 'rename_recording', record_name: 'New name' }
+        post :recording_update, params: { handler: @room.handler, record_id: Faker::IdNumber.valid, setting: 'rename_recording', record_name: 'New name' }
 
         expect(response).to(have_http_status(204))
       end
@@ -176,7 +176,7 @@ describe RoomsController, type: :controller do
         allow_any_instance_of(BbbHelper).to(receive(:delete_recording).and_return(true))
         @request.session[:user_id] = @user.uid
 
-        post :recording_delete, params: { id: @room.id, record_id: Faker::IdNumber.valid }
+        post :recording_delete, params: { handler: @room.handler, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
@@ -186,7 +186,7 @@ describe RoomsController, type: :controller do
       it 'publishes the recording' do
         allow_any_instance_of(BbbHelper).to(receive(:publish_recording).and_return(true))
 
-        post :recording_publish, params: { id: @room.id, record_id: Faker::IdNumber.valid }
+        post :recording_publish, params: { handler: @room.handler, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
@@ -194,7 +194,7 @@ describe RoomsController, type: :controller do
       it 'unpublishes the recording' do
         allow_any_instance_of(BbbHelper).to(receive(:unpublish_recording).and_return(true))
 
-        post :recording_unpublish, params: { id: @room.id, record_id: Faker::IdNumber.valid }
+        post :recording_unpublish, params: { handler: @room.handler, record_id: Faker::IdNumber.valid }
 
         expect(response).to(have_http_status(302))
       end
@@ -207,7 +207,7 @@ describe RoomsController, type: :controller do
         allow_any_instance_of(BbbHelper).to(receive(:meeting_running?).and_return(false))
         allow_any_instance_of(BbbHelper).to(receive(:join_meeting_url).and_return('bbb.example.com'))
 
-        post :meeting_join, params: { id: @room.id }
+        post :meeting_join, params: { handler: @room.handler }
 
         expect(response).to(redirect_to('bbb.example.com'))
       end

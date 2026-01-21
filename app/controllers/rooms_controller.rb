@@ -150,7 +150,7 @@ class RoomsController < ApplicationController
   # GET /launch
   # GET /launch.json?
   def launch
-    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) && return if @room
+    redirect_to(room_path(@room, launch_nonce: params['launch_nonce'])) && return if @room
 
     redirect_to(errors_path(410))
   end
@@ -186,7 +186,7 @@ class RoomsController < ApplicationController
   # GET /rooms/:id/meeting/end.json
   def meeting_end
     end_meeting
-    redirect_to(room_path(@room.id, launch_nonce: params['launch_nonce'])) # fallback if actioncable doesn't work
+    redirect_to(room_path(@room, launch_nonce: params['launch_nonce'])) # fallback if actioncable doesn't work
   end
 
   def broadcast_meeting(action: 'none', delay: false)
@@ -209,28 +209,28 @@ class RoomsController < ApplicationController
   def recording_unpublish
     unpublish_recording(params[:record_id])
     @page_num = session[:page] || 1
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/publish
   def recording_publish
     publish_recording(params[:record_id])
     @page_num = session[:page] || 1
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/protect
   def recording_protect
     update_recording(params[:record_id], protect: true)
     @page_num = session[:page] || 1
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/unprotect
   def recording_unprotect
     update_recording(params[:record_id], protect: false)
     @page_num = session[:page] || 1
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/update
@@ -247,7 +247,7 @@ class RoomsController < ApplicationController
   def recording_delete
     delete_recording(params[:record_id])
     @page_num = session[:page] || 1
-    redirect_to(room_path(params[:id], launch_nonce: params[:launch_nonce], page: @page_num))
+    redirect_to(room_path(@room, launch_nonce: params[:launch_nonce], page: @page_num))
   end
 
   # POST /rooms/:id/recording/:record_id/:format/recording
@@ -270,8 +270,8 @@ class RoomsController < ApplicationController
   # POST /rooms/:id/revoke_shared_code
   # Change the shared code so that other rooms can't access yours anymore
   def revoke_shared_code
-    @room = Room.find(params[:id])
-    logger.info("Room #{params[:id]}: Revoking the shared code")
+    @room = Room.find_by!(handler: params[:handler])
+    logger.info("Room #{params[:handler]}: Revoking the shared code")
     @room.revoke_shared_code
     redirect_to(room_path(@room, launch_nonce: params[:launch_nonce]), notice: 'Shared code has been revoked.')
   rescue StandardError => e
@@ -314,7 +314,7 @@ class RoomsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_room
-    @room = Room.find_by(id: params[:id])
+    @room = Room.find_by(handler: params[:handler])
 
     # Exit with error if room was not found
     set_error('notfound', :not_found) && return unless @room
@@ -333,7 +333,7 @@ class RoomsController < ApplicationController
     if @shared_rooms_enabled && @room&.use_shared_code
       @shared_room = Room.find_by(code: @room.shared_code, tenant: @room.tenant)
       use_shared_room = @shared_room.present?
-      logger.debug("Room with id #{params[:id]} is using shared code: #{@room&.shared_code}")
+      logger.debug("Room with handler #{params[:handler]} is using shared code: #{@room&.shared_code}")
     else
       @shared_room = nil
       use_shared_room = false
