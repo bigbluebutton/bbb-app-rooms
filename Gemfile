@@ -113,4 +113,4 @@ gem 'remote_syslog_logger'
 gem 'syslog'
 
 # So we can upload files to Digital Ocean Spaces (S3-compatible)
-gem 'aws-sdk-s3', require: false
+gem 'aws-sdk-s3', '>= 1.208.0', require: false
