@@ -113,14 +113,15 @@
         <% @lockSettings.each do |setting| %>
             <% @setting_name = setting[0] %>
             <% @setting_value = setting[1].to_i %>
-            <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
-            <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
-            <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
-              <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-              </svg>
-            </i>
-            <br>
+            <div class="flex items-center gap-2">
+              <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+              <span><%= t("default.room.settings.#{@setting_name}") %></span>
+              <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                  <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                </svg>
+              </i>
+            </div>
         <% end %>
       </div>
   </details>
@@ -135,14 +136,15 @@
         <% @roomSettings.each do |setting| %>
           <% @setting_name = setting[0] %>
           <% @setting_value = setting[1].to_i %>
-          <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
-          <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
-          <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
-            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-              <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-            </svg>
-          </i> 
-          <br>
+          <div class="flex items-center gap-2">
+            <%= form.check_box :settings[@setting_name], class: "check-disabled", id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1 %>
+            <span><%= t("default.room.settings.#{@setting_name}") %></span>
+            <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+            </i>
+          </div>
         <% end %>
       </div>
   </details>
@@ -159,15 +161,18 @@
             <% @setting_name = setting[0] %>
             <% @setting_value = setting[1].to_i %>
             <% @show_default_publish = ActiveModel::Type::Boolean.new.cast(Rails.configuration.show_default_recording_publish_setting) %>
-            <% unless @setting_name == "defaultRecordingPublish" && !@show_default_publish %>
-              <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1, class: "disabled:bg-slate-100 disabled:border-slate-200 check-disabled" %>
-              <%= t("default.room.settings.#{@setting_name}") %>&nbsp;
-              <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
-                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                  <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                </svg>
-              </i>
-              <br>
+            <% if @setting_name == "defaultRecordingPublish" && !@show_default_publish %>
+              <%= hidden_field_tag "room[settings][#{@setting_name}]", @setting_value %>
+            <% else %>
+              <div class="flex items-center gap-2">
+                <%= form.check_box :settings[@setting_name], id: "#{@setting_name}_checkbox", name: "room[settings][#{@setting_name}]", checked: @setting_value == 1, class: "disabled:bg-slate-100 disabled:border-slate-200 check-disabled" %>
+                <span><%= t("default.room.settings.#{@setting_name}") %></span>
+                <i data-toggle="tooltip" title="<%= t("default.room.tooltip.#{@setting_name}") %>">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path fill-rule="evenodd" d="M19 10.5a8.5 8.5 0 11-17 0 8.5 8.5 0 0117 0zM8.25 9.75A.75.75 0 019 9h.253a1.75 1.75 0 011.709 2.13l-.46 2.066a.25.25 0 00.245.304H11a.75.75 0 010 1.5h-.253a1.75 1.75 0 01-1.709-2.13l.46-2.066a.25.25 0 00-.245-.304H9a.75.75 0 01-.75-.75zM10 7a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                  </svg>
+                </i>
+              </div>
             <% end %>
           <% end %>
         </div>

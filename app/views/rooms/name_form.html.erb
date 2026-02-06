@@ -25,7 +25,7 @@
                 <%= form.text_field :full_name, :required => true,  class: "form-control rounded input mt-1 ml-2" %>
             </div>
             <p class="text-center p-2"><%= t('default.meeting.personal_info_message') %> </p>
-            <%= button_tag t('default.app.accept'),:type => 'submit', :class => "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.id} %>
+            <%= button_tag t('default.app.accept'),:type => 'submit', :class => "font-sans text-center text-white px-4 py-2 w-50 mb-0 border border-bbb-blue bg-bbb-blue rounded hover:bg-darker-bbb-blue", id: 'join-room-btn', formtarget: "_blank", data: {url: meeting_join_path(@room, :launch_nonce => @launch_nonce), room: @room.handler} %>
             </div>
         <% end %>
        

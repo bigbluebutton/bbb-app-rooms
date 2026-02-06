@@ -14,7 +14,7 @@ digitalocean:
   bucket: <%= ENV['DO_BUCKET_NAME'] %>
   region: <%= ENV['DO_STORAGE_REGION'] %>
 
-google: 
+google:
   service: GCS
   project: "<%= ENV['GCS_PROJECT'] %>"
   bucket: "<%= ENV['GCS_BUCKET'] %>"
@@ -30,6 +30,11 @@ google:
     auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs'
     client_x509_cert_url: "<%= ENV['GCS_CLIENT_CERT'] %>"
 
+mirror:
+  service: Mirror
+  primary: <%= ENV['AS_MIRROR_PRIMARY'] %>
+  mirrors: [ <%= ENV['AS_MIRROR_SECONDARY'] %> ]
+
 # Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
@@ -44,8 +49,3 @@ google:
 #   storage_account_name: your_account_name
 #   storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
 #   container: your_container_name
-
- mirror:
-   service: Mirror
-   primary: <%= ENV['AS_MIRROR_PRIMARY'] %>
-   mirrors: [ <%= ENV['AS_MIRROR_SECONDARY'] %> ]
