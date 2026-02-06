@@ -355,6 +355,7 @@ module BbbHelper
     region = @chosen_room.region
     if region.blank?
       region = broker_tenant_info(@chosen_room.tenant)&.[]('region')
+      logger.info("Pulled region from broker: #{region}")
       if region.present?
         # rubocop:disable Rails/SkipsModelValidations
         @chosen_room.update_column(:region, region)
@@ -364,19 +365,19 @@ module BbbHelper
 
     case region
     when 'rna1'
-      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA1'), '/api/')
+      endpoint = ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA1')
       secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_RNA1')
     when 'reu1'
-      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_REU1'), '/api/')
+      endpoint = ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_REU1')
       secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_REU1')
     when 'rna2'
-      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA2'), '/api/')
+      endpoint = ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_RNA2')
       secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_RNA2')
     when 'roc2'
-      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_ROC2'), '/api/')
+      endpoint = ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT_ROC2')
       secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET_ROC2')
     else
-      endpoint = File.join(ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT'), '/api/')
+      endpoint = ENV.fetch('EXTERNAL_MULTITENANT_ENDPOINT')
       secret = ENV.fetch('EXTERNAL_MULTITENANT_SECRET')
     end
 

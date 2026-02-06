@@ -97,6 +97,7 @@ module Bbb
       # get the api URL and secret from the LB if not defined in tenant settings
       if missing_creds
         Rails.logger.debug('Missing credentials, attempt to fetch from multitenant_api_endpoint...')
+        Rails.logger.debug("@multitenant_api_endpoint = #{@multitenant_api_endpoint}")
         # Build the URI.
         uri = encoded_url(
           "#{@multitenant_api_endpoint}api/getUser",
