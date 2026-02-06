@@ -260,11 +260,37 @@ module BbbHelper
 
   # Helper for converting BigBlueButton dates into the desired format.
   def recording_date(date)
+    localized_date = convert_recording_time(date)
+
     # NOTE: if we really wanted ordinalization, then we can add an if statement to ordinalize if locale is en.
     # .ordinalize does not work with other locales
-    return date.strftime("%B #{date.day}, %Y.") unless I18n.locale.eql?(:en)
+    return localized_date.strftime("%B #{localized_date.day}, %Y.") unless I18n.locale.eql?(:en)
 
-    date.strftime("%B #{date.day.ordinalize}, %Y.")
+    localized_date.strftime("%B #{localized_date.day.ordinalize}, %Y.")
+  end
+
+  def convert_recording_time(date)
+    time_zone = browser_time_zone
+    recording_time = normalize_recording_time(date)
+
+    return recording_time unless time_zone && recording_time.respond_to?(:in_time_zone)
+
+    recording_time.in_time_zone(time_zone)
+  end
+
+  def normalize_recording_time(date)
+    return date if date.respond_to?(:in_time_zone)
+
+    timestamp = date.to_i
+    timestamp /= 1000 if timestamp > 10**11 # convert ms to seconds if needed
+    Time.zone.at(timestamp)
+  rescue StandardError
+    date
+  end
+
+  def browser_time_zone
+    zone_name = cookies[:browser_time_zone]
+    Time.find_zone(zone_name)
   end
 
   # Helper for converting BigBlueButton dates into a nice length string.
