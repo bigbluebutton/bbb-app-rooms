@@ -425,7 +425,7 @@ class RoomsController < ApplicationController
   end
 
   def room_params
-    params.require(:room).permit(
+    permitted = params.require(:room).permit(
       :name,
       :description,
       :welcome,
@@ -441,6 +441,11 @@ class RoomsController < ApplicationController
       :presentation,
       settings: Room.stored_attributes[:settings]
     )
+    # While 'Use Shared Code' is checked, the settings checkboxes are disabled in the form,
+    # so only their hidden '0' companion fields get submitted. Keep the room's stored
+    # settings instead of overwriting them all with zeros.
+    permitted.delete(:settings) if ActiveModel::Type::Boolean.new.cast(permitted[:use_shared_code])
+    permitted
   end
 
   def launch_params_to_new_room_params(handler, handler_legacy, launch_params)

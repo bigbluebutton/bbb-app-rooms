@@ -150,6 +150,52 @@ describe RoomsController, type: :controller do
         },
       }
     end
+
+    context 'settings while using a shared code' do
+      let(:all_settings_enabled) { Room.stored_attributes[:settings].index_with { '1' }.transform_keys(&:to_s) }
+      let(:all_settings_zeroed) { Room.stored_attributes[:settings].index_with { '0' } }
+
+      before do
+        # Rooms leak across examples (DatabaseCleaner strategies are set but never run),
+        # so a unique handler is needed for find_by(handler:) to resolve this room.
+        @room.update!(handler: SecureRandom.hex(8), settings: all_settings_enabled)
+        @request.session[@room.handler] = @request.session['handler']
+      end
+
+      it 'keeps the stored settings when the form is submitted with use_shared_code enabled' do
+        owner = create(:room, handler: 'owner-handler', tenant: @room.tenant)
+
+        # The form disables the settings checkboxes while 'Use Shared Code' is checked,
+        # so the submission only carries the hidden '0' fields for every setting.
+        patch :update, params: {
+          handler: @room.handler,
+          room: {
+            name: @room.name,
+            use_shared_code: '1',
+            shared_code: owner.code,
+            settings: all_settings_zeroed,
+          },
+        }
+
+        @room.reload
+        expect(@room.use_shared_code).to(be(true))
+        expect(@room.shared_code).to(eq(owner.code))
+        expect(@room.settings).to(eq(all_settings_enabled))
+      end
+
+      it 'applies submitted settings when use_shared_code is disabled' do
+        patch :update, params: {
+          handler: @room.handler,
+          room: {
+            name: @room.name,
+            use_shared_code: '0',
+            settings: all_settings_zeroed,
+          },
+        }
+
+        expect(@room.reload.settings['record']).to(eq('0'))
+      end
+    end
   end
 
   describe '#meeting_end' do
