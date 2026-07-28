@@ -206,6 +206,7 @@ class Room < ApplicationRecord
 
   def shared_code_presence
     errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
+    errors.add(:shared_code, "A room can't use its own code as a shared code") && return if shared_code == code
 
     return if Room.exists?(code: shared_code, tenant: tenant)
 
