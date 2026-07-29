@@ -46,13 +46,17 @@ $(document).on('turbolinks:load', function () {
     function handleUseSharedCodeCheckbox() {
         var textAreas = $('.check-disabled');
         var elements = $('.lock-visibility');
+        // Prevent hidden components from sending value=0
+        var hiddenCompanions = textAreas.filter(':checkbox').prev('input[type="hidden"]');
         var use_shared_code_checked = $('#use_shared_code_checkbox').prop("checked");
         if (use_shared_code_checked) {
             textAreas.prop('disabled', true);
+            hiddenCompanions.prop('disabled', true);
             textAreas.addClass('disabled-textarea');
             elements.css('display', 'inline');
         } else {
             textAreas.prop('disabled', false);
+            hiddenCompanions.prop('disabled', false);
             textAreas.removeClass('disabled-textarea');
             elements.css('display', 'none');
         }
