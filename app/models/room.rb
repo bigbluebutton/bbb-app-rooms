@@ -37,6 +37,14 @@ class Room < ApplicationRecord
   ROOM_SETTINGS = [:guestPolicy, :allModerators].freeze
   CODE_LENGTH = 10
 
+  # This method controls what Rails uses in URL helpers.
+  # By default it’s the record’s id. In Room, returning handler makes helpers like room_path(@room)
+  # generate /rooms/<handler> instead of /rooms/<id>. It also matches
+  # how 'resources :rooms, param: :handler' expects the route parameter.
+  def to_param
+    handler
+  end
+
   def default_values
     self.handler ||= Digest::SHA1.hexdigest(SecureRandom.uuid)
     self.moderator = random_password(8) if moderator.blank?
@@ -198,6 +206,7 @@ class Room < ApplicationRecord
 
   def shared_code_presence
     errors.add(:shared_code, "The shared code can't be blank when 'Use Shared Code' is enabled") && return if shared_code.blank?
+    errors.add(:shared_code, "A room can't use its own code as a shared code") && return if shared_code == code
 
     return if Room.exists?(code: shared_code, tenant: tenant)
 

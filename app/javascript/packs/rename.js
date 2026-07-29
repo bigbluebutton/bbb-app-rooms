@@ -82,7 +82,6 @@ $(document).on('turbolinks:load', function () {
         },
         data: data,
         success: function (response) {
-          console.log("succesfully updated. data = ", data);
         },
         error: function (xhr, status, error) {
           console.log("error in sending ajax request to rename recording");

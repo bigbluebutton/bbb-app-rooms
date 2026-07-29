@@ -18,7 +18,13 @@
 
 class MeetingInfoChannel < ApplicationCable::Channel
   def subscribed
-    @chosen_room = Room.find(params[:room_id])
+    @chosen_room = Room.find_by(handler: params[:room_handler])
+    unless @chosen_room
+      logger.warn("[MeetingInfoChannel] Missing or invalid room_handler: #{params[:room_handler].inspect}")
+      reject
+      return
+    end
+
     stream_for(@chosen_room)
     NotifyMeetingWatcherJob.set(wait: 1.second).perform_later(@chosen_room, {})
   end

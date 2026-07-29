@@ -16,10 +16,11 @@
  *  with BigBlueButton; if not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'rooms';
-@import 'errors';
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import 'scaffolds.scss';
-@import 'tailwind';
+@use 'rooms';
+@use 'errors';
+@use 'scaffolds';
+@use 'tailwind';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+

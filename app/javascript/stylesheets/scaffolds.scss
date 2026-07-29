@@ -88,6 +88,7 @@ svg {
 summary {
   position: relative;
   display: block;
+  list-style: none;
   /* turns off the open indicator on modern UA's */
   padding: 1rem 3em 1em 0em;
   border: 1px;
@@ -97,6 +98,10 @@ summary {
 summary::-webkit-details-marker {
   display: none;
   /* turn off open indicator in crApple's "new IE" */
+}
+
+summary::marker {
+  content: "";
 }
 
 summary::before {

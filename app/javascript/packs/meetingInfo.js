@@ -22,24 +22,30 @@ $(document).on('turbolinks:load', function () {
 
   var controller = $("body").data('controller');
   var action = $("body").data('action');
-  var chosenRoomId = $("#body").data("chosenroomid");
+  var chosenRoomHandler = $("#body").data("chosenRoomHandler");
 
-  if (!(controller == "rooms" && action == "meeting_join")) {
+  if (!(controller == "rooms" && action == "meeting_join") && chosenRoomHandler) {
     App.meetingInfo = App.cable.subscriptions.create({
       channel: "MeetingInfoChannel",
-      room_id: chosenRoomId
+      room_handler: chosenRoomHandler
     }, {
       connected: function () {
-        console.log("Connected to meeting info channel for [" + chosenRoomId + "]");
+        console.log("Connected to meeting info channel");
       },
       disconnected: function () {
         console.log("Disconnected from meeting info channel");
       },
       received: function (data) {
-        console.log("Received data from meeting info channel. data: " + JSON.stringify(data));
+        console.log("Received data from meeting info channel.");
         if (data.meeting_in_progress == true) {
-          startTime = data.elapsed_time
-          start_elapsed_time();
+          startTime = data.elapsed_time;
+          if (typeof startTime === 'string') {
+            var parsedStartTime = Date.parse(startTime);
+            startTime = isNaN(parsedStartTime) ? Number(startTime) : parsedStartTime;
+          }
+          if (!isNaN(startTime)) {
+            start_elapsed_time();
+          }
           display_participant_count(data.participant_count);
           show_elems();
         }

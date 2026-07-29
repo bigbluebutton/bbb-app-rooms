@@ -77,7 +77,7 @@ group :test do
 end
 
 group :production do
-  gem 'google-cloud-storage', '~> 1.8', require: false
+  gem 'google-cloud-storage', '~> 1.57', '>= 1.57.0', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -90,7 +90,7 @@ gem 'bigbluebutton-api-ruby', '~> 1.9.1'
 gem 'rest-client'
 
 gem 'omniauth', '>= 2.1.2'
-gem 'omniauth-oauth2', '>= 1.8.0'
+gem 'omniauth-oauth2', '>= 1.9.0'
 gem 'omniauth-rails_csrf_protection', '~> 1.0.2'
 gem 'repost', '~> 0.4.1'
 
