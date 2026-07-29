@@ -2,6 +2,7 @@
 
 require "pathname"
 require "bundler/setup"
+require "logger"
 require "webpacker"
 require "webpacker/webpack_runner"
 
