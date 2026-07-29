@@ -22,7 +22,7 @@
     "flowbite": "^4.0.1",
     "jquery": "^3.6.0",
     "mini-css-extract-plugin": "^2.6.1",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.18",
     "postcss-import": "^15.0.0",
     "postcss-loader": "^7.1.0",
     "sass": "^1.87.0",
