@@ -104,6 +104,7 @@ gem 'net-smtp'
 gem 'webpacker', '~> 6.0.0.rc.5'
 
 gem 'bigdecimal'
+gem 'logger', require: false
 gem 'mutex_m'
 gem 'rdoc', require: false
 

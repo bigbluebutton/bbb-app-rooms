@@ -534,6 +534,7 @@ DEPENDENCIES
   jbuilder (~> 2.11, >= 2.11.5)
   json
   listen (>= 3.0.5, < 3.2)
+  logger
   logging (~> 2.3)
   lograge (~> 0.14.0)
   minitest
@@ -570,3 +571,6 @@ DEPENDENCIES
   webdrivers
   webmock (>= 3.20.0)
   webpacker (~> 6.0.0.rc.5)
+
+BUNDLED WITH
+   2.6.9
